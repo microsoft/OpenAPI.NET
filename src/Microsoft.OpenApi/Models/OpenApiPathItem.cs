@@ -170,10 +170,12 @@ namespace Microsoft.OpenApi
 
             var standardMethodsNames = version switch
             {
-                OpenApiSpecVersion.OpenApi2_0 => _standardHttp2MethodsNames,
-                OpenApiSpecVersion.OpenApi3_0 => _standardHttp30MethodsNames,
+                OpenApiSpecVersion.OpenApi3_2 => _standardHttp32MethodsNames,
                 OpenApiSpecVersion.OpenApi3_1 => _standardHttp31MethodsNames,
-                OpenApiSpecVersion.OpenApi3_2 or _ => _standardHttp32MethodsNames,
+                OpenApiSpecVersion.OpenApi3_0 => _standardHttp30MethodsNames,
+                // OpenAPI 2.0 supports the fewest methods, so it's the safest default in case of an unknown version.
+                // This way the library will emit additional methods as extensions instead of producing a potentially invalid spec.
+                _ => _standardHttp2MethodsNames,
             };
 
             // operations
