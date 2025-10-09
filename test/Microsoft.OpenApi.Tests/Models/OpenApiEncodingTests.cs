@@ -213,7 +213,9 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await encoding.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_2);
 
             // Assert
-            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(actual, expected);
         }
 
         [Fact]
