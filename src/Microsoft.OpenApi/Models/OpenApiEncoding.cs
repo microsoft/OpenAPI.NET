@@ -87,9 +87,9 @@ namespace Microsoft.OpenApi
         {
             ContentType = encoding?.ContentType ?? ContentType;
             Headers = encoding?.Headers != null ? new Dictionary<string, IOpenApiHeader>(encoding.Headers) : null;
-            Encoding = encoding?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(encoding.Encoding.ToDictionary(kvp => kvp.Key, kvp => new OpenApiEncoding(kvp.Value))) : null;
+            Encoding = encoding?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(encoding.Encoding, StringComparer.Ordinal) : null;
             ItemEncoding = encoding?.ItemEncoding != null ? new OpenApiEncoding(encoding.ItemEncoding) : null;
-            PrefixEncoding = encoding?.PrefixEncoding != null ? new List<OpenApiEncoding>(encoding.PrefixEncoding.Select(e => new OpenApiEncoding(e))) : null;
+            PrefixEncoding = encoding?.PrefixEncoding != null ? new List<OpenApiEncoding>(encoding.PrefixEncoding) : null;
             Style = encoding?.Style ?? Style;
             Explode = encoding?._explode;
             AllowReserved = encoding?.AllowReserved ?? AllowReserved;
