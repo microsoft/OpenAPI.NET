@@ -35,6 +35,16 @@ namespace Microsoft.OpenApi
         public IDictionary<string, OpenApiEncoding>? Encoding { get; set; }
 
         /// <summary>
+        /// Encoding object for array items.
+        /// </summary>
+        public OpenApiEncoding? ItemEncoding { get; set; }
+
+        /// <summary>
+        /// Encoding objects for tuple-style arrays.
+        /// </summary>
+        public IList<OpenApiEncoding>? PrefixEncoding { get; set; }
+
+        /// <summary>
         /// Describes how a specific property value will be serialized depending on its type.
         /// </summary>
         public ParameterStyle? Style { get; set; }
@@ -78,6 +88,8 @@ namespace Microsoft.OpenApi
             ContentType = encoding?.ContentType ?? ContentType;
             Headers = encoding?.Headers != null ? new Dictionary<string, IOpenApiHeader>(encoding.Headers) : null;
             Encoding = encoding?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(encoding.Encoding.ToDictionary(kvp => kvp.Key, kvp => new OpenApiEncoding(kvp.Value))) : null;
+            ItemEncoding = encoding?.ItemEncoding != null ? new OpenApiEncoding(encoding.ItemEncoding) : null;
+            PrefixEncoding = encoding?.PrefixEncoding != null ? new List<OpenApiEncoding>(encoding.PrefixEncoding.Select(e => new OpenApiEncoding(e))) : null;
             Style = encoding?.Style ?? Style;
             Explode = encoding?._explode;
             AllowReserved = encoding?.AllowReserved ?? AllowReserved;
@@ -127,8 +139,44 @@ namespace Microsoft.OpenApi
             // headers
             writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, callback);
 
-            // encoding
-            writer.WriteOptionalMap(OpenApiConstants.Encoding, Encoding, callback);
+            // encoding - serialize as native field in v3.2+, as extension in earlier versions
+            if (Encoding != null)
+            {
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
+                {
+                    writer.WriteOptionalMap(OpenApiConstants.Encoding, Encoding, callback);
+                }
+                else
+                {
+                    writer.WriteOptionalMap(OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.Encoding, Encoding, callback);
+                }
+            }
+
+            // itemEncoding - serialize as native field in v3.2+, as extension in earlier versions
+            if (ItemEncoding != null)
+            {
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
+                {
+                    writer.WriteOptionalObject(OpenApiConstants.ItemEncoding, ItemEncoding, callback);
+                }
+                else
+                {
+                    writer.WriteOptionalObject(OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.ItemEncoding, ItemEncoding, callback);
+                }
+            }
+
+            // prefixEncoding - serialize as native field in v3.2+, as extension in earlier versions
+            if (PrefixEncoding != null)
+            {
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
+                {
+                    writer.WriteOptionalCollection(OpenApiConstants.PrefixEncoding, PrefixEncoding, callback);
+                }
+                else
+                {
+                    writer.WriteOptionalCollection(OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.PrefixEncoding, PrefixEncoding, callback);
+                }
+            }
 
             // style
             writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());

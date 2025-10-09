@@ -218,5 +218,112 @@ namespace Microsoft.OpenApi.Tests.Models
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public async Task SerializeEncodingWithItemAndPrefixEncodingAsV32JsonWorks()
+        {
+            // Arrange
+            var encoding = new OpenApiEncoding
+            {
+                ContentType = "application/json",
+                ItemEncoding = new OpenApiEncoding
+                {
+                    ContentType = "application/xml",
+                    Style = ParameterStyle.Form,
+                    Explode = true
+                },
+                PrefixEncoding = new List<OpenApiEncoding>
+                {
+                    new OpenApiEncoding
+                    {
+                        ContentType = "text/plain",
+                        Style = ParameterStyle.Simple
+                    },
+                    new OpenApiEncoding
+                    {
+                        ContentType = "application/octet-stream"
+                    }
+                }
+            };
+
+            var expected =
+                """
+                {
+                  "contentType": "application/json",
+                  "itemEncoding": {
+                    "contentType": "application/xml",
+                    "style": "form",
+                    "explode": true
+                  },
+                  "prefixEncoding": [
+                    {
+                      "contentType": "text/plain",
+                      "style": "simple"
+                    },
+                    {
+                      "contentType": "application/octet-stream"
+                    }
+                  ]
+                }
+                """;
+
+            // Act
+            var actual = await encoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task SerializeEncodingAsV31ShouldUseExtensionsForNewFields()
+        {
+            // Arrange
+            var encoding = new OpenApiEncoding
+            {
+                ContentType = "application/json",
+                Encoding = new Dictionary<string, OpenApiEncoding>
+                {
+                    ["nested"] = new OpenApiEncoding { ContentType = "text/plain" }
+                },
+                ItemEncoding = new OpenApiEncoding
+                {
+                    ContentType = "application/xml"
+                },
+                PrefixEncoding = new List<OpenApiEncoding>
+                {
+                    new OpenApiEncoding { ContentType = "text/csv" }
+                }
+            };
+
+            var expected =
+                """
+                {
+                  "contentType": "application/json",
+                  "x-oai-encoding": {
+                    "nested": {
+                      "contentType": "text/plain"
+                    }
+                  },
+                  "x-oai-itemEncoding": {
+                    "contentType": "application/xml"
+                  },
+                  "x-oai-prefixEncoding": [
+                    {
+                      "contentType": "text/csv"
+                    }
+                  ]
+                }
+                """;
+
+            // Act
+            var actual = await encoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
     }
 }

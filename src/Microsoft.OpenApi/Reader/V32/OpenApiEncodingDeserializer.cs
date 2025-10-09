@@ -29,6 +29,18 @@ namespace Microsoft.OpenApi.Reader.V32
                 }
             },
             {
+                "itemEncoding", (o, n, t) =>
+                {
+                    o.ItemEncoding = LoadEncoding(n, t);
+                }
+            },
+            {
+                "prefixEncoding", (o, n, t) =>
+                {
+                    o.PrefixEncoding = n.CreateList(LoadEncoding, t);
+                }
+            },
+            {
                 "style", (o, n, _) =>
                 {
                     if(!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(n.Context, out var style))
