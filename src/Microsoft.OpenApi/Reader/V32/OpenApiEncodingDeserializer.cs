@@ -23,6 +23,12 @@ namespace Microsoft.OpenApi.Reader.V32
                 }
             },
             {
+                "encoding", (o, n, t) =>
+                {
+                    o.Encoding = n.CreateMap(LoadEncoding, t);
+                }
+            },
+            {
                 "style", (o, n, _) =>
                 {
                     if(!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(n.Context, out var style))

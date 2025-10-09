@@ -679,6 +679,7 @@ namespace Microsoft.OpenApi
         public OpenApiEncoding(Microsoft.OpenApi.OpenApiEncoding encoding) { }
         public bool? AllowReserved { get; set; }
         public string? ContentType { get; set; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.OpenApiEncoding>? Encoding { get; set; }
         public bool? Explode { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiExtension>? Extensions { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.IOpenApiHeader>? Headers { get; set; }

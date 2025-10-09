@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.OpenApi
 {
@@ -26,6 +27,12 @@ namespace Microsoft.OpenApi
         /// A map allowing additional information to be provided as headers.
         /// </summary>
         public IDictionary<string, IOpenApiHeader>? Headers { get; set; }
+
+        /// <summary>
+        /// A map of property names to their encoding information.
+        /// The key is the property name and the value is the encoding object.
+        /// </summary>
+        public IDictionary<string, OpenApiEncoding>? Encoding { get; set; }
 
         /// <summary>
         /// Describes how a specific property value will be serialized depending on its type.
@@ -70,6 +77,7 @@ namespace Microsoft.OpenApi
         {
             ContentType = encoding?.ContentType ?? ContentType;
             Headers = encoding?.Headers != null ? new Dictionary<string, IOpenApiHeader>(encoding.Headers) : null;
+            Encoding = encoding?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(encoding.Encoding.ToDictionary(kvp => kvp.Key, kvp => new OpenApiEncoding(kvp.Value))) : null;
             Style = encoding?.Style ?? Style;
             Explode = encoding?._explode;
             AllowReserved = encoding?.AllowReserved ?? AllowReserved;
@@ -118,6 +126,9 @@ namespace Microsoft.OpenApi
 
             // headers
             writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, callback);
+
+            // encoding
+            writer.WriteOptionalMap(OpenApiConstants.Encoding, Encoding, callback);
 
             // style
             writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
