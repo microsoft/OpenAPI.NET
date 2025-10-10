@@ -1,0 +1,51 @@
+{
+  "openapi": "3.2.0",
+  "info": {
+    "description": "Groups API",
+    "title": "Groups",
+    "version": "1.0"
+  },
+  "paths": {
+    "/groups": {
+      "get": {
+        "operationId": "getGroups",
+        "parameters": [
+          {
+            "description": "Zero-based page index (0..N)",
+            "example": 0,
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PaginatedGroup" } } }
+          }
+        },
+        "tags": [ "" ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PaginatedGroup": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The number of the current page."
+          }
+        }
+      }
+    }
+  }
+}
+

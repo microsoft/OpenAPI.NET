@@ -161,6 +161,7 @@ namespace Microsoft.OpenApi
             WalkDictionary(OpenApiConstants.Links, components.Links, static (self, item, isComponent) => self.Walk(item), isComponent);
             WalkDictionary(OpenApiConstants.RequestBodies, components.RequestBodies, static (self, item, isComponent) => self.Walk(item), isComponent);
             WalkDictionary(OpenApiConstants.Responses, components.Responses, static (self, item, isComponent) => self.Walk(item), isComponent);
+            WalkDictionary(OpenApiConstants.MediaTypes, components.MediaTypes, static (self, item, isComponent) => self.Walk(item, isComponent), isComponent);
 
             Walk(components as IOpenApiExtensible);
         }
@@ -780,9 +781,9 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
-        /// Visits dictionary of <see cref="OpenApiMediaType"/>
+        /// Visits dictionary of <see cref="IOpenApiMediaType"/>
         /// </summary>
-        internal void Walk(IDictionary<string, OpenApiMediaType>? content)
+        internal void Walk(IDictionary<string, IOpenApiMediaType>? content)
         {
             if (content == null)
             {
@@ -799,15 +800,15 @@ namespace Microsoft.OpenApi
                 }
 
                 _visitor.CurrentKeys.Content = mediaType.Key;
-                WalkItem(mediaType.Key, mediaType.Value, static (self, item) => self.Walk(item));
+                WalkItem(mediaType.Key, mediaType.Value, static (self, item, isComponent) => self.Walk(item, isComponent), isComponent: false);
                 _visitor.CurrentKeys.Content = null;
             }
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiMediaType"/> and child objects
+        /// Visits <see cref="IOpenApiMediaType"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiMediaType mediaType)
+        internal void Walk(IOpenApiMediaType mediaType)
         {
             if (mediaType == null)
             {
@@ -829,6 +830,28 @@ namespace Microsoft.OpenApi
             }
 
             Walk(mediaType as IOpenApiExtensible);
+        }
+
+        /// <summary>
+        /// Visits <see cref="IOpenApiMediaType"/> and child objects
+        /// </summary>
+        internal void Walk(IOpenApiMediaType mediaType, bool isComponent = false)
+        {
+            if (mediaType == null)
+            {
+                return;
+            }
+
+            if (mediaType is IOpenApiReferenceHolder openApiReferenceHolder)
+            {
+                Walk(openApiReferenceHolder);
+                return;
+            }
+
+            if (mediaType is OpenApiMediaType openApiMediaType)
+            {
+                Walk((IOpenApiMediaType)openApiMediaType);
+            }
         }
 
         /// <summary>
@@ -1250,27 +1273,25 @@ namespace Microsoft.OpenApi
                 case IOpenApiCallback e: Walk(e); break;
                 case OpenApiEncoding e: Walk(e); break;
                 case IOpenApiExample e: Walk(e); break;
-                case Dictionary<string, IOpenApiExample> e: Walk(e); break;
                 case OpenApiExternalDocs e: Walk(e); break;
-                case OpenApiHeader e: Walk(e); break;
-                case OpenApiLink e: Walk(e); break;
-                case Dictionary<string, IOpenApiLink> e: Walk(e); break;
-                case OpenApiMediaType e: Walk(e); break;
+                case IOpenApiHeader e: Walk(e); break;
+                case IOpenApiLink e: Walk(e); break;
+                case IOpenApiMediaType e: Walk(e); break;
                 case OpenApiOAuthFlows e: Walk(e); break;
                 case OpenApiOAuthFlow e: Walk(e); break;
                 case OpenApiOperation e: Walk(e); break;
                 case IOpenApiParameter e: Walk(e); break;
                 case OpenApiPaths e: Walk(e); break;
+                case IOpenApiPathItem e: Walk(e); break;
                 case OpenApiRequestBody e: Walk(e); break;
-                case OpenApiResponse e: Walk(e); break;
-                case OpenApiSchema e: Walk(e); break;
+                case IOpenApiResponse e: Walk(e); break;
+                case IOpenApiSchema e: Walk(e); break;
                 case OpenApiDiscriminator e: Walk(e); break;
                 case OpenApiSecurityRequirement e: Walk(e); break;
-                case OpenApiSecurityScheme e: Walk(e); break;
+                case IOpenApiSecurityScheme e: Walk(e); break;
                 case OpenApiServer e: Walk(e); break;
                 case OpenApiServerVariable e: Walk(e); break;
                 case OpenApiTag e: Walk(e); break;
-                case HashSet<OpenApiTag> e: Walk(e); break;
                 case IOpenApiExtensible e: Walk(e); break;
                 case IOpenApiExtension e: Walk(e); break;
             }

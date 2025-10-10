@@ -1,0 +1,13 @@
+openapi: 3.2.0
+info:
+  title: Example of reference object in a component object
+  version: 1.0.0
+paths:
+  /item:
+    get:
+        security:
+            - customapikey: []
+components:
+  securitySchemes:
+    customapikey:
+        $ref: ./customApiKey.yaml#/components/securityschemes/customapikey

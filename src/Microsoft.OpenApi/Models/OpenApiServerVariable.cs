@@ -51,6 +51,14 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiServerVariable"/> to Open Api v3.2
+        /// </summary>
+        public void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_2);
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiServerVariable"/> to Open Api v3.1
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)

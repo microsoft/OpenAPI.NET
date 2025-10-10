@@ -59,6 +59,6 @@ public interface IOpenApiHeader : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// <summary>
     /// A map containing the representations for the header.
     /// </summary>
-    public IDictionary<string, OpenApiMediaType>? Content { get; }
+    public IDictionary<string, IOpenApiMediaType>? Content { get; }
 
 }

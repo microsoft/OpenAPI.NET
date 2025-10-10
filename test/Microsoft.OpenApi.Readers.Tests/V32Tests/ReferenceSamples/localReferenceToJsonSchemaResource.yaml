@@ -1,0 +1,23 @@
+openapi: 3.2.0
+info:
+  title: OpenAPI document containing examples for reuse
+  version: 1.0.0
+components:
+  schemas:
+    a:
+      type:
+        - object
+        - 'null'
+      properties:
+        b:
+          type:
+            - object
+            - 'null'
+          properties:
+            c:
+              type:
+                - object
+                - 'null'
+              properties:
+                b:
+                 $ref: '#/properties/b'

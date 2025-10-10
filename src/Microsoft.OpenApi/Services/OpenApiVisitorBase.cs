@@ -187,14 +187,14 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Visits media type content.
         /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiMediaType> content)
+        public virtual void Visit(IDictionary<string, IOpenApiMediaType> content)
         {
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiMediaType"/>
+        /// Visits <see cref="IOpenApiMediaType"/>
         /// </summary>
-        public virtual void Visit(OpenApiMediaType mediaType)
+        public virtual void Visit(IOpenApiMediaType mediaType)
         {
         }
 

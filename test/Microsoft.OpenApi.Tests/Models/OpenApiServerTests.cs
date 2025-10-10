@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -42,6 +43,13 @@ namespace Microsoft.OpenApi.Tests.Models
                     Default = "v1"
                 },
             }
+        };
+
+        public static OpenApiServer ServerWithName = new()
+        {
+            Name = "dev-server",
+            Description = "Development server",
+            Url = "https://dev.example.com"
         };
 
         [Fact]
@@ -101,6 +109,86 @@ namespace Microsoft.OpenApi.Tests.Models
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task SerializeServerWithNameAsV32JsonWorks()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "url": "https://dev.example.com",
+                  "name": "dev-server",
+                  "description": "Development server"
+                }
+                """;
+
+            // Act
+            var actual = await ServerWithName.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+
+            // Assert
+             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeServerWithNameAsV31JsonWorks()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "url": "https://dev.example.com",
+                  "description": "Development server",
+                  "x-oai-name": "dev-server"
+                }
+                """;
+
+            // Act
+            var actual = await ServerWithName.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeServerWithNameAsV3JsonWorks()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "url": "https://dev.example.com",
+                  "description": "Development server",
+                  "x-oai-name": "dev-server"
+                }
+                """;
+
+            // Act
+            var actual = await ServerWithName.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public void CopyConstructorHandlesNameField()
+        {
+            // Arrange
+            var original = new OpenApiServer
+            {
+                Name = "test-server",
+                Description = "Test description",
+                Url = "https://test.example.com"
+            };
+
+            // Act
+            var copy = new OpenApiServer(original);
+
+            // Assert
+            Assert.Equal(original.Name, copy.Name);
+            Assert.Equal(original.Description, copy.Description);
+            Assert.Equal(original.Url, copy.Url);
         }
     }
 }

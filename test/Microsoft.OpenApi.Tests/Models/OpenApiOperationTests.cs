@@ -40,9 +40,9 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Description = "description2",
                 Required = true,
-                Content = new Dictionary<string, OpenApiMediaType>()
+                Content = new Dictionary<string, IOpenApiMediaType>()
                 {
-                    ["application/json"] = new()
+                    ["application/json"] = new OpenApiMediaType()
                     {
                         Schema = new OpenApiSchema()
                         {
@@ -58,9 +58,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["200"] = new OpenApiResponseReference("response1"),
                 ["400"] = new OpenApiResponse()
                 {
-                    Content = new Dictionary<string, OpenApiMediaType>()
+                    Content = new Dictionary<string, IOpenApiMediaType>()
                     {
-                        ["application/json"] = new()
+                        ["application/json"] = new OpenApiMediaType()
                         {
                             Schema = new OpenApiSchema()
                             {
@@ -114,9 +114,9 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Description = "description2",
                 Required = true,
-                Content = new Dictionary<string, OpenApiMediaType>()
+                Content = new Dictionary<string, IOpenApiMediaType>()
                 {
-                    ["application/json"] = new()
+                    ["application/json"] = new OpenApiMediaType()
                     {
                         Schema = new OpenApiSchema()
                         {
@@ -132,9 +132,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["200"] = new OpenApiResponseReference("response1"),
                 ["400"] = new OpenApiResponse()
                 {
-                    Content = new Dictionary<string, OpenApiMediaType>()
+                    Content = new Dictionary<string, IOpenApiMediaType>()
                     {
-                        ["application/json"] = new()
+                        ["application/json"] = new OpenApiMediaType()
                         {
                             Schema = new OpenApiSchema()
                             {
@@ -218,9 +218,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 ],
                 RequestBody = new OpenApiRequestBody()
                 {
-                    Content = new Dictionary<string, OpenApiMediaType>()
+                    Content = new Dictionary<string, IOpenApiMediaType>()
                     {
-                        ["application/x-www-form-urlencoded"] = new()
+                        ["application/x-www-form-urlencoded"] = new OpenApiMediaType()
                         {
                             Schema = new OpenApiSchema()
                             {
@@ -243,7 +243,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 }
                             }
                         },
-                        ["multipart/form-data"] = new()
+                        ["multipart/form-data"] = new OpenApiMediaType()
                         {
                             Schema = new OpenApiSchema()
                             {

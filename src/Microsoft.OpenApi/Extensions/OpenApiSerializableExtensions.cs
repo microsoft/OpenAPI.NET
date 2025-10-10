@@ -111,6 +111,10 @@ namespace Microsoft.OpenApi
 
             switch (specVersion)
             {
+                case OpenApiSpecVersion.OpenApi3_2:
+                    element.SerializeAsV32(writer);
+                    break;
+
                 case OpenApiSpecVersion.OpenApi3_1:
                     element.SerializeAsV31(writer);
                     break;
