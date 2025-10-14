@@ -65,7 +65,7 @@ public class OpenApiSerializableExtensionsTests
 
         Assert.Equal("{\n  \"name\": \"param1\",\n  \"in\": \"query\",\n  \"description\": \"A sample parameter\",\n  \"schema\": {\n    \"type\": \"string\"\n  }\n}", output);
     }
-    
+
     [Fact]
     public async Task UsesTheTerseOutputInformationFromSettingsNoSettings()
     {
