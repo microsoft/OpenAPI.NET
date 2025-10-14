@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.5](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.4...v2.3.5) (2025-10-14)
+
+
+### Bug Fixes
+
+* use settings for terse output in serialization extension methods ([246039b](https://github.com/microsoft/OpenAPI.NET/commit/246039bfa8a16c042a10a87126289de82d18b321))
+* use settings for terse output in serialization extension methods ([8b91278](https://github.com/microsoft/OpenAPI.NET/commit/8b912788ef18b44a083d3fd2a1d6e25c9e6e17cb))
+
 ## [2.3.4](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.3...v2.3.4) (2025-10-06)
 
 
