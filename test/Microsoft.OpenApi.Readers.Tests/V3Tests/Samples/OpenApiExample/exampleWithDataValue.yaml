@@ -1,0 +1,4 @@
+summary: Example with dataValue (extension)
+x-oai-dataValue:
+  name: Alice Johnson
+  age: 28

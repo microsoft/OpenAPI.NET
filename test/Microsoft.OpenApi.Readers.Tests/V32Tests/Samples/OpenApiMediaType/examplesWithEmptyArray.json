@@ -1,0 +1,25 @@
+{
+  "schema": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "examples": {
+    "Success response - no results": {
+      "summary": "empty array summary",
+      "description": "empty array description",
+      "value": []
+    },
+    "Success response - with results": {
+      "summary": "array summary",
+      "description": "array description",
+      "value": [ 1 ]
+    }
+  }
+}

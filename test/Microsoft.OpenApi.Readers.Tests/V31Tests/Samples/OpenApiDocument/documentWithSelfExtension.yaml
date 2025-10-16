@@ -1,0 +1,12 @@
+openapi: 3.1.2
+info:
+  title: API with x-oai-$self extension
+  version: 1.0.0
+paths:
+  /test:
+    get:
+      summary: Test endpoint
+      responses:
+        '200':
+          description: Success
+x-oai-$self: https://example.org/api/openapi.yaml

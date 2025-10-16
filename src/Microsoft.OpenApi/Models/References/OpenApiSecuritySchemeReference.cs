@@ -61,6 +61,9 @@ namespace Microsoft.OpenApi
         public SecuritySchemeType? Type { get => Target?.Type; }
 
         /// <inheritdoc/>
+        public bool Deprecated { get => Target?.Deprecated ?? default; }
+
+        /// <inheritdoc/>
         public override IOpenApiSecurityScheme CopyReferenceAsTargetElementWithOverrides(IOpenApiSecurityScheme source)
         {
             return source is OpenApiSecurityScheme ? new OpenApiSecurityScheme(this) : source;

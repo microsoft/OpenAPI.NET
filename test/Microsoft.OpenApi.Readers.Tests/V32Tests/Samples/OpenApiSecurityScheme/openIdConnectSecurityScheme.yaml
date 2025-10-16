@@ -1,0 +1,3 @@
+﻿type: openIdConnect
+description: Sample Description
+openIdConnectUrl: http://www.example.com

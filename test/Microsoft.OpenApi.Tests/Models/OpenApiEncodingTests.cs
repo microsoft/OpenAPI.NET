@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -125,6 +127,198 @@ namespace Microsoft.OpenApi.Tests.Models
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(actual, expected);
+        }
+
+        [Fact]
+        public async Task SerializeEncodingWithNestedEncodingAsV32JsonWorks()
+        {
+            // Arrange
+            var encoding = new OpenApiEncoding
+            {
+                ContentType = "application/json",
+                Encoding = new Dictionary<string, OpenApiEncoding>
+                {
+                    ["nestedField"] = new OpenApiEncoding
+                    {
+                        ContentType = "application/xml",
+                        Style = ParameterStyle.Form,
+                        Explode = true
+                    },
+                    ["anotherField"] = new OpenApiEncoding
+                    {
+                        ContentType = "text/plain"
+                    }
+                }
+            };
+
+            var expected =
+                """
+                {
+                  "contentType": "application/json",
+                  "encoding": {
+                    "nestedField": {
+                      "contentType": "application/xml",
+                      "style": "form",
+                      "explode": true
+                    },
+                    "anotherField": {
+                      "contentType": "text/plain"
+                    }
+                  }
+                }
+                """;
+
+            // Act
+            var actual = await encoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+        }
+
+        [Fact]
+        public async Task SerializeEncodingWithNestedEncodingAsV32YamlWorks()
+        {
+            // Arrange
+            var encoding = new OpenApiEncoding
+            {
+                ContentType = "application/json",
+                Encoding = new Dictionary<string, OpenApiEncoding>
+                {
+                    ["nestedField"] = new OpenApiEncoding
+                    {
+                        ContentType = "application/xml",
+                        Style = ParameterStyle.Form,
+                        Explode = true
+                    },
+                    ["anotherField"] = new OpenApiEncoding
+                    {
+                        ContentType = "text/plain"
+                    }
+                }
+            };
+
+            var expected =
+                """
+                contentType: application/json
+                encoding:
+                  nestedField:
+                    contentType: application/xml
+                    style: form
+                    explode: true
+                  anotherField:
+                    contentType: text/plain
+                """;
+
+            // Act
+            var actual = await encoding.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_2);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(actual, expected);
+        }
+
+        [Fact]
+        public async Task SerializeEncodingWithItemAndPrefixEncodingAsV32JsonWorks()
+        {
+            // Arrange
+            var encoding = new OpenApiEncoding
+            {
+                ContentType = "application/json",
+                ItemEncoding = new OpenApiEncoding
+                {
+                    ContentType = "application/xml",
+                    Style = ParameterStyle.Form,
+                    Explode = true
+                },
+                PrefixEncoding = new List<OpenApiEncoding>
+                {
+                    new OpenApiEncoding
+                    {
+                        ContentType = "text/plain",
+                        Style = ParameterStyle.Simple
+                    },
+                    new OpenApiEncoding
+                    {
+                        ContentType = "application/octet-stream"
+                    }
+                }
+            };
+
+            var expected =
+                """
+                {
+                  "contentType": "application/json",
+                  "itemEncoding": {
+                    "contentType": "application/xml",
+                    "style": "form",
+                    "explode": true
+                  },
+                  "prefixEncoding": [
+                    {
+                      "contentType": "text/plain",
+                      "style": "simple"
+                    },
+                    {
+                      "contentType": "application/octet-stream"
+                    }
+                  ]
+                }
+                """;
+
+            // Act
+            var actual = await encoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+        }
+
+        [Fact]
+        public async Task SerializeEncodingAsV31ShouldUseExtensionsForNewFields()
+        {
+            // Arrange
+            var encoding = new OpenApiEncoding
+            {
+                ContentType = "application/json",
+                Encoding = new Dictionary<string, OpenApiEncoding>
+                {
+                    ["nested"] = new OpenApiEncoding { ContentType = "text/plain" }
+                },
+                ItemEncoding = new OpenApiEncoding
+                {
+                    ContentType = "application/xml"
+                },
+                PrefixEncoding = new List<OpenApiEncoding>
+                {
+                    new OpenApiEncoding { ContentType = "text/csv" }
+                }
+            };
+
+            var expected =
+                """
+                {
+                  "contentType": "application/json",
+                  "x-oai-encoding": {
+                    "nested": {
+                      "contentType": "text/plain"
+                    }
+                  },
+                  "x-oai-itemEncoding": {
+                    "contentType": "application/xml"
+                  },
+                  "x-oai-prefixEncoding": [
+                    {
+                      "contentType": "text/csv"
+                    }
+                  ]
+                }
+                """;
+
+            // Act
+            var actual = await encoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
     }
 }

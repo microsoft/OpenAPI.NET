@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -10,6 +11,7 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiXmlTests
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         public static OpenApiXml AdvancedXml = new()
         {
             Name = "animal",
@@ -22,8 +24,27 @@ namespace Microsoft.OpenApi.Tests.Models
                 {"x-xml-extension", new JsonNodeExtension(7)}
             }
         };
+#pragma warning restore CS0618 // Type or member is obsolete
 
         public static OpenApiXml BasicXml = new();
+
+        public static OpenApiXml XmlWithNodeType = new()
+        {
+            Name = "pet",
+            Namespace = new("http://example.com/schema"),
+            Prefix = "ex",
+            NodeType = OpenApiXmlNodeType.Element,
+            Extensions = new Dictionary<string, IOpenApiExtension>()
+            {
+                {"x-custom", new JsonNodeExtension("test")}
+            }
+        };
+
+        public static OpenApiXml XmlWithAttributeNodeType = new()
+        {
+            Name = "id",
+            NodeType = OpenApiXmlNodeType.Attribute
+        };
 
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Json)]
@@ -55,7 +76,6 @@ namespace Microsoft.OpenApi.Tests.Models
                   "namespace": "http://swagger.io/schema/sample",
                   "prefix": "sample",
                   "attribute": true,
-                  "wrapped": true,
                   "x-xml-extension": 7
                 }
                 """;
@@ -64,9 +84,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await AdvancedXml.SerializeAsJsonAsync(version);
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
 
         [Theory]
@@ -81,7 +99,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 namespace: http://swagger.io/schema/sample
                 prefix: sample
                 attribute: true
-                wrapped: true
                 x-xml-extension: 7
                 """;
 
@@ -92,6 +109,110 @@ namespace Microsoft.OpenApi.Tests.Models
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task SerializeXmlWithNodeTypeAsJsonV32Works()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "name": "pet",
+                  "namespace": "http://example.com/schema",
+                  "prefix": "ex",
+                  "nodeType": "element",
+                  "x-custom": "test"
+                }
+                """;
+
+            // Act
+            var actual = await XmlWithNodeType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+        }
+
+        [Fact]
+        public async Task SerializeXmlWithNodeTypeAsYamlV32Works()
+        {
+            // Arrange
+            var expected =
+                """
+                name: pet
+                namespace: http://example.com/schema
+                prefix: ex
+                nodeType: element
+                x-custom: test
+                """;
+
+            // Act
+            var actual = await XmlWithNodeType.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_2);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task SerializeXmlWithAttributeNodeTypeAsJsonV32Works()
+        {
+            // Arrange
+            var expected =
+                """
+                {
+                  "name": "id",
+                  "nodeType": "attribute"
+                }
+                """;
+
+            // Act
+            var actual = await XmlWithAttributeNodeType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+        }
+
+        [Fact]
+        public async Task SerializeXmlWithNodeTypeAsJsonV31DoesNotSerializeNodeType()
+        {
+            // Arrange - In v3.1, nodeType should not be serialized, instead attribute/wrapped should be
+            var expected =
+                """
+                {
+                  "name": "pet",
+                  "namespace": "http://example.com/schema",
+                  "prefix": "ex",
+                  "wrapped": true,
+                  "x-custom": "test"
+                }
+                """;
+
+            // Act
+            var actual = await XmlWithNodeType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
+        }
+
+        [Fact]
+        public async Task SerializeXmlWithAttributeNodeTypeAsJsonV31DoesNotSerializeNodeType()
+        {
+            // Arrange - In v3.1, nodeType should not be serialized, instead attribute/wrapped should be
+            var expected =
+                """
+                {
+                  "name": "id",
+                  "attribute": true
+                }
+                """;
+
+            // Act
+            var actual = await XmlWithAttributeNodeType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
         }
     }
 }

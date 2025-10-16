@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                             {
                                                 Name = "ids",
                                                 In = ParameterLocation.Query,
-                                                Content = new Dictionary<string, OpenApiMediaType>()
+                                                Content = new Dictionary<string, IOpenApiMediaType>()
                                                 {
                                                     {
                                                         "application/json",

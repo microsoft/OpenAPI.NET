@@ -1,0 +1,8 @@
+schema:
+  type: array
+prefixEncoding:
+  - contentType: application/json
+    style: simple
+  - contentType: text/plain
+    style: form
+    explode: false

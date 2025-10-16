@@ -34,6 +34,8 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly PatternFieldMap<OpenApiExample> _examplePatternFields =
             new()
             {
+                {s => s.Equals("x-oai-dataValue", StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.DataValue = n.CreateAny()},
+                {s => s.Equals("x-oai-serializedValue", StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.SerializedValue = n.GetScalarValue()},
                 {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
             };
 

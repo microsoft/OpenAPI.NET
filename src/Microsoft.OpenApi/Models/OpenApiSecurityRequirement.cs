@@ -27,6 +27,20 @@ namespace Microsoft.OpenApi
             : base(new OpenApiSecuritySchemeReferenceEqualityComparer())
         {
         }
+        /// <summary>
+        /// Serialize <see cref="OpenApiSecurityRequirement"/> to Open Api v3.2
+        /// </summary>
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, (w, s) =>
+            {
+                if (!string.IsNullOrEmpty(s.Reference.ReferenceV3) && s.Reference.ReferenceV3 is not null)
+                {
+                    w.WritePropertyName(s.Reference.ReferenceV3);
+                }
+            });
+        }
+
 
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityRequirement"/> to Open Api v3.1
@@ -35,7 +49,7 @@ namespace Microsoft.OpenApi
         {
             SerializeInternal(writer, (w, s) =>
             {
-                if(!string.IsNullOrEmpty(s.Reference.ReferenceV3) && s.Reference.ReferenceV3 is not null)
+                if (!string.IsNullOrEmpty(s.Reference.ReferenceV3) && s.Reference.ReferenceV3 is not null)
                 {
                     w.WritePropertyName(s.Reference.ReferenceV3);
                 }

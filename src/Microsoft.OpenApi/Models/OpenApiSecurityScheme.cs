@@ -36,6 +36,9 @@ namespace Microsoft.OpenApi
         public Uri? OpenIdConnectUrl { get; set; }
 
         /// <inheritdoc/>
+        public bool Deprecated { get; set; }
+
+        /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
         /// <summary>
@@ -57,7 +60,15 @@ namespace Microsoft.OpenApi
             BearerFormat = securityScheme.BearerFormat ?? BearerFormat;
             Flows = securityScheme.Flows != null ? new(securityScheme.Flows) : null;
             OpenIdConnectUrl = securityScheme.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
+            Deprecated = securityScheme.Deprecated;
             Extensions = securityScheme.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
+        }
+        /// <summary>
+        /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v3.2
+        /// </summary>
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_2, (writer, element) => element.SerializeAsV32(writer));
         }
 
         /// <summary>
@@ -115,6 +126,19 @@ namespace Microsoft.OpenApi
                     // openIdConnectUrl
                     writer.WriteProperty(OpenApiConstants.OpenIdConnectUrl, OpenIdConnectUrl?.ToString());
                     break;
+            }
+
+            // deprecated - serialize as native field for v3.2+ or as extension for earlier versions
+            if (Deprecated)
+            {
+                if (version >= OpenApiSpecVersion.OpenApi3_2)
+                {
+                    writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
+                }
+                else
+                {
+                    writer.WriteProperty("x-oai-deprecated", Deprecated, false);
+                }
             }
 
             // extensions

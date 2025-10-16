@@ -51,6 +51,11 @@ namespace Microsoft.OpenApi
             Server = link.Server != null ? new(link.Server) : null;
             Extensions = link.Extensions != null ? new Dictionary<string, IOpenApiExtension>(link.Extensions) : null;
         }
+        /// <inheritdoc/>
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV32(writer));
+        }
 
         /// <inheritdoc/>
         public virtual void SerializeAsV31(IOpenApiWriter writer)

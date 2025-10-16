@@ -41,6 +41,11 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Provides a simple way of rendering nested objects using form parameters.
         /// </summary>
-        [Display("deepObject")] DeepObject
+        [Display("deepObject")] DeepObject,
+
+        /// <summary>
+        /// Cookie style parameters. Introduced in OpenAPI 3.2.
+        /// </summary>
+        [Display("cookie")] Cookie
     }
 }

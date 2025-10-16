@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public bool Explode
         {
-            get => _explode ?? Style == ParameterStyle.Form;
+            get => _explode ?? (Style is ParameterStyle.Form or ParameterStyle.Cookie);
             set => _explode = value;
         }
 
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi
         public JsonNode? Example { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; }
+        public IDictionary<string, IOpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
@@ -87,10 +87,16 @@ namespace Microsoft.OpenApi
             Schema = parameter.Schema?.CreateShallowCopy();
             Examples = parameter.Examples != null ? new Dictionary<string, IOpenApiExample>(parameter.Examples) : null;
             Example = parameter.Example != null ? JsonNodeCloneHelper.Clone(parameter.Example) : null;
-            Content = parameter.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
+            Content = parameter.Content != null ? new Dictionary<string, IOpenApiMediaType>(parameter.Content) : null;
             Extensions = parameter.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
             AllowEmptyValue = parameter.AllowEmptyValue;
             Deprecated = parameter.Deprecated;
+        }
+
+        /// <inheritdoc/>
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_2, (writer, element) => element.SerializeAsV32(writer));
         }
 
         /// <inheritdoc/>
@@ -109,6 +115,26 @@ namespace Microsoft.OpenApi
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);
+            
+            // Validate that Cookie style is only used in OpenAPI 3.2 and later
+            if (Style == ParameterStyle.Cookie && version < OpenApiSpecVersion.OpenApi3_2)
+            {
+                throw new OpenApiException($"Parameter style 'cookie' is only supported in OpenAPI 3.2 and later versions. Current version: {version}");
+            }
+
+            // Check for querystring restrictions
+            if (In == ParameterLocation.QueryString)
+            {
+                if (version < OpenApiSpecVersion.OpenApi3_2)
+                {
+                    throw new InvalidOperationException("Parameter location 'querystring' is only supported in OpenAPI 3.2.0 and above.");
+                }
+                // Only throw if forbidden properties are explicitly set (not just default values)
+                if ((_style.HasValue) || (_explode.HasValue && _explode.Value) || AllowReserved || Schema != null)
+                {
+                    throw new InvalidOperationException("When 'in' is 'querystring', 'style', 'explode', 'allowReserved', and 'schema' properties MUST NOT be used as per OpenAPI 3.2 specification.");
+                }
+            }
 
             writer.WriteStartObject();
 
@@ -137,7 +163,7 @@ namespace Microsoft.OpenApi
             }
 
             // explode
-            writer.WriteProperty(OpenApiConstants.Explode, _explode, Style is ParameterStyle.Form);
+            writer.WriteProperty(OpenApiConstants.Explode, _explode, Style is ParameterStyle.Form or ParameterStyle.Cookie);
 
             // allowReserved
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
@@ -245,6 +271,18 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
+            
+            // Validate that Cookie style is only used in OpenAPI 3.2 and later
+            if (Style == ParameterStyle.Cookie)
+            {
+                throw new OpenApiException($"Parameter style 'cookie' is only supported in OpenAPI 3.2 and later versions. Current version: {OpenApiSpecVersion.OpenApi2_0}");
+            }
+
+            // Throw if 'querystring' is used in V2
+            if (In == ParameterLocation.QueryString)
+            {
+                throw new InvalidOperationException("Parameter location 'querystring' is not supported in OpenAPI 2.0.");
+            }
 
             writer.WriteStartObject();
 

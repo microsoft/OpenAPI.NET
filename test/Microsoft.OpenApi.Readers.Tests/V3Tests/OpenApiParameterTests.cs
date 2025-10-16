@@ -107,9 +107,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     In = ParameterLocation.Query,
                     Name = "coordinates",
-                    Content = new Dictionary<string, OpenApiMediaType>()
+                    Content = new Dictionary<string, IOpenApiMediaType>()
                     {
-                        ["application/json"] = new()
+                        ["application/json"] = new OpenApiMediaType()
                         {
                            Schema = new OpenApiSchema()
                            {

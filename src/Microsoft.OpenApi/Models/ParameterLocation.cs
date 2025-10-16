@@ -27,6 +27,11 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Used to pass a specific cookie value to the API.
         /// </summary>
-        [Display("cookie")] Cookie
+        [Display("cookie")] Cookie,
+
+        /// <summary>
+        /// Parameters that are appended to the URL query string (OpenAPI 3.2+ only).
+        /// </summary>
+        [Display("querystring")] QueryString
     }
 }

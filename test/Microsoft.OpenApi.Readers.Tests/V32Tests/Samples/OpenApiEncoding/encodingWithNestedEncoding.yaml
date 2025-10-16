@@ -1,0 +1,14 @@
+# https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.2.0.md#encodingObject
+contentType: application/json
+headers:
+  X-Rate-Limit-Limit:
+    description: The number of allowed requests in the current period
+    schema:
+      type: integer
+encoding:
+  nestedField:
+    contentType: application/xml
+    style: form
+    explode: true
+  anotherField:
+    contentType: text/plain

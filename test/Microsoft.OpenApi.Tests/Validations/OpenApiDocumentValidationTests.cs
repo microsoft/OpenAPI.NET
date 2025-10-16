@@ -47,7 +47,7 @@ public static class OpenApiDocumentValidationTests
                         ["200"] = new OpenApiResponse
                         {
                             Description = "OK",
-                            Content = new Dictionary<string, OpenApiMediaType>()
+                            Content = new Dictionary<string, IOpenApiMediaType>()
                             {
                                 ["application/json"] = new OpenApiMediaType
                                 {
@@ -107,7 +107,7 @@ public static class OpenApiDocumentValidationTests
                         ["200"] = new OpenApiResponse
                         {
                             Description = "OK",
-                            Content = new Dictionary<string, OpenApiMediaType>()
+                            Content = new Dictionary<string, IOpenApiMediaType>()
                             {
                                 ["application/json"] = new OpenApiMediaType
                                 {
@@ -168,7 +168,7 @@ public static class OpenApiDocumentValidationTests
                         ["200"] = new OpenApiResponse
                         {
                             Description = "OK",
-                            Content = new Dictionary<string, OpenApiMediaType>()
+                            Content = new Dictionary<string, IOpenApiMediaType>()
                             {
                                 ["application/json"] = new OpenApiMediaType
                                 {
