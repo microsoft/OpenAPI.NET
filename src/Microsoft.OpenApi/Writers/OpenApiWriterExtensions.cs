@@ -141,9 +141,9 @@ namespace Microsoft.OpenApi
         {
             if (value != null)
             {
-                if (value is IEnumerable values && !values.GetEnumerator().MoveNext())
+                if (value is IEnumerable values && value is not JsonArray && !values.GetEnumerator().MoveNext())
                 {
-                    return; // Don't render optional empty collections
+                    return; // Don't render optional empty collections except for the Default properties which are JsonArray
                 }
 
                 writer.WriteRequiredObject(name, value, action);
