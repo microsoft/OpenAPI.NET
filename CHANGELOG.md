@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.6](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.5...v2.3.6) (2025-10-20)
+
+
+### Bug Fixes
+
+* a bug where empty collections would not be serialized for default values ([4c4d257](https://github.com/microsoft/OpenAPI.NET/commit/4c4d257c0cf10d1742fae9f3961e4a6242c0ce1d))
+
 ## [2.3.5](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.4...v2.3.5) (2025-10-14)
 
 
