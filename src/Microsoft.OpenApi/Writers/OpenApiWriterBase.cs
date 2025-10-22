@@ -55,10 +55,7 @@ namespace Microsoft.OpenApi
             Writer.NewLine = "\n";
 
             Scopes = new();
-            if (settings == null)
-            {
-                settings = new();
-            }
+            settings ??= new();
             Settings = settings;
         }
 

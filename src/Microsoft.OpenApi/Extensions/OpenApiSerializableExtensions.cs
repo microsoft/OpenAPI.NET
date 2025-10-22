@@ -88,7 +88,8 @@ namespace Microsoft.OpenApi
 
             IOpenApiWriter writer = format.ToLowerInvariant() switch
             {
-                OpenApiConstants.Json => new OpenApiJsonWriter(streamWriter, settings, false),
+                OpenApiConstants.Json when settings is OpenApiJsonWriterSettings jsonSettings => new OpenApiJsonWriter(streamWriter, jsonSettings),
+                OpenApiConstants.Json => new OpenApiJsonWriter(streamWriter, settings),
                 OpenApiConstants.Yaml => new OpenApiYamlWriter(streamWriter, settings),
                 _ => throw new OpenApiException(string.Format(SRResource.OpenApiFormatNotSupported, format)),
             };

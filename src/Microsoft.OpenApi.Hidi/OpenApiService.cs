@@ -192,16 +192,17 @@ namespace Microsoft.OpenApi.Hidi
                 using var outputStream = options.Output.Create();
                 using var textWriter = new StreamWriter(outputStream);
 
-                var settings = new OpenApiWriterSettings
+                var settings = new OpenApiJsonWriterSettings
                 {
                     InlineLocalReferences = options.InlineLocal,
-                    InlineExternalReferences = options.InlineExternal
+                    InlineExternalReferences = options.InlineExternal,
+                    Terse = options.TerseOutput
                 };
 #pragma warning disable CA1308
                 IOpenApiWriter writer = openApiFormat.ToLowerInvariant() switch
 #pragma warning restore CA1308
                 {
-                    OpenApiConstants.Json => options.TerseOutput ? new(textWriter, settings, options.TerseOutput) : new OpenApiJsonWriter(textWriter, settings, false),
+                    OpenApiConstants.Json => new OpenApiJsonWriter(textWriter, settings),
                     OpenApiConstants.Yaml => new OpenApiYamlWriter(textWriter, settings),
                     _ => throw new ArgumentException("Unknown format"),
                 };

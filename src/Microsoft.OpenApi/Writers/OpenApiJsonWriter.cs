@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
+using System.ComponentModel;
 using System.IO;
 
 namespace Microsoft.OpenApi
@@ -14,7 +16,17 @@ namespace Microsoft.OpenApi
         /// Initializes a new instance of the <see cref="OpenApiJsonWriter"/> class.
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
-        public OpenApiJsonWriter(TextWriter textWriter) : base(textWriter, null)
+        public OpenApiJsonWriter(TextWriter textWriter) : this(textWriter, (OpenApiWriterSettings?)null)
+        {
+			// this constructor is kept for binary compatibility
+            // TODO remove in next major version and make the settings an optional parameter in the other constructor
+		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OpenApiJsonWriter"/> class.
+        /// </summary>
+        /// <param name="settings">Settings for controlling how the OpenAPI document will be written out.</param>
+        /// <param name="textWriter">The text writer.</param>
+        public OpenApiJsonWriter(TextWriter textWriter, OpenApiWriterSettings? settings) : base(textWriter, settings ?? new OpenApiJsonWriterSettings())
         {
         }
 
@@ -34,9 +46,13 @@ namespace Microsoft.OpenApi
         /// <param name="textWriter">The text writer.</param>
         /// <param name="settings">Settings for controlling how the OpenAPI document will be written out.</param>
         /// <param name="terseOutput"> Setting for allowing the JSON emitted to be in terse format.</param>
-        public OpenApiJsonWriter(TextWriter textWriter, OpenApiWriterSettings? settings, bool terseOutput = false) : base(textWriter, settings)
+        [Obsolete("Use OpenApiJsonWriter(TextWriter textWriter, OpenApiJsonWriterSettings settings) instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public OpenApiJsonWriter(TextWriter textWriter, OpenApiWriterSettings? settings, bool terseOutput) : base(textWriter, settings)
         {
             _produceTerseOutput = terseOutput;
+            // this constructor is kept for binary compatibility, terse information should be read from the settings to avoid fork APIs.
+            // TODO remove in next major version
         }
 
         /// <summary>

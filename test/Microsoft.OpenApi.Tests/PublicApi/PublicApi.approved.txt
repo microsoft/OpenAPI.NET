@@ -848,7 +848,10 @@ namespace Microsoft.OpenApi
     {
         public OpenApiJsonWriter(System.IO.TextWriter textWriter) { }
         public OpenApiJsonWriter(System.IO.TextWriter textWriter, Microsoft.OpenApi.OpenApiJsonWriterSettings settings) { }
-        public OpenApiJsonWriter(System.IO.TextWriter textWriter, Microsoft.OpenApi.OpenApiWriterSettings? settings, bool terseOutput = false) { }
+        public OpenApiJsonWriter(System.IO.TextWriter textWriter, Microsoft.OpenApi.OpenApiWriterSettings? settings) { }
+        [System.Obsolete("Use OpenApiJsonWriter(TextWriter textWriter, OpenApiJsonWriterSettings settings) " +
+            "instead.")]
+        public OpenApiJsonWriter(System.IO.TextWriter textWriter, Microsoft.OpenApi.OpenApiWriterSettings? settings, bool terseOutput) { }
         protected override int BaseIndentation { get; }
         public override void WriteEndArray() { }
         public override void WriteEndObject() { }
