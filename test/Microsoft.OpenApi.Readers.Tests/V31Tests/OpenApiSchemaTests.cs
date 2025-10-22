@@ -350,6 +350,68 @@ examples:
         }
 
         [Fact]
+        public void DefaultNullIsLossyDuringRoundTripJson()
+        {
+            // Given
+            var serializedSchema =
+            """
+            {
+                "type": ["string", "null"],
+                "default": null
+            }
+            """;
+            using var textWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(textWriter);
+
+            // When
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(serializedSchema, OpenApiSpecVersion.OpenApi3_1, new(), out _, "json", SettingsFixture.ReaderSettings);
+
+            Assert.Null(schema.Default);
+
+            schema.SerializeAsV31(writer);
+            var roundTrippedSchema = textWriter.ToString();
+
+            // Then
+            var parsedResult = JsonNode.Parse(roundTrippedSchema);
+            var parsedExpected = JsonNode.Parse(serializedSchema);
+            Assert.False(JsonNode.DeepEquals(parsedExpected, parsedResult));
+            var resultingDefault = parsedResult["default"];
+            Assert.Null(resultingDefault);
+        }
+
+        [Fact]
+        public void DefaultNullIsLossyDuringRoundTripYaml()
+        {
+            // Given
+            var serializedSchema =
+            """
+            type:
+              - string
+              - 'null'
+            default: null
+            """;
+            using var textWriter = new StringWriter();
+            var writer = new OpenApiYamlWriter(textWriter);
+
+            // When
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(serializedSchema, OpenApiSpecVersion.OpenApi3_1, new(), out _, "yaml", SettingsFixture.ReaderSettings);
+
+            Assert.Null(schema.Default);
+
+            schema.SerializeAsV31(writer);
+            var roundTrippedSchema = textWriter.ToString();
+
+            // Then
+            Assert.Equal(
+            """
+            type:
+              - 'null'
+              - string
+            """.MakeLineBreaksEnvironmentNeutral(),
+            roundTrippedSchema.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
         public async Task SerializeV31SchemaWithMultipleTypesAsV3Works()
         {
             // Arrange
