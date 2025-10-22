@@ -316,6 +316,40 @@ examples:
         }
 
         [Fact]
+        public void DefaultEmptyCollectionShouldRoundTrip()
+        {
+            // Given
+            var serializedSchema =
+            """
+            {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "default": []
+                }
+            }
+            """;
+            using var textWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(textWriter);
+
+            // When
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(serializedSchema, OpenApiSpecVersion.OpenApi3_1, new(), out _, "json", SettingsFixture.ReaderSettings);
+
+            var deserializedArray = Assert.IsType<JsonArray>(schema.Items.Default);
+            Assert.Empty(deserializedArray);
+
+            schema.SerializeAsV31(writer);
+            var roundTrippedSchema = textWriter.ToString();
+
+            // Then
+            var parsedResult = JsonNode.Parse(roundTrippedSchema);
+            var parsedExpected = JsonNode.Parse(serializedSchema);
+            Assert.True(JsonNode.DeepEquals(parsedExpected, parsedResult));
+            var resultingArray = Assert.IsType<JsonArray>(parsedResult["items"]?["default"]);
+            Assert.Empty(resultingArray);
+        }
+
+        [Fact]
         public async Task SerializeV31SchemaWithMultipleTypesAsV3Works()
         {
             // Arrange
