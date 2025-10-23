@@ -37,6 +37,19 @@ namespace Microsoft.OpenApi.Reader
             _nodes = _node.Select(p => GetPropertyNodeFromJsonNode(p.Key, p.Value)).ToList();
         }
 
+        public PropertyNode? this[string key]
+        {
+            get
+            {
+                if (_node.TryGetPropertyValue(key, out var value))
+				{
+					return GetPropertyNodeFromJsonNode(key, value);
+				}
+
+                return null;
+            }
+        }
+
         public override Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument)
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
