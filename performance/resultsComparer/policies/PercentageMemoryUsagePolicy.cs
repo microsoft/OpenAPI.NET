@@ -60,7 +60,7 @@ internal abstract class PercentageMemoryUsagePolicy(float tolerancePercentagePoi
     }
     private static double GetRatio(BenchmarkMemory x, BenchmarkMemory y)
     {
-        return (double)(x.AllocatedBytes - y.AllocatedBytes) / x.AllocatedBytes;
+        return (double)(y.AllocatedBytes - x.AllocatedBytes) / x.AllocatedBytes;
     }
     public override string GetErrorMessage(BenchmarkMemory? x, BenchmarkMemory? y)
     {
