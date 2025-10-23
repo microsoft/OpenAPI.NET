@@ -194,6 +194,39 @@ public class YamlConverterTests
         Assert.DoesNotContain("'fooStringValue'", yamlOutput);
     }
 
+    [Fact]
+    public void ToYamlNode_StringWithLineBreaks_PreservesLineBreaks()
+    {
+        // Arrange
+        var json = JsonNode.Parse(@"{
+            ""multiline"": ""Line 1\nLine 2\nLine 3"",
+            ""description"": ""This is a description\nwith line breaks\nin it""
+        }");
+
+        // Act
+        var yamlNode = json!.ToYamlNode();
+        var yamlOutput = ConvertYamlNodeToString(yamlNode);
+
+        // Convert back to JSON to verify round-tripping
+        var yamlStream = new YamlStream();
+        using (var sr = new System.IO.StringReader(yamlOutput))
+        {
+            yamlStream.Load(sr);
+        }
+        var jsonBack = yamlStream.Documents[0].ToJsonNode();
+
+        // Assert - line breaks should be preserved during round-trip
+        var originalMultiline = json["multiline"]?.GetValue<string>();
+        var roundTripMultiline = jsonBack?["multiline"]?.GetValue<string>();
+        Assert.Equal(originalMultiline, roundTripMultiline);
+        Assert.Contains("\n", roundTripMultiline);
+
+        var originalDescription = json["description"]?.GetValue<string>();
+        var roundTripDescription = jsonBack?["description"]?.GetValue<string>();
+        Assert.Equal(originalDescription, roundTripDescription);
+        Assert.Contains("\n", roundTripDescription);
+    }
+
     private static string ConvertYamlNodeToString(YamlNode yamlNode)
     {
         using var ms = new MemoryStream();
