@@ -20,10 +20,10 @@ public static class JsonNullSentinel
     /// This can only be used for OpenAPI properties of type <see cref="JsonNode"/>.
     /// This can only be used for the root level of a JSON structure.
     /// Any use outside of these constraints is unsupported and may lead to unexpected behavior.
-    /// Because this is returning a cloned instance, so the value can be added in a tree, reference equality checks will not work.
+    /// Because the value might be cloned, so the value can be added in a tree, reference equality checks will not work.
     /// You must use the <see cref="IsJsonNullSentinel(JsonNode?)"/> method to check for this sentinel.
 	/// </summary>
-    public static JsonValue JsonNull => (JsonValue)SentinelJsonValue.DeepClone();
+    public static JsonValue JsonNull => SentinelJsonValue;
 
     /// <summary>
     /// Determines if the given node is the JSON null sentinel.
@@ -32,7 +32,8 @@ public static class JsonNullSentinel
     /// <returns>Whether or not the given node is the JSON null sentinel.</returns>
     public static bool IsJsonNullSentinel(this JsonNode? node)
     {
-        return node is JsonValue jsonValue &&
+        return node == SentinelJsonValue ||
+                node is JsonValue jsonValue &&
                 jsonValue.GetValueKind() == JsonValueKind.String &&
                 jsonValue.TryGetValue<string>(out var value) &&
                 SentinelValue.Equals(value, StringComparison.Ordinal);

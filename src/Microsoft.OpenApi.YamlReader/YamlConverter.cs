@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.YamlReader
             {
                 ScalarStyle.Plain when decimal.TryParse(yaml.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var d) => JsonValue.Create(d),
                 ScalarStyle.Plain when bool.TryParse(yaml.Value, out var b) => JsonValue.Create(b),
-                ScalarStyle.Plain when YamlNullRepresentations.Contains(yaml.Value) => JsonNullSentinel.JsonNull,
+                ScalarStyle.Plain when YamlNullRepresentations.Contains(yaml.Value) => (JsonValue)JsonNullSentinel.JsonNull.DeepClone(),
                 ScalarStyle.Plain => JsonValue.Create(yaml.Value),
                 ScalarStyle.SingleQuoted or ScalarStyle.DoubleQuoted or ScalarStyle.Literal or ScalarStyle.Folded or ScalarStyle.Any => JsonValue.Create(yaml.Value),
                 _ => throw new ArgumentOutOfRangeException(nameof(yaml)),
