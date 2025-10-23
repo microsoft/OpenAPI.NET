@@ -39,10 +39,9 @@ namespace Microsoft.OpenApi.Reader
             {
                 if (_node.TryGetPropertyValue(key, out var node))
                 {
-                    if (node is not null)
-                        return new(Context, key, node);
-                    else
-                        return new(Context, key, JsonNullSentinel.JsonNull);
+                    return node is not null
+                        ? new(Context, key, node)
+                        : new(Context, key, JsonNullSentinel.JsonNull);
                 }
 
                 return null;
