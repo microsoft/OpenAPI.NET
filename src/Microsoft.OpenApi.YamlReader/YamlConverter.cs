@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using SharpYaml;
 using SharpYaml.Serialization;
@@ -133,7 +134,31 @@ namespace Microsoft.OpenApi.YamlReader
 
         private static YamlScalarNode ToYamlScalar(this JsonValue val)
         {
-            return new YamlScalarNode(val.ToJsonString());
+            // Try to get the underlying value based on its actual type
+            // First try to get it as a string
+            if (val.GetValueKind() == JsonValueKind.String &&
+                val.TryGetValue(out string? stringValue))
+            {
+                // For string values, we need to determine if they should be quoted in YAML
+                // Strings that look like numbers, booleans, or null need to be quoted
+                // to preserve their string type when round-tripping
+                var needsQuoting = decimal.TryParse(stringValue, NumberStyles.Float, CultureInfo.InvariantCulture, out _) ||
+                                   bool.TryParse(stringValue, out _) ||
+                                   YamlNullRepresentations.Contains(stringValue);
+                
+                return new YamlScalarNode(stringValue)
+                {
+                    Style = needsQuoting ? ScalarStyle.DoubleQuoted : ScalarStyle.Plain
+                };
+            }
+            
+            // For non-string values (numbers, booleans, null), use their string representation
+            // These should remain unquoted in YAML
+            var valueString = val.ToString();
+            return new YamlScalarNode(valueString)
+            {
+                Style = ScalarStyle.Plain
+            };
         }
     }
 }
