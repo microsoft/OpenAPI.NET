@@ -56,11 +56,11 @@ internal abstract class PercentageMemoryUsagePolicy(float tolerancePercentagePoi
     }
     private static double GetPercentageDifference(BenchmarkMemory x, BenchmarkMemory y)
     {
-        return Math.Truncate(Math.Abs(GetAbsoluteRatio(x, y)) * 10000) / 100;
+        return Math.Truncate(Math.Abs(GetRatio(x, y)) * 10000) / 100;
     }
-    private static double GetAbsoluteRatio(BenchmarkMemory x, BenchmarkMemory y)
+    private static double GetRatio(BenchmarkMemory x, BenchmarkMemory y)
     {
-        return Math.Abs(((double)(x.AllocatedBytes - y.AllocatedBytes))/x.AllocatedBytes);
+        return (double)(x.AllocatedBytes - y.AllocatedBytes) / x.AllocatedBytes;
     }
     public override string GetErrorMessage(BenchmarkMemory? x, BenchmarkMemory? y)
     {
@@ -68,6 +68,6 @@ internal abstract class PercentageMemoryUsagePolicy(float tolerancePercentagePoi
         {
             return "One of the benchmarks is null.";
         }
-        return $"Allocated bytes differ: {x.AllocatedBytes} != {y.AllocatedBytes}, Ratio: {GetAbsoluteRatio(x, y)}, Allowed: {TolerancePercentagePoints}%";
+        return $"Allocated bytes differ: {x.AllocatedBytes} != {y.AllocatedBytes}, Ratio: {GetRatio(x, y)}, Allowed: {TolerancePercentagePoints}%";
     }
 }
