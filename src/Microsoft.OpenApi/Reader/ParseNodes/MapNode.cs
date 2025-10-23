@@ -21,9 +21,7 @@ namespace Microsoft.OpenApi.Reader
 
         private PropertyNode GetPropertyNodeFromJsonNode(string key, JsonNode? node)
 		{
-            return node is null ?
-                new PropertyNode(Context, key, JsonNullSentinel.JsonNull) :
-                new PropertyNode(Context, key, node);
+            return new PropertyNode(Context, key, node ?? JsonNullSentinel.JsonNull);
 		}
 
         public MapNode(ParsingContext context, JsonNode node) : base(
