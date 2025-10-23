@@ -209,10 +209,8 @@ public class YamlConverterTests
 
         // Convert back to JSON to verify round-tripping
         var yamlStream = new YamlStream();
-        using (var sr = new System.IO.StringReader(yamlOutput))
-        {
-            yamlStream.Load(sr);
-        }
+        using var sr = new StringReader(yamlOutput);
+        yamlStream.Load(sr);
         var jsonBack = yamlStream.Documents[0].ToJsonNode();
 
         // Assert - line breaks should be preserved during round-trip
