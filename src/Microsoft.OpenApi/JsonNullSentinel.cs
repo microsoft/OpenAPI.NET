@@ -33,9 +33,9 @@ public static class JsonNullSentinel
     public static bool IsJsonNullSentinel(this JsonNode? node)
     {
         return node == SentinelJsonValue ||
-                node is JsonValue jsonValue &&
-                jsonValue.GetValueKind() == JsonValueKind.String &&
-                jsonValue.TryGetValue<string>(out var value) &&
-                SentinelValue.Equals(value, StringComparison.Ordinal);
+                node is not null &&
+                node.GetValueKind() == JsonValueKind.String &&
+                // using deep equals here results in fewer allocations than TryGetValue
+                JsonNode.DeepEquals(SentinelJsonValue, node);
     }
 }
