@@ -18,7 +18,19 @@ namespace Microsoft.OpenApi.Reader
     internal class MapNode : ParseNode, IEnumerable<PropertyNode>
     {
         private readonly JsonObject _node;
-        private readonly List<PropertyNode> _nodes;
+        private Dictionary<string, PropertyNode>? _nodes;
+
+        private void EnsureNodesIsInitialized()
+		{
+			if (_nodes is null)
+			{
+                _nodes = _node.Where(p => p.Value is not null).OfType<KeyValuePair<string, JsonNode>>().ToDictionary(p => p.Key, p => new PropertyNode(Context, p.Key, p.Value), StringComparer.Ordinal);
+                if (_node.Where(p => p.Value is null).ToArray() is { Length: > 0 } nullNodes)
+				{
+					_nodes.AddRange(nullNodes.Select(p => new KeyValuePair<string, PropertyNode>(p.Key, new PropertyNode(Context, p.Key, JsonNullSentinel.JsonNull))));
+				}
+			}
+		}
 
         public MapNode(ParsingContext context, JsonNode node) : base(
             context, node)
@@ -29,19 +41,19 @@ namespace Microsoft.OpenApi.Reader
             }
 
             _node = mapNode;
-            _nodes = _node.Where(p => p.Value is not null).OfType<KeyValuePair<string, JsonNode>>().Select(p => new PropertyNode(Context, p.Key, p.Value)).ToList();
-            _nodes.AddRange(_node.Where(p => p.Value is null).Select(p => new PropertyNode(Context, p.Key, JsonNullSentinel.JsonNull)));
         }
 
         public PropertyNode? this[string key]
         {
             get
             {
-                if (_node.TryGetPropertyValue(key, out var node))
+                if (_node.ContainsKey(key))
                 {
-                    return node is not null
-                        ? new(Context, key, node)
-                        : new(Context, key, JsonNullSentinel.JsonNull);
+                    EnsureNodesIsInitialized();
+                    if (_nodes!.TryGetValue(key, out var propertyNode))
+                    {
+                        return propertyNode;
+                    }
                 }
 
                 return null;
@@ -132,12 +144,13 @@ namespace Microsoft.OpenApi.Reader
 
         public IEnumerator<PropertyNode> GetEnumerator()
         {
-            return _nodes.GetEnumerator();
+            EnsureNodesIsInitialized();
+            return _nodes!.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _nodes.GetEnumerator();
+            return GetEnumerator();
         }
 
         public override string GetRaw()
