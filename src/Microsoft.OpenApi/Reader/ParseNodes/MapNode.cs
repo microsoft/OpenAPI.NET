@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Reader
             return new PropertyNode(Context, key, node ?? JsonNullSentinel.JsonNull);
 		}
 
-        private readonly List<PropertyNode> _nodes;
+        private readonly Dictionary<string, PropertyNode> _nodes;
         public MapNode(ParsingContext context, JsonNode node) : base(
             context, node)
         {
@@ -34,16 +34,16 @@ namespace Microsoft.OpenApi.Reader
             }
 
             _node = mapNode;
-            _nodes = _node.Select(p => GetPropertyNodeFromJsonNode(p.Key, p.Value)).ToList();
+            _nodes = _node.ToDictionary(static p => p.Key, p => GetPropertyNodeFromJsonNode(p.Key, p.Value), StringComparer.Ordinal);
         }
 
         public PropertyNode? this[string key]
         {
             get
             {
-                if (_node.TryGetPropertyValue(key, out var value))
+                if (_node.ContainsKey(key))
 				{
-					return GetPropertyNodeFromJsonNode(key, value);
+					return _nodes[key];
 				}
 
                 return null;
@@ -134,7 +134,7 @@ namespace Microsoft.OpenApi.Reader
 
         public IEnumerator<PropertyNode> GetEnumerator()
         {
-            return _nodes.GetEnumerator();
+            return _nodes.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
