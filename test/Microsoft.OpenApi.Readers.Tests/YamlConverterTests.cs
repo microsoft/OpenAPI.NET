@@ -1,4 +1,4 @@
-using SharpYaml;
+﻿using SharpYaml;
 using SharpYaml.Serialization;
 using Xunit;
 using Microsoft.OpenApi.YamlReader;
@@ -33,10 +33,10 @@ public class YamlConverterTests
     public void ToYamlNode_StringValue_NotQuotedInYaml()
     {
         // Arrange
-        var json = JsonNode.Parse(@"{""fooString"": ""fooStringValue""}");
+        var json = Assert.IsType<JsonObject>(JsonNode.Parse(@"{""fooString"": ""fooStringValue""}"));
 
         // Act
-        var yamlNode = json!.ToYamlNode();
+        var yamlNode = json.ToYamlNode();
         var yamlOutput = ConvertYamlNodeToString(yamlNode);
 
         // Assert
@@ -49,10 +49,10 @@ public class YamlConverterTests
     public void ToYamlNode_StringThatLooksLikeNumber_QuotedInYaml()
     {
         // Arrange
-        var json = JsonNode.Parse(@"{""fooStringOfNumber"": ""200""}");
+        var json = Assert.IsType<JsonObject>(JsonNode.Parse(@"{""fooStringOfNumber"": ""200""}"));
 
         // Act
-        var yamlNode = json!.ToYamlNode();
+        var yamlNode = json.ToYamlNode();
         var yamlOutput = ConvertYamlNodeToString(yamlNode);
 
         // Assert
@@ -63,10 +63,10 @@ public class YamlConverterTests
     public void ToYamlNode_ActualNumber_NotQuotedInYaml()
     {
         // Arrange
-        var json = JsonNode.Parse(@"{""actualNumber"": 200}");
+        var json = Assert.IsType<JsonObject>(JsonNode.Parse(@"{""actualNumber"": 200}"));
 
         // Act
-        var yamlNode = json!.ToYamlNode();
+        var yamlNode = json.ToYamlNode();
         var yamlOutput = ConvertYamlNodeToString(yamlNode);
 
         // Assert
@@ -78,10 +78,10 @@ public class YamlConverterTests
     public void ToYamlNode_StringThatLooksLikeDecimal_QuotedInYaml()
     {
         // Arrange
-        var json = JsonNode.Parse(@"{""decimalString"": ""123.45""}");
+        var json = Assert.IsType<JsonObject>(JsonNode.Parse(@"{""decimalString"": ""123.45""}"));
 
         // Act
-        var yamlNode = json!.ToYamlNode();
+        var yamlNode = json.ToYamlNode();
         var yamlOutput = ConvertYamlNodeToString(yamlNode);
 
         // Assert
@@ -92,10 +92,10 @@ public class YamlConverterTests
     public void ToYamlNode_ActualDecimal_NotQuotedInYaml()
     {
         // Arrange
-        var json = JsonNode.Parse(@"{""actualDecimal"": 123.45}");
+        var json = Assert.IsType<JsonObject>(JsonNode.Parse(@"{""actualDecimal"": 123.45}"));
 
         // Act
-        var yamlNode = json!.ToYamlNode();
+        var yamlNode = json.ToYamlNode();
         var yamlOutput = ConvertYamlNodeToString(yamlNode);
 
         // Assert
@@ -107,10 +107,10 @@ public class YamlConverterTests
     public void ToYamlNode_StringThatLooksLikeBoolean_QuotedInYaml()
     {
         // Arrange
-        var json = JsonNode.Parse(@"{""boolString"": ""true""}");
+        var json = Assert.IsType<JsonObject>(JsonNode.Parse(@"{""boolString"": ""true""}"));
 
         // Act
-        var yamlNode = json!.ToYamlNode();
+        var yamlNode = json.ToYamlNode();
         var yamlOutput = ConvertYamlNodeToString(yamlNode);
 
         // Assert
@@ -121,10 +121,10 @@ public class YamlConverterTests
     public void ToYamlNode_ActualBoolean_NotQuotedInYaml()
     {
         // Arrange
-        var json = JsonNode.Parse(@"{""actualBool"": true}");
+        var json = Assert.IsType<JsonObject>(JsonNode.Parse(@"{""actualBool"": true}"));
 
         // Act
-        var yamlNode = json!.ToYamlNode();
+        var yamlNode = json.ToYamlNode();
         var yamlOutput = ConvertYamlNodeToString(yamlNode);
 
         // Assert
@@ -136,10 +136,10 @@ public class YamlConverterTests
     public void ToYamlNode_StringThatLooksLikeNull_QuotedInYaml()
     {
         // Arrange
-        var json = JsonNode.Parse(@"{""nullString"": ""null""}");
+        var json = Assert.IsType<JsonObject>(JsonNode.Parse(@"{""nullString"": ""null""}"));
 
         // Act
-        var yamlNode = json!.ToYamlNode();
+        var yamlNode = json.ToYamlNode();
         var yamlOutput = ConvertYamlNodeToString(yamlNode);
 
         // Assert
@@ -150,16 +150,16 @@ public class YamlConverterTests
     public void ToYamlNode_MixedTypes_CorrectQuoting()
     {
         // Arrange
-        var json = JsonNode.Parse(@"{
+        var json = Assert.IsType<JsonObject>(JsonNode.Parse(@"{
             ""str"": ""hello"",
             ""numStr"": ""42"",
             ""num"": 42,
             ""boolStr"": ""false"",
             ""bool"": false
-        }");
+        }"));
 
         // Act
-        var yamlNode = json!.ToYamlNode();
+        var yamlNode = json.ToYamlNode();
         var yamlOutput = ConvertYamlNodeToString(yamlNode);
 
         // Assert
@@ -176,13 +176,13 @@ public class YamlConverterTests
     public void ToYamlNode_FromIssueExample_CorrectOutput()
     {
         // Arrange - Example from issue #1951
-        var json = JsonNode.Parse(@"{
+        var json = Assert.IsType<JsonObject>(JsonNode.Parse(@"{
             ""fooString"": ""fooStringValue"",
             ""fooStringOfNumber"": ""200""
-        }");
+        }"));
 
         // Act
-        var yamlNode = json!.ToYamlNode();
+        var yamlNode = json.ToYamlNode();
         var yamlOutput = ConvertYamlNodeToString(yamlNode);
 
         // Assert
@@ -198,13 +198,13 @@ public class YamlConverterTests
     public void ToYamlNode_StringWithLineBreaks_PreservesLineBreaks()
     {
         // Arrange
-        var json = JsonNode.Parse(@"{
+        var json = Assert.IsType<JsonObject>(JsonNode.Parse(@"{
             ""multiline"": ""Line 1\nLine 2\nLine 3"",
             ""description"": ""This is a description\nwith line breaks\nin it""
-        }");
+        }"));
 
         // Act
-        var yamlNode = json!.ToYamlNode();
+        var yamlNode = json.ToYamlNode();
         var yamlOutput = ConvertYamlNodeToString(yamlNode);
 
         // Convert back to JSON to verify round-tripping
