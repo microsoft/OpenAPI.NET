@@ -41,9 +41,9 @@ namespace Microsoft.OpenApi.Reader
         {
             get
             {
-                if (_nodes.TryGetValue(key, out var value))
+                if (_node.ContainsKey(key))
 				{
-					return value;
+					return _nodes[key];
 				}
 
                 return null;
