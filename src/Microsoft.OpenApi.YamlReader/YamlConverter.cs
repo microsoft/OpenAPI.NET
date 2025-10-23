@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using SharpYaml;
 using SharpYaml.Serialization;
@@ -135,7 +136,8 @@ namespace Microsoft.OpenApi.YamlReader
         {
             // Try to get the underlying value based on its actual type
             // First try to get it as a string
-            if (val.TryGetValue(out string? stringValue))
+            if (val.GetValueKind() == JsonValueKind.String &&
+                val.TryGetValue(out string? stringValue))
             {
                 // For string values, we need to determine if they should be quoted in YAML
                 // Strings that look like numbers, booleans, or null need to be quoted
