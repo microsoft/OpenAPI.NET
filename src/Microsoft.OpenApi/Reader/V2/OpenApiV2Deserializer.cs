@@ -19,19 +19,16 @@ namespace Microsoft.OpenApi.Reader.V2
             T domainObject,
             FixedFieldMap<T> fixedFieldMap,
             PatternFieldMap<T> patternFieldMap,
-            OpenApiDocument doc,
-            List<string>? requiredFields = null)
+            OpenApiDocument doc)
         {
             if (mapNode == null)
             {
                 return;
             }
 
-            var allFields = fixedFieldMap.Keys.Union(mapNode.Select(static x => x.Name));
-            foreach (var propertyNode in allFields)
+            foreach (var propertyNode in mapNode)
             {
-                mapNode[propertyNode]?.ParseField(domainObject, fixedFieldMap, patternFieldMap, doc);
-                requiredFields?.Remove(propertyNode);
+                propertyNode.ParseField(domainObject, fixedFieldMap, patternFieldMap, doc);
             }
         }
 
