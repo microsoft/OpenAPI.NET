@@ -13,6 +13,7 @@ public class MapNodeTests
         var mapNode = new MapNode(new ParsingContext(new()), jsonNode);
 
         Assert.NotNull(mapNode);
-        Assert.Empty(mapNode);
+        Assert.Single(mapNode);
+        Assert.True(mapNode["key"].Value.JsonNode.IsJsonNullSentinel());
     }
 }

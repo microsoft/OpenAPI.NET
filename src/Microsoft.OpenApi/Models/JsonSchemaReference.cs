@@ -17,6 +17,8 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
     /// <summary>
     /// A default value which by default SHOULD override that of the referenced component.
     /// If the referenced object-type does not allow a default field, then this field has no effect.
+    /// You must use the <see cref="JsonNullSentinel.IsJsonNullSentinel(JsonNode?)"/> method to check whether Default was assigned a null value in the document.
+    /// Assign <see cref="JsonNullSentinel.JsonNull"/> to use get null as a serialized value.
     /// </summary>
     public JsonNode? Default { get; set; }
 

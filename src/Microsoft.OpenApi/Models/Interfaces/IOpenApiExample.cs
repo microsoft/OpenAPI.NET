@@ -12,6 +12,8 @@ public interface IOpenApiExample : IOpenApiDescribedElement, IOpenApiSummarizedE
     /// Embedded literal example. The value field and externalValue field are mutually
     /// exclusive. To represent examples of media types that cannot naturally represented
     /// in JSON or YAML, use a string value to contain the example, escaping where necessary.
+    /// You must use the <see cref="JsonNullSentinel.IsJsonNullSentinel(JsonNode?)"/> method to check whether Default was assigned a null value in the document.
+    /// Assign <see cref="JsonNullSentinel.JsonNull"/> to use get null as a serialized value.
     /// </summary>
     public JsonNode? Value { get; }
 

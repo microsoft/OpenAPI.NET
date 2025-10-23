@@ -29,6 +29,8 @@ namespace Microsoft.OpenApi
 
         /// <summary>
         /// Gets/Sets the <see cref="JsonNode"/>
+        /// You must use the <see cref="JsonNullSentinel.IsJsonNullSentinel(JsonNode?)"/> method to check whether Default was assigned a null value in the document.
+        /// Assign <see cref="JsonNullSentinel.JsonNull"/> to use get null as a serialized value.
         /// </summary>
         public JsonNode? Any
         {

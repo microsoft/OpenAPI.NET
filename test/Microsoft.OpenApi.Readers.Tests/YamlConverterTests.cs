@@ -1,7 +1,7 @@
+﻿using Microsoft.OpenApi.YamlReader;
 using SharpYaml;
 using SharpYaml.Serialization;
 using Xunit;
-using Microsoft.OpenApi.YamlReader;
 
 namespace Microsoft.OpenApi.Readers.Tests;
 
@@ -24,6 +24,6 @@ public class YamlConverterTests
         var jsonNode = yamlNull.ToJsonNode();
 
         // Then
-        Assert.Null(jsonNode);
+        Assert.True(jsonNode.IsJsonNullSentinel());
     }
 }

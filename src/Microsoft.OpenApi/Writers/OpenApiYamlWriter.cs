@@ -275,9 +275,8 @@ namespace Microsoft.OpenApi
         /// </summary>
         public override void WriteNull()
         {
-            // YAML allows null value to be represented by either nothing or the word null.
-            // We will write nothing here.
             WriteValueSeparator();
+            Writer.Write("null");
         }
 
         /// <summary>

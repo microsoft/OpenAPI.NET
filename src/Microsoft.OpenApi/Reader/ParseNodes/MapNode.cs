@@ -30,15 +30,19 @@ namespace Microsoft.OpenApi.Reader
 
             _node = mapNode;
             _nodes = _node.Where(p => p.Value is not null).OfType<KeyValuePair<string, JsonNode>>().Select(p => new PropertyNode(Context, p.Key, p.Value)).ToList();
+            _nodes.AddRange(_node.Where(p => p.Value is null).Select(p => new PropertyNode(Context, p.Key, JsonNullSentinel.JsonNull)));
         }
 
         public PropertyNode? this[string key]
         {
             get
             {
-                if (_node.TryGetPropertyValue(key, out var node) && node is not null)
+                if (_node.TryGetPropertyValue(key, out var node))
                 {
-                    return new(Context, key, node);
+                    if (node is not null)
+                        return new(Context, key, node);
+                    else
+                        return new(Context, key, JsonNullSentinel.JsonNull);
                 }
 
                 return null;

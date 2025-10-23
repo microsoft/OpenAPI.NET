@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.YamlReader
         /// </summary>
         /// <param name="yaml">The YAML stream.</param>
         /// <returns>A collection of nodes representing the YAML documents in the stream.</returns>
-        public static IEnumerable<JsonNode?> ToJsonNode(this YamlStream yaml)
+        public static IEnumerable<JsonNode> ToJsonNode(this YamlStream yaml)
         {
             return yaml.Documents.Select(x => x.ToJsonNode());
         }
@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.YamlReader
         /// </summary>
         /// <param name="yaml">The YAML document.</param>
         /// <returns>A `JsonNode` representative of the YAML document.</returns>
-        public static JsonNode? ToJsonNode(this YamlDocument yaml)
+        public static JsonNode ToJsonNode(this YamlDocument yaml)
         {
             return yaml.RootNode.ToJsonNode();
         }
@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.YamlReader
         /// <param name="yaml">The YAML node.</param>
         /// <returns>A `JsonNode` representative of the YAML node.</returns>
         /// <exception cref="NotSupportedException">Thrown for YAML that is not compatible with JSON.</exception>
-        public static JsonNode? ToJsonNode(this YamlNode yaml)
+        public static JsonNode ToJsonNode(this YamlNode yaml)
         {
             return yaml switch
             {
@@ -118,13 +118,13 @@ namespace Microsoft.OpenApi.YamlReader
             "NULL"
         };
 
-        private static JsonValue? ToJsonValue(this YamlScalarNode yaml)
+        private static JsonValue ToJsonValue(this YamlScalarNode yaml)
         {
             return yaml.Style switch
             {
                 ScalarStyle.Plain when decimal.TryParse(yaml.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var d) => JsonValue.Create(d),
                 ScalarStyle.Plain when bool.TryParse(yaml.Value, out var b) => JsonValue.Create(b),
-                ScalarStyle.Plain when YamlNullRepresentations.Contains(yaml.Value) => null,
+                ScalarStyle.Plain when YamlNullRepresentations.Contains(yaml.Value) => JsonNullSentinel.JsonNull,
                 ScalarStyle.Plain => JsonValue.Create(yaml.Value),
                 ScalarStyle.SingleQuoted or ScalarStyle.DoubleQuoted or ScalarStyle.Literal or ScalarStyle.Folded or ScalarStyle.Any => JsonValue.Create(yaml.Value),
                 _ => throw new ArgumentOutOfRangeException(nameof(yaml)),

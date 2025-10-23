@@ -117,6 +117,8 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// The default value represents what would be assumed by the consumer of the input as the value of the schema if one is not provided.
     /// Unlike JSON Schema, the value MUST conform to the defined type for the Schema Object defined at the same level.
     /// For example, if type is string, then default can be "foo" but cannot be 1.
+    /// You must use the <see cref="JsonNullSentinel.IsJsonNullSentinel(JsonNode?)"/> method to check whether Default was assigned a null value in the document.
+    /// Assign <see cref="JsonNullSentinel.JsonNull"/> to use get null as a serialized value.
     /// </summary>
     public JsonNode? Default { get; }
 
@@ -238,6 +240,8 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// A free-form property to include an example of an instance for this schema.
     /// To represent examples that cannot be naturally represented in JSON or YAML,
     /// a string value can be used to contain the example with escaping where necessary.
+    /// You must use the <see cref="JsonNullSentinel.IsJsonNullSentinel(JsonNode?)"/> method to check whether Default was assigned a null value in the document.
+    /// Assign <see cref="JsonNullSentinel.JsonNull"/> to use get null as a serialized value.
     /// </summary>
     public JsonNode? Example { get; }
 
