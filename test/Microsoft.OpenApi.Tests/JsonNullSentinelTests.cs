@@ -161,6 +161,16 @@ public class JsonNullSentinelTests
     }
 
     [Fact]
+    public void IsJsonNullSentinel_ReturnsTrueForIdenticalString()
+    {
+        // Arrange
+        var similarString1 = JsonValue.Create("openapi-json-null-sentinel-value-2BF93600-0FE4-4250-987A-E5DDB203E464");
+
+        // Act & Assert
+        Assert.True(similarString1.IsJsonNullSentinel());
+    }
+
+    [Fact]
     public void IsJsonNullSentinel_ReturnsFalseForSimilarStrings()
     {
         // Arrange
