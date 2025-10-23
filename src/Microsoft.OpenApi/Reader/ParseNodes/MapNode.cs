@@ -18,18 +18,12 @@ namespace Microsoft.OpenApi.Reader
     internal class MapNode : ParseNode, IEnumerable<PropertyNode>
     {
         private readonly JsonObject _node;
-        private Dictionary<string, PropertyNode>? _nodes;
 
-        private void EnsureNodesIsInitialized()
+        private PropertyNode GetPropertyNodeFromJsonNode(string key, JsonNode? node)
 		{
-			if (_nodes is null)
-			{
-                _nodes = _node.Where(p => p.Value is not null).OfType<KeyValuePair<string, JsonNode>>().ToDictionary(p => p.Key, p => new PropertyNode(Context, p.Key, p.Value), StringComparer.Ordinal);
-                if (_node.Where(p => p.Value is null).ToArray() is { Length: > 0 } nullNodes)
-				{
-					_nodes.AddRange(nullNodes.Select(p => new KeyValuePair<string, PropertyNode>(p.Key, new PropertyNode(Context, p.Key, JsonNullSentinel.JsonNull))));
-				}
-			}
+            return node is null ?
+                new PropertyNode(Context, key, JsonNullSentinel.JsonNull) :
+                new PropertyNode(Context, key, node);
 		}
 
         public MapNode(ParsingContext context, JsonNode node) : base(
@@ -47,14 +41,10 @@ namespace Microsoft.OpenApi.Reader
         {
             get
             {
-                if (_node.ContainsKey(key))
-                {
-                    EnsureNodesIsInitialized();
-                    if (_nodes!.TryGetValue(key, out var propertyNode))
-                    {
-                        return propertyNode;
-                    }
-                }
+                if (_node.TryGetPropertyValue(key, out var value))
+				{
+					return GetPropertyNodeFromJsonNode(key, value);
+				}
 
                 return null;
             }
@@ -142,10 +132,11 @@ namespace Microsoft.OpenApi.Reader
             return nodes.ToDictionary(kvp => kvp.key, kvp => kvp.values);
         }
 
+        private List<PropertyNode>? _nodes;
         public IEnumerator<PropertyNode> GetEnumerator()
         {
-            EnsureNodesIsInitialized();
-            return _nodes!.Values.GetEnumerator();
+            _nodes ??= _node.Select(p => GetPropertyNodeFromJsonNode(p.Key, p.Value)).ToList();
+            return _nodes.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
