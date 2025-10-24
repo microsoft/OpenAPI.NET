@@ -89,6 +89,8 @@ public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiReadOnlyE
     /// the example value SHALL override the example provided by the schema.
     /// To represent examples of media types that cannot naturally be represented in JSON or YAML,
     /// a string value can contain the example with escaping where necessary.
+    /// You must use the <see cref="JsonNullSentinel.IsJsonNullSentinel(JsonNode?)"/> method to check whether Default was assigned a null value in the document.
+    /// Assign <see cref="JsonNullSentinel.JsonNull"/> to use get null as a serialized value.
     /// </summary>
     public JsonNode? Example { get; }
 

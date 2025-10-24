@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 externalDocs:
                   description: Find more info here
                   url: https://example.com
-                x-tag-extension:
+                x-tag-extension: null
                 """;
 
             // Act
@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 externalDocs:
                   description: Find more info here
                   url: https://example.com
-                x-tag-extension:
+                x-tag-extension: null
                 """;
 
             // Act
@@ -209,7 +209,7 @@ description: Pets operations
 externalDocs:
   description: Find more info here
   url: https://example.com
-x-tag-extension:";
+x-tag-extension: null";
 
             // Act
             AdvancedTag.SerializeAsV3(writer);
@@ -234,7 +234,7 @@ description: Pets operations
 externalDocs:
   description: Find more info here
   url: https://example.com
-x-tag-extension:";
+x-tag-extension: null";
 
             // Act
             AdvancedTag.SerializeAsV2(writer);

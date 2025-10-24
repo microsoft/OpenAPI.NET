@@ -18,8 +18,13 @@ namespace Microsoft.OpenApi.Reader
     internal class MapNode : ParseNode, IEnumerable<PropertyNode>
     {
         private readonly JsonObject _node;
-        private readonly List<PropertyNode> _nodes;
 
+        private PropertyNode GetPropertyNodeFromJsonNode(string key, JsonNode? node)
+		{
+            return new PropertyNode(Context, key, node ?? JsonNullSentinel.JsonNull);
+		}
+
+        private readonly List<PropertyNode> _nodes;
         public MapNode(ParsingContext context, JsonNode node) : base(
             context, node)
         {
@@ -29,20 +34,7 @@ namespace Microsoft.OpenApi.Reader
             }
 
             _node = mapNode;
-            _nodes = _node.Where(p => p.Value is not null).OfType<KeyValuePair<string, JsonNode>>().Select(p => new PropertyNode(Context, p.Key, p.Value)).ToList();
-        }
-
-        public PropertyNode? this[string key]
-        {
-            get
-            {
-                if (_node.TryGetPropertyValue(key, out var node) && node is not null)
-                {
-                    return new(Context, key, node);
-                }
-
-                return null;
-            }
+            _nodes = _node.Select(p => GetPropertyNodeFromJsonNode(p.Key, p.Value)).ToList();
         }
 
         public override Dictionary<string, T> CreateMap<T>(Func<MapNode, OpenApiDocument, T> map, OpenApiDocument hostDocument)
@@ -134,7 +126,7 @@ namespace Microsoft.OpenApi.Reader
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _nodes.GetEnumerator();
+            return GetEnumerator();
         }
 
         public override string GetRaw()

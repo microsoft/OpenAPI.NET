@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 
@@ -13,6 +14,7 @@ public class MapNodeTests
         var mapNode = new MapNode(new ParsingContext(new()), jsonNode);
 
         Assert.NotNull(mapNode);
-        Assert.Empty(mapNode);
+        Assert.Single(mapNode);
+        Assert.True(mapNode.First().Value.JsonNode.IsJsonNullSentinel());
     }
 }

@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi
         {
             Utils.CheckArgumentNull(writer);
 
-            if (node == null)
+            if (node == null || node.IsJsonNullSentinel())
             {
                 writer.WriteNull();
                 return;
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi
                 {
                     writer.WriteAny(item);
                 }
-            }            
+            }
 
             writer.WriteEndArray();
         }
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi
             else if (jsonValue.TryGetValue(out TimeOnly timeOnlyValue))
                 writer.WriteValue(timeOnlyValue.ToString("o", CultureInfo.InvariantCulture));
 #endif
-            else if (jsonValue.TryGetValue(out bool boolValue)) 
+            else if (jsonValue.TryGetValue(out bool boolValue))
                 writer.WriteValue(boolValue);
             // write number values
             else if (jsonValue.TryGetValue(out decimal decimalValue))

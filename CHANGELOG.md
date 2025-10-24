@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.3.7](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.6...v2.3.7) (2025-10-24)
+
+
+### Bug Fixes
+
+* adds a null value sentinel to enable roundtrip serializations of JsonNode typed properties ([337c6eb](https://github.com/microsoft/OpenAPI.NET/commit/337c6eb08a9cc99bfbe2cd08fed61678030b8b8b))
+* adds a null value sentinel to enable roundtrip serializations of JsonNode typed properties ([63b2b98](https://github.com/microsoft/OpenAPI.NET/commit/63b2b98b64633fdef3b7fafee882060a3e0808fd))
+* fixes a bug where yaml null values would end up as a string "null" during roundtrip serialization ([6e62de2](https://github.com/microsoft/OpenAPI.NET/commit/6e62de205f0a5d58b385b4536dc30035a9977054))
+* fixes a bug where yaml null values would end up as a string "null" during roundtrip serialization ([994184b](https://github.com/microsoft/OpenAPI.NET/commit/994184b41bcd433a078cdeef75ba43d92b6b9762))
+* YamlConverter adding extra quotes to string values when converting from JSON to YAML ([ccfebc8](https://github.com/microsoft/OpenAPI.NET/commit/ccfebc828c2793b00faf3d5b12bd95bc68901104))
+
+
+### Performance Improvements
+
+* do not duplicate nodes when indexing ([dbbbf13](https://github.com/microsoft/OpenAPI.NET/commit/dbbbf1330934bc35fb35610a6a5db65514596c48))
+* only initialize map node nodes on demand ([bdb5264](https://github.com/microsoft/OpenAPI.NET/commit/bdb5264bc41b345f9ea95924ca5ab679178b82b6))
+* reduce allocations in mapnode ([f58aad2](https://github.com/microsoft/OpenAPI.NET/commit/f58aad235f904f94704aa14700aaca4ac16205af))
+* removes the lazy initialization since the node is always enumerated ([1c96521](https://github.com/microsoft/OpenAPI.NET/commit/1c96521c82cfa7414602e4f4da64e629b6c69c29))
+* switches to lazy instantiation ([d3c758b](https://github.com/microsoft/OpenAPI.NET/commit/d3c758b0d4421d1da9979587dfaee91bbdee0c7c))
+* use deep equals for comparison to reduce allocations ([6ce3214](https://github.com/microsoft/OpenAPI.NET/commit/6ce3214ad3beb5abe6045e5aa1743db4249c1974))
+
 ## [2.3.6](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.5...v2.3.6) (2025-10-20)
 
 
