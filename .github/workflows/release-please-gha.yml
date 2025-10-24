@@ -16,6 +16,9 @@ on:
       - main
       - support/v1
 
+permissions:
+  contents: read
+
 jobs:
   release:
     runs-on: ubuntu-latest
