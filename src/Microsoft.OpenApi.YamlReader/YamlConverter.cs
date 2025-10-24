@@ -87,7 +87,10 @@ namespace Microsoft.OpenApi.YamlReader
 
         private static YamlMappingNode ToYamlMapping(this JsonObject obj)
         {
-            return new YamlMappingNode(obj.ToDictionary(x => (YamlNode)new YamlScalarNode(x.Key), x => x.Value!.ToYamlNode()));
+            return new YamlMappingNode(obj.ToDictionary(x => (YamlNode)new YamlScalarNode(x.Key)
+            {
+                Style = double.TryParse(x.Key, out _) ? ScalarStyle.DoubleQuoted : ScalarStyle.Plain
+            }, x => x.Value!.ToYamlNode()));
         }
 
         /// <summary>

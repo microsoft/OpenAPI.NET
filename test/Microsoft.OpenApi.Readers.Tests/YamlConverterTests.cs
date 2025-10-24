@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.YamlReader;
+﻿using Microsoft.OpenApi.Tests;
+using Microsoft.OpenApi.YamlReader;
 using SharpYaml;
 using SharpYaml.Serialization;
 using System.IO;
@@ -225,12 +226,60 @@ public class YamlConverterTests
         Assert.Contains("\n", roundTripDescription);
     }
 
+    [Fact]
+    public void NumericPropertyNamesShouldRemainStringsFromJson()
+    {
+        // Given
+        var yamlInput =
+        """
+        "123": value1
+        "456": value2
+        """;
+
+        // Given
+        var jsonNode = Assert.IsType<JsonObject>(JsonNode.Parse(@"{
+            ""123"": ""value1"",
+            ""456"": ""value2""
+        }"));
+
+        // When
+        var convertedBack = jsonNode.ToYamlNode();
+        var convertedBackOutput = ConvertYamlNodeToString(convertedBack);
+
+        // Then
+        Assert.Equal(yamlInput.MakeLineBreaksEnvironmentNeutral(), convertedBackOutput.MakeLineBreaksEnvironmentNeutral());
+    }
+
+    [Fact]
+    public void NumericPropertyNamesShouldRemainStringsFromYaml()
+    {
+        // Given
+        var yamlInput =
+        """
+        "123": value1
+        "456": value2
+        """;
+
+        var yamlDocument = new YamlStream();
+        using var sr = new StringReader(yamlInput);
+        yamlDocument.Load(sr);
+        var yamlRoot = yamlDocument.Documents[0].RootNode;
+        // When
+
+        var jsonNode = yamlRoot.ToJsonNode();
+
+        var convertedBack = jsonNode.ToYamlNode();
+        var convertedBackOutput = ConvertYamlNodeToString(convertedBack);
+        // Then
+        Assert.Equal(yamlInput.MakeLineBreaksEnvironmentNeutral(), convertedBackOutput.MakeLineBreaksEnvironmentNeutral());
+    }
+
     private static string ConvertYamlNodeToString(YamlNode yamlNode)
     {
         using var ms = new MemoryStream();
-        var yamlStream = new YamlStream(new YamlDocument(yamlNode));
+        var document = new YamlStream(new YamlDocument(yamlNode));
         var writer = new StreamWriter(ms);
-        yamlStream.Save(writer);
+        document.Save(writer, isLastDocumentEndImplicit: true);
         writer.Flush();
         ms.Seek(0, SeekOrigin.Begin);
         var reader = new StreamReader(ms);
