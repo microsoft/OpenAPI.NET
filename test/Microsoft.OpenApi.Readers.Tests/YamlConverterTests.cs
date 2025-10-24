@@ -274,6 +274,30 @@ public class YamlConverterTests
         Assert.Equal(yamlInput.MakeLineBreaksEnvironmentNeutral(), convertedBackOutput.MakeLineBreaksEnvironmentNeutral());
     }
 
+    [Fact]
+    public void BooleanPropertyNamesShouldRemainStringsFromYaml()
+    {
+        // Given
+        var yamlInput =
+        """
+        "true": value1
+        "false": value2
+        """;
+
+        var yamlDocument = new YamlStream();
+        using var sr = new StringReader(yamlInput);
+        yamlDocument.Load(sr);
+        var yamlRoot = yamlDocument.Documents[0].RootNode;
+        // When
+
+        var jsonNode = yamlRoot.ToJsonNode();
+
+        var convertedBack = jsonNode.ToYamlNode();
+        var convertedBackOutput = ConvertYamlNodeToString(convertedBack);
+        // Then
+        Assert.Equal(yamlInput.MakeLineBreaksEnvironmentNeutral(), convertedBackOutput.MakeLineBreaksEnvironmentNeutral());
+    }
+
     private static string ConvertYamlNodeToString(YamlNode yamlNode)
     {
         using var ms = new MemoryStream();
