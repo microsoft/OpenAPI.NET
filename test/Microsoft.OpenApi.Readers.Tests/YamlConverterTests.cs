@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.YamlReader;
+﻿using Microsoft.OpenApi.Tests;
+using Microsoft.OpenApi.YamlReader;
 using SharpYaml;
 using SharpYaml.Serialization;
 using System.IO;
@@ -208,10 +209,7 @@ public class YamlConverterTests
         var yamlOutput = ConvertYamlNodeToString(yamlNode);
 
         // Convert back to JSON to verify round-tripping
-        var yamlStream = new YamlStream();
-        using var sr = new StringReader(yamlOutput);
-        yamlStream.Load(sr);
-        var jsonBack = yamlStream.Documents[0].ToJsonNode();
+        var jsonBack = ConvertYamlStringToJsonNode(yamlOutput);
 
         // Assert - line breaks should be preserved during round-trip
         var originalMultiline = json["multiline"]?.GetValue<string>();
@@ -225,12 +223,80 @@ public class YamlConverterTests
         Assert.Contains("\n", roundTripDescription);
     }
 
+    [Fact]
+    public void NumericPropertyNamesShouldRemainStringsFromJson()
+    {
+        // Given
+        var yamlInput =
+        """
+        "123": value1
+        "456": value2
+        """;
+
+        // Given
+        var jsonNode = Assert.IsType<JsonObject>(JsonNode.Parse(@"{
+            ""123"": ""value1"",
+            ""456"": ""value2""
+        }"));
+
+        // When
+        var convertedBack = jsonNode.ToYamlNode();
+        var convertedBackOutput = ConvertYamlNodeToString(convertedBack);
+
+        // Then
+        Assert.Equal(yamlInput.MakeLineBreaksEnvironmentNeutral(), convertedBackOutput.MakeLineBreaksEnvironmentNeutral());
+    }
+
+    [Fact]
+    public void NumericPropertyNamesShouldRemainStringsFromYaml()
+    {
+        // Given
+        var yamlInput =
+        """
+        "123": value1
+        "456": value2
+        """;
+
+        var jsonNode = ConvertYamlStringToJsonNode(yamlInput);
+
+        var convertedBack = jsonNode.ToYamlNode();
+        var convertedBackOutput = ConvertYamlNodeToString(convertedBack);
+        // Then
+        Assert.Equal(yamlInput.MakeLineBreaksEnvironmentNeutral(), convertedBackOutput.MakeLineBreaksEnvironmentNeutral());
+    }
+
+    [Fact]
+    public void BooleanPropertyNamesShouldRemainStringsFromYaml()
+    {
+        // Given
+        var yamlInput =
+        """
+        "true": value1
+        "false": value2
+        """;
+
+        var jsonNode = ConvertYamlStringToJsonNode(yamlInput);
+
+        var convertedBack = jsonNode.ToYamlNode();
+        var convertedBackOutput = ConvertYamlNodeToString(convertedBack);
+        // Then
+        Assert.Equal(yamlInput.MakeLineBreaksEnvironmentNeutral(), convertedBackOutput.MakeLineBreaksEnvironmentNeutral());
+    }
+    private static JsonNode ConvertYamlStringToJsonNode(string yamlInput)
+    {
+        var yamlDocument = new YamlStream();
+        using var sr = new StringReader(yamlInput);
+        yamlDocument.Load(sr);
+        var yamlRoot = yamlDocument.Documents[0].RootNode;
+        return yamlRoot.ToJsonNode();
+    }
+
     private static string ConvertYamlNodeToString(YamlNode yamlNode)
     {
         using var ms = new MemoryStream();
         var yamlStream = new YamlStream(new YamlDocument(yamlNode));
         var writer = new StreamWriter(ms);
-        yamlStream.Save(writer);
+        yamlStream.Save(writer, isLastDocumentEndImplicit: true);
         writer.Flush();
         ms.Seek(0, SeekOrigin.Begin);
         var reader = new StreamReader(ms);
