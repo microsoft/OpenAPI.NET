@@ -64,7 +64,7 @@ internal class CompareCommandHandler : AsynchronousCommandLineAction
             {
                 if (!comparisonPolicy.Equals(existingBenchmarkResult.Value, newBenchmarkResult))
                 {
-                    logger.LogError("Benchmark result for {ExistingBenchmarkResultKey} does not match the existing benchmark result. {ErrorMessage}", existingBenchmarkResult.Key, comparisonPolicy.GetErrorMessage(existingBenchmarkResult.Value, newBenchmarkResult));
+                    logger.LogError("Benchmark result for {ExistingBenchmarkResultKey} does not match the existing benchmark result (original!=new). {ErrorMessage}", existingBenchmarkResult.Key, comparisonPolicy.GetErrorMessage(existingBenchmarkResult.Value, newBenchmarkResult));
                     hasErrors = true;
                 }
             }

@@ -171,7 +171,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 property6: -5
                 property7: true
                 property8: 'true'
-                property9:
+                property9: null
                 property10: 'null'
                 property11: ''
                 """
@@ -384,7 +384,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 """;
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiYamlWriter(outputString, new() { InlineLocalReferences = true } );
+            var writer = new OpenApiYamlWriter(outputString, new() { InlineLocalReferences = true });
 
             // Act
             doc.SerializeAsV3(writer);

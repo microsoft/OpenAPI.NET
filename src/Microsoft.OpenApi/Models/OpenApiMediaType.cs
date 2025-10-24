@@ -21,6 +21,8 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Example of the media type.
         /// The example object SHOULD be in the correct format as specified by the media type.
+        /// You must use the <see cref="JsonNullSentinel.IsJsonNullSentinel(JsonNode?)"/> method to check whether Default was assigned a null value in the document.
+        /// Assign <see cref="JsonNullSentinel.JsonNull"/> to use get null as a serialized value.
         /// </summary>
         public JsonNode? Example { get; set; }
 

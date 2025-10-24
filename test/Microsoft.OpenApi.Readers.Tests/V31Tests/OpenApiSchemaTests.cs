@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Nodes;
@@ -11,7 +13,6 @@ using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Xunit;
-using System;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -366,16 +367,16 @@ examples:
             // When
             var schema = OpenApiModelFactory.Parse<OpenApiSchema>(serializedSchema, OpenApiSpecVersion.OpenApi3_1, new(), out _, "json", SettingsFixture.ReaderSettings);
 
-            Assert.Null(schema.Default);
+            Assert.True(schema.Default.IsJsonNullSentinel());
 
             schema.SerializeAsV31(writer);
             var roundTrippedSchema = textWriter.ToString();
 
             // Then
-            var parsedResult = JsonNode.Parse(roundTrippedSchema);
+            var parsedResult = Assert.IsType<JsonObject>(JsonNode.Parse(roundTrippedSchema));
             var parsedExpected = JsonNode.Parse(serializedSchema);
             Assert.False(JsonNode.DeepEquals(parsedExpected, parsedResult));
-            var resultingDefault = parsedResult["default"];
+            Assert.True(parsedResult.TryGetPropertyValue("default", out var resultingDefault));
             Assert.Null(resultingDefault);
         }
 
@@ -396,7 +397,7 @@ examples:
             // When
             var schema = OpenApiModelFactory.Parse<OpenApiSchema>(serializedSchema, OpenApiSpecVersion.OpenApi3_1, new(), out _, "yaml", SettingsFixture.ReaderSettings);
 
-            Assert.Null(schema.Default);
+            Assert.True(schema.Default.IsJsonNullSentinel());
 
             schema.SerializeAsV31(writer);
             var roundTrippedSchema = textWriter.ToString();
@@ -407,6 +408,7 @@ examples:
             type:
               - 'null'
               - string
+            default: null
             """.MakeLineBreaksEnvironmentNeutral(),
             roundTrippedSchema.MakeLineBreaksEnvironmentNeutral());
         }
@@ -663,7 +665,7 @@ description: Schema for a person object
             var actual2 = textWriter.ToString();
             Assert.Equal(expected2.MakeLineBreaksEnvironmentNeutral(), actual2.MakeLineBreaksEnvironmentNeutral());
         }
-      
+
         [Theory]
         [InlineData(JsonSchemaType.Integer | JsonSchemaType.String, new[] { "integer", "string" })]
         [InlineData(JsonSchemaType.Integer | JsonSchemaType.Null, new[] { "integer", "null" })]

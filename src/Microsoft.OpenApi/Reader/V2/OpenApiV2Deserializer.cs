@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 
@@ -19,19 +18,22 @@ namespace Microsoft.OpenApi.Reader.V2
             T domainObject,
             FixedFieldMap<T> fixedFieldMap,
             PatternFieldMap<T> patternFieldMap,
-            OpenApiDocument doc,
-            List<string>? requiredFields = null)
+            OpenApiDocument doc)
         {
             if (mapNode == null)
             {
                 return;
             }
 
-            var allFields = fixedFieldMap.Keys.Union(mapNode.Select(static x => x.Name));
-            foreach (var propertyNode in allFields)
+            var mapNodeFields = mapNode.ToDictionary(static x => x.Name, static x => x);
+            var allFields = fixedFieldMap.Keys.Union(mapNodeFields.Keys);
+            foreach (var propertyNodeName in allFields)
             {
-                mapNode[propertyNode]?.ParseField(domainObject, fixedFieldMap, patternFieldMap, doc);
-                requiredFields?.Remove(propertyNode);
+                if (!mapNodeFields.TryGetValue(propertyNodeName, out var propertyNode))
+                {
+                    continue;
+                }
+                propertyNode.ParseField(domainObject, fixedFieldMap, patternFieldMap, doc);
             }
         }
 

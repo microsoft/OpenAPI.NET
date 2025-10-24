@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Extensions = new Dictionary<string, IOpenApiExtension>()
                     {
                         ["myextension"] = new JsonNodeExtension("myextensionvalue"),
-                    }, 
+                    },
                 }
             },
             Headers = new Dictionary<string, IOpenApiHeader>
@@ -138,7 +138,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
-                     Schema = new OpenApiSchema()
+                    Schema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Array,
                         Items = new OpenApiSchemaReference("customType", null)
@@ -178,7 +178,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var expected = format == OpenApiConstants.Json ? @"{
   ""description"": null
-}" : @"description: ";
+}" : @"description: null";
 
             // Act
             var actual = await BasicResponse.SerializeAsync(version, format);
