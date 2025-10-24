@@ -294,9 +294,9 @@ public class YamlConverterTests
     private static string ConvertYamlNodeToString(YamlNode yamlNode)
     {
         using var ms = new MemoryStream();
-        var document = new YamlStream(new YamlDocument(yamlNode));
+        var yamlStream = new YamlStream(new YamlDocument(yamlNode));
         var writer = new StreamWriter(ms);
-        document.Save(writer, isLastDocumentEndImplicit: true);
+        yamlStream.Save(writer, isLastDocumentEndImplicit: true);
         writer.Flush();
         ms.Seek(0, SeekOrigin.Begin);
         var reader = new StreamReader(ms);
