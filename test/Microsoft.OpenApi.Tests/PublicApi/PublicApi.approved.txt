@@ -345,6 +345,11 @@ namespace Microsoft.OpenApi
         public System.Text.Json.Nodes.JsonNode Node { get; }
         public void Write(Microsoft.OpenApi.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
     }
+    public static class JsonNullSentinel
+    {
+        public static System.Text.Json.Nodes.JsonValue JsonNull { get; }
+        public static bool IsJsonNullSentinel(this System.Text.Json.Nodes.JsonNode? node) { }
+    }
     public class JsonPointer
     {
         public JsonPointer(string pointer) { }

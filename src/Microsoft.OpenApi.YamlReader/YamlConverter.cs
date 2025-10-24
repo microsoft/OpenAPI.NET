@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using SharpYaml;
 using SharpYaml.Serialization;
@@ -110,30 +111,54 @@ namespace Microsoft.OpenApi.YamlReader
             return new YamlSequenceNode(arr.Select(x => x!.ToYamlNode()));
         }
 
+        private static readonly HashSet<string> YamlNullRepresentations = new(StringComparer.Ordinal)
+        {
+            "~",
+            "null",
+            "Null",
+            "NULL"
+        };
+
         private static JsonValue ToJsonValue(this YamlScalarNode yaml)
         {
-            switch (yaml.Style)
+            return yaml.Style switch
             {
-                case ScalarStyle.Plain:
-                    return decimal.TryParse(yaml.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var d)
-                        ? JsonValue.Create(d)
-                        : bool.TryParse(yaml.Value, out var b)
-                            ? JsonValue.Create(b)
-                            : JsonValue.Create(yaml.Value)!;
-                case ScalarStyle.SingleQuoted:
-                case ScalarStyle.DoubleQuoted:
-                case ScalarStyle.Literal:
-                case ScalarStyle.Folded:
-                case ScalarStyle.Any:
-                    return JsonValue.Create(yaml.Value)!;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                ScalarStyle.Plain when decimal.TryParse(yaml.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var d) => JsonValue.Create(d),
+                ScalarStyle.Plain when bool.TryParse(yaml.Value, out var b) => JsonValue.Create(b),
+                ScalarStyle.Plain when YamlNullRepresentations.Contains(yaml.Value) => (JsonValue)JsonNullSentinel.JsonNull.DeepClone(),
+                ScalarStyle.Plain => JsonValue.Create(yaml.Value),
+                ScalarStyle.SingleQuoted or ScalarStyle.DoubleQuoted or ScalarStyle.Literal or ScalarStyle.Folded or ScalarStyle.Any => JsonValue.Create(yaml.Value),
+                _ => throw new ArgumentOutOfRangeException(nameof(yaml)),
+            };
         }
 
         private static YamlScalarNode ToYamlScalar(this JsonValue val)
         {
-            return new YamlScalarNode(val.ToJsonString());
+            // Try to get the underlying value based on its actual type
+            // First try to get it as a string
+            if (val.GetValueKind() == JsonValueKind.String &&
+                val.TryGetValue(out string? stringValue))
+            {
+                // For string values, we need to determine if they should be quoted in YAML
+                // Strings that look like numbers, booleans, or null need to be quoted
+                // to preserve their string type when round-tripping
+                var needsQuoting = decimal.TryParse(stringValue, NumberStyles.Float, CultureInfo.InvariantCulture, out _) ||
+                                   bool.TryParse(stringValue, out _) ||
+                                   YamlNullRepresentations.Contains(stringValue);
+                
+                return new YamlScalarNode(stringValue)
+                {
+                    Style = needsQuoting ? ScalarStyle.DoubleQuoted : ScalarStyle.Plain
+                };
+            }
+            
+            // For non-string values (numbers, booleans, null), use their string representation
+            // These should remain unquoted in YAML
+            var valueString = val.ToString();
+            return new YamlScalarNode(valueString)
+            {
+                Style = ScalarStyle.Plain
+            };
         }
     }
 }

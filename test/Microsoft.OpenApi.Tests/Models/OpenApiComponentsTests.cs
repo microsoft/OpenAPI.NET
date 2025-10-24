@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Type = JsonSchemaType.Integer
                         },
-                        ["property3"] = new OpenApiSchemaReference("schema2", null)                        
+                        ["property3"] = new OpenApiSchemaReference("schema2", null)
                     }
                 },
                 ["schema2"] = new OpenApiSchema()
@@ -215,7 +215,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         },
                         ["property3"] = new OpenApiSchemaReference("schema2", null)
                     }
-                },                
+                },
 
                 ["schema2"] = new OpenApiSchema()
                 {
@@ -527,16 +527,16 @@ namespace Microsoft.OpenApi.Tests.Models
                 schemas:
                   schema1:
                     type: string
-                  schema2:
-                  schema3:
+                  schema2: null
+                  schema3: null
                   schema4:
                     type: string
                     allOf:
-                      -
-                      -
+                      - null
+                      - null
                       - type: string
-                      -
-                      -
+                      - null
+                      - null
                 """;
 
             // Act
