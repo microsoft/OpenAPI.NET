@@ -1,0 +1,16 @@
+openapi: 3.2.0
+info:
+  title: Test API
+  version: 1.0.0
+components:
+  responses:
+    SuccessResponse:
+      summary: Successful response
+      description: A successful response with summary
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string

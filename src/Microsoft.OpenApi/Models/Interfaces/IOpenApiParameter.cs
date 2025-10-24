@@ -103,5 +103,5 @@ public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiReadOnlyE
     /// When example or examples are provided in conjunction with the schema object,
     /// the example MUST follow the prescribed serialization strategy for the parameter.
     /// </summary>
-    public IDictionary<string, OpenApiMediaType>? Content { get; }    
+    public IDictionary<string, IOpenApiMediaType>? Content { get; }    
 }

@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi;
@@ -32,9 +33,18 @@ public class OpenApiReferenceWithDescriptionAndSummary : OpenApiReferenceWithDes
     /// <inheritdoc/>
     protected override void SerializeAdditionalV31Properties(IOpenApiWriter writer)
     {
+        SerializeAdditionalV3XProperties(writer, base.SerializeAdditionalV31Properties);
+    }
+    /// <inheritdoc/>
+    protected override void SerializeAdditionalV32Properties(IOpenApiWriter writer)
+    {
+        SerializeAdditionalV3XProperties(writer, base.SerializeAdditionalV32Properties);
+    }
+    private void SerializeAdditionalV3XProperties(IOpenApiWriter writer, Action<IOpenApiWriter> baseSerializer)
+    {
         // summary and description are in 3.1 but not in 3.0
         writer.WriteProperty(OpenApiConstants.Summary, Summary);
-        base.SerializeAdditionalV31Properties(writer);
+        baseSerializer(writer);
     }
     /// <inheritdoc/>
     protected override void SetAdditional31MetadataFromMapNode(JsonObject jsonObject)

@@ -1,0 +1,14 @@
+openapi: 3.2.0
+info:
+    title: Reference to an external OpenApi document component
+    version: 1.0.0
+paths:
+    /person/{id}:
+        get:
+          responses:
+            200:
+              description: ok
+              content:
+                application/json:
+                  schema:
+                    $ref: 'OAS-schemas.yaml#/components/schemas/person/properties/address'

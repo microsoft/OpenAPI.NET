@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 ["200"] = new OpenApiResponse
                 {
                     Description = "Pet updated.",
-                    Content = new Dictionary<string, OpenApiMediaType>()
+                    Content = new Dictionary<string, IOpenApiMediaType>()
                     {
                         ["application/json"] = new OpenApiMediaType(),
                         ["application/xml"] = new OpenApiMediaType()
@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             {
                 Description = "Pet to update with",
                 Required = true,
-                Content = new Dictionary<string, OpenApiMediaType>()
+                Content = new Dictionary<string, IOpenApiMediaType>()
                 {
                     ["application/json"] = new OpenApiMediaType
                     {
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 ["200"] = new OpenApiResponse
                 {
                     Description = "Pet updated.",
-                    Content = new Dictionary<string, OpenApiMediaType>()
+                    Content = new Dictionary<string, IOpenApiMediaType>()
                     {
                         ["application/json"] = new OpenApiMediaType(),
                         ["application/xml"] = new OpenApiMediaType()
@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 ["405"] = new OpenApiResponse
                 {
                     Description = "Invalid input",
-                    Content = new Dictionary<string, OpenApiMediaType>()
+                    Content = new Dictionary<string, IOpenApiMediaType>()
                     {
                         ["application/json"] = new OpenApiMediaType(),
                         ["application/xml"] = new OpenApiMediaType()
@@ -208,7 +208,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         { "200", new OpenApiResponse()
                         {
                             Description = "An array of float response",
-                            Content = new Dictionary<string, OpenApiMediaType>()
+                            Content = new Dictionary<string, IOpenApiMediaType>()
                             {
                                 ["application/json"] = new OpenApiMediaType()
                                 {
@@ -527,7 +527,7 @@ responses: { }";
             openApiDocument.AddComponent("UserRequest", new OpenApiRequestBody
             {
                 Description = "User creation request body",
-                Content = new Dictionary<string, OpenApiMediaType>()
+                Content = new Dictionary<string, IOpenApiMediaType>()
                 {
                     ["application/json"] = new OpenApiMediaType
                     {

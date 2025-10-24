@@ -1,0 +1,30 @@
+openapi: 3.2.0
+info:
+  title: ReferenceById
+  version: 1.0.0
+paths:
+  /resource:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiffCreatedEvent'
+components:
+  schemas:
+    DiffCreatedEvent:
+      description: 'diff index created'
+      type: object
+      additionalProperties: false
+      properties:
+        updatedAt:        
+          $ref: '#/components/schemas/Timestamp'
+      example:        
+          "updatedAt": '2020-06-30T06:43:51.391Z'        
+    Timestamp:      
+        type: string 
+        format: date-time 
+        description: 'timestamp' 
+        example: '2020-06-30T06:43:51.391Z' 

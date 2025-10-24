@@ -1,0 +1,1 @@
+{"name":"sessionId","in":"cookie","description":"Session identifier stored in cookie","style":"cookie","schema":{"type":"string"}}

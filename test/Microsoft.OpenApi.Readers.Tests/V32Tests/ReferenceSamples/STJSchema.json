@@ -1,0 +1,67 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": null,
+      "x-schema-id": null
+    },
+    "parent": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": null,
+          "x-schema-id": null
+        },
+        "parent": {
+          "$ref": "#/properties/parent",
+          "x-schema-id": "Category"
+        },
+        "tags": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": null,
+                "x-schema-id": null
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "x-schema-id": "Tag"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "x-schema-id": "Category"
+    },
+    "tags": {
+      "$ref": "#/properties/parent/properties/tags"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "x-schema-id": "Category"
+}

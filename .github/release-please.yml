@@ -5,3 +5,6 @@ branches:
   - branch: support/v1
     manifest: true
     handleGHRelease: true
+  - branch: support/v2
+    manifest: true
+    handleGHRelease: true

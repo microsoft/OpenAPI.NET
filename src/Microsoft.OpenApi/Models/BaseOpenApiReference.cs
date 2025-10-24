@@ -151,9 +151,24 @@ namespace Microsoft.OpenApi
         }
 
         /// <inheritdoc/>
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, SerializeAdditionalV32Properties);
+        }
+
+        /// <inheritdoc/>
         public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, SerializeAdditionalV31Properties);
+        }
+
+        /// <summary>
+        /// Serialize additional properties for Open Api v3.2.
+        /// </summary>
+        /// <param name="writer"></param>
+        protected virtual void SerializeAdditionalV32Properties(IOpenApiWriter writer)
+        {
+            // noop for the base type
         }
 
         /// <summary>

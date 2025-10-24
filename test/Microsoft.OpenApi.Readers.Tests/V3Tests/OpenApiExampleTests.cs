@@ -73,5 +73,39 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "explicitString.yaml"), SettingsFixture.ReaderSettings);
             Assert.Empty(result.Diagnostic.Errors);
         }
+
+        [Fact]
+        public async Task ParseExampleWithDataValueExtensionShouldSucceed()
+        {
+            // Arrange & Act
+            var example = await OpenApiModelFactory.LoadAsync<OpenApiExample>(
+                Path.Combine(SampleFolderPath, "exampleWithDataValue.yaml"), 
+                OpenApiSpecVersion.OpenApi3_0, 
+                new(), 
+                SettingsFixture.ReaderSettings);
+
+            // Assert
+            Assert.NotNull(example);
+            Assert.Equal("Example with dataValue (extension)", example.Summary);
+            Assert.NotNull(example.DataValue);
+            Assert.Equal("Alice Johnson", example.DataValue["name"].GetValue<string>());
+            Assert.Equal(28, example.DataValue["age"].GetValue<decimal>());
+        }
+
+        [Fact]
+        public async Task ParseExampleWithSerializedValueExtensionShouldSucceed()
+        {
+            // Arrange & Act
+            var example = await OpenApiModelFactory.LoadAsync<OpenApiExample>(
+                Path.Combine(SampleFolderPath, "exampleWithSerializedValue.yaml"), 
+                OpenApiSpecVersion.OpenApi3_0, 
+                new(), 
+                SettingsFixture.ReaderSettings);
+
+            // Assert
+            Assert.NotNull(example);
+            Assert.Equal("Example with serializedValue (extension)", example.Summary);
+            Assert.Equal("custom serialized string for V3", example.SerializedValue);
+        }
     }
 }

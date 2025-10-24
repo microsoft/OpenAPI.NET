@@ -17,9 +17,9 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Description = "description",
             Required = true,
-            Content = new Dictionary<string, OpenApiMediaType>()
+            Content = new Dictionary<string, IOpenApiMediaType>()
             {
-                ["application/json"] = new()
+                ["application/json"] = new OpenApiMediaType()
                 {
                     Schema = new OpenApiSchema()
                     {
@@ -34,9 +34,9 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Description = "description",
             Required = true,
-            Content = new Dictionary<string, OpenApiMediaType>()
+            Content = new Dictionary<string, IOpenApiMediaType>()
             {
-                ["application/json"] = new()
+                ["application/json"] = new OpenApiMediaType()
                 {
                     Schema = new OpenApiSchema()
                     {

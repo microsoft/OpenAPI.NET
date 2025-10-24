@@ -8,6 +8,7 @@ using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Reader.V2;
 using Microsoft.OpenApi.Reader.V3;
 using Microsoft.OpenApi.Reader.V31;
+using Microsoft.OpenApi.Reader.V32;
 
 namespace Microsoft.OpenApi.Reader
 {
@@ -88,6 +89,12 @@ namespace Microsoft.OpenApi.Reader
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_1;
                     ValidateRequiredFields(doc, version);
                     break;
+                case string version when version.is3_2():
+                    VersionService = new OpenApiV32VersionService(Diagnostic);
+                    doc = VersionService.LoadDocument(RootNode, location);
+                    this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_2;
+                    ValidateRequiredFields(doc, version);
+                    break;
                 default:
                     throw new OpenApiUnsupportedSpecVersionException(inputVersion);
             }
@@ -121,6 +128,10 @@ namespace Microsoft.OpenApi.Reader
                     break;
                 case OpenApiSpecVersion.OpenApi3_1:
                     this.VersionService = new OpenApiV31VersionService(Diagnostic);
+                    element = this.VersionService.LoadElement<T>(node, openApiDocument);
+                    break;
+                case OpenApiSpecVersion.OpenApi3_2:
+                    this.VersionService = new OpenApiV32VersionService(Diagnostic);
                     element = this.VersionService.LoadElement<T>(node, openApiDocument);
                     break;
             }
