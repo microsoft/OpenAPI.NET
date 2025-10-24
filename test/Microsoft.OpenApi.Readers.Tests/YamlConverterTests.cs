@@ -209,10 +209,7 @@ public class YamlConverterTests
         var yamlOutput = ConvertYamlNodeToString(yamlNode);
 
         // Convert back to JSON to verify round-tripping
-        var yamlStream = new YamlStream();
-        using var sr = new StringReader(yamlOutput);
-        yamlStream.Load(sr);
-        var jsonBack = yamlStream.Documents[0].ToJsonNode();
+        var jsonBack = ConvertYamlStringToJsonNode(yamlOutput);
 
         // Assert - line breaks should be preserved during round-trip
         var originalMultiline = json["multiline"]?.GetValue<string>();
@@ -260,13 +257,7 @@ public class YamlConverterTests
         "456": value2
         """;
 
-        var yamlDocument = new YamlStream();
-        using var sr = new StringReader(yamlInput);
-        yamlDocument.Load(sr);
-        var yamlRoot = yamlDocument.Documents[0].RootNode;
-        // When
-
-        var jsonNode = yamlRoot.ToJsonNode();
+        var jsonNode = ConvertYamlStringToJsonNode(yamlInput);
 
         var convertedBack = jsonNode.ToYamlNode();
         var convertedBackOutput = ConvertYamlNodeToString(convertedBack);
@@ -284,18 +275,20 @@ public class YamlConverterTests
         "false": value2
         """;
 
-        var yamlDocument = new YamlStream();
-        using var sr = new StringReader(yamlInput);
-        yamlDocument.Load(sr);
-        var yamlRoot = yamlDocument.Documents[0].RootNode;
-        // When
-
-        var jsonNode = yamlRoot.ToJsonNode();
+        var jsonNode = ConvertYamlStringToJsonNode(yamlInput);
 
         var convertedBack = jsonNode.ToYamlNode();
         var convertedBackOutput = ConvertYamlNodeToString(convertedBack);
         // Then
         Assert.Equal(yamlInput.MakeLineBreaksEnvironmentNeutral(), convertedBackOutput.MakeLineBreaksEnvironmentNeutral());
+    }
+    private static JsonNode ConvertYamlStringToJsonNode(string yamlInput)
+    {
+        var yamlDocument = new YamlStream();
+        using var sr = new StringReader(yamlInput);
+        yamlDocument.Load(sr);
+        var yamlRoot = yamlDocument.Documents[0].RootNode;
+        return yamlRoot.ToJsonNode();
     }
 
     private static string ConvertYamlNodeToString(YamlNode yamlNode)
