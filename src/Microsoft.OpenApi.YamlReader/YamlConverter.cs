@@ -87,7 +87,10 @@ namespace Microsoft.OpenApi.YamlReader
 
         private static YamlMappingNode ToYamlMapping(this JsonObject obj)
         {
-            return new YamlMappingNode(obj.ToDictionary(x => (YamlNode)new YamlScalarNode(x.Key), x => x.Value!.ToYamlNode()));
+            return new YamlMappingNode(obj.ToDictionary(x => (YamlNode)new YamlScalarNode(x.Key)
+            {
+                Style = NeedsQuoting(x.Key) ? ScalarStyle.DoubleQuoted : ScalarStyle.Plain
+            }, x => x.Value!.ToYamlNode()));
         }
 
         /// <summary>
@@ -132,6 +135,11 @@ namespace Microsoft.OpenApi.YamlReader
             };
         }
 
+        private static bool NeedsQuoting(string value) =>
+        decimal.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out _) ||
+                                   bool.TryParse(value, out _) ||
+                                   YamlNullRepresentations.Contains(value);
+
         private static YamlScalarNode ToYamlScalar(this JsonValue val)
         {
             // Try to get the underlying value based on its actual type
@@ -142,13 +150,20 @@ namespace Microsoft.OpenApi.YamlReader
                 // For string values, we need to determine if they should be quoted in YAML
                 // Strings that look like numbers, booleans, or null need to be quoted
                 // to preserve their string type when round-tripping
-                var needsQuoting = decimal.TryParse(stringValue, NumberStyles.Float, CultureInfo.InvariantCulture, out _) ||
-                                   bool.TryParse(stringValue, out _) ||
-                                   YamlNullRepresentations.Contains(stringValue);
+                var needsQuoting = NeedsQuoting(stringValue);
+
+                var containsNewLine = stringValue.Contains('\n');
+
+                var style = (needsQuoting, containsNewLine) switch
+                {
+                    (true, _) => ScalarStyle.DoubleQuoted,
+                    (false, true) => ScalarStyle.Literal,
+                    (false, false) => ScalarStyle.Plain
+                };
                 
                 return new YamlScalarNode(stringValue)
                 {
-                    Style = needsQuoting ? ScalarStyle.DoubleQuoted : ScalarStyle.Plain
+                    Style = style
                 };
             }
             
