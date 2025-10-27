@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.3.8](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.7...v2.3.8) (2025-10-27)
+
+
+### Bug Fixes
+
+* an issue where numeric property names would be missing quotes in yaml conversion ([da43c98](https://github.com/microsoft/OpenAPI.NET/commit/da43c98cfd7938a2354bfe57f431aa4bd0407b66))
+* an issue where numeric property names would be missing quotes in yaml conversion ([234504c](https://github.com/microsoft/OpenAPI.NET/commit/234504c6a1a53be8630b1f2eda8640f04a92327d))
+* quote property names in yaml that match boolean values ([39a9f41](https://github.com/microsoft/OpenAPI.NET/commit/39a9f4112a123b9207504d4a840a9be553703555))
+* yaml blocks and line returns ([b053848](https://github.com/microsoft/OpenAPI.NET/commit/b05384872e9364aedf8d8fc24b36bab9824594c5))
+* yaml multi-line literals maintain their lines ([558a1ce](https://github.com/microsoft/OpenAPI.NET/commit/558a1ceafc22e6075470a8799582575c8c1e125d))
+
 ## [2.3.7](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.6...v2.3.7) (2025-10-24)
 
 
