@@ -151,10 +151,19 @@ namespace Microsoft.OpenApi.YamlReader
                 // Strings that look like numbers, booleans, or null need to be quoted
                 // to preserve their string type when round-tripping
                 var needsQuoting = NeedsQuoting(stringValue);
+
+                var containsNewLine = stringValue.Contains('\n');
+
+                var style = (needsQuoting, containsNewLine) switch
+                {
+                    (true, _) => ScalarStyle.DoubleQuoted,
+                    (false, true) => ScalarStyle.Literal,
+                    (false, false) => ScalarStyle.Plain
+                };
                 
                 return new YamlScalarNode(stringValue)
                 {
-                    Style = needsQuoting ? ScalarStyle.DoubleQuoted : ScalarStyle.Plain
+                    Style = style
                 };
             }
             

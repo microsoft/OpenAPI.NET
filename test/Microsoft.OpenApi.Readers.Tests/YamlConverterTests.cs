@@ -282,6 +282,31 @@ public class YamlConverterTests
         // Then
         Assert.Equal(yamlInput.MakeLineBreaksEnvironmentNeutral(), convertedBackOutput.MakeLineBreaksEnvironmentNeutral());
     }
+
+    [Fact]
+    public void LineBreaksShouldRoundTrip()
+    {
+        var yamlInput =
+        """
+        python: |-
+          from openai import OpenAI
+
+          client = OpenAI(
+              api_key="My API Key",
+          )
+          page = client.beta.assistants.list()
+          page = page.data[0]
+          print(page.id)
+        """;
+        // When
+        var jsonNode = ConvertYamlStringToJsonNode(yamlInput);
+        var convertedBack = jsonNode.ToYamlNode();
+        var convertedBackOutput = ConvertYamlNodeToString(convertedBack);
+    
+        // Then
+        Assert.Equal(yamlInput.MakeLineBreaksEnvironmentNeutral(), convertedBackOutput.MakeLineBreaksEnvironmentNeutral());
+    }
+
     private static JsonNode ConvertYamlStringToJsonNode(string yamlInput)
     {
         var yamlDocument = new YamlStream();
