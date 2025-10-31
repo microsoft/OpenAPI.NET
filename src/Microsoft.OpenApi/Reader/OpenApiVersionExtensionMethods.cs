@@ -57,5 +57,21 @@ namespace Microsoft.OpenApi.Reader
 
             return result;
         }
+
+        /// <summary>
+        /// Extension method for Spec version 3.2
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public static bool is3_2(this string version)
+        {
+            bool result = false;
+            if (version.StartsWith("3.2", StringComparison.OrdinalIgnoreCase))
+            {
+                result = true;
+            }
+
+            return result;
+        }
     }
 }

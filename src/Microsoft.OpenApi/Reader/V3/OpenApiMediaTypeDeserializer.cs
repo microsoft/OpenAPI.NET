@@ -30,12 +30,31 @@ namespace Microsoft.OpenApi.Reader.V3
                     OpenApiConstants.Encoding,
                     (o, n, t) => o.Encoding = n.CreateMap(LoadEncoding, t)
                 },
+                {
+                    OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.ItemEncoding,
+                    (o, n, t) => o.ItemEncoding = LoadEncoding(n, t)
+                },
+                {
+                    OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.PrefixEncoding,
+                    (o, n, t) => o.PrefixEncoding = n.CreateList(LoadEncoding, t)
+                },
             };
 
         private static readonly PatternFieldMap<OpenApiMediaType> _mediaTypePatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, t) => 
+                {
+                    // Handle x-oai-itemSchema as ItemSchema property for forward compatibility
+                    if (p.Equals("x-oai-itemSchema", StringComparison.OrdinalIgnoreCase))
+                    {
+                        o.ItemSchema = LoadSchema(n, t);
+                    }
+                    else
+                    {
+                        o.AddExtension(p, LoadExtension(p, n));
+                    }
+                }}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields = new()
@@ -62,7 +81,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
         };
 
-        public static OpenApiMediaType LoadMediaType(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiMediaType LoadMediaType(ParseNode node, OpenApiDocument hostDocument)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Content);
 

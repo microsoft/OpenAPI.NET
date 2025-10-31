@@ -1,0 +1,11 @@
+﻿{
+  "name": "store",
+  "description": "Store operations",
+  "externalDocs": {
+    "description": "Find more info here",
+    "url": "https://example.com"
+  },
+  "summary": "Operations related to the pet store",
+  "parent": "pet",
+  "kind": "operational"
+}

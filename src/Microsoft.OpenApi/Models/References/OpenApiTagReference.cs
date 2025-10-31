@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -58,6 +59,27 @@ namespace Microsoft.OpenApi
 
         /// <inheritdoc/>
         public string? Name { get => Target?.Name ?? Reference?.Id; }
+
+        /// <inheritdoc/>
+        public string? Summary => Target?.Summary;
+
+        /// <inheritdoc/>
+        public OpenApiTagReference? Parent 
+        { 
+            get 
+            {
+                if (Target is OpenApiTagReference targetRef && (Reference.Id?.Equals(targetRef.Reference.Id, StringComparison.Ordinal) ?? false))
+                {
+                    return null;
+                }
+
+                return Target?.Parent;
+            }
+        }
+
+        /// <inheritdoc/>
+        public string? Kind => Target?.Kind;
+
         /// <inheritdoc/>
         public override IOpenApiTag CopyReferenceAsTargetElementWithOverrides(IOpenApiTag source)
         {

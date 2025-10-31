@@ -32,7 +32,21 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => 
+            {
+                if (p.Equals("x-oai-$self", StringComparison.OrdinalIgnoreCase))
+                {
+                    var value = n.GetScalarValue();
+                    if (value != null)
+                    {
+                        o.Self = new(value, UriKind.Absolute);
+                    }
+                }
+                else
+                {
+                    o.AddExtension(p, LoadExtension(p, n));
+                }
+            }}
         };
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode, Uri location)

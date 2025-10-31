@@ -1,0 +1,4 @@
+﻿{
+  "summary": "Example with serializedValue",
+  "x-oai-serializedValue": "custom serialized string"
+}

@@ -1,0 +1,12 @@
+openapi: 3.2.0
+$self: https://example.org/api/openapi.yaml
+info:
+  title: API with $self property
+  version: 1.0.0
+paths:
+  /test:
+    get:
+      summary: Test endpoint
+      responses:
+        '200':
+          description: Success

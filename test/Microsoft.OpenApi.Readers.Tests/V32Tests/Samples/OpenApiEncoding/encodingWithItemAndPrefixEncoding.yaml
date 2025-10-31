@@ -1,0 +1,10 @@
+# https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.2.0.md#encodingObject
+contentType: application/json
+itemEncoding:
+  contentType: application/xml
+  style: form
+  explode: true
+prefixEncoding:
+  - contentType: text/plain
+    style: simple
+  - contentType: application/octet-stream

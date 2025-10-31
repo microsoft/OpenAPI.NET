@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -57,11 +58,11 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             if (response.Content == null)
             {
-                response.Content = new Dictionary<string, OpenApiMediaType>();
+                response.Content = new Dictionary<string, IOpenApiMediaType>();
             }
             else if (context.GetFromTempStorage<bool>(TempStorageKeys.ResponseProducesSet, response))
             {
-                // Process "produces" only once since once specified at operation level it cannot be overriden.
+                // Process "produces" only once since once specified at operation level it cannot be overridden.
                 return;
             }
 
@@ -74,12 +75,12 @@ namespace Microsoft.OpenApi.Reader.V2
 
             foreach (var produce in produces)
             {
-                if (response.Content.TryGetValue(produce, out var produceValue))
+                if (response.Content.TryGetValue(produce, out var produceValue) && produceValue is OpenApiMediaType openApiMediaType)
                 {
                     if (schema != null)
                     {
-                        produceValue.Schema = schema;
-                        ProcessAnyFields(mapNode, produceValue, _mediaTypeAnyFields);
+                        openApiMediaType.Schema = schema;
+                        ProcessAnyFields(mapNode, openApiMediaType, _mediaTypeAnyFields);
                     }
                 }
                 else
@@ -154,12 +155,12 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             var exampleNode = node.CreateAny();
 
-            response.Content ??= new Dictionary<string, OpenApiMediaType>();
+            response.Content ??= new Dictionary<string, IOpenApiMediaType>();
 
             OpenApiMediaType mediaTypeObject;
-            if (response.Content.TryGetValue(mediaType, out var value))
+            if (response.Content.TryGetValue(mediaType, out var value) && value is OpenApiMediaType mediaTypeValue)
             {
-                mediaTypeObject = value;
+                mediaTypeObject = mediaTypeValue;
             }
             else
             {
@@ -192,7 +193,7 @@ namespace Microsoft.OpenApi.Reader.V2
             }
             if (response.Content?.Values is not null)
             {
-                foreach (var mediaType in response.Content.Values)
+                foreach (var mediaType in response.Content.Values.OfType<OpenApiMediaType>())
                 {
                     if (mediaType.Schema != null)
                     {

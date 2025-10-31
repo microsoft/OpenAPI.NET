@@ -42,9 +42,9 @@ namespace Microsoft.OpenApi.Tests.Validations
                             {
                                 ["200"] = new OpenApiResponse()
                                 {
-                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    Content = new Dictionary<string, IOpenApiMediaType>()
                                     {
-                                        ["application/json"] = new()
+                                        ["application/json"] = new OpenApiMediaType()
                                         {
                                             Schema = new OpenApiSchemaReference("test")
                                         }
@@ -96,9 +96,9 @@ namespace Microsoft.OpenApi.Tests.Validations
                             {
                                 ["200"] = new OpenApiResponse()
                                 {
-                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    Content = new Dictionary<string, IOpenApiMediaType>()
                                     {
-                                        ["application/json"] = new()
+                                        ["application/json"] = new OpenApiMediaType()
                                         {
                                             Schema = new OpenApiSchemaReference("test")
                                         }

@@ -61,6 +61,11 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Path item.
         /// </summary>
-        [Display("pathItems")] PathItem
+        [Display("pathItems")] PathItem,
+
+        /// <summary>
+        /// MediaTypes item.
+        /// </summary>
+        [Display("mediaTypes")] MediaType
     }
 }

@@ -30,13 +30,40 @@ namespace Microsoft.OpenApi
         /// Declares whether the property definition translates to an attribute instead of an element.
         /// Default value is false.
         /// </summary>
-        public bool Attribute { get; set; }
+        [Obsolete("Use NodeType property instead. This property will be removed in a future version.")]
+        internal bool Attribute
+        {
+            get
+            {
+                return NodeType == OpenApiXmlNodeType.Attribute;
+            }
+            set
+            {
+                NodeType = value ? OpenApiXmlNodeType.Attribute : OpenApiXmlNodeType.None;
+            }
+        }
 
         /// <summary>
         /// Signifies whether the array is wrapped.
         /// Default value is false.
         /// </summary>
-        public bool Wrapped { get; set; }
+        [Obsolete("Use NodeType property instead. This property will be removed in a future version.")]
+        internal bool Wrapped
+        {
+            get
+            {
+                return NodeType == OpenApiXmlNodeType.Element;
+            }
+            set
+            {
+                NodeType = value ? OpenApiXmlNodeType.Element : OpenApiXmlNodeType.None;
+            }
+        }
+
+        /// <summary>
+        /// The node type of the XML representation.
+        /// </summary>
+        public OpenApiXmlNodeType? NodeType { get; set; }
 
         /// <summary>
         /// Specification Extensions.
@@ -56,13 +83,20 @@ namespace Microsoft.OpenApi
             Name = xml?.Name ?? Name;
             Namespace = xml?.Namespace ?? Namespace;
             Prefix = xml?.Prefix ?? Prefix;
-            Attribute = xml?.Attribute ?? Attribute;
-            Wrapped = xml?.Wrapped ?? Wrapped;
+            NodeType = xml?.NodeType ?? NodeType;
             Extensions = xml?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(xml.Extensions) : null;
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiXml"/> to Open Api v3.0
+        /// Serialize <see cref="OpenApiXml"/> to Open Api v3.2
+        /// </summary>
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            Write(writer, OpenApiSpecVersion.OpenApi3_2);
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiXml"/> to Open Api v3.1
         /// </summary>
         public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
@@ -100,11 +134,25 @@ namespace Microsoft.OpenApi
             // prefix
             writer.WriteProperty(OpenApiConstants.Prefix, Prefix);
 
-            // attribute
-            writer.WriteProperty(OpenApiConstants.Attribute, Attribute, false);
-
-            // wrapped
-            writer.WriteProperty(OpenApiConstants.Wrapped, Wrapped, false);
+            // For OpenAPI 3.2.0 and above, serialize nodeType
+            if (specVersion >= OpenApiSpecVersion.OpenApi3_2)
+            {
+                if (NodeType.HasValue)
+                {
+                    writer.WriteProperty(OpenApiConstants.NodeType, NodeType.Value.GetDisplayName());
+                }
+            }
+            else
+            {
+                // For OpenAPI 3.1.0 and below, serialize attribute and wrapped
+                // Use backing fields if they were set via obsolete properties,
+                // otherwise derive from NodeType if set
+                var attribute = NodeType.HasValue && NodeType == OpenApiXmlNodeType.Attribute;
+                var wrapped = NodeType.HasValue && NodeType == OpenApiXmlNodeType.Element;
+                
+                writer.WriteProperty(OpenApiConstants.Attribute, attribute, false);
+                writer.WriteProperty(OpenApiConstants.Wrapped, wrapped, false);
+            }
 
             // extensions
             writer.WriteExtensions(Extensions, specVersion);

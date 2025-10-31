@@ -26,6 +26,16 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
+        public static readonly OpenApiTag TagWithV32Properties = new()
+        {
+            Name = "store",
+            Description = "Store operations",
+            Summary = "Operations related to the pet store",
+            Parent = new OpenApiTagReference("pet"),
+            Kind = "operational",
+            ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs
+        };
+
         public static IOpenApiTag ReferencedTag = new OpenApiTagReference("pet");
 
         [Theory]
@@ -309,6 +319,253 @@ x-tag-extension: null";
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
+        }
+
+        // Tests for V3.2 properties in V3.1 serialization (using extension format)
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeTagWithV32PropertiesAsV31JsonWorksAsync(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
+
+            // Act
+            TagWithV32Properties.SerializeAsV31(writer);
+            await writer.FlushAsync();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Fact]
+        public async Task SerializeTagWithV32PropertiesAsV31YamlWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiYamlWriter(outputStringWriter);
+            var expected = @"name: store
+description: Store operations
+externalDocs:
+  description: Find more info here
+  url: https://example.com
+x-oas-summary: Operations related to the pet store
+x-oas-parent: pet
+x-oas-kind: operational";
+
+            // Act
+            TagWithV32Properties.SerializeAsV31(writer);
+            await writer.FlushAsync();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+        // Tests for V3.2 properties in V3.2 serialization (using native format)
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeTagWithV32PropertiesAsV32JsonWorksAsync(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
+
+            // Act
+            TagWithV32Properties.SerializeAsV32(writer);
+            await writer.FlushAsync();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Fact]
+        public async Task SerializeTagWithV32PropertiesAsV32YamlWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiYamlWriter(outputStringWriter);
+            var expected = @"name: store
+description: Store operations
+externalDocs:
+  description: Find more info here
+  url: https://example.com
+summary: Operations related to the pet store
+parent: pet
+kind: operational";
+
+            // Act
+            TagWithV32Properties.SerializeAsV32(writer);
+            await writer.FlushAsync();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+        // Test for V3.0 serialization with V3.2 properties (should use extension format)
+        [Fact]
+        public async Task SerializeTagWithV32PropertiesAsV3YamlWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiYamlWriter(outputStringWriter);
+            var expected = @"name: store
+description: Store operations
+externalDocs:
+  description: Find more info here
+  url: https://example.com
+x-oas-summary: Operations related to the pet store
+x-oas-parent: pet
+x-oas-kind: operational";
+
+            // Act
+            TagWithV32Properties.SerializeAsV3(writer);
+            await writer.FlushAsync();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+        // Tests for individual V3.2 properties
+        [Fact]
+        public void TagWithSummaryPropertyWorks()
+        {
+            // Arrange & Act
+            var tag = new OpenApiTag
+            {
+                Name = "test",
+                Summary = "Test summary"
+            };
+
+            // Assert
+            Assert.Equal("test", tag.Name);
+            Assert.Equal("Test summary", tag.Summary);
+        }
+
+        [Fact]
+        public void TagWithParentPropertyWorks()
+        {
+            // Arrange & Act
+            var parentTag = new OpenApiTagReference("parent-tag");
+            var tag = new OpenApiTag
+            {
+                Name = "child",
+                Parent = parentTag
+            };
+
+            // Assert
+            Assert.Equal("child", tag.Name);
+            Assert.NotNull(tag.Parent);
+            Assert.Equal(parentTag, tag.Parent);
+        }
+
+        [Fact]
+        public void TagWithKindPropertyWorks()
+        {
+            // Arrange & Act
+            var tag = new OpenApiTag
+            {
+                Name = "test",
+                Kind = "category"
+            };
+
+            // Assert
+            Assert.Equal("test", tag.Name);
+            Assert.Equal("category", tag.Kind);
+        }
+
+        [Fact]
+        public void TagWithAllV32PropertiesWorks()
+        {
+            // Arrange & Act
+            var parentTag = new OpenApiTagReference("parent-tag");
+            var tag = new OpenApiTag
+            {
+                Name = "test",
+                Description = "Test description",
+                Summary = "Test summary",
+                Parent = parentTag,
+                Kind = "category"
+            };
+
+            // Assert
+            Assert.Equal("test", tag.Name);
+            Assert.Equal("Test description", tag.Description);
+            Assert.Equal("Test summary", tag.Summary);
+            Assert.Equal(parentTag, tag.Parent);
+            Assert.Equal("category", tag.Kind);
+        }
+
+        [Fact]
+        public void CreateShallowCopyIncludesV32Properties()
+        {
+            // Arrange
+            var originalParent = new OpenApiTagReference("original-parent");
+            var original = new OpenApiTag
+            {
+                Name = "original",
+                Description = "Original description",
+                Summary = "Original summary",
+                Parent = originalParent,
+                Kind = "original-kind"
+            };
+
+            // Act
+            var copy = original.CreateShallowCopy();
+
+            // Assert
+            Assert.Equal(original.Name, copy.Name);
+            Assert.Equal(original.Description, copy.Description);
+            Assert.Equal(original.Summary, copy.Summary);
+            Assert.Equal(original.Parent, copy.Parent);
+            Assert.Equal(original.Kind, copy.Kind);
+        }
+
+        [Fact]
+        public void TagWithNullV32PropertiesWorks()
+        {
+            // Arrange & Act
+            var tag = new OpenApiTag
+            {
+                Name = "test",
+                Summary = null,
+                Parent = null,
+                Kind = null
+            };
+
+            // Assert
+            Assert.Equal("test", tag.Name);
+            Assert.Null(tag.Summary);
+            Assert.Null(tag.Parent);
+            Assert.Null(tag.Kind);
+        }
+
+        [Theory]
+        [InlineData("category")]
+        [InlineData("operational")]
+        [InlineData("system")]
+        [InlineData("custom-kind")]
+        public void TagKindPropertyAcceptsVariousValues(string kindValue)
+        {
+            // Arrange & Act
+            var tag = new OpenApiTag
+            {
+                Name = "test",
+                Kind = kindValue
+            };
+
+            // Assert
+            Assert.Equal(kindValue, tag.Kind);
         }
     }
 }

@@ -41,7 +41,9 @@ namespace Microsoft.OpenApi.Reader.V31
                     var attribute = n.GetScalarValue();
                     if (attribute is not null)
                     {
+#pragma warning disable CS0618 // Type or member is obsolete
                         o.Attribute = bool.Parse(attribute);
+#pragma warning restore CS0618 // Type or member is obsolete
                     }
                 }
             },
@@ -52,7 +54,9 @@ namespace Microsoft.OpenApi.Reader.V31
                     var wrapped = n.GetScalarValue();
                     if (wrapped is not null)
                     {
+#pragma warning disable CS0618 // Type or member is obsolete
                         o.Wrapped = bool.Parse(wrapped);
+#pragma warning restore CS0618 // Type or member is obsolete
                     }
                 }
             }

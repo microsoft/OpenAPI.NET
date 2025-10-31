@@ -1,0 +1,7 @@
+schema:
+  type: array
+x-oai-itemEncoding:
+  contentType: image/png, image/jpeg
+  style: simple
+  explode: true
+  allowReserved: true

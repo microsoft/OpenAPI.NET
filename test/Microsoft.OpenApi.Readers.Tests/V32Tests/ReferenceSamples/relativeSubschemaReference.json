@@ -1,0 +1,58 @@
+{
+    "openapi": "3.2.0",
+    "info": {
+        "title": "Relative reference in a subschema of an component schema",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/items": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Foo"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Foo": {
+                "type": "object",
+                "properties": {
+                    "seq1": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": null,
+                                "x-schema-id": null
+                            }
+                        }
+                    },
+                    "seq2": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "$ref": "#/properties/seq1/items"
+                        }
+                    }
+                },
+                "x-schema-id": "ContainerType"
+            }
+        }
+    }
+}

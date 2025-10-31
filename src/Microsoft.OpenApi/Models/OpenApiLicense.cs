@@ -48,6 +48,16 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiLicense"/> to Open Api v3.2
+        /// </summary>
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_2);
+            writer.WriteProperty(OpenApiConstants.Identifier, Identifier);
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiLicense"/> to Open Api v3.1
         /// </summary>
         public virtual void SerializeAsV31(IOpenApiWriter writer)
