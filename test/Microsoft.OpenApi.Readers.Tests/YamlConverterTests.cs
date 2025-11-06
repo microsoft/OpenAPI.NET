@@ -2,6 +2,7 @@
 using Microsoft.OpenApi.YamlReader;
 using SharpYaml;
 using SharpYaml.Serialization;
+using System;
 using System.IO;
 using System.Text.Json.Nodes;
 using Xunit;
@@ -302,9 +303,17 @@ public class YamlConverterTests
         var jsonNode = ConvertYamlStringToJsonNode(yamlInput);
         var convertedBack = jsonNode.ToYamlNode();
         var convertedBackOutput = ConvertYamlNodeToString(convertedBack);
-    
+
         // Then
         Assert.Equal(yamlInput.MakeLineBreaksEnvironmentNeutral(), convertedBackOutput.MakeLineBreaksEnvironmentNeutral());
+    }
+    [Fact]
+    public void ItDoesNotSerializeTheSentinelValue()
+    {
+        var yamlValue = JsonNullSentinel.JsonNull.ToYamlNode();
+
+        var scalarNode = Assert.IsType<YamlScalarNode>(yamlValue);
+        Assert.Equal("null", scalarNode.Value, StringComparer.OrdinalIgnoreCase);
     }
 
     private static JsonNode ConvertYamlStringToJsonNode(string yamlInput)

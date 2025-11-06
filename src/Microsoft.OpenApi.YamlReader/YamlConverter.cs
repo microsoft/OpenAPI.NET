@@ -63,6 +63,10 @@ namespace Microsoft.OpenApi.YamlReader
             {
                 JsonObject obj => obj.ToYamlMapping(),
                 JsonArray arr => arr.ToYamlSequence(),
+                JsonValue nullVal when JsonNullSentinel.IsJsonNullSentinel(nullVal) => new YamlScalarNode("null")
+                {
+                    Style = ScalarStyle.Plain
+                },
                 JsonValue val => val.ToYamlScalar(),
                 _ => throw new NotSupportedException("This isn't a supported JsonNode")
             };
