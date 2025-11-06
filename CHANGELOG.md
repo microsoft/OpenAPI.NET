@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.9](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.8...v2.3.9) (2025-11-06)
+
+
+### Bug Fixes
+
+* a bug where null sentinel value would appear in YAML documents ([0e864c7](https://github.com/microsoft/OpenAPI.NET/commit/0e864c73791b8610a95f06da9fbb44bfa1cf75a9))
+* a bug where null sentinel value would appear in YAML documents ([15618e1](https://github.com/microsoft/OpenAPI.NET/commit/15618e1f6a79874ae61dc31e3bcd5e1f3177d7ff))
+
 ## [2.3.8](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.7...v2.3.8) (2025-10-27)
 
 
