@@ -25,8 +25,8 @@ Project Objectives:
 - Install core Nuget package [**Microsoft.OpenApi**](https://www.nuget.org/packages/Microsoft.OpenApi)
 - Install Yaml Reader Nuget package [**Microsoft.OpenApi.YamlReader**](https://www.nuget.org/packages/Microsoft.OpenApi.YamlReader)
 
-> Note: we just released a new major version of the library, which brings support for OpenAPI 3.1!
-> You can read more about the changes of this upcoming version [in the upgrade guide](./docs/upgrade-guide-2.md).
+> Note: we just released a new major version of the library, which brings support for OpenAPI 3.2!
+> You can read more about the changes of this upcoming version [in the upgrade guide](./docs/upgrade-guide-3.md).
 
 # Processors
 The OpenAPI.NET project holds the base object model for representing OpenAPI documents as .NET objects. Some developers have found the need to write processors that convert other data formats into this OpenAPI.NET object model. We'd like to curate that list of processors in this section of the readme. 
