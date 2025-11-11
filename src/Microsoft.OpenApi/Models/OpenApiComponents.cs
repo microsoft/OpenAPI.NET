@@ -63,6 +63,11 @@ namespace Microsoft.OpenApi
         public IDictionary<string, IOpenApiPathItem>? PathItems { get; set; }
 
         /// <summary>
+        /// An object to hold reusable <see cref="IOpenApiMediaType"/> Objects.
+        /// </summary>
+        public IDictionary<string, IOpenApiMediaType>? MediaTypes { get; set; }
+
+        /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
@@ -87,7 +92,17 @@ namespace Microsoft.OpenApi
             Links = components?.Links != null ? new Dictionary<string, IOpenApiLink>(components.Links) : null;
             Callbacks = components?.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(components.Callbacks) : null;
             PathItems = components?.PathItems != null ? new Dictionary<string, IOpenApiPathItem>(components.PathItems) : null;
+            MediaTypes = components?.MediaTypes != null ? new Dictionary<string, IOpenApiMediaType>(components.MediaTypes) : null;
             Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiComponents"/> to Open API v3.2.
+        /// </summary>
+        /// <param name="writer"></param>
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeAsV3X(writer, OpenApiSpecVersion.OpenApi3_2, (writer, element) => element.SerializeAsV32(writer), (writer, referenceElement) => referenceElement.SerializeAsV32(writer));
         }
 
         /// <summary>
@@ -96,13 +111,17 @@ namespace Microsoft.OpenApi
         /// <param name="writer"></param>
         public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
+            SerializeAsV3X(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer), (writer, referenceElement) => referenceElement.SerializeAsV31(writer));
+        }
+        private void SerializeAsV3X(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback, Action<IOpenApiWriter, IOpenApiReferenceHolder> action)
+        {
             Utils.CheckArgumentNull(writer);
 
             // If references have been inlined we don't need the to render the components section
             // however if they have cycles, then we will need a component rendered
             if (writer.GetSettings().InlineLocalReferences)
             {
-                RenderComponents(writer, (writer, element) => element.SerializeAsV31(writer), OpenApiSpecVersion.OpenApi3_1);                
+                RenderComponents(writer, callback, version);
                 return;
             }
 
@@ -116,16 +135,15 @@ namespace Microsoft.OpenApi
             {
                 if (component is OpenApiPathItemReference reference)
                 {
-                    reference.SerializeAsV31(w);
+                    action(w, reference);
                 }
                 else
                 {
-                    component.SerializeAsV31(w);
+                    callback(w, component);
                 }
             });
 
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer),
-               (writer, referenceElement) => referenceElement.SerializeAsV31(writer));
+            SerializeInternal(writer, version, callback, action);
         }
 
         /// <summary>
@@ -301,6 +319,26 @@ namespace Microsoft.OpenApi
                         callback(w, component);
                     }
                 });
+
+            // mediaTypes - serialize as native field in v3.2+
+            if (MediaTypes != null && version >= OpenApiSpecVersion.OpenApi3_2)
+            {
+
+                writer.WriteOptionalMap(
+                    OpenApiConstants.MediaTypes,
+                    MediaTypes,
+                    (w, key, component) =>
+                    {
+                        if (component is OpenApiMediaTypeReference reference)
+                        {
+                            action(w, reference);
+                        }
+                        else
+                        {
+                            callback(w, component);
+                        }
+                    });
+            }
 
             // extensions
             writer.WriteExtensions(Extensions, version);

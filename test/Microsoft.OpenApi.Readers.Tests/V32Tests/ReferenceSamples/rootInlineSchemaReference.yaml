@@ -1,0 +1,18 @@
+openapi: 3.2.0
+info:
+    title: Reference in at the root of an inline schema
+    version: 1.0.0
+paths:
+    /item:
+        get:
+          responses:
+            200:
+              description: ok
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/item'
+components:
+    schemas:
+      item:
+        type: object

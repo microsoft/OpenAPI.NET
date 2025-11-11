@@ -13,13 +13,16 @@ namespace Microsoft.OpenApi
     public class OpenApiResponse : IOpenApiExtensible, IOpenApiResponse
     {
         /// <inheritdoc/>
+        public string? Summary { get; set; }
+
+        /// <inheritdoc/>
         public string? Description { get; set; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiHeader>? Headers { get; set; }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get; set; }
+        public IDictionary<string, IOpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiLink>? Links { get; set; }
@@ -38,11 +41,20 @@ namespace Microsoft.OpenApi
         internal OpenApiResponse(IOpenApiResponse response)
         {
             Utils.CheckArgumentNull(response);
+            Summary = response.Summary ?? Summary;
             Description = response.Description ?? Description;
             Headers = response.Headers != null ? new Dictionary<string, IOpenApiHeader>(response.Headers) : null;
-            Content = response.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
+            Content = response.Content != null ? new Dictionary<string, IOpenApiMediaType>(response.Content) : null;
             Links = response.Links != null ? new Dictionary<string, IOpenApiLink>(response.Links) : null;
             Extensions = response.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiResponse"/> to Open Api v3.2
+        /// </summary>
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_2, (writer, element) => element.SerializeAsV32(writer));
         }
 
         /// <summary>
@@ -68,6 +80,12 @@ namespace Microsoft.OpenApi
 
             writer.WriteStartObject();
 
+            // summary - only for v3.2+
+            if (version >= OpenApiSpecVersion.OpenApi3_2)
+            {
+                writer.WriteProperty(OpenApiConstants.Summary, Summary);
+            }
+
             // description
             writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
 
@@ -79,6 +97,12 @@ namespace Microsoft.OpenApi
 
             // links
             writer.WriteOptionalMap(OpenApiConstants.Links, Links, callback);
+
+            // summary as extension for v3.1 and earlier
+            if (version < OpenApiSpecVersion.OpenApi3_2 && !string.IsNullOrEmpty(Summary))
+            {
+                writer.WriteProperty(OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.Summary, Summary);
+            }
 
             // extension
             writer.WriteExtensions(Extensions, version);

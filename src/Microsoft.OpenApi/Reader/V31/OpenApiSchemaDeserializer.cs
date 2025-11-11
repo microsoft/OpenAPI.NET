@@ -197,13 +197,10 @@ internal static partial class OpenApiV31Deserializer
                 {
                     var list = n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc);
                     JsonSchemaType combinedType = 0;
-                    foreach(var type in list)
+                    foreach(var type in list.Where(static t => t is not null))
                     {
-                        if (type is not null)
-                        {
-                            var schemaType = type.ToJsonSchemaType();
-                            combinedType |= schemaType;
-                        }                            
+                        var schemaType = type.ToJsonSchemaType();
+                        combinedType |= schemaType;
                     }
                     o.Type = combinedType;
                 }

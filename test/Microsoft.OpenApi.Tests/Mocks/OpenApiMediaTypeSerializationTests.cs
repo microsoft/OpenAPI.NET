@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Tests.Mocks
 
         public OpenApiMediaTypeSerializationTests()
         {
-            _mediaType = OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"];
+            _mediaType = (OpenApiMediaType)OpenApiDocumentMock.CreateCompleteOpenApiDocument().Paths["/pets"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"];
             _mediaType.Schema = _schemaMock.Object;
             _mediaType.Examples["cat"] = _exampleMock.Object;
             _mediaType.Examples["example"] = _exampleMock.Object;

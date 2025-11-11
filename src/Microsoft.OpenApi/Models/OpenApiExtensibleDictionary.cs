@@ -36,6 +36,14 @@ namespace Microsoft.OpenApi
         /// </summary>
         public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
+        /// <summary>
+        /// Serialize to Open Api v3.2
+        /// </summary>
+        /// <param name="writer"></param>
+        public void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_2, (writer, element) => element.SerializeAsV32(writer));
+        }
 
         /// <summary>
         /// Serialize to Open Api v3.1

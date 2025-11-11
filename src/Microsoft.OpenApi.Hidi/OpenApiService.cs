@@ -67,9 +67,9 @@ namespace Microsoft.OpenApi.Hidi
                     throw new IOException($"The file {options.Output} already exists. Please input a new file path.");
                 }
 
-                // Default to yaml and OpenApiVersion 3_1 during csdl to OpenApi conversion
+                // Default to yaml and OpenApiVersion 3_2 during csdl to OpenApi conversion
                 var openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiConstants.Yaml);
-                var openApiVersion = options.Version != null ? TryParseOpenApiSpecVersion(options.Version) : OpenApiSpecVersion.OpenApi3_1;
+                var openApiVersion = options.Version != null ? TryParseOpenApiSpecVersion(options.Version) : OpenApiSpecVersion.OpenApi3_2;
 
                 // If ApiManifest is provided, set the referenced OpenAPI document
                 var apiDependency = await FindApiDependencyAsync(options.FilterOptions.FilterByApiManifest, logger, cancellationToken).ConfigureAwait(false);

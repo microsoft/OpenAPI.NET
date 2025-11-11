@@ -277,7 +277,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
                     if (response.Content != null)
                     {
-                        foreach (var mediaType in response.Content.Values)
+                        foreach (var mediaType in response.Content.Values.OfType<OpenApiMediaType>())
                         {
                             ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
                         }

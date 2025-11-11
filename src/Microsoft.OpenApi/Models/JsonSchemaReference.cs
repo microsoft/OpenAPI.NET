@@ -74,10 +74,19 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
     /// <inheritdoc/>
     protected override void SerializeAdditionalV31Properties(IOpenApiWriter writer)
     {
+        SerializeAdditionalV3XProperties(writer, base.SerializeAdditionalV31Properties);
+    }
+    /// <inheritdoc/>
+    protected override void SerializeAdditionalV32Properties(IOpenApiWriter writer)
+    {
+        SerializeAdditionalV3XProperties(writer, base.SerializeAdditionalV32Properties);
+    }
+    private void SerializeAdditionalV3XProperties(IOpenApiWriter writer, Action<IOpenApiWriter> baseSerializer)
+    {
         if (Type != ReferenceType.Schema) throw new InvalidOperationException(
             $"JsonSchemaReference can only be serialized for ReferenceType.Schema, but was {Type}.");
 
-        base.SerializeAdditionalV31Properties(writer);        
+        baseSerializer(writer);
         // Additional schema metadata annotations in 3.1
         writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
         writer.WriteProperty(OpenApiConstants.Title, Title);

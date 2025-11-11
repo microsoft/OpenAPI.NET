@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     {
                                         RequestBody = new OpenApiRequestBody
                                         {
-                                            Content = new Dictionary<string, OpenApiMediaType>
+                                            Content = new Dictionary<string, IOpenApiMediaType>
                                             {
                                                 ["application/json"] = null
                                             }
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 {
                                     RequestBody = new OpenApiRequestBody
                                     {
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new Dictionary<string, IOpenApiMediaType>
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 {
                                     RequestBody = new OpenApiRequestBody
                                     {
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new Dictionary<string, IOpenApiMediaType>
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -173,7 +173,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     RequestBody = new OpenApiRequestBody
                                     {
                                         Description = "Callback 2",
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new Dictionary<string, IOpenApiMediaType>
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -209,7 +209,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 {
                                     RequestBody = new OpenApiRequestBody
                                     {
-                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        Content = new Dictionary<string, IOpenApiMediaType>
                                         {
                                             ["application/xml"] = new OpenApiMediaType
                                             {

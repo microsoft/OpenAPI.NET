@@ -56,6 +56,12 @@ namespace Microsoft.OpenApi
         public JsonNode? Value { get => Target?.Value; }
 
         /// <inheritdoc/>
+        public JsonNode? DataValue { get => Target?.DataValue; }
+
+        /// <inheritdoc/>
+        public string? SerializedValue { get => Target?.SerializedValue; }
+
+        /// <inheritdoc/>
         public override IOpenApiExample CopyReferenceAsTargetElementWithOverrides(IOpenApiExample source)
         {
             return source is OpenApiExample ? new OpenApiExample(this) : source;

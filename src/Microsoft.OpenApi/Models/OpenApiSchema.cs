@@ -323,6 +323,11 @@ namespace Microsoft.OpenApi
             UnrecognizedKeywords = schema.UnrecognizedKeywords != null ? new Dictionary<string, JsonNode>(schema.UnrecognizedKeywords) : null;
             DependentRequired = schema.DependentRequired != null ? new Dictionary<string, HashSet<string>>(schema.DependentRequired) : null;
         }
+        /// <inheritdoc />
+        public virtual void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_2, (writer, element) => element.SerializeAsV32(writer));
+        }
 
         /// <inheritdoc />
         public virtual void SerializeAsV31(IOpenApiWriter writer)
@@ -384,7 +389,7 @@ namespace Microsoft.OpenApi
         {
             writer.WriteStartObject();
 
-            if (version == OpenApiSpecVersion.OpenApi3_1)
+            if (version >= OpenApiSpecVersion.OpenApi3_1)
             {
                 WriteJsonSchemaKeywords(writer);
             }

@@ -35,8 +35,12 @@ namespace Microsoft.OpenApi.Hidi
             {
                 return OpenApiSpecVersion.OpenApi3_1;
             }
+            else if (majorVersion == 3 && minorVersion == 2)
+            {
+                return OpenApiSpecVersion.OpenApi3_2;
+            }
 
-            return OpenApiSpecVersion.OpenApi3_1; // default
+            return OpenApiSpecVersion.OpenApi3_2; // default
         }
     }
 }

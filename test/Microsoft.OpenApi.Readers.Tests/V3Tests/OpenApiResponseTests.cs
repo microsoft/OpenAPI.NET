@@ -24,5 +24,29 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
             Assert.Equal(expected.Description, actual.Description);
         }
+
+        [Fact]
+        public async Task ResponseWithSummaryV32ShouldDeserializeCorrectly()
+        {
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "responseWithSummary.yaml"), SettingsFixture.ReaderSettings);
+
+            var response = result.Document.Components.Responses["SuccessResponse"] as OpenApiResponse;
+            
+            Assert.NotNull(response);
+            Assert.Equal("Successful response", response.Summary);
+            Assert.Equal("A successful response with summary", response.Description);
+        }
+
+        [Fact]
+        public async Task ResponseWithSummaryExtensionV31ShouldDeserializeCorrectly()
+        {
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "responseWithSummaryExtension.yaml"), SettingsFixture.ReaderSettings);
+
+            var response = result.Document.Components.Responses["SuccessResponse"] as OpenApiResponse;
+            
+            Assert.NotNull(response);
+            Assert.Equal("Successful response", response.Summary);
+            Assert.Equal("A successful response with summary extension", response.Description);
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Response Object Reference.
     /// </summary>
-    public class OpenApiResponseReference : BaseOpenApiReferenceHolder<OpenApiResponse, IOpenApiResponse, OpenApiReferenceWithDescription>, IOpenApiResponse
+    public class OpenApiResponseReference : BaseOpenApiReferenceHolder<OpenApiResponse, IOpenApiResponse, OpenApiReferenceWithDescriptionAndSummary>, IOpenApiResponse
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -33,6 +33,13 @@ namespace Microsoft.OpenApi
         }
 
         /// <inheritdoc/>
+        public string? Summary 
+        { 
+            get => string.IsNullOrEmpty(Reference.Summary) ? Target?.Summary : Reference.Summary;
+            set => Reference.Summary = value;
+        }
+
+        /// <inheritdoc/>
         public string? Description
         {
             get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
@@ -40,7 +47,7 @@ namespace Microsoft.OpenApi
         }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
+        public IDictionary<string, IOpenApiMediaType>? Content { get => Target?.Content; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiHeader>? Headers { get => Target?.Headers; }
@@ -63,9 +70,9 @@ namespace Microsoft.OpenApi
             return new OpenApiResponseReference(this);
         }
         /// <inheritdoc/>
-        protected override OpenApiReferenceWithDescription CopyReference(OpenApiReferenceWithDescription sourceReference)
+        protected override OpenApiReferenceWithDescriptionAndSummary CopyReference(OpenApiReferenceWithDescriptionAndSummary sourceReference)
         {
-            return new OpenApiReferenceWithDescription(sourceReference);
+            return new OpenApiReferenceWithDescriptionAndSummary(sourceReference);
         }
     }
 }

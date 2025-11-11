@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
@@ -18,7 +19,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse AdvancedV2Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content = new Dictionary<string, OpenApiMediaType>
+            Content = new Dictionary<string, IOpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -57,7 +58,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse AdvancedV3Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content = new Dictionary<string, OpenApiMediaType>
+            Content = new Dictionary<string, IOpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -98,7 +99,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse ReferencedV2Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content = new Dictionary<string, OpenApiMediaType>
+            Content = new Dictionary<string, IOpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -134,7 +135,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiResponse ReferencedV3Response => new OpenApiResponse
         {
             Description = "A complex object array response",
-            Content = new Dictionary<string, OpenApiMediaType>
+            Content = new Dictionary<string, IOpenApiMediaType>
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
@@ -163,6 +164,22 @@ namespace Microsoft.OpenApi.Tests.Models
                         Type = JsonSchemaType.Integer
                     }
                 },
+            }
+        };
+
+        private static OpenApiResponse ResponseWithSummary => new OpenApiResponse
+        {
+            Summary = "Successful response",
+            Description = "A detailed description of a successful response",
+            Content = new Dictionary<string, IOpenApiMediaType>
+            {
+                ["application/json"] = new OpenApiMediaType
+                {
+                    Schema = new OpenApiSchema()
+                    {
+                        Type = JsonSchemaType.Object
+                    }
+                }
             }
         };
 
@@ -398,6 +415,86 @@ headers:
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Fact]
+        public async Task SerializeResponseWithSummaryAsV32Works()
+        {
+            // Arrange
+            var expected = @"{
+  ""summary"": ""Successful response"",
+  ""description"": ""A detailed description of a successful response"",
+  ""content"": {
+    ""application/json"": {
+      ""schema"": {
+        ""type"": ""object""
+      }
+    }
+  }
+}";
+
+            // Act
+            var actual = await ResponseWithSummary.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeResponseWithSummaryAsV31Works()
+        {
+            // Arrange
+            var expected = @"{
+  ""description"": ""A detailed description of a successful response"",
+  ""content"": {
+    ""application/json"": {
+      ""schema"": {
+        ""type"": ""object""
+      }
+    }
+  },
+  ""x-oai-summary"": ""Successful response""
+}";
+
+            // Act
+            var actual = await ResponseWithSummary.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeResponseWithSummaryAsV3Works()
+        {
+            // Arrange
+            var expected = @"{
+  ""description"": ""A detailed description of a successful response"",
+  ""content"": {
+    ""application/json"": {
+      ""schema"": {
+        ""type"": ""object""
+      }
+    }
+  },
+  ""x-oai-summary"": ""Successful response""
+}";
+
+            // Act
+            var actual = await ResponseWithSummary.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public void ResponseWithSummaryShouldImplementIOpenApiSummarizedElement()
+        {
+            // Arrange
+            var response = new OpenApiResponse { Summary = "Test summary" };
+
+            // Act & Assert
+            Assert.IsType<IOpenApiSummarizedElement>(response, exactMatch: false);
+            Assert.Equal("Test summary", response.Summary);
         }
     }
 }

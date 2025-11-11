@@ -20,7 +20,31 @@ The best way to get started with a contribution is to start a dialog with the ow
 
 ## Submit pull requests for bug fixes and features
 
-Feel free to submit a pull request with a linked issue against the __main__ branch.  The main branch will be updated frequently.
+Feel free to submit a pull request with a linked issue.
+
+### Branches and support policy
+
+Because one major consumer of these libraries is ASP.net, the support policy of this repository is aligned with [dotnet support policy](https://dotnet.microsoft.com/platform/support/policy/dotnet-core#lifecycle).
+
+The following table outlines the mapping between package major versions, dotnet versions, and which contributions are accepted. As a consumer, make sure the version of this library your application is using is aligned with the version of ASP.net described in the table below.
+
+| Major version | Branch     | Supported ASP.NET versions | Supported OpenAPI versions | Changes provided by Microsoft               | Accepted contributions                      | End of support date |
+| ------------- | ---------- | -------------------------- | -------------------------- | ------------------------------------------- | ------------------------------------------- | --------------- |
+| 1.X           | support/v1 | < 10                       | 2.0, 3.0                   | security fixes                              | security and bugfixes                       | net 9 (Nov 2026)           |
+| 2.X           | support/v2 | = 10 *                     | 2.0, 3.0, 3.1              | security and bugfixes                       | security and bugfixes                       | net 10 (Nov 2028) * |
+| 3.X           | main       | not available              | 2.0, 3.0, 3.1, 3.2         | security, bugfixes and feature improvements | security, bugfixes and feature improvements | TBD ** |
+
+> Notes:
+>
+> * This assumes that NET 11 and above will adopt version 3 or above of this library, otherwise, it'd expand the support date for version 2 of this library.
+> ** This will be conditioned by new releases of OpenAPI, this library, asp.net and asp.net's adoptions of new versions of this library.
+
+### Multi-versions requirement for contributions
+
+When contributing to the library, start by making a contribution to the main branch first, or the uppermost version it applies to. During the review process you'll be asked to demonstrate your contribution cannot apply to prior versions or to port your contribution to the branches for prior versions before the initial pull request can get merged.
+
+This approach helps maintain a similar behavior across all versions under active support.
+
 ## Commit message format
 
 To support our automated release process, pull requests are required to follow the [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/)

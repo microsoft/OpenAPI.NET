@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var ruleset = ValidationRuleSet.GetDefaultRuleSet();
             var validator = new OpenApiValidator(ruleset);
             var walker = new OpenApiWalker(validator);
-            walker.Walk(mediaType);
+            walker.Walk((IOpenApiMediaType)mediaType);
 
             warnings = validator.Warnings;
             var result = !warnings.Any();
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var ruleset = ValidationRuleSet.GetDefaultRuleSet();
             var validator = new OpenApiValidator(ruleset);
             var walker = new OpenApiWalker(validator);
-            walker.Walk(mediaType);
+            walker.Walk((IOpenApiMediaType)mediaType);
 
             warnings = validator.Warnings;
             var result = !warnings.Any();

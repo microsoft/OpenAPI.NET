@@ -100,6 +100,19 @@ public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHol
     }
 
     /// <inheritdoc/>
+    public virtual void SerializeAsV32(IOpenApiWriter writer)
+    {
+        if (!writer.GetSettings().ShouldInlineReference(Reference))
+        {
+            Reference.SerializeAsV32(writer);
+        }
+        else
+        {
+            SerializeInternal(writer, (writer, element) => CopyReferenceAsTargetElementWithOverrides(element).SerializeAsV32(writer));
+        }
+    }
+
+    /// <inheritdoc/>
     public virtual void SerializeAsV31(IOpenApiWriter writer)
     {
         if (!writer.GetSettings().ShouldInlineReference(Reference))

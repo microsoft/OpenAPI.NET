@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "pet response",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 {
                                     Description = "Information about a new pet in the system",
                                     Required = true,
-                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    Content = new Dictionary<string, IOpenApiMediaType>()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     ["200"] = new OpenApiResponse
                                     {
                                         Description = "Return a 200 status to indicate that the data was received successfully",
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, IOpenApiMediaType>()
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -339,7 +339,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "pet response",
-                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    Content = new Dictionary<string, IOpenApiMediaType>()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -367,7 +367,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             {
                                 Description = "Information about a new pet in the system",
                                 Required = true,
-                                Content = new Dictionary<string, OpenApiMediaType>()
+                                Content = new Dictionary<string, IOpenApiMediaType>()
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
@@ -380,7 +380,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 ["200"] = new OpenApiResponse
                                 {
                                     Description = "Return a 200 status to indicate that the data was received successfully",
-                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    Content = new Dictionary<string, IOpenApiMediaType>()
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
@@ -610,6 +610,25 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             Assert.Equal(targetSchemaExample, actualSchemaExample);
             Assert.Empty(result.Diagnostic.Errors);
             Assert.Empty(result.Diagnostic.Warnings);            
+        }
+
+        [Fact]
+        public async Task ParseDocumentWithSelfExtensionWorks()
+        {
+            // Arrange && Act
+            var path = Path.Combine(SampleFolderPath, "documentWithSelfExtension.yaml");
+            var result = await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings);
+
+            // Assert
+            Assert.NotNull(result.Document);
+            Assert.NotNull(result.Document.Self);
+            Assert.Equal("https://example.org/api/openapi.yaml", result.Document.Self.ToString());
+            Assert.Equal("API with x-oai-$self extension", result.Document.Info.Title);
+            Assert.Equal("1.0.0", result.Document.Info.Version);
+            // The x-oai-$self extension should be moved to the Self property and not remain in extensions
+            Assert.Null(result.Document.Extensions);
+            Assert.Empty(result.Diagnostic.Errors);
+            Assert.Empty(result.Diagnostic.Warnings);
         }
     }
 }

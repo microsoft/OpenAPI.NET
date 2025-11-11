@@ -41,6 +41,11 @@ namespace Microsoft.OpenApi
         public const string JsonSchemaDialect = "jsonSchemaDialect";
 
         /// <summary>
+        /// Field: $self
+        /// </summary>
+        public const string Self = "$self";
+
+        /// <summary>
         /// Field: Webhooks
         /// </summary>
         public const string Webhooks = "webhooks";
@@ -241,6 +246,11 @@ namespace Microsoft.OpenApi
         public const string Wrapped = "wrapped";
 
         /// <summary>
+        /// Field: NodeType
+        /// </summary>
+        public const string NodeType = "nodeType";
+
+        /// <summary>
         /// Field: In
         /// </summary>
         public const string In = "in";
@@ -291,6 +301,11 @@ namespace Microsoft.OpenApi
         public const string Schema = "schema";
 
         /// <summary>
+        /// Field: ItemSchema
+        /// </summary>
+        public const string ItemSchema = "itemSchema";
+
+        /// <summary>
         /// Field: Schemas
         /// </summary>
         public const string Schemas = "schemas";
@@ -316,6 +331,16 @@ namespace Microsoft.OpenApi
         public const string Encoding = "encoding";
 
         /// <summary>
+        /// Field: ItemEncoding
+        /// </summary>
+        public const string ItemEncoding = "itemEncoding";
+
+        /// <summary>
+        /// Field: PrefixEncoding
+        /// </summary>
+        public const string PrefixEncoding = "prefixEncoding";
+
+        /// <summary>
         /// Field: RequestBodies
         /// </summary>
         public const string RequestBodies = "requestBodies";
@@ -334,6 +359,16 @@ namespace Microsoft.OpenApi
         /// Field: ExternalValue
         /// </summary>
         public const string ExternalValue = "externalValue";
+
+        /// <summary>
+        /// Field: DataValue
+        /// </summary>
+        public const string DataValue = "dataValue";
+
+        /// <summary>
+        /// Field: SerializedValue
+        /// </summary>
+        public const string SerializedValue = "serializedValue";
 
         /// <summary>
         /// Field: DollarRef
@@ -364,6 +399,11 @@ namespace Microsoft.OpenApi
         /// Field: Callbacks
         /// </summary>
         public const string Callbacks = "callbacks";
+
+        /// <summary>
+        /// Field: MediaTypes
+        /// </summary>
+        public const string MediaTypes = "mediaTypes";
 
         /// <summary>
         /// Field: Url
@@ -556,6 +596,11 @@ namespace Microsoft.OpenApi
         public const string AuthorizationCode = "authorizationCode";
 
         /// <summary>
+        /// Field: DeviceAuthorization
+        /// </summary>
+        public const string DeviceAuthorization = "deviceAuthorization";
+
+        /// <summary>
         /// Field: AuthorizationUrl
         /// </summary>
         public const string AuthorizationUrl = "authorizationUrl";
@@ -569,6 +614,11 @@ namespace Microsoft.OpenApi
         /// Field: RefreshUrl
         /// </summary>
         public const string RefreshUrl = "refreshUrl";
+
+        /// <summary>
+        /// Field: DeviceAuthorizationUrl
+        /// </summary>
+        public const string DeviceAuthorizationUrl = "deviceAuthorizationUrl";
 
         /// <summary>
         /// Field: Scopes
@@ -741,6 +791,11 @@ namespace Microsoft.OpenApi
         /// Field: version2_0
         /// </summary>
         public static readonly Version version2_0 = new(2, 0);
+
+        /// <summary>
+        /// Field: AdditionalOperations
+        /// </summary>
+        public const string AdditionalOperations = "additionalOperations";
 
         /// <summary>
         /// Field: BasePath

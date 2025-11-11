@@ -1,0 +1,49 @@
+{
+  "$id": "https://example.com/arrays.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A representation of a person, company, organization, or place",
+  "type": "object",
+  "properties": {
+    "fruits": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "vegetables": {
+      "type": "array"
+    }
+  },
+  "$defs": {
+    "veggie": {
+      "type": "object",
+      "required": [ "veggieName", "veggieLike" ],
+      "properties": {
+        "veggieName": {
+          "type": "string",
+          "description": "The name of the vegetable."
+        },
+        "veggieLike": {
+          "type": "boolean",
+          "description": "Do I like this vegetable?"
+        },
+        "veggieType": {
+          "type": "string",
+          "description": "The type of vegetable (e.g., root, leafy, etc.)."
+        },
+        "veggieColor": {
+          "type": "string",
+          "description": "The color of the vegetable."
+        },
+        "veggieSize": {
+          "type": "string",
+          "description": "The size of the vegetable."
+        }
+      },
+      "dependentRequired": {
+        "veggieType": [ "veggieColor", "veggieSize" ]
+      }
+    }
+  }
+}
+
