@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.0.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.9...v3.0.0) (2025-11-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* adds support for OpenAPI 3.2.0
+
+> Note: Please refer to the [upgrade guide](https://github.com/microsoft/OpenAPI.NET/blob/main/docs/upgrade-guide-3.md) for a detailed description of the breaking changes.
+
+> Note: ASP.net users should remain on version 1.X for ASP.net < 10, and version 2.X for ASP.net 10, this new major version will be implemented in a future version of ASP.net, [more information](https://github.com/microsoft/OpenAPI.NET/blob/main/CONTRIBUTING.md#branches-and-support-policy)
+
+### Features
+
+* adds support for OpenAPI 3.2.0 ([765a8dd](https://github.com/microsoft/OpenAPI.NET/commit/765a8dd4d6efd1a31b6a76d282ccffa5877a845a))
+
 ## [2.3.9](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.8...v2.3.9) (2025-11-06)
 
 
