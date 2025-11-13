@@ -39,8 +39,8 @@
     </PackageReference>
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta5.25306.1" />
     <PackageReference Include="Microsoft.OData.Edm" Version="8.4.2" />
-    <PackageReference Include="Microsoft.OpenApi.OData" Version="2.0.0" />
-    <PackageReference Include="Microsoft.OpenApi.ApiManifest" Version="2.0.0-preview5" />
+    <PackageReference Include="Microsoft.OpenApi.OData" Version="3.0.0" />
+    <PackageReference Include="Microsoft.OpenApi.ApiManifest" Version="3.0.0-preview.1" />
     <PackageReference Include="System.CommandLine.Hosting" Version="0.4.0-alpha.25306.1" />
   </ItemGroup>
 
