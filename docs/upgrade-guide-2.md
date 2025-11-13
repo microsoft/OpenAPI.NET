@@ -20,7 +20,7 @@ If you are using this library with [AspNetCore OpenAPI versions](https://www.nug
 
 If you are using this library with [Swashbuckle.AspNetCore version](https://www.nuget.org/packages/Swashbuckle.AspNetCore/) `< 10.0` then you must remain on version `1.x` as it's not compatible.
 
-The latest support policy information for this library, and integration with ASP.NET can be found on [the contributing documentation](https://github.com/microsoft/OpenAPI.NET/blob/main/CONTRIBUTING.md#branches-and-support-policy).
+The latest support policy information for this library, and integration with ASP.NET Core can be found on [the contributing documentation](https://github.com/microsoft/OpenAPI.NET/blob/main/CONTRIBUTING.md#branches-and-support-policy).
 
 ## The biggest update ever
 
