@@ -14,7 +14,7 @@ OpenAPI.NET v2 is a major update to the OpenAPI.NET library. This release includ
 > [!WARNING]
 > This is a major version update that includes breaking changes. Please review this guide carefully before upgrading.
 
-## Integrations with ASP.NET
+## Integrations with ASP.NET Core
 
 If you are using this library with [AspNetCore OpenAPI versions](https://www.nuget.org/packages/Microsoft.AspNetCore.OpenApi) `< 10.0` then you must remain on version `1.x` as it's not compatible.
 
