@@ -28,16 +28,17 @@ Because one major consumer of these libraries is ASP.net, the support policy of 
 
 The following table outlines the mapping between package major versions, dotnet versions, and which contributions are accepted. As a consumer, make sure the version of this library your application is using is aligned with the version of ASP.net described in the table below.
 
-| Major version | Branch     | Supported ASP.NET versions | Supported OpenAPI versions | Changes provided by Microsoft               | Accepted contributions                      | End of support date |
-| ------------- | ---------- | -------------------------- | -------------------------- | ------------------------------------------- | ------------------------------------------- | --------------- |
-| 1.X           | support/v1 | < 10                       | 2.0, 3.0                   | security fixes                              | security and bugfixes                       | net 9 (Nov 2026)           |
-| 2.X           | support/v2 | = 10 *                     | 2.0, 3.0, 3.1              | security and bugfixes                       | security and bugfixes                       | net 10 (Nov 2028) * |
-| 3.X           | main       | not available              | 2.0, 3.0, 3.1, 3.2         | security, bugfixes and feature improvements | security, bugfixes and feature improvements | TBD ** |
+| Major version | Branch     | Supported [AspNetCore OpenAPI versions](https://www.nuget.org/packages/Microsoft.AspNetCore.OpenApi)  | Supported [Swashbuckle.AspNetCore version](https://www.nuget.org/packages/Swashbuckle.AspNetCore/) | Supported OpenAPI versions | Changes provided by Microsoft               | Accepted contributions                      | End of support date |
+| ------------- | ---------- | -------------------------- | ---------- | -------------------------- | ------------------------------------------- | ------------------------------------------- | --------------- |
+| 1.X           | support/v1 | < 10                       | < 10          | 2.0, 3.0                   | security fixes                              | security and bugfixes                       | .NET 9 (Nov 2026)           |
+| 2.X           | support/v2 | = 10 ¹                     | = 10 ³        | 2.0, 3.0, 3.1              | security and bugfixes                       | security and bugfixes                       | .NET 10 (Nov 2028) ¹ |
+| 3.X  ²        | main       | not available              | not available | 2.0, 3.0, 3.1, 3.2         | security, bugfixes and feature improvements | security, bugfixes and feature improvements | TBD  |
 
 > Notes:
 >
-> * This assumes that NET 11 and above will adopt version 3 or above of this library, otherwise, it'd expand the support date for version 2 of this library.
-> ** This will be conditioned by new releases of OpenAPI, this library, asp.net and asp.net's adoptions of new versions of this library.
+> 1. This assumes that AspNetCore OpenAPI version 11 and above will adopt version 3 or above of this library, otherwise, it'd expand the support date for version 2 of this library.
+> 2. This will be conditioned by new releases of OpenAPI, this library, ASP.NET and AspNetCore OpenAPI's adoption of new versions of this library.
+> 3. This assumes that Swashbuckle.AspNetCore version 11 and above will adopt version 3 or above of this library.
 
 ### Multi-versions requirement for contributions
 
