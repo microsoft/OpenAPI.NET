@@ -14,6 +14,7 @@ updates:
       interval: "daily"
     groups:
       MicrosoftExtensions:
+        patterns:
           - "Microsoft.Extensions.*"
   - package-ecosystem: dotnet-sdk
     directory: /
