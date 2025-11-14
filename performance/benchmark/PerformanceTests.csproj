@@ -11,7 +11,8 @@
     <Optimize>true</Optimize>
     <Configuration>Release</Configuration>
     <IsPackable>false</IsPackable>
-    <NoWarn>CA1822</NoWarn>
+    <!-- https://github.com/dotnet/BenchmarkDotNet/issues/2863 -->
+    <NoWarn>CA1822;CS9057;</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.15.7" />
