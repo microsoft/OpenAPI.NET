@@ -6,9 +6,9 @@ dotnet msbuild %PROJ% /t:restore /p:Configuration=Release
 dotnet msbuild %PROJ% /t:build /p:Configuration=Release
 dotnet msbuild %PROJ% /t:pack /p:Configuration=Release;PackageOutputPath=%~dp0artifacts
 
-Echo Building Microsoft.OpenApi.Readers
+Echo Building Microsoft.OpenApi.YamlReader
 
-SET PROJ=%~dp0src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj
+SET PROJ=%~dp0src\Microsoft.OpenApi.YamlReader\Microsoft.OpenApi.YamlReader.csproj
 dotnet msbuild %PROJ% /t:restore /p:Configuration=Release
 dotnet msbuild %PROJ% /t:build /p:Configuration=Release
 dotnet msbuild %PROJ% /t:pack /p:Configuration=Release;PackageOutputPath=%~dp0artifacts
