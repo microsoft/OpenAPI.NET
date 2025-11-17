@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.10](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.9...v2.3.10) (2025-11-17)
+
+
+### Bug Fixes
+
+* empty strings should be quoted in yaml ([e919b33](https://github.com/microsoft/OpenAPI.NET/commit/e919b33e9d09159217066248483ef4c767865c82))
+* empty strings should be quoted in yaml ([0ca10db](https://github.com/microsoft/OpenAPI.NET/commit/0ca10db3bb9ffa937dd35862068926f3586d6991))
+
 ## [2.3.9](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.8...v2.3.9) (2025-11-06)
 
 
