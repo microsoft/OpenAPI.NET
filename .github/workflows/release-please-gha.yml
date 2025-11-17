@@ -16,6 +16,7 @@ on:
       - main
       - support/v1
       - support/v2
+  workflow_dispatch:
 
 permissions:
   contents: read
