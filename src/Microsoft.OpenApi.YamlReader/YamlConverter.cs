@@ -140,9 +140,10 @@ namespace Microsoft.OpenApi.YamlReader
         }
 
         private static bool NeedsQuoting(string value) =>
+        string.IsNullOrEmpty(value) ||
         decimal.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out _) ||
-                                   bool.TryParse(value, out _) ||
-                                   YamlNullRepresentations.Contains(value);
+        bool.TryParse(value, out _) ||
+        YamlNullRepresentations.Contains(value);
 
         private static YamlScalarNode ToYamlScalar(this JsonValue val)
         {
