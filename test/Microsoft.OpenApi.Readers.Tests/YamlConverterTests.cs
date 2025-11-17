@@ -315,6 +315,23 @@ public class YamlConverterTests
         var scalarNode = Assert.IsType<YamlScalarNode>(yamlValue);
         Assert.Equal("null", scalarNode.Value, StringComparer.OrdinalIgnoreCase);
     }
+    [Fact]
+    public void RoundTripEmptyStringsValues()
+    {
+        // Given
+        var yamlInput =
+        """
+        emptyString: ""
+        """;
+
+        // When
+        var jsonNode = ConvertYamlStringToJsonNode(yamlInput);
+        var convertedBack = jsonNode.ToYamlNode();
+        var convertedBackOutput = ConvertYamlNodeToString(convertedBack);
+
+        // Then
+        Assert.Equal(yamlInput.MakeLineBreaksEnvironmentNeutral(), convertedBackOutput.MakeLineBreaksEnvironmentNeutral());
+    }
 
     private static JsonNode ConvertYamlStringToJsonNode(string yamlInput)
     {
