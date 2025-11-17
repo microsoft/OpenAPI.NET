@@ -14,13 +14,13 @@ jobs:
       GITHUB_RUN_NUMBER: ${{ github.run_number }}
     steps:
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
 
       - name: Checkout repository
         id: checkout_repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
@@ -41,10 +41,10 @@ jobs:
     name: Validate Project for Trimming
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
 
@@ -58,10 +58,10 @@ jobs:
     needs: [ci]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
 
@@ -74,6 +74,13 @@ jobs:
         run: |
           dotnet run -c Release
         working-directory: ./performance/benchmark
+
+      - name: Publish benchmark results
+        uses: actions/upload-artifact@v5
+        with:
+          if-no-files-found: error
+          name: benchmark-results
+          path: "${{ github.workspace }}/performance/benchmark/BenchmarkDotNet.Artifacts/results"
 
       - name: Run comparison tool for empty models
         run: dotnet run -c Release --project ./performance/resultsComparer/resultsComparer.csproj -- compare $OLD_REPORT $NEW_REPORT -p IdenticalMemoryUsage
