@@ -466,17 +466,20 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, callback);
 
             // additionalProperties
-            if (AdditionalPropertiesAllowed)
+            if (AdditionalProperties is not null && version >= OpenApiSpecVersion.OpenApi3_0)
             {
                 writer.WriteOptionalObject(
                     OpenApiConstants.AdditionalProperties,
                     AdditionalProperties,
                     callback);
             }
-            else
+            // true is the default in earlier versions 3, no need to write it out
+            // boolean value is only supported for version 3 and earlier (version 2 is implemented in the other serialize method, the condition is a failsafe)
+            else if (!AdditionalPropertiesAllowed && version <= OpenApiSpecVersion.OpenApi3_0)
             {
                 writer.WriteProperty(OpenApiConstants.AdditionalProperties, AdditionalPropertiesAllowed);
             }
+            // not having anything is the same as having it set to true (v2/v3) or an empty schema (v3.1+)
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -727,14 +730,9 @@ namespace Microsoft.OpenApi
             });
 
             // additionalProperties
-            if (AdditionalPropertiesAllowed)
-            {
-                writer.WriteOptionalObject(
-                    OpenApiConstants.AdditionalProperties,
-                    AdditionalProperties,
-                    (w, s) => s.SerializeAsV2(w));
-            }
-            else
+            // a schema cannot be serialized in v2
+            // true is the default, no need to write it out
+            if (!AdditionalPropertiesAllowed)
             {
                 writer.WriteProperty(OpenApiConstants.AdditionalProperties, AdditionalPropertiesAllowed);
             }

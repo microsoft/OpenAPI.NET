@@ -684,6 +684,112 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.False(v2Node.AsObject().ContainsKey("const"));
         }
 
+        [Fact]
+        public async Task SerializeAdditionalPropertiesAsV2DoesNotEmit()
+        {
+            var expected = @"{ }";
+            // Given
+            var schema = new OpenApiSchema
+            {
+                AdditionalProperties = new OpenApiSchema()
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeAdditionalPropertiesAllowedAsV2DefaultDoesNotEmit()
+        {
+            var expected = @"{ }";
+            // Given
+            var schema = new OpenApiSchema
+            {
+                AdditionalPropertiesAllowed = true
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeAdditionalPropertiesAllowedAsV2FalseEmits()
+        {
+            var expected = @"{ ""additionalProperties"": false }";
+            // Given
+            var schema = new OpenApiSchema
+            {
+                AdditionalPropertiesAllowed = false
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        public async Task SerializeAdditionalPropertiesAllowedAsV3PlusDefaultDoesNotEmit(OpenApiSpecVersion version)
+        {
+            var expected = @"{ }";
+            // Given
+            var schema = new OpenApiSchema
+            {
+                AdditionalPropertiesAllowed = true
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeAdditionalPropertiesAllowedAsV3FalseEmits()
+        {
+            var expected = @"{ ""additionalProperties"": false }";
+            // Given
+            var schema = new OpenApiSchema
+            {
+                AdditionalPropertiesAllowed = false
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        public async Task SerializeAdditionalPropertiesAsV3PlusEmits(OpenApiSpecVersion version)
+        {
+            var expected = @"{ ""additionalProperties"": { } }";
+            // Given
+            var schema = new OpenApiSchema
+            {
+                AdditionalProperties = new OpenApiSchema()
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
 
         internal class SchemaVisitor : OpenApiVisitorBase
         {
