@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.3.11](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.10...v2.3.11) (2025-12-08)
+
+
+### Bug Fixes
+
+* additional properties serialization should not emit a schema in v2 ([946cba9](https://github.com/microsoft/OpenAPI.NET/commit/946cba992a2733a60182453e38722b4ed789b729))
+* additional properties serialization should not emit a schema in v2 fix: additional properties serialization should not emit booleans in v3.1+ ([275dd9d](https://github.com/microsoft/OpenAPI.NET/commit/275dd9d7525b1f490eccaf1e6e60829ae51bdf5d))
+* additional properties serialization should not emit booleans in v3.1+ ([946cba9](https://github.com/microsoft/OpenAPI.NET/commit/946cba992a2733a60182453e38722b4ed789b729))
+
 ## [2.3.10](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.9...v2.3.10) (2025-11-17)
 
 
