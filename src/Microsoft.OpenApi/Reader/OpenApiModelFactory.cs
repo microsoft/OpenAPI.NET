@@ -445,14 +445,9 @@ namespace Microsoft.OpenApi.Reader
             {
                 format ??= InspectStreamFormat(ms);
             }
-            else if (!input.CanSeek)
+            else if (!input.CanSeek || !TryInspectStreamFormat(input, out format!))
             {
                 // Copy to a MemoryStream to enable seeking and perform format inspection
-                var bufferStream = await CopyToMemoryStreamAsync(input, token).ConfigureAwait(false);
-                return await PrepareStreamForReadingAsync(bufferStream, format, token).ConfigureAwait(false);
-            }
-            else if (!TryInspectStreamFormat(input, out format!))
-            {
                 var bufferStream = await CopyToMemoryStreamAsync(input, token).ConfigureAwait(false);
                 return await PrepareStreamForReadingAsync(bufferStream, format, token).ConfigureAwait(false);
             }
