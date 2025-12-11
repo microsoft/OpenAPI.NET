@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Security;
@@ -362,7 +363,23 @@ namespace Microsoft.OpenApi.Reader
             return input.StartsWith("{", StringComparison.OrdinalIgnoreCase) || input.StartsWith("[", StringComparison.OrdinalIgnoreCase) ? OpenApiConstants.Json : OpenApiConstants.Yaml;
         }
 
-        private static string InspectStreamFormat(Stream stream)
+        /// <summary>
+        /// Reads the initial bytes of the stream to determine if it is JSON or YAML.
+        /// </summary>
+        /// <remarks>
+        /// It is important NOT TO change the stream type from MemoryStream.
+        /// In Asp.Net core 3.0+ we could get passed a stream from a request or response body.
+        /// In such case, we CAN'T use the ReadByte method as it throws NotSupportedException.
+        /// Therefore, we need to ensure that the stream is a MemoryStream before calling this method.
+        /// Maintaining this type ensures there won't be any unforeseen wrong usage of the method.
+        /// </remarks>
+        /// <param name="stream">The stream to inspect</param>
+        /// <returns>The format of the stream.</returns>
+        private static string InspectStreamFormat(MemoryStream stream)
+        {
+            return TryInspectStreamFormat(stream, out var format) ? format! : throw new InvalidOperationException("Could not determine the format of the stream.");
+        }
+        private static bool TryInspectStreamFormat(Stream stream, out string? format)
         {
 #if NET6_0_OR_GREATER
             ArgumentNullException.ThrowIfNull(stream);
@@ -370,65 +387,69 @@ namespace Microsoft.OpenApi.Reader
             if (stream is null) throw new ArgumentNullException(nameof(stream));
 #endif
 
-            long initialPosition = stream.Position;
-            int firstByte = stream.ReadByte();
-
-            // Skip whitespace if present and read the next non-whitespace byte
-            if (char.IsWhiteSpace((char)firstByte))
+            try
             {
-                firstByte = stream.ReadByte();
+                var initialPosition = stream.Position;
+                var firstByte = (char)stream.ReadByte();
+
+                // Skip whitespace if present and read the next non-whitespace byte
+                if (char.IsWhiteSpace(firstByte))
+                {
+                    firstByte = (char)stream.ReadByte();
+                }
+
+                stream.Position = initialPosition; // Reset the stream position to the beginning
+
+                format = firstByte switch
+                {
+                    '{' or '[' => OpenApiConstants.Json,  // If the first character is '{' or '[', assume JSON
+                    _ => OpenApiConstants.Yaml             // Otherwise assume YAML
+                };
+                return true;
             }
-
-            stream.Position = initialPosition; // Reset the stream position to the beginning
-
-            char firstChar = (char)firstByte;
-            return firstChar switch
+            catch (NotSupportedException)
             {
-                '{' or '[' => OpenApiConstants.Json,  // If the first character is '{' or '[', assume JSON
-                _ => OpenApiConstants.Yaml             // Otherwise assume YAML
-            };
+                // https://github.com/dotnet/aspnetcore/blob/c9d0750396e1d319301255ba61842721ab72ab10/src/Servers/Kestrel/Core/src/Internal/Http/HttpResponseStream.cs#L40
+            }
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
+            catch (InvalidOperationException ex) when (ex.Message.Contains("AllowSynchronousIO", StringComparison.Ordinal))
+#else
+            catch (InvalidOperationException ex) when (ex.Message.Contains("AllowSynchronousIO"))
+#endif
+            {
+                // https://github.com/dotnet/aspnetcore/blob/c9d0750396e1d319301255ba61842721ab72ab10/src/Servers/HttpSys/src/RequestProcessing/RequestStream.cs#L100-L108
+                // https://github.com/dotnet/aspnetcore/blob/c9d0750396e1d319301255ba61842721ab72ab10/src/Servers/IIS/IIS/src/Core/HttpRequestStream.cs#L24-L30
+                // https://github.com/dotnet/aspnetcore/blob/c9d0750396e1d319301255ba61842721ab72ab10/src/Servers/Kestrel/Core/src/Internal/Http/HttpRequestStream.cs#L54-L60
+            }
+            format = null;
+            return false;
         }
+
+        private static async Task<MemoryStream> CopyToMemoryStreamAsync(Stream input, CancellationToken token)
+        {
+            var bufferStream = new MemoryStream();
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
+            await input.CopyToAsync(bufferStream, token).ConfigureAwait(false);
+#else
+            await input.CopyToAsync(bufferStream, 81920, token).ConfigureAwait(false);
+#endif
+            bufferStream.Position = 0;
+            return bufferStream;
+        } 
 
         private static async Task<(Stream, string)> PrepareStreamForReadingAsync(Stream input, string? format, CancellationToken token = default)
         {
             Stream preparedStream = input;
 
-            if (!input.CanSeek)
+            if (input is MemoryStream ms)
             {
-                // Use a temporary buffer to read a small portion for format detection
-                using var bufferStream = new MemoryStream();
-                await input.CopyToAsync(bufferStream, 1024, token).ConfigureAwait(false);
-                bufferStream.Position = 0;
-
-                // Inspect the format from the buffered portion
-                format ??= InspectStreamFormat(bufferStream);
-
-                // If format is JSON, no need to buffer further — use the original stream.
-                if (format.Equals(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase))
-                {
-                    preparedStream = input;
-                }
-                else
-                {
-                    // YAML or other non-JSON format; copy remaining input to a new stream.
-                    preparedStream = new MemoryStream();
-                    bufferStream.Position = 0;
-                    await bufferStream.CopyToAsync(preparedStream, 81920, token).ConfigureAwait(false); // Copy buffered portion
-                    await input.CopyToAsync(preparedStream, 81920, token).ConfigureAwait(false); // Copy remaining data
-                    preparedStream.Position = 0;
-                }
+                format ??= InspectStreamFormat(ms);
             }
-            else
+            else if (!input.CanSeek || !TryInspectStreamFormat(input, out format!))
             {
-                format ??= InspectStreamFormat(input);
-
-                if (!format.Equals(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase))
-                {
-                    // Buffer stream for non-JSON formats (e.g., YAML) since they require synchronous reading
-                    preparedStream = new MemoryStream();
-                    await input.CopyToAsync(preparedStream, 81920, token).ConfigureAwait(false);
-                    preparedStream.Position = 0;
-                }
+                // Copy to a MemoryStream to enable seeking and perform format inspection
+                var bufferStream = await CopyToMemoryStreamAsync(input, token).ConfigureAwait(false);
+                return await PrepareStreamForReadingAsync(bufferStream, format, token).ConfigureAwait(false);
             }
 
             return (preparedStream, format);
