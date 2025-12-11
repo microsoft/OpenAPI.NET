@@ -403,20 +403,12 @@ namespace Microsoft.OpenApi.Reader
                 // Inspect the format from the buffered portion
                 format ??= InspectStreamFormat(bufferStream);
 
-                // If format is JSON, no need to buffer further — use the original stream.
-                if (format.Equals(OpenApiConstants.Json, StringComparison.OrdinalIgnoreCase))
-                {
-                    preparedStream = input;
-                }
-                else
-                {
-                    // YAML or other non-JSON format; copy remaining input to a new stream.
-                    preparedStream = new MemoryStream();
-                    bufferStream.Position = 0;
-                    await bufferStream.CopyToAsync(preparedStream, 81920, token).ConfigureAwait(false); // Copy buffered portion
-                    await input.CopyToAsync(preparedStream, 81920, token).ConfigureAwait(false); // Copy remaining data
-                    preparedStream.Position = 0;
-                }
+                // we need to copy the stream to memory string we've already started reading it and can't reposition it
+                preparedStream = new MemoryStream();
+                bufferStream.Position = 0;
+                await bufferStream.CopyToAsync(preparedStream, 81920, token).ConfigureAwait(false); // Copy buffered portion
+                await input.CopyToAsync(preparedStream, 81920, token).ConfigureAwait(false); // Copy remaining data
+                preparedStream.Position = 0;
             }
             else
             {
