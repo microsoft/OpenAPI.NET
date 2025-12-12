@@ -790,6 +790,318 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
+        [Fact]
+        public async Task SerializeOneOfWithNullAsV3ShouldUseNullableAsync()
+        {
+            // Arrange - oneOf with null and a reference-like schema
+            var schema = new OpenApiSchema
+            {
+                OneOf = new List<IOpenApiSchema>
+                {
+                    new OpenApiSchema { Type = JsonSchemaType.Null },
+                    new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String,
+                        MaxLength = 10
+                    }
+                }
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+
+            // Act
+            schema.SerializeAsV3(writer);
+            await writer.FlushAsync();
+
+            var v3Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+
+            var expectedV3Schema =
+                """
+                {
+                  "type": "string",
+                  "oneOf": [
+                    {
+                      "maxLength": 10,
+                      "type": "string"
+                    }
+                  ],
+                  "nullable": true
+                }
+                """.MakeLineBreaksEnvironmentNeutral();
+
+            // Assert
+            Assert.Equal(expectedV3Schema, v3Schema);
+        }
+
+        [Fact]
+        public async Task SerializeOneOfWithNullAndMultipleSchemasAsV3ShouldMarkItAsNullableWithoutType()
+        {
+            // Arrange - oneOf with null, string, and number
+            var schema = new OpenApiSchema
+            {
+                OneOf = new List<IOpenApiSchema>
+                {
+                    new OpenApiSchema { Type = JsonSchemaType.Null },
+                    new OpenApiSchema { Type = JsonSchemaType.String },
+                    new OpenApiSchema { Type = JsonSchemaType.Number }
+                }
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+
+            // Act
+            schema.SerializeAsV3(writer);
+            await writer.FlushAsync();
+
+            var v3Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+
+            var expectedV3Schema =
+                """
+                {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ],
+                  "nullable": true
+                }
+                """.MakeLineBreaksEnvironmentNeutral();
+
+            // Assert
+            Assert.Equal(expectedV3Schema, v3Schema);
+        }
+
+        [Fact]
+        public async Task SerializeAnyOfWithNullAsV3ShouldUseNullableAsync()
+        {
+            // Arrange - anyOf with null and object schema
+            var schema = new OpenApiSchema
+            {
+                AnyOf = new List<IOpenApiSchema>
+                {
+                    new OpenApiSchema { Type = JsonSchemaType.Null },
+                    new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.Object,
+                        Properties = new Dictionary<string, IOpenApiSchema>
+                        {
+                            ["id"] = new OpenApiSchema { Type = JsonSchemaType.Integer }
+                        }
+                    }
+                }
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+
+            // Act
+            schema.SerializeAsV3(writer);
+            await writer.FlushAsync();
+
+            var v3Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+
+            var expectedV3Schema =
+                """
+                {
+                  "type": "object",
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  ],
+                  "nullable": true
+                }
+                """.MakeLineBreaksEnvironmentNeutral();            // Assert
+            Assert.Equal(expectedV3Schema, v3Schema);
+        }
+
+        [Fact]
+        public async Task SerializeAnyOfWithNullAndMultipleSchemasAsV3ShouldApplyNullable()
+        {
+            // Arrange - anyOf with null and multiple schemas
+            var schema = new OpenApiSchema
+            {
+                AnyOf = new List<IOpenApiSchema>
+                {
+                    new OpenApiSchema { Type = JsonSchemaType.Null },
+                    new OpenApiSchema { Type = JsonSchemaType.String, MinLength = 1 },
+                    new OpenApiSchema { Type = JsonSchemaType.Integer }
+                }
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+
+            // Act
+            schema.SerializeAsV3(writer);
+            await writer.FlushAsync();
+
+            var v3Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+
+            var expectedV3Schema =
+                """
+                {
+                  "anyOf": [
+                    {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ],
+                  "nullable": true
+                }
+                """.MakeLineBreaksEnvironmentNeutral();
+
+            // Assert
+            Assert.Equal(expectedV3Schema, v3Schema);
+        }
+
+        [Fact]
+        public async Task SerializeOneOfWithOnlyNullAsV3ShouldJustBeNullableAsync()
+        {
+            // Arrange - oneOf with only null
+            var schema = new OpenApiSchema
+            {
+                OneOf = new List<IOpenApiSchema>
+                {
+                    new OpenApiSchema { Type = JsonSchemaType.Null }
+                }
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+
+            // Act
+            schema.SerializeAsV3(writer);
+            await writer.FlushAsync();
+
+            var v3Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+
+            var expectedV3Schema =
+                """
+                {
+                  "nullable": true
+                }
+                """.MakeLineBreaksEnvironmentNeutral();
+
+            // Assert
+            Assert.Equal(expectedV3Schema, v3Schema);
+        }
+
+        [Fact]
+        public async Task SerializeOneOfWithNullAsV31ShouldNotChangeAsync()
+        {
+            // Arrange - oneOf with null should remain unchanged in v3.1
+            var schema = new OpenApiSchema
+            {
+                OneOf = new List<IOpenApiSchema>
+                {
+                    new OpenApiSchema { Type = JsonSchemaType.Null },
+                    new OpenApiSchema { Type = JsonSchemaType.String }
+                }
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+
+            // Act
+            schema.SerializeAsV31(writer);
+            await writer.FlushAsync();
+
+            var v31Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+
+            var expectedV31Schema =
+                """
+                {
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                }
+                """.MakeLineBreaksEnvironmentNeutral();
+
+            // Assert
+            Assert.Equal(expectedV31Schema, v31Schema);
+        }
+
+        [Fact]
+        public async Task SerializeOneOfWithNullAndRefAsV3ShouldUseNullableAsync()
+        {
+            // Arrange - oneOf with null and a $ref to a schema component
+            var document = new OpenApiDocument
+            {
+                Components = new OpenApiComponents
+                {
+                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    {
+                        ["Pet"] = new OpenApiSchema
+                        {
+                            Type = JsonSchemaType.Object,
+                            Properties = new Dictionary<string, IOpenApiSchema>
+                            {
+                                ["id"] = new OpenApiSchema { Type = JsonSchemaType.Integer },
+                                ["name"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Register components so references can be resolved
+            document.Workspace.RegisterComponents(document);
+
+            var schemaRef = new OpenApiSchemaReference("Pet", document);
+
+            var schema = new OpenApiSchema
+            {
+                OneOf = new List<IOpenApiSchema>
+                {
+                    new OpenApiSchema { Type = JsonSchemaType.Null },
+                    schemaRef
+                }
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+
+            // Act
+            schema.SerializeAsV3(writer);
+            await writer.FlushAsync();
+
+            var v3Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+
+            var expectedV3Schema =
+                """
+                {
+                  "type": "object",
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Pet"
+                    }
+                  ],
+                  "nullable": true
+                }
+                """.MakeLineBreaksEnvironmentNeutral();
+
+            // Assert
+            Assert.Equal(expectedV3Schema, v3Schema);
+        }
 
         internal class SchemaVisitor : OpenApiVisitorBase
         {

@@ -438,23 +438,39 @@ namespace Microsoft.OpenApi
 
             // enum
             var enumValue = Enum is not { Count: > 0 }
-                && !string.IsNullOrEmpty(Const) 
+                && !string.IsNullOrEmpty(Const)
                 && version < OpenApiSpecVersion.OpenApi3_1
                 ? new List<JsonNode> { JsonValue.Create(Const)! }
                 : Enum;
             writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValue, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
+            // Handle oneOf/anyOf with null type for v3.0 downcast
+            IList<IOpenApiSchema>? effectiveOneOf = OneOf;
+            IList<IOpenApiSchema>? effectiveAnyOf = AnyOf;
+            bool hasNullInComposition = false;
+            JsonSchemaType? inferredType = null;
+
+            if (version == OpenApiSpecVersion.OpenApi3_0)
+            {
+                (effectiveOneOf, var inferredOneOf, var nullInOneOf) = ProcessCompositionForNull(OneOf);
+                hasNullInComposition |= nullInOneOf;
+                inferredType = inferredOneOf ?? inferredType;
+                (effectiveAnyOf, var inferredAnyOf, var nullInAnyOf) = ProcessCompositionForNull(AnyOf);
+                hasNullInComposition |= nullInAnyOf;
+                inferredType = inferredAnyOf ?? inferredType;
+            }
+
             // type
-            SerializeTypeProperty(writer, version);
+            SerializeTypeProperty(writer, version, inferredType);
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, callback);
 
             // anyOf
-            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, callback);
+            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, effectiveAnyOf, callback);
 
             // oneOf
-            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, callback);
+            writer.WriteOptionalCollection(OpenApiConstants.OneOf, effectiveOneOf, callback);
 
             // not
             writer.WriteOptionalObject(OpenApiConstants.Not, Not, callback);
@@ -493,7 +509,7 @@ namespace Microsoft.OpenApi
             // nullable
             if (version == OpenApiSpecVersion.OpenApi3_0)
             {
-                SerializeNullable(writer, version);
+                SerializeNullable(writer, version, hasNullInComposition);
             }
 
             // discriminator
@@ -766,14 +782,17 @@ namespace Microsoft.OpenApi
             writer.WriteEndObject();
         }
 
-        private void SerializeTypeProperty(IOpenApiWriter writer, OpenApiSpecVersion version)
+        private void SerializeTypeProperty(IOpenApiWriter writer, OpenApiSpecVersion version, JsonSchemaType? inferredType = null)
         {
-            if (Type is null)
+            // Use inferred type from oneOf/anyOf if provided and original type is not set
+            var typeToUse = inferredType ?? Type;
+
+            if (typeToUse is null)
             {
                 return;
             }
 
-            var unifiedType = IsNullable ? Type.Value | JsonSchemaType.Null : Type.Value;
+            var unifiedType = IsNullable ? typeToUse.Value | JsonSchemaType.Null : typeToUse.Value;
             var typeWithoutNull = unifiedType & ~JsonSchemaType.Null;
 
             switch (version)
@@ -804,8 +823,8 @@ namespace Microsoft.OpenApi
         private static void WriteUnifiedSchemaType(JsonSchemaType type, IOpenApiWriter writer)
         {
             var array = (from JsonSchemaType flag in jsonSchemaTypeValues
-                        where type.HasFlag(flag)
-                        select flag.ToFirstIdentifier()).ToArray();
+                         where type.HasFlag(flag)
+                         select flag.ToFirstIdentifier()).ToArray();
             if (array.Length > 1)
             {
                 writer.WriteOptionalCollection(OpenApiConstants.Type, array, (w, s) =>
@@ -822,9 +841,9 @@ namespace Microsoft.OpenApi
             }
         }
 
-        private void SerializeNullable(IOpenApiWriter writer, OpenApiSpecVersion version)
+        private void SerializeNullable(IOpenApiWriter writer, OpenApiSpecVersion version, bool hasNullInComposition = false)
         {
-            if (IsNullable)
+            if (IsNullable || hasNullInComposition)
             {
                 switch (version)
                 {
@@ -835,6 +854,50 @@ namespace Microsoft.OpenApi
                         writer.WriteProperty(OpenApiConstants.Nullable, true);
                         break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Processes a composition (oneOf or anyOf) for null types, filtering out null schemas and inferring common type.
+        /// </summary>
+        /// <param name="composition">The list of schemas in the composition.</param>
+        /// <returns>A tuple with the effective list, inferred type, and whether null is present in composition.</returns>
+        private static (IList<IOpenApiSchema>? effective, JsonSchemaType? inferredType, bool hasNullInComposition)
+            ProcessCompositionForNull(IList<IOpenApiSchema>? composition)
+        {
+            if (composition is null || !composition.Any(s => s.Type is JsonSchemaType.Null))
+            {
+                // Nothing to patch
+                return (composition, null, false);
+            }
+
+            var nonNullSchemas = composition
+                .Where(s => s.Type is null or not JsonSchemaType.Null)
+                .ToList();
+
+            if (nonNullSchemas.Count > 0)
+            {
+                JsonSchemaType commonType = 0;
+
+                foreach (var schema in nonNullSchemas)
+                {
+                    commonType |= schema.Type.GetValueOrDefault() & ~JsonSchemaType.Null;
+                }
+
+                if (System.Enum.IsDefined(commonType))
+                {
+                    // Single common type
+                    return (nonNullSchemas, commonType, true);
+                }
+                else
+                {
+                    return (nonNullSchemas, null, true);
+                }
+
+            }
+            else
+            {
+                return (null, null, true);
             }
         }
 
