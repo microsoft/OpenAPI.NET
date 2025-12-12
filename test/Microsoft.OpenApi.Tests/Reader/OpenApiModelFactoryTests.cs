@@ -203,6 +203,32 @@ paths: {}
         Assert.Equal("Sample API", document.Info.Title);
     }
 
+    [Fact]
+    public async Task CanLoadANonSeekableStreamInJsonAndDetectFormatWhenPrecededBySpaces()
+    {
+        // Given
+        using var memoryStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("     " + documentJson));
+        using var nonSeekableStream = new NonSeekableStream(memoryStream);
+    
+        // When
+        var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream);
+    
+        // Then
+        Assert.NotNull(document);
+        Assert.Equal("Sample API", document.Info.Title);
+    }
+
+    [Fact]
+    public void CanLoadAStringJsonAndDetectFormatWhenPrecededBySpaces()
+    {
+        // When
+        var (document, _) = OpenApiDocument.Parse("     " + documentJson);
+    
+        // Then
+        Assert.NotNull(document);
+        Assert.Equal("Sample API", document.Info.Title);
+    }
+
     public sealed class AsyncOnlyStream : Stream
     {
         private readonly Stream _innerStream;
