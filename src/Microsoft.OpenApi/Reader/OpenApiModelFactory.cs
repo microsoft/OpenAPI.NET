@@ -360,7 +360,9 @@ namespace Microsoft.OpenApi.Reader
 
         private static string InspectInputFormat(string input)
         {
-            return input.StartsWith("{", StringComparison.OrdinalIgnoreCase) || input.StartsWith("[", StringComparison.OrdinalIgnoreCase) ? OpenApiConstants.Json : OpenApiConstants.Yaml;
+            var trimmedInput = input.TrimStart();
+            return trimmedInput.StartsWith("{", StringComparison.OrdinalIgnoreCase) || trimmedInput.StartsWith("[", StringComparison.OrdinalIgnoreCase) ?
+                    OpenApiConstants.Json : OpenApiConstants.Yaml;
         }
 
         /// <summary>
@@ -393,7 +395,7 @@ namespace Microsoft.OpenApi.Reader
                 var firstByte = (char)stream.ReadByte();
 
                 // Skip whitespace if present and read the next non-whitespace byte
-                if (char.IsWhiteSpace(firstByte))
+                while (char.IsWhiteSpace(firstByte))
                 {
                     firstByte = (char)stream.ReadByte();
                 }
