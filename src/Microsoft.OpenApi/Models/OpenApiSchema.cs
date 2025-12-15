@@ -865,14 +865,14 @@ namespace Microsoft.OpenApi
         private static (IList<IOpenApiSchema>? effective, JsonSchemaType? inferredType, bool hasNullInComposition)
             ProcessCompositionForNull(IList<IOpenApiSchema>? composition)
         {
-            if (composition is null || !composition.Any(s => s.Type is JsonSchemaType.Null))
+            if (composition is null || !composition.Any(static s => s.Type is JsonSchemaType.Null))
             {
                 // Nothing to patch
                 return (composition, null, false);
             }
 
             var nonNullSchemas = composition
-                .Where(s => s.Type is null or not JsonSchemaType.Null)
+                .Where(static s => s.Type is null or not JsonSchemaType.Null)
                 .ToList();
 
             if (nonNullSchemas.Count > 0)
