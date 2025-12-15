@@ -877,22 +877,35 @@ namespace Microsoft.OpenApi
 
             if (nonNullSchemas.Count > 0)
             {
-                JsonSchemaType commonType = 0;
+                // Check if all schemas have the same type
+                JsonSchemaType? firstType = null;
+                bool allSameType = true;
 
                 foreach (var schema in nonNullSchemas)
                 {
-                    commonType |= schema.Type.GetValueOrDefault() & ~JsonSchemaType.Null;
+                    var schemaType = schema.Type;
+                    if (schemaType.HasValue && schemaType.Value != JsonSchemaType.Null)
+                    {
+                        if (firstType == null)
+                        {
+                            firstType = schemaType.Value;
+                        }
+                        else if (firstType != schemaType.Value)
+                        {
+                            allSameType = false;
+                            break;
+                        }
+                    }
                 }
 
-                // Check if commonType is a single flag (power of 2) indicating all schemas share the same type
-                var isSingleType = commonType != 0 && (commonType & (commonType - 1)) == 0;
-                if (isSingleType)
+                if (allSameType && firstType.HasValue)
                 {
-                    // Single common type
-                    return (nonNullSchemas, commonType, true);
+                    // All schemas share the same type
+                    return (nonNullSchemas, firstType.Value, true);
                 }
                 else
                 {
+                    // Multiple different types
                     return (nonNullSchemas, null, true);
                 }
 
