@@ -814,7 +814,7 @@ namespace Microsoft.OpenApi.Tests.Models
             schema.SerializeAsV3(writer);
             await writer.FlushAsync();
 
-            var v3Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+            var v3Schema = outputStringWriter.GetStringBuilder().ToString();
 
             var expectedV3Schema =
                 """
@@ -828,10 +828,10 @@ namespace Microsoft.OpenApi.Tests.Models
                   ],
                   "nullable": true
                 }
-                """.MakeLineBreaksEnvironmentNeutral();
+                """;
 
             // Assert
-            Assert.Equal(expectedV3Schema, v3Schema);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
         }
 
         [Fact]
@@ -855,7 +855,7 @@ namespace Microsoft.OpenApi.Tests.Models
             schema.SerializeAsV3(writer);
             await writer.FlushAsync();
 
-            var v3Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+            var v3Schema = outputStringWriter.GetStringBuilder().ToString();
 
             var expectedV3Schema =
                 """
@@ -870,10 +870,10 @@ namespace Microsoft.OpenApi.Tests.Models
                   ],
                   "nullable": true
                 }
-                """.MakeLineBreaksEnvironmentNeutral();
+                """;
 
             // Assert
-            Assert.Equal(expectedV3Schema, v3Schema);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
         }
 
         [Fact]
@@ -903,7 +903,7 @@ namespace Microsoft.OpenApi.Tests.Models
             schema.SerializeAsV3(writer);
             await writer.FlushAsync();
 
-            var v3Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+            var v3Schema = outputStringWriter.GetStringBuilder().ToString();
 
             var expectedV3Schema =
                 """
@@ -921,8 +921,9 @@ namespace Microsoft.OpenApi.Tests.Models
                   ],
                   "nullable": true
                 }
-                """.MakeLineBreaksEnvironmentNeutral();            // Assert
-            Assert.Equal(expectedV3Schema, v3Schema);
+                """;
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
         }
 
         [Fact]
@@ -946,7 +947,7 @@ namespace Microsoft.OpenApi.Tests.Models
             schema.SerializeAsV3(writer);
             await writer.FlushAsync();
 
-            var v3Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+            var v3Schema = outputStringWriter.GetStringBuilder().ToString();
 
             var expectedV3Schema =
                 """
@@ -962,10 +963,10 @@ namespace Microsoft.OpenApi.Tests.Models
                   ],
                   "nullable": true
                 }
-                """.MakeLineBreaksEnvironmentNeutral();
+                """;
 
             // Assert
-            Assert.Equal(expectedV3Schema, v3Schema);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
         }
 
         [Fact]
@@ -987,17 +988,17 @@ namespace Microsoft.OpenApi.Tests.Models
             schema.SerializeAsV3(writer);
             await writer.FlushAsync();
 
-            var v3Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+            var v3Schema = outputStringWriter.GetStringBuilder().ToString();
 
             var expectedV3Schema =
                 """
                 {
                   "nullable": true
                 }
-                """.MakeLineBreaksEnvironmentNeutral();
+                """;
 
             // Assert
-            Assert.Equal(expectedV3Schema, v3Schema);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
         }
 
         [Fact]
@@ -1020,7 +1021,7 @@ namespace Microsoft.OpenApi.Tests.Models
             schema.SerializeAsV31(writer);
             await writer.FlushAsync();
 
-            var v31Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+            var v31Schema = outputStringWriter.GetStringBuilder().ToString();
 
             var expectedV31Schema =
                 """
@@ -1034,10 +1035,10 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                   ]
                 }
-                """.MakeLineBreaksEnvironmentNeutral();
+                """;
 
             // Assert
-            Assert.Equal(expectedV31Schema, v31Schema);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV31Schema), JsonNode.Parse(v31Schema)));
         }
 
         [Fact]
@@ -1084,7 +1085,7 @@ namespace Microsoft.OpenApi.Tests.Models
             schema.SerializeAsV3(writer);
             await writer.FlushAsync();
 
-            var v3Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+            var v3Schema = outputStringWriter.GetStringBuilder().ToString();
 
             var expectedV3Schema =
                 """
@@ -1097,10 +1098,10 @@ namespace Microsoft.OpenApi.Tests.Models
                   ],
                   "nullable": true
                 }
-                """.MakeLineBreaksEnvironmentNeutral();
+                """;
 
             // Assert
-            Assert.Equal(expectedV3Schema, v3Schema);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
         }
 
         internal class SchemaVisitor : OpenApiVisitorBase
