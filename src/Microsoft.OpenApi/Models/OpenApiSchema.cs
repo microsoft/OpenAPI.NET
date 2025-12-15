@@ -884,7 +884,9 @@ namespace Microsoft.OpenApi
                     commonType |= schema.Type.GetValueOrDefault() & ~JsonSchemaType.Null;
                 }
 
-                if (System.Enum.IsDefined(commonType))
+                // Check if commonType is a single flag (power of 2) indicating all schemas share the same type
+                var isSingleType = commonType != 0 && (commonType & (commonType - 1)) == 0;
+                if (isSingleType)
                 {
                     // Single common type
                     return (nonNullSchemas, commonType, true);
