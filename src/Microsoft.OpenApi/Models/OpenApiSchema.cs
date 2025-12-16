@@ -886,7 +886,6 @@ namespace Microsoft.OpenApi
                     var schemaType = schema.Type;
                     if (schemaType.HasValue)
                     {
-                        // Remove null from the type using bitwise operator
                         var typeWithoutNull = schemaType.Value & ~JsonSchemaType.Null;
                         
                         if (typeWithoutNull != 0)
