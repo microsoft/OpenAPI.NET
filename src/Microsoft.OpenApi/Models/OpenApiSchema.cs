@@ -865,32 +865,53 @@ namespace Microsoft.OpenApi
         private static (IList<IOpenApiSchema>? effective, JsonSchemaType? inferredType, bool hasNullInComposition)
             ProcessCompositionForNull(IList<IOpenApiSchema>? composition)
         {
-            if (composition is null || !composition.Any(s => s.Type is JsonSchemaType.Null))
+            if (composition is null || !composition.Any(static s => s.Type is JsonSchemaType.Null))
             {
                 // Nothing to patch
                 return (composition, null, false);
             }
 
             var nonNullSchemas = composition
-                .Where(s => s.Type is null or not JsonSchemaType.Null)
+                .Where(static s => s.Type is null or not JsonSchemaType.Null)
                 .ToList();
 
             if (nonNullSchemas.Count > 0)
             {
-                JsonSchemaType commonType = 0;
+                // Check if all schemas have the same type (excluding null)
+                JsonSchemaType? firstType = null;
+                bool allSameType = true;
 
                 foreach (var schema in nonNullSchemas)
                 {
-                    commonType |= schema.Type.GetValueOrDefault() & ~JsonSchemaType.Null;
+                    var schemaType = schema.Type;
+                    if (schemaType.HasValue)
+                    {
+                        // Remove null from the type using bitwise operator
+                        var typeWithoutNull = schemaType.Value & ~JsonSchemaType.Null;
+                        
+                        if (typeWithoutNull != 0)
+                        {
+                            if (firstType == null)
+                            {
+                                firstType = typeWithoutNull;
+                            }
+                            else if (firstType != typeWithoutNull)
+                            {
+                                allSameType = false;
+                                break;
+                            }
+                        }
+                    }
                 }
 
-                if (System.Enum.IsDefined(commonType))
+                if (allSameType && firstType.HasValue)
                 {
-                    // Single common type
-                    return (nonNullSchemas, commonType, true);
+                    // All schemas share the same type
+                    return (nonNullSchemas, firstType.Value, true);
                 }
                 else
                 {
+                    // Multiple different types
                     return (nonNullSchemas, null, true);
                 }
 
