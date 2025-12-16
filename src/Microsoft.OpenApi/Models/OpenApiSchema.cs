@@ -784,8 +784,8 @@ namespace Microsoft.OpenApi
 
         private void SerializeTypeProperty(IOpenApiWriter writer, OpenApiSpecVersion version, JsonSchemaType? inferredType = null)
         {
-            // Use inferred type from oneOf/anyOf if provided and original type is not set
-            var typeToUse = inferredType ?? Type;
+            // Use original type or inferred type when the explicit type is not set
+            var typeToUse = Type ?? inferredType;
 
             if (typeToUse is null)
             {
