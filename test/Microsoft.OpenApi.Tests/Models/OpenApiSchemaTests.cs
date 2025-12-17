@@ -844,7 +844,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     new OpenApiSchema { Type = JsonSchemaType.Null },
                     new OpenApiSchema { Type = JsonSchemaType.String },
-                    new OpenApiSchema { Type = JsonSchemaType.Number }
+                    new OpenApiSchema { Type = JsonSchemaType.Number },
                 }
             };
 

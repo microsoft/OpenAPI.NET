@@ -884,15 +884,7 @@ namespace Microsoft.OpenApi
                     commonType |= schema.Type.GetValueOrDefault() & ~JsonSchemaType.Null;
                 }
 
-                if (HasMultipleTypes(commonType) || commonType == 0)
-                {
-                    return (nonNullSchemas, null, true);
-                }
-                else
-                {
-                    // Single common type
-                    return (nonNullSchemas, commonType, true);
-                }
+                return (nonNullSchemas, commonType, true);
             }
             else
             {
