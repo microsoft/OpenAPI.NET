@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.12...v2.4.0) (2025-12-17)
+
+
+### Features
+
+* Add `type: "null"` downcasting when in oneOf and anyOf for OpenAPI v3 ([782cf8d](https://github.com/microsoft/OpenAPI.NET/commit/782cf8d1ff8166e3c7be706e08dabf168b9616a4))
+
 ## [2.3.12](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.11...v2.3.12) (2025-12-15)
 
 
