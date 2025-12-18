@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.1](https://github.com/microsoft/OpenAPI.NET/compare/v2.4.0...v2.4.1) (2025-12-18)
+
+
+### Bug Fixes
+
+* **schema:** always serialize `additionalProperties: false` ([6651c36](https://github.com/microsoft/OpenAPI.NET/commit/6651c36ff341329c053776d65b36b1b7fa9dd3ea))
+* **schema:** always serialize `additionalProperties: false` ([e36fc95](https://github.com/microsoft/OpenAPI.NET/commit/e36fc9565bce42916eb7bf64d1f74d491dd1f407))
+
 ## [2.4.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.12...v2.4.0) (2025-12-17)
 
 
