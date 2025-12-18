@@ -2,14 +2,12 @@
 
 ## [3.1.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.0.3...v3.1.0) (2025-12-17)
 
-
 ### Features
 
 * Add `type: "null"` downcasting when in oneOf and anyOf for OpenAPI v3 ([782cf8d](https://github.com/microsoft/OpenAPI.NET/commit/782cf8d1ff8166e3c7be706e08dabf168b9616a4))
 
 ## [3.0.3](https://github.com/microsoft/OpenAPI.NET/compare/v3.0.2...v3.0.3) (2025-12-16)
 
-### Bug Fixes
 
 * load JSON documents that are preceded by multiple whitespace ([6461bac](https://github.com/microsoft/OpenAPI.NET/commit/6461bac01c4176424210e9ac249698f665a514a6))
 * non-seekable json streams would fail to load as a document ([2436d73](https://github.com/microsoft/OpenAPI.NET/commit/2436d7382bfbf8b9ba501d88f682e952bdf27146))
@@ -43,8 +41,20 @@
 
 * adds support for OpenAPI 3.2.0 ([765a8dd](https://github.com/microsoft/OpenAPI.NET/commit/765a8dd4d6efd1a31b6a76d282ccffa5877a845a))
 
-## [2.3.12](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.11...v2.3.12) (2025-12-15)
+## [2.4.1](https://github.com/microsoft/OpenAPI.NET/compare/v2.4.0...v2.4.1) (2025-12-18)
 
+### Bug Fixes
+
+* **schema:** always serialize `additionalProperties: false` ([6651c36](https://github.com/microsoft/OpenAPI.NET/commit/6651c36ff341329c053776d65b36b1b7fa9dd3ea))
+* **schema:** always serialize `additionalProperties: false` ([e36fc95](https://github.com/microsoft/OpenAPI.NET/commit/e36fc9565bce42916eb7bf64d1f74d491dd1f407))
+
+## [2.4.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.12...v2.4.0) (2025-12-17)
+
+### Features
+
+* Add `type: "null"` downcasting when in oneOf and anyOf for OpenAPI v3 ([782cf8d](https://github.com/microsoft/OpenAPI.NET/commit/782cf8d1ff8166e3c7be706e08dabf168b9616a4))
+
+## [2.3.12](https://github.com/microsoft/OpenAPI.NET/compare/v2.3.11...v2.3.12) (2025-12-15)
 
 ### Bug Fixes
 

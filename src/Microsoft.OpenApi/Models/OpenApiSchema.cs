@@ -494,9 +494,8 @@ namespace Microsoft.OpenApi
                     AdditionalProperties,
                     callback);
             }
-            // true is the default in earlier versions 3, no need to write it out
-            // boolean value is only supported for version 3 and earlier (version 2 is implemented in the other serialize method, the condition is a failsafe)
-            else if (!AdditionalPropertiesAllowed && version <= OpenApiSpecVersion.OpenApi3_0)
+            // true is the default, no need to write it out
+            else if (!AdditionalPropertiesAllowed)
             {
                 writer.WriteProperty(OpenApiConstants.AdditionalProperties, AdditionalPropertiesAllowed);
             }
