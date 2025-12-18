@@ -754,8 +754,10 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
-        [Fact]
-        public async Task SerializeAdditionalPropertiesAllowedAsV3FalseEmits()
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        public async Task SerializeAdditionalPropertiesAllowedAsV3PlusFalseEmits(OpenApiSpecVersion version)
         {
             var expected = @"{ ""additionalProperties"": false }";
             // Given
@@ -765,7 +767,7 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // When
-            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await schema.SerializeAsJsonAsync(version);
 
             // Then
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
