@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.2](https://github.com/microsoft/OpenAPI.NET/compare/v2.4.1...v2.4.2) (2025-12-22)
+
+
+### Bug Fixes
+
+* wrap extension parser calls in try-catch to ensure correct error pointers ([63cf4a3](https://github.com/microsoft/OpenAPI.NET/commit/63cf4a3029fe2d285a6fe2724e30ffcf3bdd2f9f))
+* wrap extension parser calls in try-catch to ensure correct error pointers ([458cabe](https://github.com/microsoft/OpenAPI.NET/commit/458cabe6cd0fbdb192dbd17f2d6ab3b8162d1166))
+
 ## [2.4.1](https://github.com/microsoft/OpenAPI.NET/compare/v2.4.0...v2.4.1) (2025-12-18)
 
 
