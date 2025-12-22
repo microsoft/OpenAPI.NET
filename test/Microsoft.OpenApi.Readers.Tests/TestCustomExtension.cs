@@ -44,6 +44,81 @@ namespace Microsoft.OpenApi.Readers.Tests
             Assert.Equal("hey", fooExtension.Bar);
             Assert.Equal("hi!", fooExtension.Baz);
         }
+
+        [Fact]
+        public void ExtensionParserThrowingOpenApiException_V2_ShouldHaveCorrectPointer()
+        {
+            var json = """
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Demo",
+    "version": "1"
+  },
+  "paths": {},
+  "definitions": {
+    "demo": {
+      "x-tag": null
+    }
+  }
+}
+""";
+            var settings = new OpenApiReaderSettings
+            {
+                ExtensionParsers =
+                {
+                    { "x-tag", (any, version) => throw new OpenApiException("Testing") }
+                }
+            };
+
+            var result = OpenApiDocument.Parse(json, "json", settings);
+
+            Assert.NotNull(result.Diagnostic);
+            Assert.NotEmpty(result.Diagnostic.Errors);
+            var error = result.Diagnostic.Errors[0];
+            Assert.Equal("Testing", error.Message);
+            Assert.Equal("#/definitions/demo/x-tag", error.Pointer);
+        }
+
+        [Theory]
+        [InlineData("3.0.4")]
+        [InlineData("3.1.1")]
+        [InlineData("3.2.0")]
+        public void ExtensionParserThrowingOpenApiException_V3_ShouldHaveCorrectPointer(string version)
+        {
+            var json = $$"""
+{
+  "openapi": "{{version}}",
+  "info": {
+    "title": "Demo",
+    "version": "1"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "demo": {
+        "x-tag": null
+      }
+    }
+  }
+}
+""";
+            var settings = new OpenApiReaderSettings
+            {
+                ExtensionParsers =
+                {
+                    { "x-tag", (any, version) => throw new OpenApiException("Testing") }
+                }
+            };
+
+            var result = OpenApiDocument.Parse(json, "json", settings);
+
+            Assert.NotNull(result.Diagnostic);
+            Assert.NotEmpty(result.Diagnostic.Errors);
+            var error = result.Diagnostic.Errors[0];
+            Assert.Equal("Testing", error.Message);
+            Assert.Equal("#/components/schemas/demo/x-tag", error.Pointer);
+        }
     }
 
     internal class FooExtension : IOpenApiExtension, IOpenApiElement
