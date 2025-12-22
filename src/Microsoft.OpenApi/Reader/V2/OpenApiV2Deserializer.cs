@@ -87,13 +87,10 @@ namespace Microsoft.OpenApi.Reader.V2
                 {
                     ex.Pointer = node.Context.GetLocation();
                     node.Context.Diagnostic.Errors.Add(new(ex));
-                    return new JsonNodeExtension(node.CreateAny());
                 }
             }
-            else
-            {
-                return new JsonNodeExtension(node.CreateAny());
-            }
+
+            return new JsonNodeExtension(node.CreateAny());
         }
 
         private static string? LoadString(ParseNode node)
