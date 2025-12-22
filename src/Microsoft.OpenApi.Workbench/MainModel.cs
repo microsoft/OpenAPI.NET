@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Workbench
         /// <summary>
         /// Default version.
         /// </summary>
-        private OpenApiSpecVersion _version = OpenApiSpecVersion.OpenApi3_0;
+        private OpenApiSpecVersion _version = OpenApiSpecVersion.OpenApi3_2;
 
         private static readonly HttpClient _httpClient = new();
 
