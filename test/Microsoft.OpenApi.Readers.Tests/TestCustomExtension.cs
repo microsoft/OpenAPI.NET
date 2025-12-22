@@ -48,19 +48,21 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void ExtensionParserThrowingOpenApiException_V2_ShouldHaveCorrectPointer()
         {
-            var json = @"{
-  ""swagger"": ""2.0"",
-  ""info"": {
-    ""title"": ""Demo"",
-    ""version"": ""1""
+            var json = """
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Demo",
+    "version": "1"
   },
-  ""paths"": {},
-  ""definitions"": {
-    ""demo"": {
-      ""x-tag"": null
+  "paths": {},
+  "definitions": {
+    "demo": {
+      "x-tag": null
     }
   }
-}";
+}
+""";
             var settings = new OpenApiReaderSettings
             {
                 ExtensionParsers =
@@ -81,21 +83,23 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void ExtensionParserThrowingOpenApiException_V3_ShouldHaveCorrectPointer()
         {
-            var json = @"{
-  ""openapi"": ""3.0.0"",
-  ""info"": {
-    ""title"": ""Demo"",
-    ""version"": ""1""
+            var json = """
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Demo",
+    "version": "1"
   },
-  ""paths"": {},
-  ""components"": {
-    ""schemas"": {
-      ""demo"": {
-        ""x-tag"": null
+  "paths": {},
+  "components": {
+    "schemas": {
+      "demo": {
+        "x-tag": null
       }
     }
   }
-}";
+}
+""";
             var settings = new OpenApiReaderSettings
             {
                 ExtensionParsers =
@@ -116,20 +120,22 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void ExtensionParserThrowingOpenApiException_V31_ShouldHaveCorrectPointer()
         {
-            var json = @"{
-  ""openapi"": ""3.1.0"",
-  ""info"": {
-    ""title"": ""Demo"",
-    ""version"": ""1""
+            var json = """
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Demo",
+    "version": "1"
   },
-  ""components"": {
-    ""schemas"": {
-      ""demo"": {
-        ""x-tag"": null
+  "components": {
+    "schemas": {
+      "demo": {
+        "x-tag": null
       }
     }
   }
-}";
+}
+""";
             var settings = new OpenApiReaderSettings
             {
                 ExtensionParsers =
