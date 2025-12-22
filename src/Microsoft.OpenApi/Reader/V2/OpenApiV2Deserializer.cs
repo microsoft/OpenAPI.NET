@@ -79,7 +79,16 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             if (node.Context.ExtensionParsers is not null && node.Context.ExtensionParsers.TryGetValue(name, out var parser))
             {
-                return parser(node.CreateAny(), OpenApiSpecVersion.OpenApi2_0);
+                try
+                {
+                    return parser(node.CreateAny(), OpenApiSpecVersion.OpenApi2_0);
+                }
+                catch (OpenApiException ex)
+                {
+                    ex.Pointer = node.Context.GetLocation();
+                    node.Context.Diagnostic.Errors.Add(new(ex));
+                    return new JsonNodeExtension(node.CreateAny());
+                }
             }
             else
             {
