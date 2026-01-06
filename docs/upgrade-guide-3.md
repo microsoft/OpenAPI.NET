@@ -11,11 +11,11 @@ We are excited to announce OpenAPI.NET v3.0! This major update introduces suppor
 
 If you are using this library with [AspNetCore OpenAPI versions](https://www.nuget.org/packages/Microsoft.AspNetCore.OpenApi) `< 10.0` then you must remain on version `1.x` as it's not compatible with version 3 or above of this library.
 
-If you are using this library with [AspNetCore OpenAPI versions](https://www.nuget.org/packages/Microsoft.AspNetCore.OpenApi) `= 10.0` then you must remain on version `2.x` as it's not compatible with version 3 or above of this library.
+If you are using this library with [AspNetCore OpenAPI versions](https://www.nuget.org/packages/Microsoft.AspNetCore.OpenApi) `= 10.X` then you must remain on version `2.x` as it's not compatible with version 3 or above of this library.
 
 If you are using this library with [Swashbuckle.AspNetCore version](https://www.nuget.org/packages/Swashbuckle.AspNetCore/) `< 10.0` then you must remain on version `1.x` as it's not compatible with version 3 or above of this library.
 
-If you are using this library with [Swashbuckle.AspNetCore version](https://www.nuget.org/packages/Swashbuckle.AspNetCore/) `= 10.0` then you must remain on version `2.x` as it's not compatible with version 3 or above of this library.
+If you are using this library with [Swashbuckle.AspNetCore version](https://www.nuget.org/packages/Swashbuckle.AspNetCore/) `= 10.X` then you must remain on version `2.x` as it's not compatible with version 3 or above of this library.
 
 The latest support policy information for this library, and integration with ASP.NET Core can be found on [the contributing documentation](https://github.com/microsoft/OpenAPI.NET/blob/main/CONTRIBUTING.md#branches-and-support-policy).
 
