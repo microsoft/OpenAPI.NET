@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.2](https://github.com/microsoft/OpenAPI.NET/compare/v3.1.1...v3.1.2) (2026-01-06)
+
+
+### Bug Fixes
+
+* correct error pointer when extension parser throws OpenApiException ([43c75a9](https://github.com/microsoft/OpenAPI.NET/commit/43c75a90746344fcc975611100e995fe4045edf0))
+* wrap extension parser calls in try-catch to ensure correct error pointers ([50b44aa](https://github.com/microsoft/OpenAPI.NET/commit/50b44aad12d8fa86a46f7f6d62896a7b1c344d2e))
+
 ## [3.1.1](https://github.com/microsoft/OpenAPI.NET/compare/v3.1.0...v3.1.1) (2025-12-18)
 
 
