@@ -3,8 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VerifyXunit;
@@ -2124,6 +2127,79 @@ components:
             Assert.Equal(2, document.Tags.Count);
             Assert.Contains(document.Tags, t => t.Name == "tag1");
             Assert.Contains(document.Tags, t => t.Name == "tag2");
+        }
+
+        [Fact]
+        public void TagsSupportsCustomComparer()
+        {
+            var document = new OpenApiDocument
+            {
+                Tags = new HashSet<OpenApiTag>(new CaseInsensitiveOpenApiTagEqualityComparer()),
+            };
+
+            Assert.True(document.Tags.Add(new OpenApiTag { Name = "Tag1" }));
+            Assert.False(document.Tags.Add(new OpenApiTag { Name = "tag1" }));
+            Assert.True(document.Tags.Add(new OpenApiTag { Name = "tag2" }));
+            Assert.False(document.Tags.Add(new OpenApiTag { Name = "TAG1" }));
+            Assert.Equal(2, document.Tags.Count);
+        }
+
+        private sealed class CaseInsensitiveOpenApiTagEqualityComparer : IEqualityComparer<OpenApiTag>
+        {
+            public bool Equals(OpenApiTag x, OpenApiTag y)
+            {
+                return string.Equals(x.Name, y.Name, StringComparison.OrdinalIgnoreCase);
+            }
+
+            public int GetHashCode([DisallowNull] OpenApiTag obj)
+            {
+                return obj.Name.GetHashCode(StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
+        [Fact]
+        public void TagsSupportsSortedSets()
+        {
+            var document = new OpenApiDocument
+            {
+                Tags = new SortedSet<OpenApiTag>(new DescendingOpenApiTagComparer())
+                {
+                    new OpenApiTag { Name = "tagB" },
+                    new OpenApiTag { Name = "tagA" },
+                    new OpenApiTag { Name = "tagC" },
+                }
+            };
+
+            var names = document.Tags.Select(t => t.Name);
+            Assert.Equal(["tagC", "tagB", "tagA"], names);
+            Assert.IsType<SortedSet<OpenApiTag>>(document.Tags);
+        }
+
+        private sealed class DescendingOpenApiTagComparer : IComparer<OpenApiTag>
+        {
+            public int Compare(OpenApiTag x, OpenApiTag y)
+            {
+                return string.Compare(y?.Name, x?.Name, StringComparison.Ordinal);
+            }
+        }
+
+        [Fact]
+        public void TagsSupportsImmutableSortedSets()
+        {
+            var document = new OpenApiDocument
+            {
+                Tags = ImmutableSortedSet.Create(
+                    new DescendingOpenApiTagComparer(),
+                    [
+                        new OpenApiTag { Name = "tagB" },
+                        new OpenApiTag { Name = "tagA" },
+                        new OpenApiTag { Name = "tagC" },
+                    ]),
+            };
+
+            var names = document.Tags.Select(t => t.Name);
+            Assert.Equal(["tagC", "tagB", "tagA"], names);
+            Assert.IsType<ImmutableSortedSet<OpenApiTag>>(document.Tags);
         }
 
         public static TheoryData<OpenApiSpecVersion> OpenApiSpecVersions()
