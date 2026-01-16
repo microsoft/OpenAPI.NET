@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.3](https://github.com/microsoft/OpenAPI.NET/compare/v3.1.2...v3.1.3) (2026-01-16)
+
+
+### Bug Fixes
+
+* Support custom tag ordering ([008576c](https://github.com/microsoft/OpenAPI.NET/commit/008576c31f8dcecf59363c9c2f85d691601faa73))
+* Support custom tag ordering ([7610d07](https://github.com/microsoft/OpenAPI.NET/commit/7610d07bd11a99a4ce1cc31338d180dbd764d952))
+
 ## [3.1.2](https://github.com/microsoft/OpenAPI.NET/compare/v3.1.1...v3.1.2) (2026-01-06)
 
 ### Bug Fixes
