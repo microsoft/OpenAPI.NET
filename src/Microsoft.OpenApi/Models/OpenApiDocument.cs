@@ -3,6 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+#if NET
+using System.Collections.Immutable;
+#endif
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -83,9 +86,15 @@ namespace Microsoft.OpenApi
                 {
                     return;
                 }
-                _tags = value is HashSet<OpenApiTag> tags && tags.Comparer is OpenApiTagComparer ?
-                        tags :
-                        new HashSet<OpenApiTag>(value, OpenApiTagComparer.Instance);
+                _tags = value switch
+                {
+                    HashSet<OpenApiTag> tags when tags.Comparer != EqualityComparer<OpenApiTag>.Default => value,
+                    SortedSet<OpenApiTag> => value,
+#if NET
+                    ImmutableSortedSet<OpenApiTag> => value,
+#endif
+                    _ => new HashSet<OpenApiTag>(value, OpenApiTagComparer.Instance),
+                };
             }
         }
 
