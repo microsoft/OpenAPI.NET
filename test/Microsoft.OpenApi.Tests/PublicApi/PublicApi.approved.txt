@@ -1261,7 +1261,11 @@ namespace Microsoft.OpenApi
     {
         public static Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.IOpenApiSchema> ValidateSchemaDiscriminator { get; }
         public static Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.IOpenApiSchema> ValidateSchemaPropertyHasValue { get; }
+        [System.ComponentModel.Browsable(false)]
+        [System.Obsolete("This method will be made private in future versions.")]
         public static bool TraverseSchemaElements(string discriminatorName, System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiSchema>? childSchema) { }
+        [System.ComponentModel.Browsable(false)]
+        [System.Obsolete("This method will be made private in future versions.")]
         public static bool ValidateChildSchemaAgainstDiscriminator(Microsoft.OpenApi.IOpenApiSchema schema, string? discriminatorName) { }
     }
     public class OpenApiSecurityRequirement : System.Collections.Generic.Dictionary<Microsoft.OpenApi.OpenApiSecuritySchemeReference, System.Collections.Generic.List<string>>, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiSerializable
