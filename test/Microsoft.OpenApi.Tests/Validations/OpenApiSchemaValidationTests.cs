@@ -246,7 +246,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         }
 
         [Fact]
-        public void ValidateOneOfSchemaPropertyNameContainsPropertySpecifiedInTheDiscriminator()
+        public void ValidateOneOfSchemaPropertyNameContainsPropertySpecifiedInTheDiscriminatorOneOf()
         {
             // Arrange
             var components = new OpenApiComponents
@@ -263,6 +263,103 @@ namespace Microsoft.OpenApi.Validations.Tests
                                 PropertyName = "type"
                             },
                             OneOf =
+                            [
+                                new OpenApiSchema()
+                                {
+                                    Properties = new Dictionary<string, IOpenApiSchema>
+                                    {
+                                        {
+                                            "type",
+                                            new OpenApiSchema
+                                            {
+                                                Type = JsonSchemaType.Array
+                                            }
+                                        }
+                                    },
+                                }
+                            ],
+                        }
+                    }
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(components);
+
+            var errors = validator.Errors;
+
+            //Assert
+            Assert.Empty(errors);
+        }
+
+        [Fact]
+        public void ValidateOneOfSchemaPropertyNameContainsPropertySpecifiedInTheDiscriminatorAnyOf()
+        {
+            // Arrange
+            var components = new OpenApiComponents
+            {
+                Schemas = new Dictionary<string, IOpenApiSchema>
+                {
+                    {
+                        "Person",
+                        new OpenApiSchema
+                        {
+                            Type = JsonSchemaType.Array,
+                            Discriminator = new()
+                            {
+                                PropertyName = "type"
+                            },
+                            AnyOf =
+                            [
+                                new OpenApiSchema()
+                                {
+                                    Properties = new Dictionary<string, IOpenApiSchema>
+                                    {
+                                        {
+                                            "type",
+                                            new OpenApiSchema
+                                            {
+                                                Type = JsonSchemaType.Array
+                                            }
+                                        }
+                                    },
+                                }
+                            ],
+                        }
+                    }
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(components);
+
+            var errors = validator.Errors;
+
+            //Assert
+            Assert.Empty(errors);
+        }
+        [Fact]
+        public void ValidateOneOfSchemaPropertyNameContainsPropertySpecifiedInTheDiscriminatorAllOf()
+        {
+            // Arrange
+            var components = new OpenApiComponents
+            {
+                Schemas = new Dictionary<string, IOpenApiSchema>
+                {
+                    {
+                        "Person",
+                        new OpenApiSchema
+                        {
+                            Type = JsonSchemaType.Array,
+                            Discriminator = new()
+                            {
+                                PropertyName = "type"
+                            },
+                            AllOf =
                             [
                                 new OpenApiSchema()
                                 {
