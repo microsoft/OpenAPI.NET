@@ -3,7 +3,7 @@
 namespace Microsoft.OpenApi;
 
 /// <summary>
-/// Represents an Extensible Open API element elements can be rad from.
+/// Represents an Extensible Open API element elements can be read from.
 /// </summary>
 public interface IOpenApiReadOnlyExtensible
 {
