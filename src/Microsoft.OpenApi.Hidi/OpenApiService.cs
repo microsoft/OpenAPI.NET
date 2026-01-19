@@ -398,6 +398,7 @@ namespace Microsoft.OpenApi.Hidi
                 logger.LogTrace("{Timestamp}ms: Completed parsing.", stopwatch.ElapsedMilliseconds);
 
                 LogErrors(logger, result);
+                LogWarnings(logger, result);
                 stopwatch.Stop();
             }
 
@@ -652,13 +653,28 @@ namespace Microsoft.OpenApi.Hidi
         private static void LogErrors(ILogger logger, ReadResult result)
         {
             var context = result.Diagnostic;
-            if (context is not null && context.Errors.Count != 0)
+            if (context is { Errors.Count: > 0 })
             {
                 using (logger.BeginScope("Detected errors"))
                 {
                     foreach (var error in context.Errors)
                     {
                         logger.LogError("Detected error during parsing: {Error}", error.ToString());
+                    }
+                }
+            }
+        }
+
+        private static void LogWarnings(ILogger logger, ReadResult result)
+        {
+            var context = result.Diagnostic;
+            if (context is { Warnings.Count: > 0 })
+            {
+                using (logger.BeginScope("Detected warnings"))
+                {
+                    foreach (var warning in context.Warnings)
+                    {
+                        logger.LogWarning("Detected warning during parsing: {Warning}", warning.ToString());
                     }
                 }
             }
