@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.5.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.4.3...v2.5.0) (2026-01-19)
+
+
+### Features
+
+* hidi validate command now logs warnings ([1d3d085](https://github.com/microsoft/OpenAPI.NET/commit/1d3d085e0278d9341d7bd10065eba584cb25773c))
+* hidi validate command now logs warnings ([18ed5ac](https://github.com/microsoft/OpenAPI.NET/commit/18ed5acce9661639e1698f19c194e520eb5c93c1))
+
+
+### Bug Fixes
+
+* discriminator property validation fails any/allOf cases when it shouldn't ([ff6e411](https://github.com/microsoft/OpenAPI.NET/commit/ff6e4115dcab8c893bbc6b97639fd620b50f105e))
+* discriminator property validation fails any/allOf cases when it shouldn't ([7def73d](https://github.com/microsoft/OpenAPI.NET/commit/7def73d774d1f0e96118e92b636e52cbea371f2d))
+
 ## [2.4.3](https://github.com/microsoft/OpenAPI.NET/compare/v2.4.2...v2.4.3) (2026-01-16)
 
 
