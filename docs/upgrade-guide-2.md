@@ -32,7 +32,7 @@ One of the key features of OpenAPI.NET is its performance. This version makes it
 
 In v1, instances of `$ref` were resolved in a second pass of the document to ensure the target of the reference has been parsed before attempting to resolve it. In v2, reference targets are lazily resolved when reference objects are accessed. This improves load time performance for documents that make heavy use of references.
 
-[How does this change the behavior of external references?]
+Because references are lazily loaded and depend on the workspace context, loading a document with unresolved references (internal or external) does not lead to an exception being thrown anymore. Instead warnings are logged in the diagnostics object. This gives you an opportunity to load additional documents in the workspace if needed, [more information](#component-registration-in-a-documents-workspace).
 
 ### Results
 
