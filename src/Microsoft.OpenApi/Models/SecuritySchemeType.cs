@@ -26,6 +26,11 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Use OAuth2 with OpenId Connect URL to discover OAuth2 configuration value.
         /// </summary>
-        [Display("openIdConnect")] OpenIdConnect
+        [Display("openIdConnect")] OpenIdConnect,
+
+        /// <summary>
+        /// Use mutual TLS authentication.
+        /// </summary>
+        [Display("mutualTLS")] MutualTLS
     }
 }

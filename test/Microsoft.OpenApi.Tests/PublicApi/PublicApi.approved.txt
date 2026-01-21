@@ -1808,6 +1808,8 @@ namespace Microsoft.OpenApi
         OAuth2 = 2,
         [Microsoft.OpenApi.Display("openIdConnect")]
         OpenIdConnect = 3,
+        [Microsoft.OpenApi.Display("mutualTLS")]
+        MutualTLS = 4,
     }
     public abstract class SourceExpression : Microsoft.OpenApi.RuntimeExpression
     {
