@@ -103,6 +103,25 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         }
 
         [Fact]
+        public async Task ParseMutualTlsSecuritySchemeShouldSucceed()
+        {
+            // Act
+            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(
+                Path.Combine(SampleFolderPath, "mutualTlsSecurityScheme.yaml"),
+                OpenApiSpecVersion.OpenApi3_2,
+                new(),
+                SettingsFixture.ReaderSettings);
+
+            // Assert
+            Assert.Equivalent(
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.MutualTLS,
+                    Description = "Sample Description"
+                }, securityScheme);
+        }
+
+        [Fact]
         public async Task ParseOAuth2SecuritySchemeWithDeviceAuthorizationUrlShouldSucceed()
         {
             // Act
