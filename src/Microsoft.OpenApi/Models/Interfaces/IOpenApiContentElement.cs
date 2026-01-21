@@ -5,7 +5,7 @@ namespace Microsoft.OpenApi;
 /// <summary>
 /// Describes an element that has content.
 /// </summary>
-public interface IOpenApiContentElement
+public interface IOpenApiContentElement : IOpenApiReadOnlyContentElement
 {
     /// <summary>
     /// A map containing descriptions of potential payloads.
