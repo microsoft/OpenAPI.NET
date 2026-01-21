@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.6.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.5.0...v2.6.0) (2026-01-21)
+
+
+### Features
+
+* **models:** add shared Content interface ([80e4bbf](https://github.com/microsoft/OpenAPI.NET/commit/80e4bbfa4ab31d3af69fe29751714d001c1f9566))
+* **models:** add shared Content interface ([#2695](https://github.com/microsoft/OpenAPI.NET/issues/2695)) ([338566f](https://github.com/microsoft/OpenAPI.NET/commit/338566fafce04ee1329f4ead61fe1e87e01144ad))
+* **models:** add shared Content interface ([#2695](https://github.com/microsoft/OpenAPI.NET/issues/2695)) ([80e4bbf](https://github.com/microsoft/OpenAPI.NET/commit/80e4bbfa4ab31d3af69fe29751714d001c1f9566))
+* **models:** support mutualTLS security scheme ([f9cf5b8](https://github.com/microsoft/OpenAPI.NET/commit/f9cf5b807d71c49e5bd7e2bec97f12d3b50ca180))
+
 ## [2.5.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.4.3...v2.5.0) (2026-01-19)
 
 
