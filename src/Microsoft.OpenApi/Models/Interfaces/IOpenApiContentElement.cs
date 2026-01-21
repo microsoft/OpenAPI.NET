@@ -5,7 +5,7 @@ namespace Microsoft.OpenApi;
 /// <summary>
 /// Describes an element that has content.
 /// </summary>
-public interface IOpenApiContentElement : IOpenApiReadOnlyContentElement
+public interface IOpenApiContentElement
 {
     /// <inheritdoc />
     IDictionary<string, IOpenApiMediaType>? Content { get; set; }
