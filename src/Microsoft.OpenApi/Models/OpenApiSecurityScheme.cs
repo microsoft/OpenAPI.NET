@@ -126,6 +126,9 @@ namespace Microsoft.OpenApi
                     // openIdConnectUrl
                     writer.WriteProperty(OpenApiConstants.OpenIdConnectUrl, OpenIdConnectUrl?.ToString());
                     break;
+                case SecuritySchemeType.MutualTLS:
+                    // No additional properties for mutualTLS
+                    break;
             }
 
             // deprecated - serialize as native field for v3.2+ or as extension for earlier versions
@@ -165,6 +168,14 @@ namespace Microsoft.OpenApi
             if (Type == SecuritySchemeType.OpenIdConnect)
             {
                 // Bail because V2 does not support OpenIdConnect
+                writer.WriteStartObject();
+                writer.WriteEndObject();
+                return;
+            }
+
+            if (Type == SecuritySchemeType.MutualTLS)
+            {
+                // Bail because V2 does not support mutualTLS
                 writer.WriteStartObject();
                 writer.WriteEndObject();
                 return;
