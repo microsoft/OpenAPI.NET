@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Request Body Object
     /// </summary>
-    public class OpenApiRequestBody : IOpenApiExtensible, IOpenApiRequestBody
+    public class OpenApiRequestBody : IOpenApiExtensible, IOpenApiRequestBody, IOpenApiContentElement
     {
         /// <inheritdoc />
         public string? Description { get; set; }
@@ -18,7 +18,10 @@ namespace Microsoft.OpenApi
         /// <inheritdoc />
         public bool Required { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// REQUIRED. The content of the request body. The key is a media type or media type range and the value describes it.
+        /// For requests that match multiple keys, only the most specific key is applicable. e.g. text/plain overrides text/*
+        /// </summary>
         public IDictionary<string, IOpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc />
@@ -64,7 +67,7 @@ namespace Microsoft.OpenApi
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
-        
+
         internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
@@ -110,7 +113,7 @@ namespace Microsoft.OpenApi
                 Extensions = Extensions?.ToDictionary(static k => k.Key, static v => v.Value)
             };
             // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
-            if (bodyParameter.Extensions is not null && 
+            if (bodyParameter.Extensions is not null &&
                 bodyParameter.Extensions.TryGetValue(OpenApiConstants.BodyName, out var bodyNameExtension) &&
                 bodyNameExtension is JsonNodeExtension bodyName)
             {
@@ -126,7 +129,7 @@ namespace Microsoft.OpenApi
             if (Content == null || !Content.Any())
                 yield break;
             var properties = Content.First().Value.Schema?.Properties;
-            if(properties != null)
+            if (properties != null)
             {
                 foreach (var property in properties)
                 {
@@ -144,11 +147,11 @@ namespace Microsoft.OpenApi
                             OpenApiSchemaReference => throw new InvalidOperationException("Unresolved reference target"),
                             _ => throw new InvalidOperationException("Unexpected schema type")
                         };
-                        
+
                         updatedSchema.Type = "file".ToJsonSchemaType();
                         updatedSchema.Format = null;
                         paramSchema = updatedSchema;
-                        
+
                     }
                     yield return new OpenApiFormDataParameter()
                     {
@@ -159,7 +162,7 @@ namespace Microsoft.OpenApi
                         Required = Content.First().Value.Schema?.Required?.Contains(property.Key) ?? false
                     };
                 }
-            }            
+            }
         }
 
         /// <inheritdoc/>
