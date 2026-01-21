@@ -21,10 +21,7 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiHeader>? Headers { get; set; }
 
-        /// <summary>
-        /// A map containing descriptions of potential response payloads.
-        /// The key is a media type or media type range and the value describes it.
-        /// </summary>
+        /// <inheritdoc/>
         public IDictionary<string, IOpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
