@@ -128,6 +128,11 @@ namespace Microsoft.OpenApi
                     break;
                 case SecuritySchemeType.MutualTLS:
                     // No additional properties for mutualTLS
+                    if (version < OpenApiSpecVersion.OpenApi3_1)
+                    {
+                        // mutualTLS is introduced in OpenAPI 3.1
+                        throw new OpenApiException($"mutualTLS security scheme is only supported in OpenAPI 3.1 and later versions. Current version: {version}");
+                    }
                     break;
             }
 
