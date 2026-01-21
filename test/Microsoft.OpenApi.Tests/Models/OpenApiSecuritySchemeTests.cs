@@ -100,6 +100,12 @@ namespace Microsoft.OpenApi.Tests.Models
             OpenIdConnectUrl = new("https://example.com/openIdConnect")
         };
 
+        private static OpenApiSecurityScheme MutualTlsSecurityScheme => new()
+        {
+            Description = "description1",
+            Type = SecuritySchemeType.MutualTLS
+        };
+
         private static OpenApiSecuritySchemeReference OpenApiSecuritySchemeReference => new("sampleSecurityScheme");
         private static OpenApiSecurityScheme ReferencedSecurityScheme => new()
         {
@@ -196,6 +202,19 @@ namespace Microsoft.OpenApi.Tests.Models
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void SerializeMutualTlsSecuritySchemeAsV3Throws()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+
+            // Act & Assert
+            var exception = Assert.Throws<OpenApiException>(() => MutualTlsSecurityScheme.SerializeAsV3(writer));
+            Assert.Contains("mutualTLS security scheme is only supported in OpenAPI 3.1 and later versions", exception.Message);
+            Assert.Contains($"Current version: {OpenApiSpecVersion.OpenApi3_0}", exception.Message);
         }
 
         [Fact]

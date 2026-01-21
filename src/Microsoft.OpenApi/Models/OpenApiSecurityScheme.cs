@@ -115,6 +115,14 @@ namespace Microsoft.OpenApi
                     // openIdConnectUrl
                     writer.WriteProperty(OpenApiConstants.OpenIdConnectUrl, OpenIdConnectUrl?.ToString());
                     break;
+                case SecuritySchemeType.MutualTLS:
+                    // No additional properties for mutualTLS
+                    if (version < OpenApiSpecVersion.OpenApi3_1)
+                    {
+                        // mutualTLS is introduced in OpenAPI 3.1
+                        throw new OpenApiException($"mutualTLS security scheme is only supported in OpenAPI 3.1 and later versions. Current version: {version}");
+                    }
+                    break;
             }
 
             // extensions
@@ -141,6 +149,14 @@ namespace Microsoft.OpenApi
             if (Type == SecuritySchemeType.OpenIdConnect)
             {
                 // Bail because V2 does not support OpenIdConnect
+                writer.WriteStartObject();
+                writer.WriteEndObject();
+                return;
+            }
+
+            if (Type == SecuritySchemeType.MutualTLS)
+            {
+                // Bail because V2 does not support mutualTLS
                 writer.WriteStartObject();
                 writer.WriteEndObject();
                 return;
