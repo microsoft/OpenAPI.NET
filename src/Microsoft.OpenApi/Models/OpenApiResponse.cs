@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Response object.
     /// </summary>
-    public class OpenApiResponse : IOpenApiExtensible, IOpenApiResponse
+    public class OpenApiResponse : IOpenApiExtensible, IOpenApiResponse, IOpenApiContentElement
     {
         /// <inheritdoc/>
         public string? Summary { get; set; }
@@ -21,7 +21,10 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiHeader>? Headers { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// A map containing descriptions of potential response payloads.
+        /// The key is a media type or media type range and the value describes it.
+        /// </summary>
         public IDictionary<string, IOpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
@@ -73,7 +76,7 @@ namespace Microsoft.OpenApi
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);
@@ -177,7 +180,7 @@ namespace Microsoft.OpenApi
                             // so remove it from the cloned collection so we don't write it again.
                             extensionsClone?.Remove(key);
                         }
-                    }                    
+                    }
                 }
             }
 
