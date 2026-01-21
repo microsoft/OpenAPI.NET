@@ -7,10 +7,7 @@ namespace Microsoft.OpenApi;
 /// </summary>
 public interface IOpenApiContentElement : IOpenApiReadOnlyContentElement
 {
-    /// <summary>
-    /// A map containing descriptions of potential payloads.
-    /// The key is a media type or media type range and the value describes it.
-    /// </summary>
+    /// <inheritdoc />
     IDictionary<string, IOpenApiMediaType>? Content { get; set; }
 }
 
