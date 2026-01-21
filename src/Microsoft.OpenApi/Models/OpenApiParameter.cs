@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Parameter Object.
     /// </summary>
-    public class OpenApiParameter : IOpenApiExtensible, IOpenApiParameter
+    public class OpenApiParameter : IOpenApiExtensible, IOpenApiParameter, IOpenApiContentElement
     {
         private bool? _explode;
         private ParameterStyle? _style;
@@ -60,7 +60,15 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public JsonNode? Example { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// A map containing the representations for the parameter.
+        /// The key is the media type and the value describes it.
+        /// The map MUST only contain one entry.
+        /// For more complex scenarios, the content property can define the media type and schema of the parameter.
+        /// A parameter MUST contain either a schema property, or a content property, but not both.
+        /// When example or examples are provided in conjunction with the schema object,
+        /// the example MUST follow the prescribed serialization strategy for the parameter.
+        /// </summary>
         public IDictionary<string, OpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
@@ -105,7 +113,7 @@ namespace Microsoft.OpenApi
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-        internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);
@@ -200,7 +208,8 @@ namespace Microsoft.OpenApi
                 // uniqueItems
                 // enum
                 // multipleOf
-                var targetSchema = Schema switch {
+                var targetSchema = Schema switch
+                {
                     OpenApiSchemaReference schemaReference => schemaReference.RecursiveTarget,
                     OpenApiSchema schema => schema,
                     _ => null,
