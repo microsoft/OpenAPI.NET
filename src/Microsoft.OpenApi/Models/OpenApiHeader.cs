@@ -43,9 +43,7 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExample>? Examples { get; set; }
 
-        /// <summary>
-        /// A map containing the representations for the header.
-        /// </summary>
+        /// <inheritdoc/>
         public IDictionary<string, IOpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
