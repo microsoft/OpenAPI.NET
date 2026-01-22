@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.3.1](https://github.com/microsoft/OpenAPI.NET/compare/v3.3.0...v3.3.1) (2026-01-22)
+
+
+### Features
+
+* **models:** add shared Content interface ([#2695](https://github.com/microsoft/OpenAPI.NET/issues/2695)) ([338566f](https://github.com/microsoft/OpenAPI.NET/commit/338566fafce04ee1329f4ead61fe1e87e01144ad))
+
+
+### Bug Fixes
+
+* broken binary compatibility due to interface changes in previous version ([d96bba7](https://github.com/microsoft/OpenAPI.NET/commit/d96bba72c383cd5db2b7032530aee3b4d944ebc6))
+
 ## [3.3.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.2.0...v3.3.0) (2026-01-21)
 
 
