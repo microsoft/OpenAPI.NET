@@ -7,7 +7,7 @@ namespace Microsoft.OpenApi;
 /// Defines the base properties for the parameter object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiParameter>, IOpenApiReferenceable, IOpenApiReadOnlyContentElement
+public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiParameter>, IOpenApiReferenceable
 {
     /// <summary>
     /// REQUIRED. The name of the parameter. Parameter names are case sensitive.
@@ -93,4 +93,15 @@ public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiReadOnlyE
     /// Assign <see cref="JsonNullSentinel.JsonNull"/> to use get null as a serialized value.
     /// </summary>
     public JsonNode? Example { get; }
+
+    /// <summary>
+    /// A map containing the representations for the parameter.
+    /// The key is the media type and the value describes it.
+    /// The map MUST only contain one entry.
+    /// For more complex scenarios, the content property can define the media type and schema of the parameter.
+    /// A parameter MUST contain either a schema property, or a content property, but not both.
+    /// When example or examples are provided in conjunction with the schema object,
+    /// the example MUST follow the prescribed serialization strategy for the parameter.
+    /// </summary>
+    public IDictionary<string, OpenApiMediaType>? Content { get; }    
 }
