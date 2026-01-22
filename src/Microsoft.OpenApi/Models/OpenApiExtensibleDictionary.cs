@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        protected OpenApiExtensibleDictionary():this([]) { }
+        protected OpenApiExtensibleDictionary() : this([]) { }
         /// <summary>
         /// Initializes a copy of <see cref="OpenApiExtensibleDictionary{T}"/> class.
         /// </summary>
@@ -71,6 +71,8 @@ namespace Microsoft.OpenApi
         {
             Utils.CheckArgumentNull(writer);
 
+            ValidatePathTemplateOperators(version);
+
             writer.WriteStartObject();
 
             foreach (var item in this)
@@ -83,12 +85,80 @@ namespace Microsoft.OpenApi
             writer.WriteEndObject();
         }
 
+        private static readonly char[] Rfc6570Operators = ['+', '#', '.', '/', ';', '?', '&'];
+
+        private void ValidatePathTemplateOperators(OpenApiSpecVersion version)
+        {
+            if (version >= OpenApiSpecVersion.OpenApi3_2 || this is not OpenApiPaths)
+            {
+                return;
+            }
+
+            foreach (var path in Keys)
+            {
+                if (ContainsRfc6570Operator(path))
+                {
+                    throw new OpenApiException($"RFC 6570 URI template operators are only supported in OpenAPI 3.2 and later versions. Path: '{path}'. Current version: {version}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the given path contains any RFC 6570 operators.
+        /// </summary>
+        private static bool ContainsRfc6570Operator(string path)
+        {
+            if (path.Length == 0)
+            {
+                return false;
+            }
+
+            var template = path;
+
+            var startIndex = 0;
+            while (true)
+            {
+                var open = template.IndexOf('{', startIndex);
+                if (open < 0)
+                {
+                    break;
+                }
+
+                var close = template.IndexOf('}', open + 1);
+                if (close < 0)
+                {
+                    break;
+                }
+
+                var expression = template.Substring(open + 1, close - open - 1);
+                if (!string.IsNullOrEmpty(expression))
+                {
+                    var first = expression[0];
+                    if (Array.IndexOf(Rfc6570Operators, first) >= 0)
+                    {
+                        return true;
+                    }
+
+                    if (expression.IndexOf('*') >= 0)
+                    {
+                        return true;
+                    }
+                }
+
+                startIndex = close + 1;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Serialize to Open Api v2.0
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
+
+            ValidatePathTemplateOperators(OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteStartObject();
 
