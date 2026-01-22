@@ -1,0 +1,8 @@
+# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.2.0.md#securitySchemeObject
+type: oauth2
+oauth2MetadataUrl: https://idp.example.com/.well-known/oauth-authorization-server
+flows:
+  clientCredentials:
+    tokenUrl: https://idp.example.com/oauth/token
+    scopes:
+      scope:one: Scope one

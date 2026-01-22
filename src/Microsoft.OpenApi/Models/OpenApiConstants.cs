@@ -696,6 +696,11 @@ namespace Microsoft.OpenApi
         public const string Flows = "flows";
 
         /// <summary>
+        /// Field: Oauth2MetadataUrl
+        /// </summary>
+        public const string OAuth2MetadataUrl = "oauth2MetadataUrl";
+
+        /// <summary>
         /// Field: OpenIdConnectUrl
         /// </summary>
         public const string OpenIdConnectUrl = "openIdConnectUrl";

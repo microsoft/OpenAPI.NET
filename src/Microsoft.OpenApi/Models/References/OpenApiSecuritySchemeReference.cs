@@ -55,6 +55,9 @@ namespace Microsoft.OpenApi
         public Uri? OpenIdConnectUrl { get => Target?.OpenIdConnectUrl; }
 
         /// <inheritdoc/>
+        public Uri? OAuth2MetadataUrl { get => Target?.OAuth2MetadataUrl; }
+
+        /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
 
         /// <inheritdoc/>
