@@ -87,29 +87,6 @@
 
 * adds support for OpenAPI 3.2.0 ([765a8dd](https://github.com/microsoft/OpenAPI.NET/commit/765a8dd4d6efd1a31b6a76d282ccffa5877a845a))
 
-## [2.6.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.5.0...v2.6.0) (2026-01-21)
-
-### Features
-
-* **models:** add shared Content interface ([80e4bbf](https://github.com/microsoft/OpenAPI.NET/commit/80e4bbfa4ab31d3af69fe29751714d001c1f9566))
-* **models:** add shared Content interface ([#2695](https://github.com/microsoft/OpenAPI.NET/issues/2695)) ([338566f](https://github.com/microsoft/OpenAPI.NET/commit/338566fafce04ee1329f4ead61fe1e87e01144ad))
-* **models:** add shared Content interface ([#2695](https://github.com/microsoft/OpenAPI.NET/issues/2695)) ([80e4bbf](https://github.com/microsoft/OpenAPI.NET/commit/80e4bbfa4ab31d3af69fe29751714d001c1f9566))
-* **models:** support mutualTLS security scheme ([f9cf5b8](https://github.com/microsoft/OpenAPI.NET/commit/f9cf5b807d71c49e5bd7e2bec97f12d3b50ca180))
-
-## [2.5.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.4.3...v2.5.0) (2026-01-19)
-
-## Features
-
-* hidi validate command now logs warnings ([1d3d085](https://github.com/microsoft/OpenAPI.NET/commit/1d3d085e0278d9341d7bd10065eba584cb25773c))
-* hidi validate command now logs warnings ([18ed5ac](https://github.com/microsoft/OpenAPI.NET/commit/18ed5acce9661639e1698f19c194e520eb5c93c1))
-
-
-### Bug Fixes
-
-* discriminator property validation fails any/allOf cases when it shouldn't ([ff6e411](https://github.com/microsoft/OpenAPI.NET/commit/ff6e4115dcab8c893bbc6b97639fd620b50f105e))
-* discriminator property validation fails any/allOf cases when it shouldn't ([7def73d](https://github.com/microsoft/OpenAPI.NET/commit/7def73d774d1f0e96118e92b636e52cbea371f2d))
-
-
 ## [2.4.3](https://github.com/microsoft/OpenAPI.NET/compare/v2.4.2...v2.4.3) (2026-01-16)
 
 ## Bug Fixes

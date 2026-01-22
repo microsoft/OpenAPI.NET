@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Response object.
     /// </summary>
-    public class OpenApiResponse : IOpenApiExtensible, IOpenApiResponse, IOpenApiContentElement
+    public class OpenApiResponse : IOpenApiExtensible, IOpenApiResponse
     {
         /// <inheritdoc/>
         public string? Summary { get; set; }
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi
                             // so remove it from the cloned collection so we don't write it again.
                             extensionsClone?.Remove(key);
                         }
-                    }
+                    }                    
                 }
             }
 
