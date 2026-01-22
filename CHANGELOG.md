@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.1](https://github.com/microsoft/OpenAPI.NET/compare/v2.6.0...v2.6.1) (2026-01-22)
+
+
+### Bug Fixes
+
+* broken binary compatibility due to interface changes in previous version ([06f2b85](https://github.com/microsoft/OpenAPI.NET/commit/06f2b85d71e1af9cda5aca35f85942fd6d04b903))
+
 ## [2.6.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.5.0...v2.6.0) (2026-01-21)
 
 
