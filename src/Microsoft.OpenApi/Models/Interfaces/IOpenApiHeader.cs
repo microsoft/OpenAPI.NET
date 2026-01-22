@@ -57,4 +57,5 @@ public interface IOpenApiHeader : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// Examples of the media type.
     /// </summary>
     public IDictionary<string, IOpenApiExample>? Examples { get; }
+
 }
