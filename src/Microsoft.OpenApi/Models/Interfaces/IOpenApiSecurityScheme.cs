@@ -47,6 +47,12 @@ public interface IOpenApiSecurityScheme : IOpenApiDescribedElement, IOpenApiRead
     public Uri? OpenIdConnectUrl { get; }
 
     /// <summary>
+    /// URL to the OAuth2 Authorization Server Metadata document (RFC 8414).
+    /// Note: This field is supported in OpenAPI 3.2.0+ only.
+    /// </summary>
+    public Uri? OAuth2MetadataUrl { get; }
+
+    /// <summary>
     /// Specifies that a security scheme is deprecated and SHOULD be transitioned out of usage.
     /// Note: This field is supported in OpenAPI 3.2.0+. For earlier versions, it will be serialized as x-oai-deprecated extension.
     /// </summary>

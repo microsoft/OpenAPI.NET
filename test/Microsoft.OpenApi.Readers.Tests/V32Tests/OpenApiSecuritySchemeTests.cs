@@ -87,6 +87,36 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         }
 
         [Fact]
+        public async Task ParseOAuth2SecuritySchemeWithMetadataUrlShouldSucceed()
+        {
+            // Act
+            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(
+                Path.Combine(SampleFolderPath, "oauth2SecuritySchemeWithMetadataUrl.yaml"),
+                OpenApiSpecVersion.OpenApi3_2,
+                new(),
+                SettingsFixture.ReaderSettings);
+
+            // Assert
+            Assert.Equivalent(
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    OAuth2MetadataUrl = new Uri("https://idp.example.com/.well-known/oauth-authorization-server"),
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        ClientCredentials = new OpenApiOAuthFlow
+                        {
+                            TokenUrl = new Uri("https://idp.example.com/oauth/token"),
+                            Scopes = new System.Collections.Generic.Dictionary<string, string>
+                            {
+                                ["scope:one"] = "Scope one"
+                            }
+                        }
+                    }
+                }, securityScheme);
+        }
+
+        [Fact]
         public async Task ParseOpenIdConnectSecuritySchemeShouldSucceed()
         {
             // Act
