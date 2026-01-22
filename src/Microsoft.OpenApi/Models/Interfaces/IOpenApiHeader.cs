@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi;
 /// Defines the base properties for the headers object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
 /// </summary>
-public interface IOpenApiHeader : IOpenApiDescribedElement, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiHeader>, IOpenApiReferenceable, IOpenApiReadOnlyContentElement
+public interface IOpenApiHeader : IOpenApiDescribedElement, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiHeader>, IOpenApiReferenceable
 {
     /// <summary>
     /// Determines whether this header is mandatory.
@@ -57,5 +57,10 @@ public interface IOpenApiHeader : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// Examples of the media type.
     /// </summary>
     public IDictionary<string, IOpenApiExample>? Examples { get; }
+
+    /// <summary>
+    /// A map containing the representations for the header.
+    /// </summary>
+    public IDictionary<string, IOpenApiMediaType>? Content { get; }
 
 }
