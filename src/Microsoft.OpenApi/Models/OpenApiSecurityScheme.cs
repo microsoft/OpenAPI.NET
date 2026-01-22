@@ -128,6 +128,10 @@ namespace Microsoft.OpenApi
                     {
                         writer.WriteProperty(OpenApiConstants.OAuth2MetadataUrl, OAuth2MetadataUrl?.ToString());
                     }
+                    else
+                    {
+                        writer.WriteProperty("x-oauth2-metadata-url", OAuth2MetadataUrl?.ToString());
+                    }
                     writer.WriteOptionalObject(OpenApiConstants.Flows, Flows, callback);
                     break;
                 case SecuritySchemeType.OpenIdConnect:

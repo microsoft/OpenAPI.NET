@@ -312,6 +312,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 {
                                     "type": "oauth2",
                                     "description": "description1",
+                                    "x-oauth2-metadata-url": "https://idp.example.com/.well-known/oauth-authorization-server",
                                     "flows": {
                                         "clientCredentials": {
                                             "tokenUrl": "https://idp.example.com/oauth/token",

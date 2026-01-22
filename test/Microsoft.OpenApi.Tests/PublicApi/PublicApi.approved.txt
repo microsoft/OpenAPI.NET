@@ -288,6 +288,7 @@ namespace Microsoft.OpenApi
         Microsoft.OpenApi.OpenApiOAuthFlows? Flows { get; }
         Microsoft.OpenApi.ParameterLocation? In { get; }
         string? Name { get; }
+        System.Uri? OAuth2MetadataUrl { get; }
         System.Uri? OpenIdConnectUrl { get; }
         string? Scheme { get; }
         Microsoft.OpenApi.SecuritySchemeType? Type { get; }
@@ -538,6 +539,7 @@ namespace Microsoft.OpenApi
         public const string Null = "null";
         public const string Nullable = "nullable";
         public const string NullableExtension = "x-nullable";
+        public const string OAuth2MetadataUrl = "oauth2MetadataUrl";
         public const string OneOf = "oneOf";
         public const string OpenApi = "openapi";
         public const string OpenIdConnectUrl = "openIdConnectUrl";
@@ -1381,6 +1383,7 @@ namespace Microsoft.OpenApi
         public Microsoft.OpenApi.OpenApiOAuthFlows? Flows { get; set; }
         public Microsoft.OpenApi.ParameterLocation? In { get; set; }
         public string? Name { get; set; }
+        public System.Uri? OAuth2MetadataUrl { get; set; }
         public System.Uri? OpenIdConnectUrl { get; set; }
         public string? Scheme { get; set; }
         public Microsoft.OpenApi.SecuritySchemeType? Type { get; set; }
@@ -1400,6 +1403,7 @@ namespace Microsoft.OpenApi
         public Microsoft.OpenApi.OpenApiOAuthFlows? Flows { get; }
         public Microsoft.OpenApi.ParameterLocation? In { get; }
         public string? Name { get; }
+        public System.Uri? OAuth2MetadataUrl { get; }
         public System.Uri? OpenIdConnectUrl { get; }
         public string? Scheme { get; }
         public Microsoft.OpenApi.SecuritySchemeType? Type { get; }
