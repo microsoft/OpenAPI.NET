@@ -1,0 +1,1892 @@
+#nullable enable
+abstract Microsoft.OpenApi.BaseOpenApiReferenceHolder<T, U, V>.CopyReference(V! sourceReference) -> V!
+abstract Microsoft.OpenApi.BaseOpenApiReferenceHolder<T, U, V>.CopyReferenceAsTargetElementWithOverrides(U source) -> U
+abstract Microsoft.OpenApi.OpenApiWriterBase.BaseIndentation.get -> int
+abstract Microsoft.OpenApi.OpenApiWriterBase.WriteEndArray() -> void
+abstract Microsoft.OpenApi.OpenApiWriterBase.WriteEndObject() -> void
+abstract Microsoft.OpenApi.OpenApiWriterBase.WriteNull() -> void
+abstract Microsoft.OpenApi.OpenApiWriterBase.WritePropertyName(string! name) -> void
+abstract Microsoft.OpenApi.OpenApiWriterBase.WriteRaw(string! value) -> void
+abstract Microsoft.OpenApi.OpenApiWriterBase.WriteStartArray() -> void
+abstract Microsoft.OpenApi.OpenApiWriterBase.WriteStartObject() -> void
+abstract Microsoft.OpenApi.OpenApiWriterBase.WriteValue(string! value) -> void
+abstract Microsoft.OpenApi.OpenApiWriterBase.WriteValueSeparator() -> void
+abstract Microsoft.OpenApi.RuntimeExpression.Expression.get -> string!
+const Microsoft.OpenApi.BodyExpression.Body = "body" -> string!
+const Microsoft.OpenApi.BodyExpression.PointerPrefix = "#" -> string!
+const Microsoft.OpenApi.HeaderExpression.Header = "header." -> string!
+const Microsoft.OpenApi.MethodExpression.Method = "$method" -> string!
+const Microsoft.OpenApi.OpenApiConstants.AccessCode = "accessCode" -> string!
+const Microsoft.OpenApi.OpenApiConstants.AdditionalProperties = "additionalProperties" -> string!
+const Microsoft.OpenApi.OpenApiConstants.AllOf = "allOf" -> string!
+const Microsoft.OpenApi.OpenApiConstants.AllowEmptyValue = "allowEmptyValue" -> string!
+const Microsoft.OpenApi.OpenApiConstants.AllowReserved = "allowReserved" -> string!
+const Microsoft.OpenApi.OpenApiConstants.AnyOf = "anyOf" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Application = "application" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Attribute = "attribute" -> string!
+const Microsoft.OpenApi.OpenApiConstants.AuthorizationCode = "authorizationCode" -> string!
+const Microsoft.OpenApi.OpenApiConstants.AuthorizationUrl = "authorizationUrl" -> string!
+const Microsoft.OpenApi.OpenApiConstants.BasePath = "basePath" -> string!
+const Microsoft.OpenApi.OpenApiConstants.BaseRegistryUri = "https://openapi.net/" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Basic = "basic" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Bearer = "bearer" -> string!
+const Microsoft.OpenApi.OpenApiConstants.BearerFormat = "bearerFormat" -> string!
+const Microsoft.OpenApi.OpenApiConstants.BodyName = "x-bodyName" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Callbacks = "callbacks" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ClientCredentials = "clientCredentials" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Comment = "$comment" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Components = "components" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ComponentsSegment = "/components/" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Const = "const" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Consumes = "consumes" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Contact = "contact" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Content = "content" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ContentType = "contentType" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Default = "default" -> string!
+const Microsoft.OpenApi.OpenApiConstants.DefaultDefault = "Default Default" -> string!
+const Microsoft.OpenApi.OpenApiConstants.DefaultDescription = "Default Description" -> string!
+const Microsoft.OpenApi.OpenApiConstants.DefaultName = "Default Name" -> string!
+const Microsoft.OpenApi.OpenApiConstants.DefaultTitle = "Default Title" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Definitions = "definitions" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Defs = "$defs" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Delete = "delete" -> string!
+const Microsoft.OpenApi.OpenApiConstants.DependentRequired = "dependentRequired" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Deprecated = "deprecated" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Description = "description" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Discriminator = "discriminator" -> string!
+const Microsoft.OpenApi.OpenApiConstants.DollarRef = "$ref" -> string!
+const Microsoft.OpenApi.OpenApiConstants.DollarSchema = "$schema" -> string!
+const Microsoft.OpenApi.OpenApiConstants.DynamicAnchor = "$dynamicAnchor" -> string!
+const Microsoft.OpenApi.OpenApiConstants.DynamicRef = "$dynamicRef" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Email = "email" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Encoding = "encoding" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Enum = "enum" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Example = "example" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Examples = "examples" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ExamplesExtension = "x-examples" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ExclusiveMaximum = "exclusiveMaximum" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ExclusiveMinimum = "exclusiveMinimum" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Explode = "explode" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ExtensionFieldNamePrefix = "x-" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ExternalDocs = "externalDocs" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ExternalValue = "externalValue" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Flow = "flow" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Flows = "flows" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Format = "format" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Get = "get" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Head = "head" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Headers = "headers" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Host = "host" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Id = "$id" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Identifier = "identifier" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Implicit = "implicit" -> string!
+const Microsoft.OpenApi.OpenApiConstants.In = "in" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Info = "info" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Items = "items" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Json = "json" -> string!
+const Microsoft.OpenApi.OpenApiConstants.JsonSchemaDialect = "jsonSchemaDialect" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Jwt = "JWT" -> string!
+const Microsoft.OpenApi.OpenApiConstants.License = "license" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Links = "links" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Mapping = "mapping" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Maximum = "maximum" -> string!
+const Microsoft.OpenApi.OpenApiConstants.MaxItems = "maxItems" -> string!
+const Microsoft.OpenApi.OpenApiConstants.MaxLength = "maxLength" -> string!
+const Microsoft.OpenApi.OpenApiConstants.MaxProperties = "maxProperties" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Minimum = "minimum" -> string!
+const Microsoft.OpenApi.OpenApiConstants.MinItems = "minItems" -> string!
+const Microsoft.OpenApi.OpenApiConstants.MinLength = "minLength" -> string!
+const Microsoft.OpenApi.OpenApiConstants.MinProperties = "minProperties" -> string!
+const Microsoft.OpenApi.OpenApiConstants.MultipleOf = "multipleOf" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Name = "name" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Namespace = "namespace" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Not = "not" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Null = "null" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Nullable = "nullable" -> string!
+const Microsoft.OpenApi.OpenApiConstants.NullableExtension = "x-nullable" -> string!
+const Microsoft.OpenApi.OpenApiConstants.OneOf = "oneOf" -> string!
+const Microsoft.OpenApi.OpenApiConstants.OpenApi = "openapi" -> string!
+const Microsoft.OpenApi.OpenApiConstants.OpenIdConnectUrl = "openIdConnectUrl" -> string!
+const Microsoft.OpenApi.OpenApiConstants.OperationId = "operationId" -> string!
+const Microsoft.OpenApi.OpenApiConstants.OperationRef = "operationRef" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Options = "options" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Parameters = "parameters" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Password = "password" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Patch = "patch" -> string!
+const Microsoft.OpenApi.OpenApiConstants.PathItems = "pathItems" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Paths = "paths" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Pattern = "pattern" -> string!
+const Microsoft.OpenApi.OpenApiConstants.PatternProperties = "patternProperties" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Post = "post" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Prefix = "prefix" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Produces = "produces" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Properties = "properties" -> string!
+const Microsoft.OpenApi.OpenApiConstants.PropertyName = "propertyName" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Put = "put" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ReadOnly = "readOnly" -> string!
+const Microsoft.OpenApi.OpenApiConstants.RecursiveAnchor = "$recursiveAnchor" -> string!
+const Microsoft.OpenApi.OpenApiConstants.RecursiveRef = "$recursiveRef" -> string!
+const Microsoft.OpenApi.OpenApiConstants.RefreshUrl = "refreshUrl" -> string!
+const Microsoft.OpenApi.OpenApiConstants.RequestBodies = "requestBodies" -> string!
+const Microsoft.OpenApi.OpenApiConstants.RequestBody = "requestBody" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Required = "required" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Responses = "responses" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Schema = "schema" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Schemas = "schemas" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Scheme = "scheme" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Schemes = "schemes" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Scopes = "scopes" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Security = "security" -> string!
+const Microsoft.OpenApi.OpenApiConstants.SecurityDefinitions = "securityDefinitions" -> string!
+const Microsoft.OpenApi.OpenApiConstants.SecuritySchemes = "securitySchemes" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Server = "server" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Servers = "servers" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Style = "style" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Summary = "summary" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Swagger = "swagger" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Tags = "tags" -> string!
+const Microsoft.OpenApi.OpenApiConstants.TermsOfService = "termsOfService" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Title = "title" -> string!
+const Microsoft.OpenApi.OpenApiConstants.TokenUrl = "tokenUrl" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Trace = "trace" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Type = "type" -> string!
+const Microsoft.OpenApi.OpenApiConstants.UnevaluatedProperties = "unevaluatedProperties" -> string!
+const Microsoft.OpenApi.OpenApiConstants.UniqueItems = "uniqueItems" -> string!
+const Microsoft.OpenApi.OpenApiConstants.UnrecognizedKeywords = "unrecognizedKeywords" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Url = "url" -> string!
+const Microsoft.OpenApi.OpenApiConstants.V2ReferenceUri = "https://registry/definitions/" -> string!
+const Microsoft.OpenApi.OpenApiConstants.V31ExclusiveMaximum = "exclusiveMaximum" -> string!
+const Microsoft.OpenApi.OpenApiConstants.V31ExclusiveMinimum = "exclusiveMinimum" -> string!
+const Microsoft.OpenApi.OpenApiConstants.V3ReferenceUri = "https://registry/components/schemas/" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Value = "value" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Variables = "variables" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Version = "version" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Vocabulary = "$vocabulary" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Webhooks = "webhooks" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Wrapped = "wrapped" -> string!
+const Microsoft.OpenApi.OpenApiConstants.WriteOnly = "writeOnly" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Xml = "xml" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Yaml = "yaml" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Yml = "yml" -> string!
+const Microsoft.OpenApi.OpenApiWriterBase.IndentationString = "  " -> string!
+const Microsoft.OpenApi.PathExpression.Path = "path." -> string!
+const Microsoft.OpenApi.QueryExpression.Query = "query." -> string!
+const Microsoft.OpenApi.RequestExpression.Request = "$request." -> string!
+const Microsoft.OpenApi.ResponseExpression.Response = "$response." -> string!
+const Microsoft.OpenApi.RuntimeExpression.Prefix = "$" -> string!
+const Microsoft.OpenApi.StatusCodeExpression.StatusCode = "$statusCode" -> string!
+const Microsoft.OpenApi.UrlExpression.Url = "$url" -> string!
+Microsoft.OpenApi.BaseOpenApiReference
+Microsoft.OpenApi.BaseOpenApiReference.BaseOpenApiReference() -> void
+Microsoft.OpenApi.BaseOpenApiReference.BaseOpenApiReference(Microsoft.OpenApi.BaseOpenApiReference! reference) -> void
+Microsoft.OpenApi.BaseOpenApiReference.ExternalResource.get -> string?
+Microsoft.OpenApi.BaseOpenApiReference.ExternalResource.init -> void
+Microsoft.OpenApi.BaseOpenApiReference.HostDocument.get -> Microsoft.OpenApi.OpenApiDocument?
+Microsoft.OpenApi.BaseOpenApiReference.HostDocument.init -> void
+Microsoft.OpenApi.BaseOpenApiReference.Id.get -> string?
+Microsoft.OpenApi.BaseOpenApiReference.Id.init -> void
+Microsoft.OpenApi.BaseOpenApiReference.IsExternal.get -> bool
+Microsoft.OpenApi.BaseOpenApiReference.IsFragment.get -> bool
+Microsoft.OpenApi.BaseOpenApiReference.IsFragment.init -> void
+Microsoft.OpenApi.BaseOpenApiReference.IsLocal.get -> bool
+Microsoft.OpenApi.BaseOpenApiReference.ReferenceV2.get -> string?
+Microsoft.OpenApi.BaseOpenApiReference.ReferenceV3.get -> string?
+Microsoft.OpenApi.BaseOpenApiReference.Type.get -> Microsoft.OpenApi.ReferenceType
+Microsoft.OpenApi.BaseOpenApiReference.Type.init -> void
+Microsoft.OpenApi.BaseOpenApiReferenceHolder<T, U, V>
+Microsoft.OpenApi.BaseOpenApiReferenceHolder<T, U, V>.BaseOpenApiReferenceHolder(Microsoft.OpenApi.BaseOpenApiReferenceHolder<T!, U, V!>! source) -> void
+Microsoft.OpenApi.BaseOpenApiReferenceHolder<T, U, V>.BaseOpenApiReferenceHolder(string! referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument, Microsoft.OpenApi.ReferenceType referenceType, string? externalResource) -> void
+Microsoft.OpenApi.BaseOpenApiReferenceHolder<T, U, V>.RecursiveTarget.get -> T?
+Microsoft.OpenApi.BaseOpenApiReferenceHolder<T, U, V>.Reference.get -> V!
+Microsoft.OpenApi.BaseOpenApiReferenceHolder<T, U, V>.Reference.init -> void
+Microsoft.OpenApi.BaseOpenApiReferenceHolder<T, U, V>.UnresolvedReference.get -> bool
+Microsoft.OpenApi.BodyExpression
+Microsoft.OpenApi.BodyExpression.BodyExpression() -> void
+Microsoft.OpenApi.BodyExpression.BodyExpression(Microsoft.OpenApi.JsonPointer? pointer) -> void
+Microsoft.OpenApi.BodyExpression.Fragment.get -> string?
+Microsoft.OpenApi.CompositeExpression
+Microsoft.OpenApi.CompositeExpression.CompositeExpression(string! expression) -> void
+Microsoft.OpenApi.CompositeExpression.ContainedExpressions.get -> System.Collections.Generic.List<Microsoft.OpenApi.RuntimeExpression!>!
+Microsoft.OpenApi.CurrentKeys
+Microsoft.OpenApi.CurrentKeys.Callback.get -> string?
+Microsoft.OpenApi.CurrentKeys.Content.get -> string?
+Microsoft.OpenApi.CurrentKeys.CurrentKeys() -> void
+Microsoft.OpenApi.CurrentKeys.Encoding.get -> string?
+Microsoft.OpenApi.CurrentKeys.Example.get -> string?
+Microsoft.OpenApi.CurrentKeys.Extension.get -> string?
+Microsoft.OpenApi.CurrentKeys.Header.get -> string?
+Microsoft.OpenApi.CurrentKeys.Link.get -> string?
+Microsoft.OpenApi.CurrentKeys.Operation.get -> System.Net.Http.HttpMethod?
+Microsoft.OpenApi.CurrentKeys.Path.get -> string?
+Microsoft.OpenApi.CurrentKeys.Response.get -> string?
+Microsoft.OpenApi.CurrentKeys.ServerVariable.get -> string?
+Microsoft.OpenApi.DisplayAttribute
+Microsoft.OpenApi.DisplayAttribute.DisplayAttribute(string! name) -> void
+Microsoft.OpenApi.DisplayAttribute.Name.get -> string!
+Microsoft.OpenApi.EnumExtensions
+Microsoft.OpenApi.FormattingStreamWriter
+Microsoft.OpenApi.FormattingStreamWriter.FormattingStreamWriter(System.IO.Stream! stream, System.IFormatProvider! formatProvider) -> void
+Microsoft.OpenApi.HeaderExpression
+Microsoft.OpenApi.HeaderExpression.HeaderExpression(string! token) -> void
+Microsoft.OpenApi.HeaderExpression.Token.get -> string?
+Microsoft.OpenApi.IMetadataContainer
+Microsoft.OpenApi.IMetadataContainer.Metadata.get -> System.Collections.Generic.IDictionary<string!, object!>?
+Microsoft.OpenApi.IMetadataContainer.Metadata.set -> void
+Microsoft.OpenApi.IOpenApiCallback
+Microsoft.OpenApi.IOpenApiCallback.PathItems.get -> System.Collections.Generic.Dictionary<Microsoft.OpenApi.RuntimeExpression!, Microsoft.OpenApi.IOpenApiPathItem!>?
+Microsoft.OpenApi.IOpenApiDescribedElement
+Microsoft.OpenApi.IOpenApiDescribedElement.Description.get -> string?
+Microsoft.OpenApi.IOpenApiDescribedElement.Description.set -> void
+Microsoft.OpenApi.IOpenApiElement
+Microsoft.OpenApi.IOpenApiExample
+Microsoft.OpenApi.IOpenApiExample.ExternalValue.get -> string?
+Microsoft.OpenApi.IOpenApiExample.Value.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.IOpenApiExtensible
+Microsoft.OpenApi.IOpenApiExtensible.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.IOpenApiExtensible.Extensions.set -> void
+Microsoft.OpenApi.IOpenApiExtension
+Microsoft.OpenApi.IOpenApiExtension.Write(Microsoft.OpenApi.IOpenApiWriter! writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) -> void
+Microsoft.OpenApi.IOpenApiHeader
+Microsoft.OpenApi.IOpenApiHeader.AllowEmptyValue.get -> bool
+Microsoft.OpenApi.IOpenApiHeader.AllowReserved.get -> bool
+Microsoft.OpenApi.IOpenApiHeader.Content.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiMediaType!>?
+Microsoft.OpenApi.IOpenApiHeader.Deprecated.get -> bool
+Microsoft.OpenApi.IOpenApiHeader.Example.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.IOpenApiHeader.Examples.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExample!>?
+Microsoft.OpenApi.IOpenApiHeader.Explode.get -> bool
+Microsoft.OpenApi.IOpenApiHeader.Required.get -> bool
+Microsoft.OpenApi.IOpenApiHeader.Schema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.IOpenApiHeader.Style.get -> Microsoft.OpenApi.ParameterStyle?
+Microsoft.OpenApi.IOpenApiLink
+Microsoft.OpenApi.IOpenApiLink.OperationId.get -> string?
+Microsoft.OpenApi.IOpenApiLink.OperationRef.get -> string?
+Microsoft.OpenApi.IOpenApiLink.Parameters.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.RuntimeExpressionAnyWrapper!>?
+Microsoft.OpenApi.IOpenApiLink.RequestBody.get -> Microsoft.OpenApi.RuntimeExpressionAnyWrapper?
+Microsoft.OpenApi.IOpenApiLink.Server.get -> Microsoft.OpenApi.OpenApiServer?
+Microsoft.OpenApi.IOpenApiParameter
+Microsoft.OpenApi.IOpenApiParameter.AllowEmptyValue.get -> bool
+Microsoft.OpenApi.IOpenApiParameter.AllowReserved.get -> bool
+Microsoft.OpenApi.IOpenApiParameter.Content.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiMediaType!>?
+Microsoft.OpenApi.IOpenApiParameter.Deprecated.get -> bool
+Microsoft.OpenApi.IOpenApiParameter.Example.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.IOpenApiParameter.Examples.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExample!>?
+Microsoft.OpenApi.IOpenApiParameter.Explode.get -> bool
+Microsoft.OpenApi.IOpenApiParameter.In.get -> Microsoft.OpenApi.ParameterLocation?
+Microsoft.OpenApi.IOpenApiParameter.Name.get -> string?
+Microsoft.OpenApi.IOpenApiParameter.Required.get -> bool
+Microsoft.OpenApi.IOpenApiParameter.Schema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.IOpenApiParameter.Style.get -> Microsoft.OpenApi.ParameterStyle?
+Microsoft.OpenApi.IOpenApiPathItem
+Microsoft.OpenApi.IOpenApiPathItem.Operations.get -> System.Collections.Generic.Dictionary<System.Net.Http.HttpMethod!, Microsoft.OpenApi.OpenApiOperation!>?
+Microsoft.OpenApi.IOpenApiPathItem.Parameters.get -> System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiParameter!>?
+Microsoft.OpenApi.IOpenApiPathItem.Servers.get -> System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiServer!>?
+Microsoft.OpenApi.IOpenApiReader
+Microsoft.OpenApi.IOpenApiReader.Read(System.IO.MemoryStream! input, System.Uri! location, Microsoft.OpenApi.Reader.OpenApiReaderSettings! settings) -> Microsoft.OpenApi.Reader.ReadResult!
+Microsoft.OpenApi.IOpenApiReader.ReadAsync(System.IO.Stream! input, System.Uri! location, Microsoft.OpenApi.Reader.OpenApiReaderSettings! settings, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult!>!
+Microsoft.OpenApi.IOpenApiReader.ReadFragment<T>(System.IO.MemoryStream! input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.OpenApiDocument! openApiDocument, out Microsoft.OpenApi.Reader.OpenApiDiagnostic! diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null) -> T?
+Microsoft.OpenApi.IOpenApiReadOnlyDescribedElement
+Microsoft.OpenApi.IOpenApiReadOnlyDescribedElement.Description.get -> string?
+Microsoft.OpenApi.IOpenApiReadOnlyExtensible
+Microsoft.OpenApi.IOpenApiReadOnlyExtensible.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.IOpenApiReferenceable
+Microsoft.OpenApi.IOpenApiReferenceHolder
+Microsoft.OpenApi.IOpenApiReferenceHolder.UnresolvedReference.get -> bool
+Microsoft.OpenApi.IOpenApiReferenceHolder<T, U, V>
+Microsoft.OpenApi.IOpenApiReferenceHolder<T, U, V>.CopyReferenceAsTargetElementWithOverrides(U source) -> U
+Microsoft.OpenApi.IOpenApiReferenceHolder<T, U, V>.RecursiveTarget.get -> T?
+Microsoft.OpenApi.IOpenApiReferenceHolder<T, U, V>.Target.get -> U?
+Microsoft.OpenApi.IOpenApiReferenceHolder<V>
+Microsoft.OpenApi.IOpenApiReferenceHolder<V>.Reference.get -> V!
+Microsoft.OpenApi.IOpenApiReferenceHolder<V>.Reference.init -> void
+Microsoft.OpenApi.IOpenApiRequestBody
+Microsoft.OpenApi.IOpenApiRequestBody.Content.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiMediaType!>?
+Microsoft.OpenApi.IOpenApiRequestBody.ConvertToBodyParameter(Microsoft.OpenApi.IOpenApiWriter! writer) -> Microsoft.OpenApi.IOpenApiParameter?
+Microsoft.OpenApi.IOpenApiRequestBody.ConvertToFormDataParameters(Microsoft.OpenApi.IOpenApiWriter! writer) -> System.Collections.Generic.IEnumerable<Microsoft.OpenApi.IOpenApiParameter!>?
+Microsoft.OpenApi.IOpenApiRequestBody.Required.get -> bool
+Microsoft.OpenApi.IOpenApiResponse
+Microsoft.OpenApi.IOpenApiResponse.Content.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiMediaType!>?
+Microsoft.OpenApi.IOpenApiResponse.Headers.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiHeader!>?
+Microsoft.OpenApi.IOpenApiResponse.Links.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiLink!>?
+Microsoft.OpenApi.IOpenApiSchema
+Microsoft.OpenApi.IOpenApiSchema.AdditionalProperties.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.IOpenApiSchema.AdditionalPropertiesAllowed.get -> bool
+Microsoft.OpenApi.IOpenApiSchema.AllOf.get -> System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.IOpenApiSchema.AnyOf.get -> System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.IOpenApiSchema.Comment.get -> string?
+Microsoft.OpenApi.IOpenApiSchema.Const.get -> string?
+Microsoft.OpenApi.IOpenApiSchema.Default.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.IOpenApiSchema.Definitions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.IOpenApiSchema.DependentRequired.get -> System.Collections.Generic.IDictionary<string!, System.Collections.Generic.HashSet<string!>!>?
+Microsoft.OpenApi.IOpenApiSchema.Deprecated.get -> bool
+Microsoft.OpenApi.IOpenApiSchema.Discriminator.get -> Microsoft.OpenApi.OpenApiDiscriminator?
+Microsoft.OpenApi.IOpenApiSchema.DynamicAnchor.get -> string?
+Microsoft.OpenApi.IOpenApiSchema.DynamicRef.get -> string?
+Microsoft.OpenApi.IOpenApiSchema.Enum.get -> System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode!>?
+Microsoft.OpenApi.IOpenApiSchema.Example.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.IOpenApiSchema.Examples.get -> System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode!>?
+Microsoft.OpenApi.IOpenApiSchema.ExclusiveMaximum.get -> string?
+Microsoft.OpenApi.IOpenApiSchema.ExclusiveMinimum.get -> string?
+Microsoft.OpenApi.IOpenApiSchema.ExternalDocs.get -> Microsoft.OpenApi.OpenApiExternalDocs?
+Microsoft.OpenApi.IOpenApiSchema.Format.get -> string?
+Microsoft.OpenApi.IOpenApiSchema.Id.get -> string?
+Microsoft.OpenApi.IOpenApiSchema.Items.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.IOpenApiSchema.Maximum.get -> string?
+Microsoft.OpenApi.IOpenApiSchema.MaxItems.get -> int?
+Microsoft.OpenApi.IOpenApiSchema.MaxLength.get -> int?
+Microsoft.OpenApi.IOpenApiSchema.MaxProperties.get -> int?
+Microsoft.OpenApi.IOpenApiSchema.Minimum.get -> string?
+Microsoft.OpenApi.IOpenApiSchema.MinItems.get -> int?
+Microsoft.OpenApi.IOpenApiSchema.MinLength.get -> int?
+Microsoft.OpenApi.IOpenApiSchema.MinProperties.get -> int?
+Microsoft.OpenApi.IOpenApiSchema.MultipleOf.get -> decimal?
+Microsoft.OpenApi.IOpenApiSchema.Not.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.IOpenApiSchema.OneOf.get -> System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.IOpenApiSchema.Pattern.get -> string?
+Microsoft.OpenApi.IOpenApiSchema.PatternProperties.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.IOpenApiSchema.Properties.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.IOpenApiSchema.ReadOnly.get -> bool
+Microsoft.OpenApi.IOpenApiSchema.Required.get -> System.Collections.Generic.ISet<string!>?
+Microsoft.OpenApi.IOpenApiSchema.Schema.get -> System.Uri?
+Microsoft.OpenApi.IOpenApiSchema.Title.get -> string?
+Microsoft.OpenApi.IOpenApiSchema.Type.get -> Microsoft.OpenApi.JsonSchemaType?
+Microsoft.OpenApi.IOpenApiSchema.UnevaluatedProperties.get -> bool
+Microsoft.OpenApi.IOpenApiSchema.UniqueItems.get -> bool?
+Microsoft.OpenApi.IOpenApiSchema.UnrecognizedKeywords.get -> System.Collections.Generic.IDictionary<string!, System.Text.Json.Nodes.JsonNode!>?
+Microsoft.OpenApi.IOpenApiSchema.Vocabulary.get -> System.Collections.Generic.IDictionary<string!, bool>?
+Microsoft.OpenApi.IOpenApiSchema.WriteOnly.get -> bool
+Microsoft.OpenApi.IOpenApiSchema.Xml.get -> Microsoft.OpenApi.OpenApiXml?
+Microsoft.OpenApi.IOpenApiSecurityScheme
+Microsoft.OpenApi.IOpenApiSecurityScheme.BearerFormat.get -> string?
+Microsoft.OpenApi.IOpenApiSecurityScheme.Flows.get -> Microsoft.OpenApi.OpenApiOAuthFlows?
+Microsoft.OpenApi.IOpenApiSecurityScheme.In.get -> Microsoft.OpenApi.ParameterLocation?
+Microsoft.OpenApi.IOpenApiSecurityScheme.Name.get -> string?
+Microsoft.OpenApi.IOpenApiSecurityScheme.OpenIdConnectUrl.get -> System.Uri?
+Microsoft.OpenApi.IOpenApiSecurityScheme.Scheme.get -> string?
+Microsoft.OpenApi.IOpenApiSecurityScheme.Type.get -> Microsoft.OpenApi.SecuritySchemeType?
+Microsoft.OpenApi.IOpenApiSerializable
+Microsoft.OpenApi.IOpenApiSerializable.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.IOpenApiSerializable.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.IOpenApiSerializable.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.IOpenApiSummarizedElement
+Microsoft.OpenApi.IOpenApiSummarizedElement.Summary.get -> string?
+Microsoft.OpenApi.IOpenApiSummarizedElement.Summary.set -> void
+Microsoft.OpenApi.IOpenApiTag
+Microsoft.OpenApi.IOpenApiTag.ExternalDocs.get -> Microsoft.OpenApi.OpenApiExternalDocs?
+Microsoft.OpenApi.IOpenApiTag.Name.get -> string?
+Microsoft.OpenApi.IOpenApiWriter
+Microsoft.OpenApi.IOpenApiWriter.FlushAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Microsoft.OpenApi.IOpenApiWriter.WriteEndArray() -> void
+Microsoft.OpenApi.IOpenApiWriter.WriteEndObject() -> void
+Microsoft.OpenApi.IOpenApiWriter.WriteNull() -> void
+Microsoft.OpenApi.IOpenApiWriter.WritePropertyName(string! name) -> void
+Microsoft.OpenApi.IOpenApiWriter.WriteRaw(string! value) -> void
+Microsoft.OpenApi.IOpenApiWriter.WriteStartArray() -> void
+Microsoft.OpenApi.IOpenApiWriter.WriteStartObject() -> void
+Microsoft.OpenApi.IOpenApiWriter.WriteValue(bool value) -> void
+Microsoft.OpenApi.IOpenApiWriter.WriteValue(decimal value) -> void
+Microsoft.OpenApi.IOpenApiWriter.WriteValue(int value) -> void
+Microsoft.OpenApi.IOpenApiWriter.WriteValue(object! value) -> void
+Microsoft.OpenApi.IOpenApiWriter.WriteValue(string! value) -> void
+Microsoft.OpenApi.IShallowCopyable<T>
+Microsoft.OpenApi.IShallowCopyable<T>.CreateShallowCopy() -> T
+Microsoft.OpenApi.IStreamLoader
+Microsoft.OpenApi.IStreamLoader.LoadAsync(System.Uri! baseUrl, System.Uri! uri, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IO.Stream!>!
+Microsoft.OpenApi.IValidationContext
+Microsoft.OpenApi.IValidationContext.AddError(Microsoft.OpenApi.OpenApiValidatorError! error) -> void
+Microsoft.OpenApi.IValidationContext.AddWarning(Microsoft.OpenApi.OpenApiValidatorWarning! warning) -> void
+Microsoft.OpenApi.IValidationContext.Enter(string! segment) -> void
+Microsoft.OpenApi.IValidationContext.Exit() -> void
+Microsoft.OpenApi.IValidationContext.PathString.get -> string!
+Microsoft.OpenApi.JsonNodeExtension
+Microsoft.OpenApi.JsonNodeExtension.JsonNodeExtension(System.Text.Json.Nodes.JsonNode! jsonNode) -> void
+Microsoft.OpenApi.JsonNodeExtension.Node.get -> System.Text.Json.Nodes.JsonNode!
+Microsoft.OpenApi.JsonNodeExtension.Write(Microsoft.OpenApi.IOpenApiWriter! writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) -> void
+Microsoft.OpenApi.JsonNullSentinel
+Microsoft.OpenApi.JsonPointer
+Microsoft.OpenApi.JsonPointer.JsonPointer(string! pointer) -> void
+Microsoft.OpenApi.JsonPointer.ParentPointer.get -> Microsoft.OpenApi.JsonPointer?
+Microsoft.OpenApi.JsonPointer.Tokens.get -> string![]!
+Microsoft.OpenApi.JsonSchemaReference
+Microsoft.OpenApi.JsonSchemaReference.Default.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.JsonSchemaReference.Default.set -> void
+Microsoft.OpenApi.JsonSchemaReference.Deprecated.get -> bool?
+Microsoft.OpenApi.JsonSchemaReference.Deprecated.set -> void
+Microsoft.OpenApi.JsonSchemaReference.Examples.get -> System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode!>?
+Microsoft.OpenApi.JsonSchemaReference.Examples.set -> void
+Microsoft.OpenApi.JsonSchemaReference.JsonSchemaReference() -> void
+Microsoft.OpenApi.JsonSchemaReference.JsonSchemaReference(Microsoft.OpenApi.JsonSchemaReference! reference) -> void
+Microsoft.OpenApi.JsonSchemaReference.ReadOnly.get -> bool?
+Microsoft.OpenApi.JsonSchemaReference.ReadOnly.set -> void
+Microsoft.OpenApi.JsonSchemaReference.Title.get -> string?
+Microsoft.OpenApi.JsonSchemaReference.Title.set -> void
+Microsoft.OpenApi.JsonSchemaReference.WriteOnly.get -> bool?
+Microsoft.OpenApi.JsonSchemaReference.WriteOnly.set -> void
+Microsoft.OpenApi.JsonSchemaType
+Microsoft.OpenApi.JsonSchemaType.Array = 64 -> Microsoft.OpenApi.JsonSchemaType
+Microsoft.OpenApi.JsonSchemaType.Boolean = 2 -> Microsoft.OpenApi.JsonSchemaType
+Microsoft.OpenApi.JsonSchemaType.Integer = 4 -> Microsoft.OpenApi.JsonSchemaType
+Microsoft.OpenApi.JsonSchemaType.Null = 1 -> Microsoft.OpenApi.JsonSchemaType
+Microsoft.OpenApi.JsonSchemaType.Number = 8 -> Microsoft.OpenApi.JsonSchemaType
+Microsoft.OpenApi.JsonSchemaType.Object = 32 -> Microsoft.OpenApi.JsonSchemaType
+Microsoft.OpenApi.JsonSchemaType.String = 16 -> Microsoft.OpenApi.JsonSchemaType
+Microsoft.OpenApi.MethodExpression
+Microsoft.OpenApi.MethodExpression.MethodExpression() -> void
+Microsoft.OpenApi.MicrosoftExtensions.EnumDescription
+Microsoft.OpenApi.MicrosoftExtensions.EnumDescription.Description.get -> string!
+Microsoft.OpenApi.MicrosoftExtensions.EnumDescription.Description.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.EnumDescription.EnumDescription() -> void
+Microsoft.OpenApi.MicrosoftExtensions.EnumDescription.EnumDescription(System.Text.Json.Nodes.JsonObject! source) -> void
+Microsoft.OpenApi.MicrosoftExtensions.EnumDescription.Name.get -> string!
+Microsoft.OpenApi.MicrosoftExtensions.EnumDescription.Name.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.EnumDescription.Value.get -> string!
+Microsoft.OpenApi.MicrosoftExtensions.EnumDescription.Value.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension.Date.get -> System.DateTimeOffset?
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension.Date.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension.Description.get -> string!
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension.Description.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension.OpenApiDeprecationExtension() -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension.RemovalDate.get -> System.DateTimeOffset?
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension.RemovalDate.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension.Version.get -> string!
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension.Version.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension.Write(Microsoft.OpenApi.IOpenApiWriter! writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumFlagsExtension
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumFlagsExtension.IsFlags.get -> bool
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumFlagsExtension.IsFlags.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumFlagsExtension.OpenApiEnumFlagsExtension() -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumFlagsExtension.Write(Microsoft.OpenApi.IOpenApiWriter! writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumValuesDescriptionExtension
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumValuesDescriptionExtension.EnumName.get -> string!
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumValuesDescriptionExtension.EnumName.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumValuesDescriptionExtension.OpenApiEnumValuesDescriptionExtension() -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumValuesDescriptionExtension.ValuesDescriptions.get -> System.Collections.Generic.List<Microsoft.OpenApi.MicrosoftExtensions.EnumDescription!>!
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumValuesDescriptionExtension.ValuesDescriptions.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumValuesDescriptionExtension.Write(Microsoft.OpenApi.IOpenApiWriter! writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiPagingExtension
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiPagingExtension.ItemName.get -> string!
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiPagingExtension.ItemName.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiPagingExtension.NextLinkName.get -> string!
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiPagingExtension.NextLinkName.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiPagingExtension.OpenApiPagingExtension() -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiPagingExtension.OperationName.get -> string!
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiPagingExtension.OperationName.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiPagingExtension.Write(Microsoft.OpenApi.IOpenApiWriter! writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension.IsPrimaryErrorMessage.get -> bool
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension.IsPrimaryErrorMessage.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension.OpenApiPrimaryErrorMessageExtension() -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension.Write(Microsoft.OpenApi.IOpenApiWriter! writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiReservedParameterExtension
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiReservedParameterExtension.IsReserved.get -> bool?
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiReservedParameterExtension.IsReserved.set -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiReservedParameterExtension.OpenApiReservedParameterExtension() -> void
+Microsoft.OpenApi.MicrosoftExtensions.OpenApiReservedParameterExtension.Write(Microsoft.OpenApi.IOpenApiWriter! writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) -> void
+Microsoft.OpenApi.OpenApiCallback
+Microsoft.OpenApi.OpenApiCallback.AddPathItem(Microsoft.OpenApi.RuntimeExpression! expression, Microsoft.OpenApi.IOpenApiPathItem! pathItem) -> void
+Microsoft.OpenApi.OpenApiCallback.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiCallback!
+Microsoft.OpenApi.OpenApiCallback.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiCallback.Extensions.set -> void
+Microsoft.OpenApi.OpenApiCallback.OpenApiCallback() -> void
+Microsoft.OpenApi.OpenApiCallback.PathItems.get -> System.Collections.Generic.Dictionary<Microsoft.OpenApi.RuntimeExpression!, Microsoft.OpenApi.IOpenApiPathItem!>?
+Microsoft.OpenApi.OpenApiCallback.PathItems.set -> void
+Microsoft.OpenApi.OpenApiCallbackReference
+Microsoft.OpenApi.OpenApiCallbackReference.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiCallback!
+Microsoft.OpenApi.OpenApiCallbackReference.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiCallbackReference.OpenApiCallbackReference(string! referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) -> void
+Microsoft.OpenApi.OpenApiCallbackReference.PathItems.get -> System.Collections.Generic.Dictionary<Microsoft.OpenApi.RuntimeExpression!, Microsoft.OpenApi.IOpenApiPathItem!>?
+Microsoft.OpenApi.OpenApiComponents
+Microsoft.OpenApi.OpenApiComponents.Callbacks.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiCallback!>?
+Microsoft.OpenApi.OpenApiComponents.Callbacks.set -> void
+Microsoft.OpenApi.OpenApiComponents.Examples.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExample!>?
+Microsoft.OpenApi.OpenApiComponents.Examples.set -> void
+Microsoft.OpenApi.OpenApiComponents.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiComponents.Extensions.set -> void
+Microsoft.OpenApi.OpenApiComponents.Headers.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiHeader!>?
+Microsoft.OpenApi.OpenApiComponents.Headers.set -> void
+Microsoft.OpenApi.OpenApiComponents.Links.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiLink!>?
+Microsoft.OpenApi.OpenApiComponents.Links.set -> void
+Microsoft.OpenApi.OpenApiComponents.OpenApiComponents() -> void
+Microsoft.OpenApi.OpenApiComponents.OpenApiComponents(Microsoft.OpenApi.OpenApiComponents? components) -> void
+Microsoft.OpenApi.OpenApiComponents.Parameters.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiParameter!>?
+Microsoft.OpenApi.OpenApiComponents.Parameters.set -> void
+Microsoft.OpenApi.OpenApiComponents.PathItems.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiPathItem!>?
+Microsoft.OpenApi.OpenApiComponents.PathItems.set -> void
+Microsoft.OpenApi.OpenApiComponents.RequestBodies.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiRequestBody!>?
+Microsoft.OpenApi.OpenApiComponents.RequestBodies.set -> void
+Microsoft.OpenApi.OpenApiComponents.Responses.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiResponse!>?
+Microsoft.OpenApi.OpenApiComponents.Responses.set -> void
+Microsoft.OpenApi.OpenApiComponents.Schemas.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiComponents.Schemas.set -> void
+Microsoft.OpenApi.OpenApiComponents.SecuritySchemes.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSecurityScheme!>?
+Microsoft.OpenApi.OpenApiComponents.SecuritySchemes.set -> void
+Microsoft.OpenApi.OpenApiComponentsRules
+Microsoft.OpenApi.OpenApiConstants
+Microsoft.OpenApi.OpenApiContact
+Microsoft.OpenApi.OpenApiContact.Email.get -> string?
+Microsoft.OpenApi.OpenApiContact.Email.set -> void
+Microsoft.OpenApi.OpenApiContact.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiContact.Extensions.set -> void
+Microsoft.OpenApi.OpenApiContact.Name.get -> string?
+Microsoft.OpenApi.OpenApiContact.Name.set -> void
+Microsoft.OpenApi.OpenApiContact.OpenApiContact() -> void
+Microsoft.OpenApi.OpenApiContact.OpenApiContact(Microsoft.OpenApi.OpenApiContact! contact) -> void
+Microsoft.OpenApi.OpenApiContact.Url.get -> System.Uri?
+Microsoft.OpenApi.OpenApiContact.Url.set -> void
+Microsoft.OpenApi.OpenApiContactRules
+Microsoft.OpenApi.OpenApiDiscriminator
+Microsoft.OpenApi.OpenApiDiscriminator.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiDiscriminator.Extensions.set -> void
+Microsoft.OpenApi.OpenApiDiscriminator.Mapping.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiSchemaReference!>?
+Microsoft.OpenApi.OpenApiDiscriminator.Mapping.set -> void
+Microsoft.OpenApi.OpenApiDiscriminator.OpenApiDiscriminator() -> void
+Microsoft.OpenApi.OpenApiDiscriminator.OpenApiDiscriminator(Microsoft.OpenApi.OpenApiDiscriminator! discriminator) -> void
+Microsoft.OpenApi.OpenApiDiscriminator.PropertyName.get -> string?
+Microsoft.OpenApi.OpenApiDiscriminator.PropertyName.set -> void
+Microsoft.OpenApi.OpenApiDiscriminator.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiDiscriminator.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiDiscriminator.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiDocument
+Microsoft.OpenApi.OpenApiDocument.AddComponent<T>(string! id, T componentToRegister) -> bool
+Microsoft.OpenApi.OpenApiDocument.BaseUri.get -> System.Uri!
+Microsoft.OpenApi.OpenApiDocument.Components.get -> Microsoft.OpenApi.OpenApiComponents?
+Microsoft.OpenApi.OpenApiDocument.Components.set -> void
+Microsoft.OpenApi.OpenApiDocument.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiDocument.Extensions.set -> void
+Microsoft.OpenApi.OpenApiDocument.ExternalDocs.get -> Microsoft.OpenApi.OpenApiExternalDocs?
+Microsoft.OpenApi.OpenApiDocument.ExternalDocs.set -> void
+Microsoft.OpenApi.OpenApiDocument.GetHashCodeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string!>!
+Microsoft.OpenApi.OpenApiDocument.Info.get -> Microsoft.OpenApi.OpenApiInfo!
+Microsoft.OpenApi.OpenApiDocument.Info.set -> void
+Microsoft.OpenApi.OpenApiDocument.JsonSchemaDialect.get -> System.Uri?
+Microsoft.OpenApi.OpenApiDocument.JsonSchemaDialect.set -> void
+Microsoft.OpenApi.OpenApiDocument.Metadata.get -> System.Collections.Generic.IDictionary<string!, object!>?
+Microsoft.OpenApi.OpenApiDocument.Metadata.set -> void
+Microsoft.OpenApi.OpenApiDocument.OpenApiDocument() -> void
+Microsoft.OpenApi.OpenApiDocument.OpenApiDocument(Microsoft.OpenApi.OpenApiDocument? document) -> void
+Microsoft.OpenApi.OpenApiDocument.Paths.get -> Microsoft.OpenApi.OpenApiPaths!
+Microsoft.OpenApi.OpenApiDocument.Paths.set -> void
+Microsoft.OpenApi.OpenApiDocument.RegisterComponents() -> void
+Microsoft.OpenApi.OpenApiDocument.Security.get -> System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiSecurityRequirement!>?
+Microsoft.OpenApi.OpenApiDocument.Security.set -> void
+Microsoft.OpenApi.OpenApiDocument.SerializeAs(Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiDocument.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiDocument.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiDocument.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiDocument.Servers.get -> System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiServer!>?
+Microsoft.OpenApi.OpenApiDocument.Servers.set -> void
+Microsoft.OpenApi.OpenApiDocument.SetReferenceHostDocument() -> void
+Microsoft.OpenApi.OpenApiDocument.Tags.get -> System.Collections.Generic.ISet<Microsoft.OpenApi.OpenApiTag!>?
+Microsoft.OpenApi.OpenApiDocument.Tags.set -> void
+Microsoft.OpenApi.OpenApiDocument.Webhooks.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiPathItem!>?
+Microsoft.OpenApi.OpenApiDocument.Webhooks.set -> void
+Microsoft.OpenApi.OpenApiDocument.Workspace.get -> Microsoft.OpenApi.OpenApiWorkspace?
+Microsoft.OpenApi.OpenApiDocument.Workspace.set -> void
+Microsoft.OpenApi.OpenApiDocumentRules
+Microsoft.OpenApi.OpenApiElementExtensions
+Microsoft.OpenApi.OpenApiEncoding
+Microsoft.OpenApi.OpenApiEncoding.AllowReserved.get -> bool?
+Microsoft.OpenApi.OpenApiEncoding.AllowReserved.set -> void
+Microsoft.OpenApi.OpenApiEncoding.ContentType.get -> string?
+Microsoft.OpenApi.OpenApiEncoding.ContentType.set -> void
+Microsoft.OpenApi.OpenApiEncoding.Explode.get -> bool?
+Microsoft.OpenApi.OpenApiEncoding.Explode.set -> void
+Microsoft.OpenApi.OpenApiEncoding.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiEncoding.Extensions.set -> void
+Microsoft.OpenApi.OpenApiEncoding.Headers.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiHeader!>?
+Microsoft.OpenApi.OpenApiEncoding.Headers.set -> void
+Microsoft.OpenApi.OpenApiEncoding.OpenApiEncoding() -> void
+Microsoft.OpenApi.OpenApiEncoding.OpenApiEncoding(Microsoft.OpenApi.OpenApiEncoding! encoding) -> void
+Microsoft.OpenApi.OpenApiEncoding.Style.get -> Microsoft.OpenApi.ParameterStyle?
+Microsoft.OpenApi.OpenApiEncoding.Style.set -> void
+Microsoft.OpenApi.OpenApiError
+Microsoft.OpenApi.OpenApiError.Message.get -> string!
+Microsoft.OpenApi.OpenApiError.Message.set -> void
+Microsoft.OpenApi.OpenApiError.OpenApiError(Microsoft.OpenApi.OpenApiError! error) -> void
+Microsoft.OpenApi.OpenApiError.OpenApiError(Microsoft.OpenApi.OpenApiException! exception) -> void
+Microsoft.OpenApi.OpenApiError.OpenApiError(string? pointer, string! message) -> void
+Microsoft.OpenApi.OpenApiError.Pointer.get -> string?
+Microsoft.OpenApi.OpenApiError.Pointer.set -> void
+Microsoft.OpenApi.OpenApiExample
+Microsoft.OpenApi.OpenApiExample.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiExample!
+Microsoft.OpenApi.OpenApiExample.Description.get -> string?
+Microsoft.OpenApi.OpenApiExample.Description.set -> void
+Microsoft.OpenApi.OpenApiExample.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiExample.Extensions.set -> void
+Microsoft.OpenApi.OpenApiExample.ExternalValue.get -> string?
+Microsoft.OpenApi.OpenApiExample.ExternalValue.set -> void
+Microsoft.OpenApi.OpenApiExample.OpenApiExample() -> void
+Microsoft.OpenApi.OpenApiExample.Summary.get -> string?
+Microsoft.OpenApi.OpenApiExample.Summary.set -> void
+Microsoft.OpenApi.OpenApiExample.Value.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.OpenApiExample.Value.set -> void
+Microsoft.OpenApi.OpenApiExampleReference
+Microsoft.OpenApi.OpenApiExampleReference.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiExample!
+Microsoft.OpenApi.OpenApiExampleReference.Description.get -> string?
+Microsoft.OpenApi.OpenApiExampleReference.Description.set -> void
+Microsoft.OpenApi.OpenApiExampleReference.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiExampleReference.ExternalValue.get -> string?
+Microsoft.OpenApi.OpenApiExampleReference.OpenApiExampleReference(string! referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) -> void
+Microsoft.OpenApi.OpenApiExampleReference.Summary.get -> string?
+Microsoft.OpenApi.OpenApiExampleReference.Summary.set -> void
+Microsoft.OpenApi.OpenApiExampleReference.Value.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.OpenApiException
+Microsoft.OpenApi.OpenApiException.OpenApiException() -> void
+Microsoft.OpenApi.OpenApiException.OpenApiException(string! message) -> void
+Microsoft.OpenApi.OpenApiException.OpenApiException(string! message, System.Exception? innerException) -> void
+Microsoft.OpenApi.OpenApiException.Pointer.get -> string?
+Microsoft.OpenApi.OpenApiException.Pointer.set -> void
+Microsoft.OpenApi.OpenApiExtensibleDictionary<T>
+Microsoft.OpenApi.OpenApiExtensibleDictionary<T>.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiExtensibleDictionary<T>.Extensions.set -> void
+Microsoft.OpenApi.OpenApiExtensibleDictionary<T>.OpenApiExtensibleDictionary() -> void
+Microsoft.OpenApi.OpenApiExtensibleDictionary<T>.OpenApiExtensibleDictionary(System.Collections.Generic.Dictionary<string!, T>! dictionary, System.Collections.Generic.Dictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>? extensions = null) -> void
+Microsoft.OpenApi.OpenApiExtensibleDictionary<T>.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiExtensibleDictionary<T>.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiExtensibleDictionary<T>.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiExtensibleExtensions
+Microsoft.OpenApi.OpenApiExtensibleRules
+Microsoft.OpenApi.OpenApiExternalDocs
+Microsoft.OpenApi.OpenApiExternalDocs.Description.get -> string?
+Microsoft.OpenApi.OpenApiExternalDocs.Description.set -> void
+Microsoft.OpenApi.OpenApiExternalDocs.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiExternalDocs.Extensions.set -> void
+Microsoft.OpenApi.OpenApiExternalDocs.OpenApiExternalDocs() -> void
+Microsoft.OpenApi.OpenApiExternalDocs.OpenApiExternalDocs(Microsoft.OpenApi.OpenApiExternalDocs! externalDocs) -> void
+Microsoft.OpenApi.OpenApiExternalDocs.Url.get -> System.Uri?
+Microsoft.OpenApi.OpenApiExternalDocs.Url.set -> void
+Microsoft.OpenApi.OpenApiExternalDocsRules
+Microsoft.OpenApi.OpenApiFilterService
+Microsoft.OpenApi.OpenApiHeader
+Microsoft.OpenApi.OpenApiHeader.AllowEmptyValue.get -> bool
+Microsoft.OpenApi.OpenApiHeader.AllowEmptyValue.set -> void
+Microsoft.OpenApi.OpenApiHeader.AllowReserved.get -> bool
+Microsoft.OpenApi.OpenApiHeader.AllowReserved.set -> void
+Microsoft.OpenApi.OpenApiHeader.Content.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiMediaType!>?
+Microsoft.OpenApi.OpenApiHeader.Content.set -> void
+Microsoft.OpenApi.OpenApiHeader.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiHeader!
+Microsoft.OpenApi.OpenApiHeader.Deprecated.get -> bool
+Microsoft.OpenApi.OpenApiHeader.Deprecated.set -> void
+Microsoft.OpenApi.OpenApiHeader.Description.get -> string?
+Microsoft.OpenApi.OpenApiHeader.Description.set -> void
+Microsoft.OpenApi.OpenApiHeader.Example.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.OpenApiHeader.Example.set -> void
+Microsoft.OpenApi.OpenApiHeader.Examples.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExample!>?
+Microsoft.OpenApi.OpenApiHeader.Examples.set -> void
+Microsoft.OpenApi.OpenApiHeader.Explode.get -> bool
+Microsoft.OpenApi.OpenApiHeader.Explode.set -> void
+Microsoft.OpenApi.OpenApiHeader.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiHeader.Extensions.set -> void
+Microsoft.OpenApi.OpenApiHeader.OpenApiHeader() -> void
+Microsoft.OpenApi.OpenApiHeader.Required.get -> bool
+Microsoft.OpenApi.OpenApiHeader.Required.set -> void
+Microsoft.OpenApi.OpenApiHeader.Schema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiHeader.Schema.set -> void
+Microsoft.OpenApi.OpenApiHeader.Style.get -> Microsoft.OpenApi.ParameterStyle?
+Microsoft.OpenApi.OpenApiHeader.Style.set -> void
+Microsoft.OpenApi.OpenApiHeaderReference
+Microsoft.OpenApi.OpenApiHeaderReference.AllowEmptyValue.get -> bool
+Microsoft.OpenApi.OpenApiHeaderReference.AllowReserved.get -> bool
+Microsoft.OpenApi.OpenApiHeaderReference.Content.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiMediaType!>?
+Microsoft.OpenApi.OpenApiHeaderReference.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiHeader!
+Microsoft.OpenApi.OpenApiHeaderReference.Deprecated.get -> bool
+Microsoft.OpenApi.OpenApiHeaderReference.Description.get -> string?
+Microsoft.OpenApi.OpenApiHeaderReference.Description.set -> void
+Microsoft.OpenApi.OpenApiHeaderReference.Example.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.OpenApiHeaderReference.Examples.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExample!>?
+Microsoft.OpenApi.OpenApiHeaderReference.Explode.get -> bool
+Microsoft.OpenApi.OpenApiHeaderReference.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiHeaderReference.OpenApiHeaderReference(string! referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) -> void
+Microsoft.OpenApi.OpenApiHeaderReference.Required.get -> bool
+Microsoft.OpenApi.OpenApiHeaderReference.Schema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiHeaderReference.Style.get -> Microsoft.OpenApi.ParameterStyle?
+Microsoft.OpenApi.OpenApiInfo
+Microsoft.OpenApi.OpenApiInfo.Contact.get -> Microsoft.OpenApi.OpenApiContact?
+Microsoft.OpenApi.OpenApiInfo.Contact.set -> void
+Microsoft.OpenApi.OpenApiInfo.Description.get -> string?
+Microsoft.OpenApi.OpenApiInfo.Description.set -> void
+Microsoft.OpenApi.OpenApiInfo.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiInfo.Extensions.set -> void
+Microsoft.OpenApi.OpenApiInfo.License.get -> Microsoft.OpenApi.OpenApiLicense?
+Microsoft.OpenApi.OpenApiInfo.License.set -> void
+Microsoft.OpenApi.OpenApiInfo.OpenApiInfo() -> void
+Microsoft.OpenApi.OpenApiInfo.OpenApiInfo(Microsoft.OpenApi.OpenApiInfo! info) -> void
+Microsoft.OpenApi.OpenApiInfo.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiInfo.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiInfo.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiInfo.Summary.get -> string?
+Microsoft.OpenApi.OpenApiInfo.Summary.set -> void
+Microsoft.OpenApi.OpenApiInfo.TermsOfService.get -> System.Uri?
+Microsoft.OpenApi.OpenApiInfo.TermsOfService.set -> void
+Microsoft.OpenApi.OpenApiInfo.Title.get -> string?
+Microsoft.OpenApi.OpenApiInfo.Title.set -> void
+Microsoft.OpenApi.OpenApiInfo.Version.get -> string?
+Microsoft.OpenApi.OpenApiInfo.Version.set -> void
+Microsoft.OpenApi.OpenApiInfoRules
+Microsoft.OpenApi.OpenApiJsonWriter
+Microsoft.OpenApi.OpenApiJsonWriter.OpenApiJsonWriter(System.IO.TextWriter! textWriter) -> void
+Microsoft.OpenApi.OpenApiJsonWriter.OpenApiJsonWriter(System.IO.TextWriter! textWriter, Microsoft.OpenApi.OpenApiJsonWriterSettings! settings) -> void
+Microsoft.OpenApi.OpenApiJsonWriter.OpenApiJsonWriter(System.IO.TextWriter! textWriter, Microsoft.OpenApi.OpenApiWriterSettings? settings) -> void
+Microsoft.OpenApi.OpenApiJsonWriter.OpenApiJsonWriter(System.IO.TextWriter! textWriter, Microsoft.OpenApi.OpenApiWriterSettings? settings, bool terseOutput) -> void
+Microsoft.OpenApi.OpenApiJsonWriterSettings
+Microsoft.OpenApi.OpenApiJsonWriterSettings.OpenApiJsonWriterSettings() -> void
+Microsoft.OpenApi.OpenApiJsonWriterSettings.Terse.get -> bool
+Microsoft.OpenApi.OpenApiJsonWriterSettings.Terse.set -> void
+Microsoft.OpenApi.OpenApiLicense
+Microsoft.OpenApi.OpenApiLicense.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiLicense.Extensions.set -> void
+Microsoft.OpenApi.OpenApiLicense.Identifier.get -> string?
+Microsoft.OpenApi.OpenApiLicense.Identifier.set -> void
+Microsoft.OpenApi.OpenApiLicense.Name.get -> string?
+Microsoft.OpenApi.OpenApiLicense.Name.set -> void
+Microsoft.OpenApi.OpenApiLicense.OpenApiLicense() -> void
+Microsoft.OpenApi.OpenApiLicense.OpenApiLicense(Microsoft.OpenApi.OpenApiLicense! license) -> void
+Microsoft.OpenApi.OpenApiLicense.Url.get -> System.Uri?
+Microsoft.OpenApi.OpenApiLicense.Url.set -> void
+Microsoft.OpenApi.OpenApiLicenseRules
+Microsoft.OpenApi.OpenApiLink
+Microsoft.OpenApi.OpenApiLink.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiLink!
+Microsoft.OpenApi.OpenApiLink.Description.get -> string?
+Microsoft.OpenApi.OpenApiLink.Description.set -> void
+Microsoft.OpenApi.OpenApiLink.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiLink.Extensions.set -> void
+Microsoft.OpenApi.OpenApiLink.OpenApiLink() -> void
+Microsoft.OpenApi.OpenApiLink.OperationId.get -> string?
+Microsoft.OpenApi.OpenApiLink.OperationId.set -> void
+Microsoft.OpenApi.OpenApiLink.OperationRef.get -> string?
+Microsoft.OpenApi.OpenApiLink.OperationRef.set -> void
+Microsoft.OpenApi.OpenApiLink.Parameters.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.RuntimeExpressionAnyWrapper!>?
+Microsoft.OpenApi.OpenApiLink.Parameters.set -> void
+Microsoft.OpenApi.OpenApiLink.RequestBody.get -> Microsoft.OpenApi.RuntimeExpressionAnyWrapper?
+Microsoft.OpenApi.OpenApiLink.RequestBody.set -> void
+Microsoft.OpenApi.OpenApiLink.Server.get -> Microsoft.OpenApi.OpenApiServer?
+Microsoft.OpenApi.OpenApiLink.Server.set -> void
+Microsoft.OpenApi.OpenApiLinkReference
+Microsoft.OpenApi.OpenApiLinkReference.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiLink!
+Microsoft.OpenApi.OpenApiLinkReference.Description.get -> string?
+Microsoft.OpenApi.OpenApiLinkReference.Description.set -> void
+Microsoft.OpenApi.OpenApiLinkReference.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiLinkReference.OpenApiLinkReference(string! referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) -> void
+Microsoft.OpenApi.OpenApiLinkReference.OperationId.get -> string?
+Microsoft.OpenApi.OpenApiLinkReference.OperationRef.get -> string?
+Microsoft.OpenApi.OpenApiLinkReference.Parameters.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.RuntimeExpressionAnyWrapper!>?
+Microsoft.OpenApi.OpenApiLinkReference.RequestBody.get -> Microsoft.OpenApi.RuntimeExpressionAnyWrapper?
+Microsoft.OpenApi.OpenApiLinkReference.Server.get -> Microsoft.OpenApi.OpenApiServer?
+Microsoft.OpenApi.OpenApiMediaType
+Microsoft.OpenApi.OpenApiMediaType.Encoding.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiEncoding!>?
+Microsoft.OpenApi.OpenApiMediaType.Encoding.set -> void
+Microsoft.OpenApi.OpenApiMediaType.Example.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.OpenApiMediaType.Example.set -> void
+Microsoft.OpenApi.OpenApiMediaType.Examples.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExample!>?
+Microsoft.OpenApi.OpenApiMediaType.Examples.set -> void
+Microsoft.OpenApi.OpenApiMediaType.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiMediaType.Extensions.set -> void
+Microsoft.OpenApi.OpenApiMediaType.OpenApiMediaType() -> void
+Microsoft.OpenApi.OpenApiMediaType.OpenApiMediaType(Microsoft.OpenApi.OpenApiMediaType? mediaType) -> void
+Microsoft.OpenApi.OpenApiMediaType.Schema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiMediaType.Schema.set -> void
+Microsoft.OpenApi.OpenApiNonDefaultRules
+Microsoft.OpenApi.OpenApiOAuthFlow
+Microsoft.OpenApi.OpenApiOAuthFlow.AuthorizationUrl.get -> System.Uri?
+Microsoft.OpenApi.OpenApiOAuthFlow.AuthorizationUrl.set -> void
+Microsoft.OpenApi.OpenApiOAuthFlow.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiOAuthFlow.Extensions.set -> void
+Microsoft.OpenApi.OpenApiOAuthFlow.OpenApiOAuthFlow() -> void
+Microsoft.OpenApi.OpenApiOAuthFlow.OpenApiOAuthFlow(Microsoft.OpenApi.OpenApiOAuthFlow! oAuthFlow) -> void
+Microsoft.OpenApi.OpenApiOAuthFlow.RefreshUrl.get -> System.Uri?
+Microsoft.OpenApi.OpenApiOAuthFlow.RefreshUrl.set -> void
+Microsoft.OpenApi.OpenApiOAuthFlow.Scopes.get -> System.Collections.Generic.IDictionary<string!, string!>?
+Microsoft.OpenApi.OpenApiOAuthFlow.Scopes.set -> void
+Microsoft.OpenApi.OpenApiOAuthFlow.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiOAuthFlow.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiOAuthFlow.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiOAuthFlow.TokenUrl.get -> System.Uri?
+Microsoft.OpenApi.OpenApiOAuthFlow.TokenUrl.set -> void
+Microsoft.OpenApi.OpenApiOAuthFlowRules
+Microsoft.OpenApi.OpenApiOAuthFlows
+Microsoft.OpenApi.OpenApiOAuthFlows.AuthorizationCode.get -> Microsoft.OpenApi.OpenApiOAuthFlow?
+Microsoft.OpenApi.OpenApiOAuthFlows.AuthorizationCode.set -> void
+Microsoft.OpenApi.OpenApiOAuthFlows.ClientCredentials.get -> Microsoft.OpenApi.OpenApiOAuthFlow?
+Microsoft.OpenApi.OpenApiOAuthFlows.ClientCredentials.set -> void
+Microsoft.OpenApi.OpenApiOAuthFlows.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiOAuthFlows.Extensions.set -> void
+Microsoft.OpenApi.OpenApiOAuthFlows.Implicit.get -> Microsoft.OpenApi.OpenApiOAuthFlow?
+Microsoft.OpenApi.OpenApiOAuthFlows.Implicit.set -> void
+Microsoft.OpenApi.OpenApiOAuthFlows.OpenApiOAuthFlows() -> void
+Microsoft.OpenApi.OpenApiOAuthFlows.OpenApiOAuthFlows(Microsoft.OpenApi.OpenApiOAuthFlows! oAuthFlows) -> void
+Microsoft.OpenApi.OpenApiOAuthFlows.Password.get -> Microsoft.OpenApi.OpenApiOAuthFlow?
+Microsoft.OpenApi.OpenApiOAuthFlows.Password.set -> void
+Microsoft.OpenApi.OpenApiOperation
+Microsoft.OpenApi.OpenApiOperation.Callbacks.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiCallback!>?
+Microsoft.OpenApi.OpenApiOperation.Callbacks.set -> void
+Microsoft.OpenApi.OpenApiOperation.Deprecated.get -> bool
+Microsoft.OpenApi.OpenApiOperation.Deprecated.set -> void
+Microsoft.OpenApi.OpenApiOperation.Description.get -> string?
+Microsoft.OpenApi.OpenApiOperation.Description.set -> void
+Microsoft.OpenApi.OpenApiOperation.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiOperation.Extensions.set -> void
+Microsoft.OpenApi.OpenApiOperation.ExternalDocs.get -> Microsoft.OpenApi.OpenApiExternalDocs?
+Microsoft.OpenApi.OpenApiOperation.ExternalDocs.set -> void
+Microsoft.OpenApi.OpenApiOperation.Metadata.get -> System.Collections.Generic.IDictionary<string!, object!>?
+Microsoft.OpenApi.OpenApiOperation.Metadata.set -> void
+Microsoft.OpenApi.OpenApiOperation.OpenApiOperation() -> void
+Microsoft.OpenApi.OpenApiOperation.OpenApiOperation(Microsoft.OpenApi.OpenApiOperation! operation) -> void
+Microsoft.OpenApi.OpenApiOperation.OperationId.get -> string?
+Microsoft.OpenApi.OpenApiOperation.OperationId.set -> void
+Microsoft.OpenApi.OpenApiOperation.Parameters.get -> System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiParameter!>?
+Microsoft.OpenApi.OpenApiOperation.Parameters.set -> void
+Microsoft.OpenApi.OpenApiOperation.RequestBody.get -> Microsoft.OpenApi.IOpenApiRequestBody?
+Microsoft.OpenApi.OpenApiOperation.RequestBody.set -> void
+Microsoft.OpenApi.OpenApiOperation.Responses.get -> Microsoft.OpenApi.OpenApiResponses?
+Microsoft.OpenApi.OpenApiOperation.Responses.set -> void
+Microsoft.OpenApi.OpenApiOperation.Security.get -> System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiSecurityRequirement!>?
+Microsoft.OpenApi.OpenApiOperation.Security.set -> void
+Microsoft.OpenApi.OpenApiOperation.Servers.get -> System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiServer!>?
+Microsoft.OpenApi.OpenApiOperation.Servers.set -> void
+Microsoft.OpenApi.OpenApiOperation.Summary.get -> string?
+Microsoft.OpenApi.OpenApiOperation.Summary.set -> void
+Microsoft.OpenApi.OpenApiOperation.Tags.get -> System.Collections.Generic.ISet<Microsoft.OpenApi.OpenApiTagReference!>?
+Microsoft.OpenApi.OpenApiOperation.Tags.set -> void
+Microsoft.OpenApi.OpenApiParameter
+Microsoft.OpenApi.OpenApiParameter.AllowEmptyValue.get -> bool
+Microsoft.OpenApi.OpenApiParameter.AllowEmptyValue.set -> void
+Microsoft.OpenApi.OpenApiParameter.AllowReserved.get -> bool
+Microsoft.OpenApi.OpenApiParameter.AllowReserved.set -> void
+Microsoft.OpenApi.OpenApiParameter.Content.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiMediaType!>?
+Microsoft.OpenApi.OpenApiParameter.Content.set -> void
+Microsoft.OpenApi.OpenApiParameter.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiParameter!
+Microsoft.OpenApi.OpenApiParameter.Deprecated.get -> bool
+Microsoft.OpenApi.OpenApiParameter.Deprecated.set -> void
+Microsoft.OpenApi.OpenApiParameter.Description.get -> string?
+Microsoft.OpenApi.OpenApiParameter.Description.set -> void
+Microsoft.OpenApi.OpenApiParameter.Example.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.OpenApiParameter.Example.set -> void
+Microsoft.OpenApi.OpenApiParameter.Examples.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExample!>?
+Microsoft.OpenApi.OpenApiParameter.Examples.set -> void
+Microsoft.OpenApi.OpenApiParameter.Explode.get -> bool
+Microsoft.OpenApi.OpenApiParameter.Explode.set -> void
+Microsoft.OpenApi.OpenApiParameter.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiParameter.Extensions.set -> void
+Microsoft.OpenApi.OpenApiParameter.In.get -> Microsoft.OpenApi.ParameterLocation?
+Microsoft.OpenApi.OpenApiParameter.In.set -> void
+Microsoft.OpenApi.OpenApiParameter.Name.get -> string?
+Microsoft.OpenApi.OpenApiParameter.Name.set -> void
+Microsoft.OpenApi.OpenApiParameter.OpenApiParameter() -> void
+Microsoft.OpenApi.OpenApiParameter.Required.get -> bool
+Microsoft.OpenApi.OpenApiParameter.Required.set -> void
+Microsoft.OpenApi.OpenApiParameter.Schema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiParameter.Schema.set -> void
+Microsoft.OpenApi.OpenApiParameter.Style.get -> Microsoft.OpenApi.ParameterStyle?
+Microsoft.OpenApi.OpenApiParameter.Style.set -> void
+Microsoft.OpenApi.OpenApiParameterReference
+Microsoft.OpenApi.OpenApiParameterReference.AllowEmptyValue.get -> bool
+Microsoft.OpenApi.OpenApiParameterReference.AllowReserved.get -> bool
+Microsoft.OpenApi.OpenApiParameterReference.Content.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiMediaType!>?
+Microsoft.OpenApi.OpenApiParameterReference.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiParameter!
+Microsoft.OpenApi.OpenApiParameterReference.Deprecated.get -> bool
+Microsoft.OpenApi.OpenApiParameterReference.Description.get -> string?
+Microsoft.OpenApi.OpenApiParameterReference.Description.set -> void
+Microsoft.OpenApi.OpenApiParameterReference.Example.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.OpenApiParameterReference.Examples.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExample!>?
+Microsoft.OpenApi.OpenApiParameterReference.Explode.get -> bool
+Microsoft.OpenApi.OpenApiParameterReference.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiParameterReference.In.get -> Microsoft.OpenApi.ParameterLocation?
+Microsoft.OpenApi.OpenApiParameterReference.Name.get -> string?
+Microsoft.OpenApi.OpenApiParameterReference.OpenApiParameterReference(string! referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) -> void
+Microsoft.OpenApi.OpenApiParameterReference.Required.get -> bool
+Microsoft.OpenApi.OpenApiParameterReference.Schema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiParameterReference.Style.get -> Microsoft.OpenApi.ParameterStyle?
+Microsoft.OpenApi.OpenApiParameterRules
+Microsoft.OpenApi.OpenApiPathItem
+Microsoft.OpenApi.OpenApiPathItem.AddOperation(System.Net.Http.HttpMethod! operationType, Microsoft.OpenApi.OpenApiOperation! operation) -> void
+Microsoft.OpenApi.OpenApiPathItem.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiPathItem!
+Microsoft.OpenApi.OpenApiPathItem.Description.get -> string?
+Microsoft.OpenApi.OpenApiPathItem.Description.set -> void
+Microsoft.OpenApi.OpenApiPathItem.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiPathItem.Extensions.set -> void
+Microsoft.OpenApi.OpenApiPathItem.OpenApiPathItem() -> void
+Microsoft.OpenApi.OpenApiPathItem.Operations.get -> System.Collections.Generic.Dictionary<System.Net.Http.HttpMethod!, Microsoft.OpenApi.OpenApiOperation!>?
+Microsoft.OpenApi.OpenApiPathItem.Operations.set -> void
+Microsoft.OpenApi.OpenApiPathItem.Parameters.get -> System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiParameter!>?
+Microsoft.OpenApi.OpenApiPathItem.Parameters.set -> void
+Microsoft.OpenApi.OpenApiPathItem.Servers.get -> System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiServer!>?
+Microsoft.OpenApi.OpenApiPathItem.Servers.set -> void
+Microsoft.OpenApi.OpenApiPathItem.Summary.get -> string?
+Microsoft.OpenApi.OpenApiPathItem.Summary.set -> void
+Microsoft.OpenApi.OpenApiPathItemReference
+Microsoft.OpenApi.OpenApiPathItemReference.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiPathItem!
+Microsoft.OpenApi.OpenApiPathItemReference.Description.get -> string?
+Microsoft.OpenApi.OpenApiPathItemReference.Description.set -> void
+Microsoft.OpenApi.OpenApiPathItemReference.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiPathItemReference.OpenApiPathItemReference(string! referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) -> void
+Microsoft.OpenApi.OpenApiPathItemReference.Operations.get -> System.Collections.Generic.Dictionary<System.Net.Http.HttpMethod!, Microsoft.OpenApi.OpenApiOperation!>?
+Microsoft.OpenApi.OpenApiPathItemReference.Parameters.get -> System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiParameter!>?
+Microsoft.OpenApi.OpenApiPathItemReference.Servers.get -> System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiServer!>?
+Microsoft.OpenApi.OpenApiPathItemReference.Summary.get -> string?
+Microsoft.OpenApi.OpenApiPathItemReference.Summary.set -> void
+Microsoft.OpenApi.OpenApiPaths
+Microsoft.OpenApi.OpenApiPaths.OpenApiPaths() -> void
+Microsoft.OpenApi.OpenApiPaths.OpenApiPaths(Microsoft.OpenApi.OpenApiPaths! paths) -> void
+Microsoft.OpenApi.OpenApiPathsRules
+Microsoft.OpenApi.OpenApiReaderException
+Microsoft.OpenApi.OpenApiReaderException.OpenApiReaderException() -> void
+Microsoft.OpenApi.OpenApiReaderException.OpenApiReaderException(string! message) -> void
+Microsoft.OpenApi.OpenApiReaderException.OpenApiReaderException(string! message, Microsoft.OpenApi.Reader.ParsingContext! context) -> void
+Microsoft.OpenApi.OpenApiReaderException.OpenApiReaderException(string! message, System.Exception! innerException) -> void
+Microsoft.OpenApi.OpenApiRecommendedRules
+Microsoft.OpenApi.OpenApiReferenceError
+Microsoft.OpenApi.OpenApiReferenceError.OpenApiReferenceError(Microsoft.OpenApi.BaseOpenApiReference! reference, string! message) -> void
+Microsoft.OpenApi.OpenApiReferenceError.OpenApiReferenceError(Microsoft.OpenApi.OpenApiException! exception) -> void
+Microsoft.OpenApi.OpenApiReferenceWithDescription
+Microsoft.OpenApi.OpenApiReferenceWithDescription.Description.get -> string?
+Microsoft.OpenApi.OpenApiReferenceWithDescription.Description.set -> void
+Microsoft.OpenApi.OpenApiReferenceWithDescription.OpenApiReferenceWithDescription() -> void
+Microsoft.OpenApi.OpenApiReferenceWithDescription.OpenApiReferenceWithDescription(Microsoft.OpenApi.OpenApiReferenceWithDescription! reference) -> void
+Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary
+Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary.OpenApiReferenceWithDescriptionAndSummary() -> void
+Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary.OpenApiReferenceWithDescriptionAndSummary(Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary! reference) -> void
+Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary.Summary.get -> string?
+Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary.Summary.set -> void
+Microsoft.OpenApi.OpenApiRequestBody
+Microsoft.OpenApi.OpenApiRequestBody.Content.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiMediaType!>?
+Microsoft.OpenApi.OpenApiRequestBody.Content.set -> void
+Microsoft.OpenApi.OpenApiRequestBody.ConvertToBodyParameter(Microsoft.OpenApi.IOpenApiWriter! writer) -> Microsoft.OpenApi.IOpenApiParameter!
+Microsoft.OpenApi.OpenApiRequestBody.ConvertToFormDataParameters(Microsoft.OpenApi.IOpenApiWriter! writer) -> System.Collections.Generic.IEnumerable<Microsoft.OpenApi.IOpenApiParameter!>!
+Microsoft.OpenApi.OpenApiRequestBody.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiRequestBody!
+Microsoft.OpenApi.OpenApiRequestBody.Description.get -> string?
+Microsoft.OpenApi.OpenApiRequestBody.Description.set -> void
+Microsoft.OpenApi.OpenApiRequestBody.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiRequestBody.Extensions.set -> void
+Microsoft.OpenApi.OpenApiRequestBody.OpenApiRequestBody() -> void
+Microsoft.OpenApi.OpenApiRequestBody.Required.get -> bool
+Microsoft.OpenApi.OpenApiRequestBody.Required.set -> void
+Microsoft.OpenApi.OpenApiRequestBodyReference
+Microsoft.OpenApi.OpenApiRequestBodyReference.Content.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiMediaType!>?
+Microsoft.OpenApi.OpenApiRequestBodyReference.ConvertToBodyParameter(Microsoft.OpenApi.IOpenApiWriter! writer) -> Microsoft.OpenApi.IOpenApiParameter?
+Microsoft.OpenApi.OpenApiRequestBodyReference.ConvertToFormDataParameters(Microsoft.OpenApi.IOpenApiWriter! writer) -> System.Collections.Generic.IEnumerable<Microsoft.OpenApi.IOpenApiParameter!>?
+Microsoft.OpenApi.OpenApiRequestBodyReference.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiRequestBody!
+Microsoft.OpenApi.OpenApiRequestBodyReference.Description.get -> string?
+Microsoft.OpenApi.OpenApiRequestBodyReference.Description.set -> void
+Microsoft.OpenApi.OpenApiRequestBodyReference.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiRequestBodyReference.OpenApiRequestBodyReference(string! referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) -> void
+Microsoft.OpenApi.OpenApiRequestBodyReference.Required.get -> bool
+Microsoft.OpenApi.OpenApiResponse
+Microsoft.OpenApi.OpenApiResponse.Content.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiMediaType!>?
+Microsoft.OpenApi.OpenApiResponse.Content.set -> void
+Microsoft.OpenApi.OpenApiResponse.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiResponse!
+Microsoft.OpenApi.OpenApiResponse.Description.get -> string?
+Microsoft.OpenApi.OpenApiResponse.Description.set -> void
+Microsoft.OpenApi.OpenApiResponse.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiResponse.Extensions.set -> void
+Microsoft.OpenApi.OpenApiResponse.Headers.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiHeader!>?
+Microsoft.OpenApi.OpenApiResponse.Headers.set -> void
+Microsoft.OpenApi.OpenApiResponse.Links.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiLink!>?
+Microsoft.OpenApi.OpenApiResponse.Links.set -> void
+Microsoft.OpenApi.OpenApiResponse.OpenApiResponse() -> void
+Microsoft.OpenApi.OpenApiResponseReference
+Microsoft.OpenApi.OpenApiResponseReference.Content.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiMediaType!>?
+Microsoft.OpenApi.OpenApiResponseReference.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiResponse!
+Microsoft.OpenApi.OpenApiResponseReference.Description.get -> string?
+Microsoft.OpenApi.OpenApiResponseReference.Description.set -> void
+Microsoft.OpenApi.OpenApiResponseReference.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiResponseReference.Headers.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiHeader!>?
+Microsoft.OpenApi.OpenApiResponseReference.Links.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiLink!>?
+Microsoft.OpenApi.OpenApiResponseReference.OpenApiResponseReference(string! referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) -> void
+Microsoft.OpenApi.OpenApiResponseRules
+Microsoft.OpenApi.OpenApiResponses
+Microsoft.OpenApi.OpenApiResponses.OpenApiResponses() -> void
+Microsoft.OpenApi.OpenApiResponses.OpenApiResponses(Microsoft.OpenApi.OpenApiResponses! openApiResponses) -> void
+Microsoft.OpenApi.OpenApiResponsesRules
+Microsoft.OpenApi.OpenApiRuleAttribute
+Microsoft.OpenApi.OpenApiRuleAttribute.OpenApiRuleAttribute() -> void
+Microsoft.OpenApi.OpenApiSchema
+Microsoft.OpenApi.OpenApiSchema.AdditionalProperties.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.AdditionalProperties.set -> void
+Microsoft.OpenApi.OpenApiSchema.AdditionalPropertiesAllowed.get -> bool
+Microsoft.OpenApi.OpenApiSchema.AdditionalPropertiesAllowed.set -> void
+Microsoft.OpenApi.OpenApiSchema.AllOf.get -> System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiSchema.AllOf.set -> void
+Microsoft.OpenApi.OpenApiSchema.AnyOf.get -> System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiSchema.AnyOf.set -> void
+Microsoft.OpenApi.OpenApiSchema.Comment.get -> string?
+Microsoft.OpenApi.OpenApiSchema.Comment.set -> void
+Microsoft.OpenApi.OpenApiSchema.Const.get -> string?
+Microsoft.OpenApi.OpenApiSchema.Const.set -> void
+Microsoft.OpenApi.OpenApiSchema.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiSchema!
+Microsoft.OpenApi.OpenApiSchema.Default.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.OpenApiSchema.Default.set -> void
+Microsoft.OpenApi.OpenApiSchema.Definitions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiSchema.Definitions.set -> void
+Microsoft.OpenApi.OpenApiSchema.DependentRequired.get -> System.Collections.Generic.IDictionary<string!, System.Collections.Generic.HashSet<string!>!>?
+Microsoft.OpenApi.OpenApiSchema.DependentRequired.set -> void
+Microsoft.OpenApi.OpenApiSchema.Deprecated.get -> bool
+Microsoft.OpenApi.OpenApiSchema.Deprecated.set -> void
+Microsoft.OpenApi.OpenApiSchema.Description.get -> string?
+Microsoft.OpenApi.OpenApiSchema.Description.set -> void
+Microsoft.OpenApi.OpenApiSchema.Discriminator.get -> Microsoft.OpenApi.OpenApiDiscriminator?
+Microsoft.OpenApi.OpenApiSchema.Discriminator.set -> void
+Microsoft.OpenApi.OpenApiSchema.DynamicAnchor.get -> string?
+Microsoft.OpenApi.OpenApiSchema.DynamicAnchor.set -> void
+Microsoft.OpenApi.OpenApiSchema.DynamicRef.get -> string?
+Microsoft.OpenApi.OpenApiSchema.DynamicRef.set -> void
+Microsoft.OpenApi.OpenApiSchema.Enum.get -> System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode!>?
+Microsoft.OpenApi.OpenApiSchema.Enum.set -> void
+Microsoft.OpenApi.OpenApiSchema.Example.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.OpenApiSchema.Example.set -> void
+Microsoft.OpenApi.OpenApiSchema.Examples.get -> System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode!>?
+Microsoft.OpenApi.OpenApiSchema.Examples.set -> void
+Microsoft.OpenApi.OpenApiSchema.ExclusiveMaximum.get -> string?
+Microsoft.OpenApi.OpenApiSchema.ExclusiveMaximum.set -> void
+Microsoft.OpenApi.OpenApiSchema.ExclusiveMinimum.get -> string?
+Microsoft.OpenApi.OpenApiSchema.ExclusiveMinimum.set -> void
+Microsoft.OpenApi.OpenApiSchema.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiSchema.Extensions.set -> void
+Microsoft.OpenApi.OpenApiSchema.ExternalDocs.get -> Microsoft.OpenApi.OpenApiExternalDocs?
+Microsoft.OpenApi.OpenApiSchema.ExternalDocs.set -> void
+Microsoft.OpenApi.OpenApiSchema.Format.get -> string?
+Microsoft.OpenApi.OpenApiSchema.Format.set -> void
+Microsoft.OpenApi.OpenApiSchema.Id.get -> string?
+Microsoft.OpenApi.OpenApiSchema.Id.set -> void
+Microsoft.OpenApi.OpenApiSchema.Items.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.Items.set -> void
+Microsoft.OpenApi.OpenApiSchema.Maximum.get -> string?
+Microsoft.OpenApi.OpenApiSchema.Maximum.set -> void
+Microsoft.OpenApi.OpenApiSchema.MaxItems.get -> int?
+Microsoft.OpenApi.OpenApiSchema.MaxItems.set -> void
+Microsoft.OpenApi.OpenApiSchema.MaxLength.get -> int?
+Microsoft.OpenApi.OpenApiSchema.MaxLength.set -> void
+Microsoft.OpenApi.OpenApiSchema.MaxProperties.get -> int?
+Microsoft.OpenApi.OpenApiSchema.MaxProperties.set -> void
+Microsoft.OpenApi.OpenApiSchema.Metadata.get -> System.Collections.Generic.IDictionary<string!, object!>?
+Microsoft.OpenApi.OpenApiSchema.Metadata.set -> void
+Microsoft.OpenApi.OpenApiSchema.Minimum.get -> string?
+Microsoft.OpenApi.OpenApiSchema.Minimum.set -> void
+Microsoft.OpenApi.OpenApiSchema.MinItems.get -> int?
+Microsoft.OpenApi.OpenApiSchema.MinItems.set -> void
+Microsoft.OpenApi.OpenApiSchema.MinLength.get -> int?
+Microsoft.OpenApi.OpenApiSchema.MinLength.set -> void
+Microsoft.OpenApi.OpenApiSchema.MinProperties.get -> int?
+Microsoft.OpenApi.OpenApiSchema.MinProperties.set -> void
+Microsoft.OpenApi.OpenApiSchema.MultipleOf.get -> decimal?
+Microsoft.OpenApi.OpenApiSchema.MultipleOf.set -> void
+Microsoft.OpenApi.OpenApiSchema.Not.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.Not.set -> void
+Microsoft.OpenApi.OpenApiSchema.OneOf.get -> System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiSchema.OneOf.set -> void
+Microsoft.OpenApi.OpenApiSchema.OpenApiSchema() -> void
+Microsoft.OpenApi.OpenApiSchema.Pattern.get -> string?
+Microsoft.OpenApi.OpenApiSchema.Pattern.set -> void
+Microsoft.OpenApi.OpenApiSchema.PatternProperties.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiSchema.PatternProperties.set -> void
+Microsoft.OpenApi.OpenApiSchema.Properties.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiSchema.Properties.set -> void
+Microsoft.OpenApi.OpenApiSchema.ReadOnly.get -> bool
+Microsoft.OpenApi.OpenApiSchema.ReadOnly.set -> void
+Microsoft.OpenApi.OpenApiSchema.Required.get -> System.Collections.Generic.ISet<string!>?
+Microsoft.OpenApi.OpenApiSchema.Required.set -> void
+Microsoft.OpenApi.OpenApiSchema.Schema.get -> System.Uri?
+Microsoft.OpenApi.OpenApiSchema.Schema.set -> void
+Microsoft.OpenApi.OpenApiSchema.Title.get -> string?
+Microsoft.OpenApi.OpenApiSchema.Title.set -> void
+Microsoft.OpenApi.OpenApiSchema.Type.get -> Microsoft.OpenApi.JsonSchemaType?
+Microsoft.OpenApi.OpenApiSchema.Type.set -> void
+Microsoft.OpenApi.OpenApiSchema.UnevaluatedProperties.get -> bool
+Microsoft.OpenApi.OpenApiSchema.UnevaluatedProperties.set -> void
+Microsoft.OpenApi.OpenApiSchema.UniqueItems.get -> bool?
+Microsoft.OpenApi.OpenApiSchema.UniqueItems.set -> void
+Microsoft.OpenApi.OpenApiSchema.UnrecognizedKeywords.get -> System.Collections.Generic.IDictionary<string!, System.Text.Json.Nodes.JsonNode!>?
+Microsoft.OpenApi.OpenApiSchema.UnrecognizedKeywords.set -> void
+Microsoft.OpenApi.OpenApiSchema.Vocabulary.get -> System.Collections.Generic.IDictionary<string!, bool>?
+Microsoft.OpenApi.OpenApiSchema.Vocabulary.set -> void
+Microsoft.OpenApi.OpenApiSchema.WriteOnly.get -> bool
+Microsoft.OpenApi.OpenApiSchema.WriteOnly.set -> void
+Microsoft.OpenApi.OpenApiSchema.Xml.get -> Microsoft.OpenApi.OpenApiXml?
+Microsoft.OpenApi.OpenApiSchema.Xml.set -> void
+Microsoft.OpenApi.OpenApiSchemaReference
+Microsoft.OpenApi.OpenApiSchemaReference.AdditionalProperties.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchemaReference.AdditionalPropertiesAllowed.get -> bool
+Microsoft.OpenApi.OpenApiSchemaReference.AllOf.get -> System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiSchemaReference.AnyOf.get -> System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiSchemaReference.Comment.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.Const.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiSchema!
+Microsoft.OpenApi.OpenApiSchemaReference.Default.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.OpenApiSchemaReference.Default.set -> void
+Microsoft.OpenApi.OpenApiSchemaReference.Definitions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiSchemaReference.DependentRequired.get -> System.Collections.Generic.IDictionary<string!, System.Collections.Generic.HashSet<string!>!>?
+Microsoft.OpenApi.OpenApiSchemaReference.Deprecated.get -> bool
+Microsoft.OpenApi.OpenApiSchemaReference.Deprecated.set -> void
+Microsoft.OpenApi.OpenApiSchemaReference.Description.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.Description.set -> void
+Microsoft.OpenApi.OpenApiSchemaReference.Discriminator.get -> Microsoft.OpenApi.OpenApiDiscriminator?
+Microsoft.OpenApi.OpenApiSchemaReference.DynamicAnchor.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.DynamicRef.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.Enum.get -> System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode!>?
+Microsoft.OpenApi.OpenApiSchemaReference.Example.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.OpenApiSchemaReference.Examples.get -> System.Collections.Generic.IList<System.Text.Json.Nodes.JsonNode!>?
+Microsoft.OpenApi.OpenApiSchemaReference.Examples.set -> void
+Microsoft.OpenApi.OpenApiSchemaReference.ExclusiveMaximum.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.ExclusiveMinimum.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiSchemaReference.ExternalDocs.get -> Microsoft.OpenApi.OpenApiExternalDocs?
+Microsoft.OpenApi.OpenApiSchemaReference.Format.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.Id.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.Items.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchemaReference.Maximum.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.MaxItems.get -> int?
+Microsoft.OpenApi.OpenApiSchemaReference.MaxLength.get -> int?
+Microsoft.OpenApi.OpenApiSchemaReference.MaxProperties.get -> int?
+Microsoft.OpenApi.OpenApiSchemaReference.Minimum.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.MinItems.get -> int?
+Microsoft.OpenApi.OpenApiSchemaReference.MinLength.get -> int?
+Microsoft.OpenApi.OpenApiSchemaReference.MinProperties.get -> int?
+Microsoft.OpenApi.OpenApiSchemaReference.MultipleOf.get -> decimal?
+Microsoft.OpenApi.OpenApiSchemaReference.Not.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchemaReference.OneOf.get -> System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiSchemaReference.OpenApiSchemaReference(string! referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) -> void
+Microsoft.OpenApi.OpenApiSchemaReference.Pattern.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.PatternProperties.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiSchemaReference.Properties.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiSchemaReference.ReadOnly.get -> bool
+Microsoft.OpenApi.OpenApiSchemaReference.ReadOnly.set -> void
+Microsoft.OpenApi.OpenApiSchemaReference.Required.get -> System.Collections.Generic.ISet<string!>?
+Microsoft.OpenApi.OpenApiSchemaReference.Schema.get -> System.Uri?
+Microsoft.OpenApi.OpenApiSchemaReference.Title.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.Title.set -> void
+Microsoft.OpenApi.OpenApiSchemaReference.Type.get -> Microsoft.OpenApi.JsonSchemaType?
+Microsoft.OpenApi.OpenApiSchemaReference.UnevaluatedProperties.get -> bool
+Microsoft.OpenApi.OpenApiSchemaReference.UniqueItems.get -> bool?
+Microsoft.OpenApi.OpenApiSchemaReference.UnrecognizedKeywords.get -> System.Collections.Generic.IDictionary<string!, System.Text.Json.Nodes.JsonNode!>?
+Microsoft.OpenApi.OpenApiSchemaReference.Vocabulary.get -> System.Collections.Generic.IDictionary<string!, bool>?
+Microsoft.OpenApi.OpenApiSchemaReference.WriteOnly.get -> bool
+Microsoft.OpenApi.OpenApiSchemaReference.WriteOnly.set -> void
+Microsoft.OpenApi.OpenApiSchemaReference.Xml.get -> Microsoft.OpenApi.OpenApiXml?
+Microsoft.OpenApi.OpenApiSchemaRules
+Microsoft.OpenApi.OpenApiSecurityRequirement
+Microsoft.OpenApi.OpenApiSecurityRequirement.OpenApiSecurityRequirement() -> void
+Microsoft.OpenApi.OpenApiSecurityScheme
+Microsoft.OpenApi.OpenApiSecurityScheme.BearerFormat.get -> string?
+Microsoft.OpenApi.OpenApiSecurityScheme.BearerFormat.set -> void
+Microsoft.OpenApi.OpenApiSecurityScheme.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiSecurityScheme!
+Microsoft.OpenApi.OpenApiSecurityScheme.Description.get -> string?
+Microsoft.OpenApi.OpenApiSecurityScheme.Description.set -> void
+Microsoft.OpenApi.OpenApiSecurityScheme.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiSecurityScheme.Extensions.set -> void
+Microsoft.OpenApi.OpenApiSecurityScheme.Flows.get -> Microsoft.OpenApi.OpenApiOAuthFlows?
+Microsoft.OpenApi.OpenApiSecurityScheme.Flows.set -> void
+Microsoft.OpenApi.OpenApiSecurityScheme.In.get -> Microsoft.OpenApi.ParameterLocation?
+Microsoft.OpenApi.OpenApiSecurityScheme.In.set -> void
+Microsoft.OpenApi.OpenApiSecurityScheme.Name.get -> string?
+Microsoft.OpenApi.OpenApiSecurityScheme.Name.set -> void
+Microsoft.OpenApi.OpenApiSecurityScheme.OpenApiSecurityScheme() -> void
+Microsoft.OpenApi.OpenApiSecurityScheme.OpenIdConnectUrl.get -> System.Uri?
+Microsoft.OpenApi.OpenApiSecurityScheme.OpenIdConnectUrl.set -> void
+Microsoft.OpenApi.OpenApiSecurityScheme.Scheme.get -> string?
+Microsoft.OpenApi.OpenApiSecurityScheme.Scheme.set -> void
+Microsoft.OpenApi.OpenApiSecurityScheme.Type.get -> Microsoft.OpenApi.SecuritySchemeType?
+Microsoft.OpenApi.OpenApiSecurityScheme.Type.set -> void
+Microsoft.OpenApi.OpenApiSecuritySchemeReference
+Microsoft.OpenApi.OpenApiSecuritySchemeReference.BearerFormat.get -> string?
+Microsoft.OpenApi.OpenApiSecuritySchemeReference.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiSecurityScheme!
+Microsoft.OpenApi.OpenApiSecuritySchemeReference.Description.get -> string?
+Microsoft.OpenApi.OpenApiSecuritySchemeReference.Description.set -> void
+Microsoft.OpenApi.OpenApiSecuritySchemeReference.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiSecuritySchemeReference.Flows.get -> Microsoft.OpenApi.OpenApiOAuthFlows?
+Microsoft.OpenApi.OpenApiSecuritySchemeReference.In.get -> Microsoft.OpenApi.ParameterLocation?
+Microsoft.OpenApi.OpenApiSecuritySchemeReference.Name.get -> string?
+Microsoft.OpenApi.OpenApiSecuritySchemeReference.OpenApiSecuritySchemeReference(string! referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) -> void
+Microsoft.OpenApi.OpenApiSecuritySchemeReference.OpenIdConnectUrl.get -> System.Uri?
+Microsoft.OpenApi.OpenApiSecuritySchemeReference.Scheme.get -> string?
+Microsoft.OpenApi.OpenApiSecuritySchemeReference.Type.get -> Microsoft.OpenApi.SecuritySchemeType?
+Microsoft.OpenApi.OpenApiSerializableExtensions
+Microsoft.OpenApi.OpenApiServer
+Microsoft.OpenApi.OpenApiServer.Description.get -> string?
+Microsoft.OpenApi.OpenApiServer.Description.set -> void
+Microsoft.OpenApi.OpenApiServer.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiServer.Extensions.set -> void
+Microsoft.OpenApi.OpenApiServer.OpenApiServer() -> void
+Microsoft.OpenApi.OpenApiServer.OpenApiServer(Microsoft.OpenApi.OpenApiServer! server) -> void
+Microsoft.OpenApi.OpenApiServer.Url.get -> string?
+Microsoft.OpenApi.OpenApiServer.Url.set -> void
+Microsoft.OpenApi.OpenApiServer.Variables.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiServerVariable!>?
+Microsoft.OpenApi.OpenApiServer.Variables.set -> void
+Microsoft.OpenApi.OpenApiServerExtensions
+Microsoft.OpenApi.OpenApiServerRules
+Microsoft.OpenApi.OpenApiServerVariable
+Microsoft.OpenApi.OpenApiServerVariable.Default.get -> string?
+Microsoft.OpenApi.OpenApiServerVariable.Default.set -> void
+Microsoft.OpenApi.OpenApiServerVariable.Description.get -> string?
+Microsoft.OpenApi.OpenApiServerVariable.Description.set -> void
+Microsoft.OpenApi.OpenApiServerVariable.Enum.get -> System.Collections.Generic.List<string!>?
+Microsoft.OpenApi.OpenApiServerVariable.Enum.set -> void
+Microsoft.OpenApi.OpenApiServerVariable.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiServerVariable.Extensions.set -> void
+Microsoft.OpenApi.OpenApiServerVariable.OpenApiServerVariable() -> void
+Microsoft.OpenApi.OpenApiServerVariable.OpenApiServerVariable(Microsoft.OpenApi.OpenApiServerVariable! serverVariable) -> void
+Microsoft.OpenApi.OpenApiServerVariable.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiServerVariable.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiServerVariable.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.OpenApiSpecVersion
+Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0 = 0 -> Microsoft.OpenApi.OpenApiSpecVersion
+Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0 = 1 -> Microsoft.OpenApi.OpenApiSpecVersion
+Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_1 = 2 -> Microsoft.OpenApi.OpenApiSpecVersion
+Microsoft.OpenApi.OpenApiTag
+Microsoft.OpenApi.OpenApiTag.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiTag!
+Microsoft.OpenApi.OpenApiTag.Description.get -> string?
+Microsoft.OpenApi.OpenApiTag.Description.set -> void
+Microsoft.OpenApi.OpenApiTag.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiTag.Extensions.set -> void
+Microsoft.OpenApi.OpenApiTag.ExternalDocs.get -> Microsoft.OpenApi.OpenApiExternalDocs?
+Microsoft.OpenApi.OpenApiTag.ExternalDocs.set -> void
+Microsoft.OpenApi.OpenApiTag.Name.get -> string?
+Microsoft.OpenApi.OpenApiTag.Name.set -> void
+Microsoft.OpenApi.OpenApiTag.OpenApiTag() -> void
+Microsoft.OpenApi.OpenApiTagReference
+Microsoft.OpenApi.OpenApiTagReference.CreateShallowCopy() -> Microsoft.OpenApi.IOpenApiTag!
+Microsoft.OpenApi.OpenApiTagReference.Description.get -> string?
+Microsoft.OpenApi.OpenApiTagReference.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiTagReference.ExternalDocs.get -> Microsoft.OpenApi.OpenApiExternalDocs?
+Microsoft.OpenApi.OpenApiTagReference.Name.get -> string?
+Microsoft.OpenApi.OpenApiTagReference.OpenApiTagReference(string! referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) -> void
+Microsoft.OpenApi.OpenApiTagRules
+Microsoft.OpenApi.OpenApiTypeMapper
+Microsoft.OpenApi.OpenApiUnsupportedSpecVersionException
+Microsoft.OpenApi.OpenApiUnsupportedSpecVersionException.OpenApiUnsupportedSpecVersionException(string! specificationVersion) -> void
+Microsoft.OpenApi.OpenApiUnsupportedSpecVersionException.OpenApiUnsupportedSpecVersionException(string! specificationVersion, System.Exception! innerException) -> void
+Microsoft.OpenApi.OpenApiUnsupportedSpecVersionException.SpecificationVersion.get -> string!
+Microsoft.OpenApi.OpenApiUrlTreeNode
+Microsoft.OpenApi.OpenApiUrlTreeNode.AddAdditionalData(System.Collections.Generic.Dictionary<string!, System.Collections.Generic.List<string!>!>! additionalData) -> void
+Microsoft.OpenApi.OpenApiUrlTreeNode.AdditionalData.get -> System.Collections.Generic.IDictionary<string!, System.Collections.Generic.List<string!>!>!
+Microsoft.OpenApi.OpenApiUrlTreeNode.AdditionalData.set -> void
+Microsoft.OpenApi.OpenApiUrlTreeNode.Attach(Microsoft.OpenApi.OpenApiDocument! doc, string! label) -> void
+Microsoft.OpenApi.OpenApiUrlTreeNode.Attach(string! path, Microsoft.OpenApi.IOpenApiPathItem! pathItem, string! label) -> Microsoft.OpenApi.OpenApiUrlTreeNode!
+Microsoft.OpenApi.OpenApiUrlTreeNode.Children.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiUrlTreeNode!>!
+Microsoft.OpenApi.OpenApiUrlTreeNode.HasOperations(string! label) -> bool
+Microsoft.OpenApi.OpenApiUrlTreeNode.IsParameter.get -> bool
+Microsoft.OpenApi.OpenApiUrlTreeNode.Path.get -> string!
+Microsoft.OpenApi.OpenApiUrlTreeNode.Path.set -> void
+Microsoft.OpenApi.OpenApiUrlTreeNode.PathItems.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiPathItem!>!
+Microsoft.OpenApi.OpenApiUrlTreeNode.Segment.get -> string!
+Microsoft.OpenApi.OpenApiUrlTreeNode.WriteMermaid(System.IO.TextWriter! writer) -> void
+Microsoft.OpenApi.OpenApiValidator
+Microsoft.OpenApi.OpenApiValidator.AddError(Microsoft.OpenApi.OpenApiValidatorError! error) -> void
+Microsoft.OpenApi.OpenApiValidator.AddWarning(Microsoft.OpenApi.OpenApiValidatorWarning! warning) -> void
+Microsoft.OpenApi.OpenApiValidator.Errors.get -> System.Collections.Generic.IEnumerable<Microsoft.OpenApi.OpenApiValidatorError!>!
+Microsoft.OpenApi.OpenApiValidator.OpenApiValidator(Microsoft.OpenApi.ValidationRuleSet! ruleSet) -> void
+Microsoft.OpenApi.OpenApiValidator.Warnings.get -> System.Collections.Generic.IEnumerable<Microsoft.OpenApi.OpenApiValidatorWarning!>!
+Microsoft.OpenApi.OpenApiValidatorError
+Microsoft.OpenApi.OpenApiValidatorError.OpenApiValidatorError(string! ruleName, string! pointer, string! message) -> void
+Microsoft.OpenApi.OpenApiValidatorError.RuleName.get -> string!
+Microsoft.OpenApi.OpenApiValidatorError.RuleName.set -> void
+Microsoft.OpenApi.OpenApiValidatorWarning
+Microsoft.OpenApi.OpenApiValidatorWarning.OpenApiValidatorWarning(string! ruleName, string! pointer, string! message) -> void
+Microsoft.OpenApi.OpenApiValidatorWarning.RuleName.get -> string!
+Microsoft.OpenApi.OpenApiValidatorWarning.RuleName.set -> void
+Microsoft.OpenApi.OpenApiVisitorBase
+Microsoft.OpenApi.OpenApiVisitorBase.CurrentKeys.get -> Microsoft.OpenApi.CurrentKeys!
+Microsoft.OpenApi.OpenApiVisitorBase.OpenApiVisitorBase() -> void
+Microsoft.OpenApi.OpenApiVisitorBase.PathString.get -> string!
+Microsoft.OpenApi.OpenApiWalker
+Microsoft.OpenApi.OpenApiWalker.OpenApiWalker(Microsoft.OpenApi.OpenApiVisitorBase! visitor) -> void
+Microsoft.OpenApi.OpenApiWalker.Walk(Microsoft.OpenApi.OpenApiDocument? doc) -> void
+Microsoft.OpenApi.OpenApiWorkspace
+Microsoft.OpenApi.OpenApiWorkspace.AddDocumentId(string? key, System.Uri? value) -> void
+Microsoft.OpenApi.OpenApiWorkspace.BaseUrl.get -> System.Uri?
+Microsoft.OpenApi.OpenApiWorkspace.ComponentsCount() -> int
+Microsoft.OpenApi.OpenApiWorkspace.Contains(string! location) -> bool
+Microsoft.OpenApi.OpenApiWorkspace.GetDocumentId(string? key) -> System.Uri?
+Microsoft.OpenApi.OpenApiWorkspace.OpenApiWorkspace() -> void
+Microsoft.OpenApi.OpenApiWorkspace.OpenApiWorkspace(Microsoft.OpenApi.OpenApiWorkspace! workspace) -> void
+Microsoft.OpenApi.OpenApiWorkspace.OpenApiWorkspace(System.Uri! baseUrl) -> void
+Microsoft.OpenApi.OpenApiWorkspace.RegisterComponentForDocument<T>(Microsoft.OpenApi.OpenApiDocument! openApiDocument, T componentToRegister, string! id) -> bool
+Microsoft.OpenApi.OpenApiWorkspace.RegisterComponents(Microsoft.OpenApi.OpenApiDocument! document) -> void
+Microsoft.OpenApi.OpenApiWorkspace.ResolveReference<T>(string! location) -> T?
+Microsoft.OpenApi.OpenApiWriterAnyExtensions
+Microsoft.OpenApi.OpenApiWriterBase
+Microsoft.OpenApi.OpenApiWriterBase.CurrentScope() -> Microsoft.OpenApi.Scope?
+Microsoft.OpenApi.OpenApiWriterBase.EndScope(Microsoft.OpenApi.ScopeType type) -> Microsoft.OpenApi.Scope!
+Microsoft.OpenApi.OpenApiWriterBase.FlushAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Microsoft.OpenApi.OpenApiWriterBase.IsArrayScope() -> bool
+Microsoft.OpenApi.OpenApiWriterBase.IsObjectScope() -> bool
+Microsoft.OpenApi.OpenApiWriterBase.IsTopLevelScope() -> bool
+Microsoft.OpenApi.OpenApiWriterBase.OpenApiWriterBase(System.IO.TextWriter! textWriter) -> void
+Microsoft.OpenApi.OpenApiWriterBase.OpenApiWriterBase(System.IO.TextWriter! textWriter, Microsoft.OpenApi.OpenApiWriterSettings? settings) -> void
+Microsoft.OpenApi.OpenApiWriterBase.Settings.get -> Microsoft.OpenApi.OpenApiWriterSettings!
+Microsoft.OpenApi.OpenApiWriterBase.Settings.set -> void
+Microsoft.OpenApi.OpenApiWriterBase.StartScope(Microsoft.OpenApi.ScopeType type) -> Microsoft.OpenApi.Scope!
+Microsoft.OpenApi.OpenApiWriterBase.VerifyCanWritePropertyName(string! name) -> void
+Microsoft.OpenApi.OpenApiWriterBase.Writer.get -> System.IO.TextWriter!
+Microsoft.OpenApi.OpenApiWriterException
+Microsoft.OpenApi.OpenApiWriterException.OpenApiWriterException() -> void
+Microsoft.OpenApi.OpenApiWriterException.OpenApiWriterException(string! message) -> void
+Microsoft.OpenApi.OpenApiWriterException.OpenApiWriterException(string! message, System.Exception? innerException) -> void
+Microsoft.OpenApi.OpenApiWriterExtensions
+Microsoft.OpenApi.OpenApiWriterSettings
+Microsoft.OpenApi.OpenApiWriterSettings.InlineExternalReferences.get -> bool
+Microsoft.OpenApi.OpenApiWriterSettings.InlineExternalReferences.set -> void
+Microsoft.OpenApi.OpenApiWriterSettings.InlineLocalReferences.get -> bool
+Microsoft.OpenApi.OpenApiWriterSettings.InlineLocalReferences.set -> void
+Microsoft.OpenApi.OpenApiWriterSettings.OpenApiWriterSettings() -> void
+Microsoft.OpenApi.OpenApiXml
+Microsoft.OpenApi.OpenApiXml.Attribute.get -> bool
+Microsoft.OpenApi.OpenApiXml.Attribute.set -> void
+Microsoft.OpenApi.OpenApiXml.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.OpenApiXml.Extensions.set -> void
+Microsoft.OpenApi.OpenApiXml.Name.get -> string?
+Microsoft.OpenApi.OpenApiXml.Name.set -> void
+Microsoft.OpenApi.OpenApiXml.Namespace.get -> System.Uri?
+Microsoft.OpenApi.OpenApiXml.Namespace.set -> void
+Microsoft.OpenApi.OpenApiXml.OpenApiXml() -> void
+Microsoft.OpenApi.OpenApiXml.OpenApiXml(Microsoft.OpenApi.OpenApiXml! xml) -> void
+Microsoft.OpenApi.OpenApiXml.Prefix.get -> string?
+Microsoft.OpenApi.OpenApiXml.Prefix.set -> void
+Microsoft.OpenApi.OpenApiXml.Wrapped.get -> bool
+Microsoft.OpenApi.OpenApiXml.Wrapped.set -> void
+Microsoft.OpenApi.OpenApiYamlWriter
+Microsoft.OpenApi.OpenApiYamlWriter.OpenApiYamlWriter(System.IO.TextWriter! textWriter) -> void
+Microsoft.OpenApi.OpenApiYamlWriter.OpenApiYamlWriter(System.IO.TextWriter! textWriter, Microsoft.OpenApi.OpenApiWriterSettings? settings) -> void
+Microsoft.OpenApi.OpenApiYamlWriter.UseLiteralStyle.get -> bool
+Microsoft.OpenApi.OpenApiYamlWriter.UseLiteralStyle.set -> void
+Microsoft.OpenApi.OperationSearch
+Microsoft.OpenApi.OperationSearch.OperationSearch(System.Func<string!, System.Net.Http.HttpMethod!, Microsoft.OpenApi.OpenApiOperation!, bool>! predicate) -> void
+Microsoft.OpenApi.OperationSearch.SearchResults.get -> System.Collections.Generic.IList<Microsoft.OpenApi.SearchResult!>!
+Microsoft.OpenApi.ParameterLocation
+Microsoft.OpenApi.ParameterLocation.Cookie = 3 -> Microsoft.OpenApi.ParameterLocation
+Microsoft.OpenApi.ParameterLocation.Header = 1 -> Microsoft.OpenApi.ParameterLocation
+Microsoft.OpenApi.ParameterLocation.Path = 2 -> Microsoft.OpenApi.ParameterLocation
+Microsoft.OpenApi.ParameterLocation.Query = 0 -> Microsoft.OpenApi.ParameterLocation
+Microsoft.OpenApi.ParameterStyle
+Microsoft.OpenApi.ParameterStyle.DeepObject = 6 -> Microsoft.OpenApi.ParameterStyle
+Microsoft.OpenApi.ParameterStyle.Form = 2 -> Microsoft.OpenApi.ParameterStyle
+Microsoft.OpenApi.ParameterStyle.Label = 1 -> Microsoft.OpenApi.ParameterStyle
+Microsoft.OpenApi.ParameterStyle.Matrix = 0 -> Microsoft.OpenApi.ParameterStyle
+Microsoft.OpenApi.ParameterStyle.PipeDelimited = 5 -> Microsoft.OpenApi.ParameterStyle
+Microsoft.OpenApi.ParameterStyle.Simple = 3 -> Microsoft.OpenApi.ParameterStyle
+Microsoft.OpenApi.ParameterStyle.SpaceDelimited = 4 -> Microsoft.OpenApi.ParameterStyle
+Microsoft.OpenApi.PathExpression
+Microsoft.OpenApi.PathExpression.Name.get -> string?
+Microsoft.OpenApi.PathExpression.PathExpression(string! name) -> void
+Microsoft.OpenApi.QueryExpression
+Microsoft.OpenApi.QueryExpression.Name.get -> string?
+Microsoft.OpenApi.QueryExpression.QueryExpression(string! name) -> void
+Microsoft.OpenApi.Reader.DefaultStreamLoader
+Microsoft.OpenApi.Reader.DefaultStreamLoader.DefaultStreamLoader(System.Net.Http.HttpClient! httpClient) -> void
+Microsoft.OpenApi.Reader.DefaultStreamLoader.LoadAsync(System.Uri! baseUrl, System.Uri! uri, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IO.Stream!>!
+Microsoft.OpenApi.Reader.JsonPointerExtensions
+Microsoft.OpenApi.Reader.OpenApiDiagnostic
+Microsoft.OpenApi.Reader.OpenApiDiagnostic.AppendDiagnostic(Microsoft.OpenApi.Reader.OpenApiDiagnostic! diagnosticToAdd, string? fileNameToAdd = null) -> void
+Microsoft.OpenApi.Reader.OpenApiDiagnostic.Errors.get -> System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiError!>!
+Microsoft.OpenApi.Reader.OpenApiDiagnostic.Errors.set -> void
+Microsoft.OpenApi.Reader.OpenApiDiagnostic.Format.get -> string?
+Microsoft.OpenApi.Reader.OpenApiDiagnostic.Format.set -> void
+Microsoft.OpenApi.Reader.OpenApiDiagnostic.OpenApiDiagnostic() -> void
+Microsoft.OpenApi.Reader.OpenApiDiagnostic.SpecificationVersion.get -> Microsoft.OpenApi.OpenApiSpecVersion
+Microsoft.OpenApi.Reader.OpenApiDiagnostic.SpecificationVersion.set -> void
+Microsoft.OpenApi.Reader.OpenApiDiagnostic.Warnings.get -> System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiError!>!
+Microsoft.OpenApi.Reader.OpenApiDiagnostic.Warnings.set -> void
+Microsoft.OpenApi.Reader.OpenApiJsonReader
+Microsoft.OpenApi.Reader.OpenApiJsonReader.OpenApiJsonReader() -> void
+Microsoft.OpenApi.Reader.OpenApiJsonReader.Read(System.IO.MemoryStream! input, System.Uri! location, Microsoft.OpenApi.Reader.OpenApiReaderSettings! settings) -> Microsoft.OpenApi.Reader.ReadResult!
+Microsoft.OpenApi.Reader.OpenApiJsonReader.Read(System.Text.Json.Nodes.JsonNode! jsonNode, System.Uri! location, Microsoft.OpenApi.Reader.OpenApiReaderSettings! settings) -> Microsoft.OpenApi.Reader.ReadResult!
+Microsoft.OpenApi.Reader.OpenApiJsonReader.ReadAsync(System.IO.Stream! input, System.Uri! location, Microsoft.OpenApi.Reader.OpenApiReaderSettings! settings, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult!>!
+Microsoft.OpenApi.Reader.OpenApiJsonReader.ReadFragment<T>(System.IO.MemoryStream! input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.OpenApiDocument! openApiDocument, out Microsoft.OpenApi.Reader.OpenApiDiagnostic! diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null) -> T?
+Microsoft.OpenApi.Reader.OpenApiJsonReader.ReadFragment<T>(System.Text.Json.Nodes.JsonNode! input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.OpenApiDocument! openApiDocument, out Microsoft.OpenApi.Reader.OpenApiDiagnostic! diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null) -> T?
+Microsoft.OpenApi.Reader.OpenApiModelFactory
+Microsoft.OpenApi.Reader.OpenApiReaderSettings
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.AddJsonReader() -> void
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.AddMicrosoftExtensionParsers() -> void
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.BaseUrl.get -> System.Uri?
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.BaseUrl.set -> void
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.CustomExternalLoader.get -> Microsoft.OpenApi.IStreamLoader?
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.CustomExternalLoader.set -> void
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.DefaultContentType.get -> System.Collections.Generic.List<string!>?
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.DefaultContentType.set -> void
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.ExtensionParsers.get -> System.Collections.Generic.Dictionary<string!, System.Func<System.Text.Json.Nodes.JsonNode!, Microsoft.OpenApi.OpenApiSpecVersion, Microsoft.OpenApi.IOpenApiExtension!>!>?
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.ExtensionParsers.set -> void
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.HttpClient.init -> void
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.LeaveStreamOpen.get -> bool
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.LeaveStreamOpen.set -> void
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.LoadExternalRefs.get -> bool
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.LoadExternalRefs.set -> void
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.OpenApiReaderSettings() -> void
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.Readers.get -> System.Collections.Generic.Dictionary<string!, Microsoft.OpenApi.IOpenApiReader!>!
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.Readers.init -> void
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.RuleSet.get -> Microsoft.OpenApi.ValidationRuleSet!
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.RuleSet.set -> void
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.TryAddReader(string! format, Microsoft.OpenApi.IOpenApiReader! reader) -> bool
+Microsoft.OpenApi.Reader.OpenApiVersionExtensionMethods
+Microsoft.OpenApi.Reader.ParsingContext
+Microsoft.OpenApi.Reader.ParsingContext.BaseUrl.get -> System.Uri?
+Microsoft.OpenApi.Reader.ParsingContext.BaseUrl.set -> void
+Microsoft.OpenApi.Reader.ParsingContext.DefaultContentType.get -> System.Collections.Generic.List<string!>?
+Microsoft.OpenApi.Reader.ParsingContext.DefaultContentType.set -> void
+Microsoft.OpenApi.Reader.ParsingContext.Diagnostic.get -> Microsoft.OpenApi.Reader.OpenApiDiagnostic!
+Microsoft.OpenApi.Reader.ParsingContext.EndObject() -> void
+Microsoft.OpenApi.Reader.ParsingContext.ExtensionParsers.get -> System.Collections.Generic.Dictionary<string!, System.Func<System.Text.Json.Nodes.JsonNode!, Microsoft.OpenApi.OpenApiSpecVersion, Microsoft.OpenApi.IOpenApiExtension!>!>?
+Microsoft.OpenApi.Reader.ParsingContext.ExtensionParsers.set -> void
+Microsoft.OpenApi.Reader.ParsingContext.GetFromTempStorage<T>(string! key, object? scope = null) -> T?
+Microsoft.OpenApi.Reader.ParsingContext.GetLocation() -> string!
+Microsoft.OpenApi.Reader.ParsingContext.Parse(System.Text.Json.Nodes.JsonNode! jsonNode, System.Uri! location) -> Microsoft.OpenApi.OpenApiDocument!
+Microsoft.OpenApi.Reader.ParsingContext.ParseFragment<T>(System.Text.Json.Nodes.JsonNode! jsonNode, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.OpenApiDocument! openApiDocument) -> T?
+Microsoft.OpenApi.Reader.ParsingContext.ParsingContext(Microsoft.OpenApi.Reader.OpenApiDiagnostic! diagnostic) -> void
+Microsoft.OpenApi.Reader.ParsingContext.SetTempStorage(string! key, object? value, object? scope = null) -> void
+Microsoft.OpenApi.Reader.ParsingContext.StartObject(string! objectName) -> void
+Microsoft.OpenApi.Reader.ReadResult
+Microsoft.OpenApi.Reader.ReadResult.Deconstruct(out Microsoft.OpenApi.OpenApiDocument? document, out Microsoft.OpenApi.Reader.OpenApiDiagnostic? diagnostic) -> void
+Microsoft.OpenApi.Reader.ReadResult.Diagnostic.get -> Microsoft.OpenApi.Reader.OpenApiDiagnostic?
+Microsoft.OpenApi.Reader.ReadResult.Diagnostic.set -> void
+Microsoft.OpenApi.Reader.ReadResult.Document.get -> Microsoft.OpenApi.OpenApiDocument?
+Microsoft.OpenApi.Reader.ReadResult.Document.set -> void
+Microsoft.OpenApi.Reader.ReadResult.ReadResult() -> void
+Microsoft.OpenApi.ReferenceType
+Microsoft.OpenApi.ReferenceType.Callback = 8 -> Microsoft.OpenApi.ReferenceType
+Microsoft.OpenApi.ReferenceType.Example = 3 -> Microsoft.OpenApi.ReferenceType
+Microsoft.OpenApi.ReferenceType.Header = 5 -> Microsoft.OpenApi.ReferenceType
+Microsoft.OpenApi.ReferenceType.Link = 7 -> Microsoft.OpenApi.ReferenceType
+Microsoft.OpenApi.ReferenceType.Parameter = 2 -> Microsoft.OpenApi.ReferenceType
+Microsoft.OpenApi.ReferenceType.PathItem = 10 -> Microsoft.OpenApi.ReferenceType
+Microsoft.OpenApi.ReferenceType.RequestBody = 4 -> Microsoft.OpenApi.ReferenceType
+Microsoft.OpenApi.ReferenceType.Response = 1 -> Microsoft.OpenApi.ReferenceType
+Microsoft.OpenApi.ReferenceType.Schema = 0 -> Microsoft.OpenApi.ReferenceType
+Microsoft.OpenApi.ReferenceType.SecurityScheme = 6 -> Microsoft.OpenApi.ReferenceType
+Microsoft.OpenApi.ReferenceType.Tag = 9 -> Microsoft.OpenApi.ReferenceType
+Microsoft.OpenApi.RequestExpression
+Microsoft.OpenApi.RequestExpression.RequestExpression(Microsoft.OpenApi.SourceExpression! source) -> void
+Microsoft.OpenApi.RequestExpression.Source.get -> Microsoft.OpenApi.SourceExpression!
+Microsoft.OpenApi.ResponseExpression
+Microsoft.OpenApi.ResponseExpression.ResponseExpression(Microsoft.OpenApi.SourceExpression! source) -> void
+Microsoft.OpenApi.ResponseExpression.Source.get -> Microsoft.OpenApi.SourceExpression!
+Microsoft.OpenApi.RuntimeExpression
+Microsoft.OpenApi.RuntimeExpression.Equals(Microsoft.OpenApi.RuntimeExpression? other) -> bool
+Microsoft.OpenApi.RuntimeExpression.RuntimeExpression() -> void
+Microsoft.OpenApi.RuntimeExpressionAnyWrapper
+Microsoft.OpenApi.RuntimeExpressionAnyWrapper.Any.get -> System.Text.Json.Nodes.JsonNode?
+Microsoft.OpenApi.RuntimeExpressionAnyWrapper.Any.set -> void
+Microsoft.OpenApi.RuntimeExpressionAnyWrapper.Expression.get -> Microsoft.OpenApi.RuntimeExpression?
+Microsoft.OpenApi.RuntimeExpressionAnyWrapper.Expression.set -> void
+Microsoft.OpenApi.RuntimeExpressionAnyWrapper.RuntimeExpressionAnyWrapper() -> void
+Microsoft.OpenApi.RuntimeExpressionAnyWrapper.RuntimeExpressionAnyWrapper(Microsoft.OpenApi.RuntimeExpressionAnyWrapper! runtimeExpressionAnyWrapper) -> void
+Microsoft.OpenApi.RuntimeExpressionAnyWrapper.WriteValue(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+Microsoft.OpenApi.Scope
+Microsoft.OpenApi.Scope.IsInArray.get -> bool
+Microsoft.OpenApi.Scope.IsInArray.set -> void
+Microsoft.OpenApi.Scope.ObjectCount.get -> int
+Microsoft.OpenApi.Scope.ObjectCount.set -> void
+Microsoft.OpenApi.Scope.Scope(Microsoft.OpenApi.ScopeType type) -> void
+Microsoft.OpenApi.Scope.Type.get -> Microsoft.OpenApi.ScopeType
+Microsoft.OpenApi.ScopeType
+Microsoft.OpenApi.ScopeType.Array = 1 -> Microsoft.OpenApi.ScopeType
+Microsoft.OpenApi.ScopeType.Object = 0 -> Microsoft.OpenApi.ScopeType
+Microsoft.OpenApi.SearchResult
+Microsoft.OpenApi.SearchResult.CurrentKeys.get -> Microsoft.OpenApi.CurrentKeys?
+Microsoft.OpenApi.SearchResult.CurrentKeys.set -> void
+Microsoft.OpenApi.SearchResult.Operation.get -> Microsoft.OpenApi.OpenApiOperation?
+Microsoft.OpenApi.SearchResult.Operation.set -> void
+Microsoft.OpenApi.SearchResult.Parameters.get -> System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiParameter!>?
+Microsoft.OpenApi.SearchResult.Parameters.set -> void
+Microsoft.OpenApi.SearchResult.SearchResult() -> void
+Microsoft.OpenApi.SecuritySchemeType
+Microsoft.OpenApi.SecuritySchemeType.ApiKey = 0 -> Microsoft.OpenApi.SecuritySchemeType
+Microsoft.OpenApi.SecuritySchemeType.Http = 1 -> Microsoft.OpenApi.SecuritySchemeType
+Microsoft.OpenApi.SecuritySchemeType.MutualTLS = 4 -> Microsoft.OpenApi.SecuritySchemeType
+Microsoft.OpenApi.SecuritySchemeType.OAuth2 = 2 -> Microsoft.OpenApi.SecuritySchemeType
+Microsoft.OpenApi.SecuritySchemeType.OpenIdConnect = 3 -> Microsoft.OpenApi.SecuritySchemeType
+Microsoft.OpenApi.SourceExpression
+Microsoft.OpenApi.SourceExpression.SourceExpression(string? value) -> void
+Microsoft.OpenApi.SourceExpression.Value.get -> string?
+Microsoft.OpenApi.SpecialCharacterStringExtensions
+Microsoft.OpenApi.StatusCodeExpression
+Microsoft.OpenApi.StatusCodeExpression.StatusCodeExpression() -> void
+Microsoft.OpenApi.UrlExpression
+Microsoft.OpenApi.UrlExpression.UrlExpression() -> void
+Microsoft.OpenApi.ValidationContextExtensions
+Microsoft.OpenApi.ValidationRule
+Microsoft.OpenApi.ValidationRule.Name.get -> string!
+Microsoft.OpenApi.ValidationRule<T>
+Microsoft.OpenApi.ValidationRule<T>.ValidationRule(string! name, System.Action<Microsoft.OpenApi.IValidationContext!, T>! validate) -> void
+Microsoft.OpenApi.ValidationRuleSet
+Microsoft.OpenApi.ValidationRuleSet.Add(System.Type! key, Microsoft.OpenApi.ValidationRule! rule) -> void
+Microsoft.OpenApi.ValidationRuleSet.Add(System.Type! key, System.Collections.Generic.List<Microsoft.OpenApi.ValidationRule!>! rules) -> void
+Microsoft.OpenApi.ValidationRuleSet.Clear() -> void
+Microsoft.OpenApi.ValidationRuleSet.Contains(System.Type! key, Microsoft.OpenApi.ValidationRule! rule) -> bool
+Microsoft.OpenApi.ValidationRuleSet.ContainsKey(System.Type! key) -> bool
+Microsoft.OpenApi.ValidationRuleSet.Count.get -> int
+Microsoft.OpenApi.ValidationRuleSet.FindRules(System.Type! type) -> System.Collections.Generic.IList<Microsoft.OpenApi.ValidationRule!>!
+Microsoft.OpenApi.ValidationRuleSet.GetEnumerator() -> System.Collections.Generic.IEnumerator<Microsoft.OpenApi.ValidationRule!>!
+Microsoft.OpenApi.ValidationRuleSet.Remove(Microsoft.OpenApi.ValidationRule! rule) -> bool
+Microsoft.OpenApi.ValidationRuleSet.Remove(string! ruleName) -> void
+Microsoft.OpenApi.ValidationRuleSet.Remove(System.Type! key) -> bool
+Microsoft.OpenApi.ValidationRuleSet.Remove(System.Type! key, Microsoft.OpenApi.ValidationRule! rule) -> bool
+Microsoft.OpenApi.ValidationRuleSet.Rules.get -> System.Collections.Generic.IList<Microsoft.OpenApi.ValidationRule!>!
+Microsoft.OpenApi.ValidationRuleSet.TryGetValue(System.Type! key, out System.Collections.Generic.List<Microsoft.OpenApi.ValidationRule!>? rules) -> bool
+Microsoft.OpenApi.ValidationRuleSet.Update(System.Type! key, Microsoft.OpenApi.ValidationRule! newRule, Microsoft.OpenApi.ValidationRule! oldRule) -> bool
+Microsoft.OpenApi.ValidationRuleSet.ValidationRuleSet() -> void
+Microsoft.OpenApi.ValidationRuleSet.ValidationRuleSet(Microsoft.OpenApi.ValidationRuleSet! ruleSet) -> void
+Microsoft.OpenApi.ValidationRuleSet.ValidationRuleSet(System.Collections.Generic.Dictionary<System.Type!, System.Collections.Generic.List<Microsoft.OpenApi.ValidationRule!>!>! rules) -> void
+override Microsoft.OpenApi.BodyExpression.Expression.get -> string!
+override Microsoft.OpenApi.CompositeExpression.Expression.get -> string!
+override Microsoft.OpenApi.FormattingStreamWriter.FormatProvider.get -> System.IFormatProvider!
+override Microsoft.OpenApi.HeaderExpression.Expression.get -> string!
+override Microsoft.OpenApi.JsonPointer.ToString() -> string!
+override Microsoft.OpenApi.JsonSchemaReference.SerializeAdditionalV31Properties(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+override Microsoft.OpenApi.JsonSchemaReference.SetAdditional31MetadataFromMapNode(System.Text.Json.Nodes.JsonObject! jsonObject) -> void
+override Microsoft.OpenApi.MethodExpression.Expression.get -> string!
+override Microsoft.OpenApi.OpenApiCallbackReference.CopyReference(Microsoft.OpenApi.BaseOpenApiReference! sourceReference) -> Microsoft.OpenApi.BaseOpenApiReference!
+override Microsoft.OpenApi.OpenApiCallbackReference.CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiCallback! source) -> Microsoft.OpenApi.IOpenApiCallback!
+override Microsoft.OpenApi.OpenApiCallbackReference.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+override Microsoft.OpenApi.OpenApiError.ToString() -> string!
+override Microsoft.OpenApi.OpenApiExampleReference.CopyReference(Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary! sourceReference) -> Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary!
+override Microsoft.OpenApi.OpenApiExampleReference.CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiExample! source) -> Microsoft.OpenApi.IOpenApiExample!
+override Microsoft.OpenApi.OpenApiExampleReference.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+override Microsoft.OpenApi.OpenApiHeaderReference.CopyReference(Microsoft.OpenApi.OpenApiReferenceWithDescription! sourceReference) -> Microsoft.OpenApi.OpenApiReferenceWithDescription!
+override Microsoft.OpenApi.OpenApiHeaderReference.CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiHeader! source) -> Microsoft.OpenApi.IOpenApiHeader!
+override Microsoft.OpenApi.OpenApiJsonWriter.BaseIndentation.get -> int
+override Microsoft.OpenApi.OpenApiJsonWriter.WriteEndArray() -> void
+override Microsoft.OpenApi.OpenApiJsonWriter.WriteEndObject() -> void
+override Microsoft.OpenApi.OpenApiJsonWriter.WriteIndentation() -> void
+override Microsoft.OpenApi.OpenApiJsonWriter.WriteNull() -> void
+override Microsoft.OpenApi.OpenApiJsonWriter.WritePropertyName(string! name) -> void
+override Microsoft.OpenApi.OpenApiJsonWriter.WriteRaw(string! value) -> void
+override Microsoft.OpenApi.OpenApiJsonWriter.WriteStartArray() -> void
+override Microsoft.OpenApi.OpenApiJsonWriter.WriteStartObject() -> void
+override Microsoft.OpenApi.OpenApiJsonWriter.WriteValue(string! value) -> void
+override Microsoft.OpenApi.OpenApiJsonWriter.WriteValueSeparator() -> void
+override Microsoft.OpenApi.OpenApiLinkReference.CopyReference(Microsoft.OpenApi.OpenApiReferenceWithDescription! sourceReference) -> Microsoft.OpenApi.OpenApiReferenceWithDescription!
+override Microsoft.OpenApi.OpenApiLinkReference.CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiLink! source) -> Microsoft.OpenApi.IOpenApiLink!
+override Microsoft.OpenApi.OpenApiLinkReference.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+override Microsoft.OpenApi.OpenApiParameterReference.CopyReference(Microsoft.OpenApi.OpenApiReferenceWithDescription! sourceReference) -> Microsoft.OpenApi.OpenApiReferenceWithDescription!
+override Microsoft.OpenApi.OpenApiParameterReference.CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiParameter! source) -> Microsoft.OpenApi.IOpenApiParameter!
+override Microsoft.OpenApi.OpenApiPathItemReference.CopyReference(Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary! sourceReference) -> Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary!
+override Microsoft.OpenApi.OpenApiPathItemReference.CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiPathItem! source) -> Microsoft.OpenApi.IOpenApiPathItem!
+override Microsoft.OpenApi.OpenApiPathItemReference.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+override Microsoft.OpenApi.OpenApiReferenceWithDescription.SerializeAdditionalV31Properties(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+override Microsoft.OpenApi.OpenApiReferenceWithDescription.SetAdditional31MetadataFromMapNode(System.Text.Json.Nodes.JsonObject! jsonObject) -> void
+override Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary.SerializeAdditionalV31Properties(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+override Microsoft.OpenApi.OpenApiReferenceWithDescriptionAndSummary.SetAdditional31MetadataFromMapNode(System.Text.Json.Nodes.JsonObject! jsonObject) -> void
+override Microsoft.OpenApi.OpenApiRequestBodyReference.CopyReference(Microsoft.OpenApi.OpenApiReferenceWithDescription! sourceReference) -> Microsoft.OpenApi.OpenApiReferenceWithDescription!
+override Microsoft.OpenApi.OpenApiRequestBodyReference.CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiRequestBody! source) -> Microsoft.OpenApi.IOpenApiRequestBody!
+override Microsoft.OpenApi.OpenApiRequestBodyReference.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+override Microsoft.OpenApi.OpenApiResponseReference.CopyReference(Microsoft.OpenApi.OpenApiReferenceWithDescription! sourceReference) -> Microsoft.OpenApi.OpenApiReferenceWithDescription!
+override Microsoft.OpenApi.OpenApiResponseReference.CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiResponse! source) -> Microsoft.OpenApi.IOpenApiResponse!
+override Microsoft.OpenApi.OpenApiSchemaReference.CopyReference(Microsoft.OpenApi.JsonSchemaReference! sourceReference) -> Microsoft.OpenApi.JsonSchemaReference!
+override Microsoft.OpenApi.OpenApiSchemaReference.CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiSchema! source) -> Microsoft.OpenApi.IOpenApiSchema!
+override Microsoft.OpenApi.OpenApiSchemaReference.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+override Microsoft.OpenApi.OpenApiSchemaReference.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+override Microsoft.OpenApi.OpenApiSchemaReference.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+override Microsoft.OpenApi.OpenApiSecuritySchemeReference.CopyReference(Microsoft.OpenApi.OpenApiReferenceWithDescription! sourceReference) -> Microsoft.OpenApi.OpenApiReferenceWithDescription!
+override Microsoft.OpenApi.OpenApiSecuritySchemeReference.CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiSecurityScheme! source) -> Microsoft.OpenApi.IOpenApiSecurityScheme!
+override Microsoft.OpenApi.OpenApiTagReference.CopyReference(Microsoft.OpenApi.BaseOpenApiReference! sourceReference) -> Microsoft.OpenApi.BaseOpenApiReference!
+override Microsoft.OpenApi.OpenApiTagReference.CopyReferenceAsTargetElementWithOverrides(Microsoft.OpenApi.IOpenApiTag! source) -> Microsoft.OpenApi.IOpenApiTag!
+override Microsoft.OpenApi.OpenApiTagReference.Target.get -> Microsoft.OpenApi.IOpenApiTag?
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.IOpenApiCallback! callback) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.IOpenApiExample! example) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.IOpenApiExtensible! openApiExtensible) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.IOpenApiExtension! openApiExtension) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.IOpenApiHeader! header) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.IOpenApiLink! link) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.IOpenApiParameter! parameter) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.IOpenApiPathItem! pathItem) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.IOpenApiRequestBody! requestBody) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.IOpenApiResponse! response) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.IOpenApiSchema! schema) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.IOpenApiSecurityScheme! securityScheme) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiComponents! components) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiContact! contact) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiDocument! doc) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiEncoding! encoding) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiExternalDocs! externalDocs) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiInfo! info) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiLicense! license) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiMediaType! mediaType) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiOAuthFlow! openApiOAuthFlow) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiOperation! operation) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiPaths! paths) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiResponses! response) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiSecurityRequirement! securityRequirement) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiServer! server) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiServerVariable! serverVariable) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(Microsoft.OpenApi.OpenApiTag! tag) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiCallback!>! callbacks) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExample!>! examples) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiHeader!>! headers) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiLink!>! links) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiEncoding!>! encodings) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiMediaType!>! content) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiServerVariable!>! serverVariables) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(System.Collections.Generic.IDictionary<System.Net.Http.HttpMethod!, Microsoft.OpenApi.OpenApiOperation!>! operations) -> void
+override Microsoft.OpenApi.OpenApiValidator.Visit(System.Collections.Generic.List<Microsoft.OpenApi.IOpenApiExample!>! example) -> void
+override Microsoft.OpenApi.OpenApiYamlWriter.BaseIndentation.get -> int
+override Microsoft.OpenApi.OpenApiYamlWriter.WriteEndArray() -> void
+override Microsoft.OpenApi.OpenApiYamlWriter.WriteEndObject() -> void
+override Microsoft.OpenApi.OpenApiYamlWriter.WriteNull() -> void
+override Microsoft.OpenApi.OpenApiYamlWriter.WritePropertyName(string! name) -> void
+override Microsoft.OpenApi.OpenApiYamlWriter.WriteRaw(string! value) -> void
+override Microsoft.OpenApi.OpenApiYamlWriter.WriteStartArray() -> void
+override Microsoft.OpenApi.OpenApiYamlWriter.WriteStartObject() -> void
+override Microsoft.OpenApi.OpenApiYamlWriter.WriteValue(string! value) -> void
+override Microsoft.OpenApi.OpenApiYamlWriter.WriteValueSeparator() -> void
+override Microsoft.OpenApi.OperationSearch.Visit(Microsoft.OpenApi.IOpenApiPathItem! pathItem) -> void
+override Microsoft.OpenApi.OperationSearch.Visit(System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiParameter!>! parameters) -> void
+override Microsoft.OpenApi.PathExpression.Expression.get -> string!
+override Microsoft.OpenApi.QueryExpression.Expression.get -> string!
+override Microsoft.OpenApi.RequestExpression.Expression.get -> string!
+override Microsoft.OpenApi.ResponseExpression.Expression.get -> string!
+override Microsoft.OpenApi.RuntimeExpression.Equals(object? obj) -> bool
+override Microsoft.OpenApi.RuntimeExpression.GetHashCode() -> int
+override Microsoft.OpenApi.RuntimeExpression.ToString() -> string!
+override Microsoft.OpenApi.StatusCodeExpression.Expression.get -> string!
+override Microsoft.OpenApi.UrlExpression.Expression.get -> string!
+readonly Microsoft.OpenApi.OpenApiReferenceError.Reference -> Microsoft.OpenApi.BaseOpenApiReference?
+readonly Microsoft.OpenApi.OpenApiWriterBase.Scopes -> System.Collections.Generic.Stack<Microsoft.OpenApi.Scope!>!
+static Microsoft.OpenApi.BaseOpenApiReference.GetPropertyValueFromNode(System.Text.Json.Nodes.JsonObject! jsonObject, string! key) -> string?
+static Microsoft.OpenApi.EnumExtensions.GetAttributeOfType<T>(this System.Enum! enumValue) -> T?
+static Microsoft.OpenApi.EnumExtensions.GetDisplayName(this System.Enum! enumValue) -> string!
+static Microsoft.OpenApi.JsonNullSentinel.IsJsonNullSentinel(this System.Text.Json.Nodes.JsonNode? node) -> bool
+static Microsoft.OpenApi.JsonNullSentinel.JsonNull.get -> System.Text.Json.Nodes.JsonValue!
+static Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension.Name.get -> string!
+static Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension.Parse(System.Text.Json.Nodes.JsonNode! source) -> Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension!
+static Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumFlagsExtension.Name.get -> string!
+static Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumFlagsExtension.Parse(System.Text.Json.Nodes.JsonNode! source) -> Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumFlagsExtension!
+static Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumValuesDescriptionExtension.Name.get -> string!
+static Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumValuesDescriptionExtension.Parse(System.Text.Json.Nodes.JsonNode! source) -> Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumValuesDescriptionExtension!
+static Microsoft.OpenApi.MicrosoftExtensions.OpenApiPagingExtension.Name.get -> string!
+static Microsoft.OpenApi.MicrosoftExtensions.OpenApiPagingExtension.Parse(System.Text.Json.Nodes.JsonNode! source) -> Microsoft.OpenApi.MicrosoftExtensions.OpenApiPagingExtension!
+static Microsoft.OpenApi.MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension.Name.get -> string!
+static Microsoft.OpenApi.MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension.Parse(System.Text.Json.Nodes.JsonNode! source) -> Microsoft.OpenApi.MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension!
+static Microsoft.OpenApi.MicrosoftExtensions.OpenApiReservedParameterExtension.Name.get -> string!
+static Microsoft.OpenApi.MicrosoftExtensions.OpenApiReservedParameterExtension.Parse(System.Text.Json.Nodes.JsonNode! source) -> Microsoft.OpenApi.MicrosoftExtensions.OpenApiReservedParameterExtension!
+static Microsoft.OpenApi.OpenApiComponentsRules.KeyMustBeRegularExpression.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiComponents!>!
+static Microsoft.OpenApi.OpenApiContactRules.EmailMustBeEmailFormat.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiContact!>!
+static Microsoft.OpenApi.OpenApiDocument.Load(System.IO.MemoryStream! stream, string? format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null) -> Microsoft.OpenApi.Reader.ReadResult!
+static Microsoft.OpenApi.OpenApiDocument.LoadAsync(string! url, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null, System.Threading.CancellationToken token = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult!>!
+static Microsoft.OpenApi.OpenApiDocument.LoadAsync(System.IO.Stream! stream, string? format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult!>!
+static Microsoft.OpenApi.OpenApiDocument.Parse(string! input, string? format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null) -> Microsoft.OpenApi.Reader.ReadResult!
+static Microsoft.OpenApi.OpenApiDocumentRules.OpenApiDocumentFieldIsMissing.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiDocument!>!
+static Microsoft.OpenApi.OpenApiDocumentRules.OpenApiDocumentReferencesAreValid.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiDocument!>!
+static Microsoft.OpenApi.OpenApiElementExtensions.Validate(this Microsoft.OpenApi.IOpenApiElement! element, Microsoft.OpenApi.ValidationRuleSet! ruleSet) -> System.Collections.Generic.IEnumerable<Microsoft.OpenApi.OpenApiError!>!
+static Microsoft.OpenApi.OpenApiExtensibleExtensions.AddExtension<T>(this T element, string! name, Microsoft.OpenApi.IOpenApiExtension! any) -> void
+static Microsoft.OpenApi.OpenApiExtensibleRules.ExtensionNameMustStartWithXDash.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.IOpenApiExtensible!>!
+static Microsoft.OpenApi.OpenApiExternalDocsRules.UrlIsRequired.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiExternalDocs!>!
+static Microsoft.OpenApi.OpenApiFilterService.CreateFilteredDocument(Microsoft.OpenApi.OpenApiDocument! source, System.Func<string!, System.Net.Http.HttpMethod!, Microsoft.OpenApi.OpenApiOperation!, bool>! predicate) -> Microsoft.OpenApi.OpenApiDocument!
+static Microsoft.OpenApi.OpenApiFilterService.CreateOpenApiUrlTreeNode(System.Collections.Generic.Dictionary<string!, Microsoft.OpenApi.OpenApiDocument!>! sources) -> Microsoft.OpenApi.OpenApiUrlTreeNode!
+static Microsoft.OpenApi.OpenApiFilterService.CreatePredicate(string? operationIds = null, string? tags = null, System.Collections.Generic.Dictionary<string!, System.Collections.Generic.List<string!>!>? requestUrls = null, Microsoft.OpenApi.OpenApiDocument? source = null) -> System.Func<string!, System.Net.Http.HttpMethod!, Microsoft.OpenApi.OpenApiOperation!, bool>!
+static Microsoft.OpenApi.OpenApiInfoRules.InfoRequiredFields.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiInfo!>!
+static Microsoft.OpenApi.OpenApiLicenseRules.LicenseRequiredFields.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiLicense!>!
+static Microsoft.OpenApi.OpenApiNonDefaultRules.HeaderMismatchedDataType.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.IOpenApiHeader!>!
+static Microsoft.OpenApi.OpenApiNonDefaultRules.MediaTypeMismatchedDataType.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiMediaType!>!
+static Microsoft.OpenApi.OpenApiNonDefaultRules.ParameterMismatchedDataType.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiParameter!>!
+static Microsoft.OpenApi.OpenApiNonDefaultRules.SchemaMismatchedDataType.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.IOpenApiSchema!>!
+static Microsoft.OpenApi.OpenApiOAuthFlowRules.OAuthFlowRequiredFields.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiOAuthFlow!>!
+static Microsoft.OpenApi.OpenApiParameterRules.ParameterRequiredFields.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.IOpenApiParameter!>!
+static Microsoft.OpenApi.OpenApiParameterRules.PathParameterShouldBeInThePath.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.IOpenApiParameter!>!
+static Microsoft.OpenApi.OpenApiParameterRules.RequiredMustBeTrueWhenInIsPath.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.IOpenApiParameter!>!
+static Microsoft.OpenApi.OpenApiPathsRules.PathMustBeUnique.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiPaths!>!
+static Microsoft.OpenApi.OpenApiPathsRules.PathNameMustBeginWithSlash.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiPaths!>!
+static Microsoft.OpenApi.OpenApiRecommendedRules.GetOperationShouldNotHaveRequestBody.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiPaths!>!
+static Microsoft.OpenApi.OpenApiResponseRules.ResponseRequiredFields.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.IOpenApiResponse!>!
+static Microsoft.OpenApi.OpenApiResponsesRules.ResponsesMustBeIdentifiedByDefaultOrStatusCode.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiResponses!>!
+static Microsoft.OpenApi.OpenApiResponsesRules.ResponsesMustContainAtLeastOneResponse.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiResponses!>!
+static Microsoft.OpenApi.OpenApiSchemaRules.TraverseSchemaElements(string! discriminatorName, System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiSchema!>? childSchema) -> bool
+static Microsoft.OpenApi.OpenApiSchemaRules.ValidateChildSchemaAgainstDiscriminator(Microsoft.OpenApi.IOpenApiSchema! schema, string? discriminatorName) -> bool
+static Microsoft.OpenApi.OpenApiSchemaRules.ValidateSchemaDiscriminator.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.IOpenApiSchema!>!
+static Microsoft.OpenApi.OpenApiSchemaRules.ValidateSchemaPropertyHasValue.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.IOpenApiSchema!>!
+static Microsoft.OpenApi.OpenApiSerializableExtensions.SerializeAsJsonAsync<T>(this T element, Microsoft.OpenApi.OpenApiSpecVersion specVersion, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string!>!
+static Microsoft.OpenApi.OpenApiSerializableExtensions.SerializeAsJsonAsync<T>(this T element, System.IO.Stream! stream, Microsoft.OpenApi.OpenApiSpecVersion specVersion, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static Microsoft.OpenApi.OpenApiSerializableExtensions.SerializeAsYamlAsync<T>(this T element, Microsoft.OpenApi.OpenApiSpecVersion specVersion, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string!>!
+static Microsoft.OpenApi.OpenApiSerializableExtensions.SerializeAsYamlAsync<T>(this T element, System.IO.Stream! stream, Microsoft.OpenApi.OpenApiSpecVersion specVersion, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static Microsoft.OpenApi.OpenApiSerializableExtensions.SerializeAsync<T>(this T element, Microsoft.OpenApi.IOpenApiWriter! writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static Microsoft.OpenApi.OpenApiSerializableExtensions.SerializeAsync<T>(this T element, Microsoft.OpenApi.OpenApiSpecVersion specVersion, string! format, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string!>!
+static Microsoft.OpenApi.OpenApiSerializableExtensions.SerializeAsync<T>(this T element, System.IO.Stream! stream, Microsoft.OpenApi.OpenApiSpecVersion specVersion, string! format, Microsoft.OpenApi.OpenApiWriterSettings? settings = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static Microsoft.OpenApi.OpenApiSerializableExtensions.SerializeAsync<T>(this T element, System.IO.Stream! stream, Microsoft.OpenApi.OpenApiSpecVersion specVersion, string! format, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static Microsoft.OpenApi.OpenApiServerExtensions.ReplaceServerUrlVariables(this Microsoft.OpenApi.OpenApiServer! server, System.Collections.Generic.Dictionary<string!, string!>? values = null) -> string?
+static Microsoft.OpenApi.OpenApiServerRules.ServerRequiredFields.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiServer!>!
+static Microsoft.OpenApi.OpenApiTagRules.TagRequiredFields.get -> Microsoft.OpenApi.ValidationRule<Microsoft.OpenApi.OpenApiTag!>!
+static Microsoft.OpenApi.OpenApiTypeMapper.MapOpenApiPrimitiveTypeToSimpleType(this Microsoft.OpenApi.OpenApiSchema! schema) -> System.Type!
+static Microsoft.OpenApi.OpenApiTypeMapper.MapTypeToOpenApiPrimitiveType(this System.Type! type) -> Microsoft.OpenApi.OpenApiSchema!
+static Microsoft.OpenApi.OpenApiTypeMapper.ToIdentifiers(this Microsoft.OpenApi.JsonSchemaType schemaType) -> string![]!
+static Microsoft.OpenApi.OpenApiTypeMapper.ToIdentifiers(this Microsoft.OpenApi.JsonSchemaType? schemaType) -> string![]?
+static Microsoft.OpenApi.OpenApiTypeMapper.ToJsonSchemaType(this string! identifier) -> Microsoft.OpenApi.JsonSchemaType
+static Microsoft.OpenApi.OpenApiTypeMapper.ToJsonSchemaType(this string![]! identifier) -> Microsoft.OpenApi.JsonSchemaType?
+static Microsoft.OpenApi.OpenApiUrlTreeNode.Create() -> Microsoft.OpenApi.OpenApiUrlTreeNode!
+static Microsoft.OpenApi.OpenApiUrlTreeNode.Create(Microsoft.OpenApi.OpenApiDocument! doc, string! label) -> Microsoft.OpenApi.OpenApiUrlTreeNode!
+static Microsoft.OpenApi.OpenApiWriterAnyExtensions.WriteAny(this Microsoft.OpenApi.IOpenApiWriter! writer, System.Text.Json.Nodes.JsonNode? node) -> void
+static Microsoft.OpenApi.OpenApiWriterAnyExtensions.WriteExtensions(this Microsoft.OpenApi.IOpenApiWriter! writer, System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>? extensions, Microsoft.OpenApi.OpenApiSpecVersion specVersion) -> void
+static Microsoft.OpenApi.OpenApiWriterBase.WriteV2Examples(Microsoft.OpenApi.IOpenApiWriter! writer, Microsoft.OpenApi.OpenApiExample! example, Microsoft.OpenApi.OpenApiSpecVersion version) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteOptionalCollection(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, System.Collections.Generic.IEnumerable<string?>? elements, System.Action<Microsoft.OpenApi.IOpenApiWriter!, string?>! action) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteOptionalCollection<T>(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, System.Collections.Generic.IEnumerable<T>? elements, System.Action<Microsoft.OpenApi.IOpenApiWriter!, T>! action) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteOptionalMap(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, System.Collections.Generic.IDictionary<string!, bool>? elements, System.Action<Microsoft.OpenApi.IOpenApiWriter!, bool>! action) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteOptionalMap(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, System.Collections.Generic.IDictionary<string!, string!>? elements, System.Action<Microsoft.OpenApi.IOpenApiWriter!, string!>! action) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteOptionalMap(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, System.Collections.Generic.IDictionary<string!, System.Collections.Generic.HashSet<string!>!>? elements, System.Action<Microsoft.OpenApi.IOpenApiWriter!, System.Collections.Generic.HashSet<string!>!>! action) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteOptionalMap(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, System.Collections.Generic.IDictionary<string!, System.Text.Json.Nodes.JsonNode!>? elements, System.Action<Microsoft.OpenApi.IOpenApiWriter!, System.Text.Json.Nodes.JsonNode!>! action) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteOptionalMap<T>(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, System.Collections.Generic.IDictionary<string!, T>? elements, System.Action<Microsoft.OpenApi.IOpenApiWriter!, string!, T>! action) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteOptionalMap<T>(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, System.Collections.Generic.IDictionary<string!, T>? elements, System.Action<Microsoft.OpenApi.IOpenApiWriter!, T>! action) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteOptionalObject<T>(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, T? value, System.Action<Microsoft.OpenApi.IOpenApiWriter!, T>! action) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteOptionalOrEmptyCollection<T>(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, System.Collections.Generic.IEnumerable<T>? elements, System.Action<Microsoft.OpenApi.IOpenApiWriter!, T>! action) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteProperty(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, bool value, bool defaultValue = false) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteProperty(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, bool? value, bool defaultValue = false) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteProperty(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, string? value) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteProperty<T>(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, T value) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteProperty<T>(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, T? value) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteRequiredCollection<T>(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, System.Collections.Generic.IEnumerable<T>! elements, System.Action<Microsoft.OpenApi.IOpenApiWriter!, T>! action) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteRequiredMap(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, System.Collections.Generic.IDictionary<string!, string!>? elements, System.Action<Microsoft.OpenApi.IOpenApiWriter!, string!>! action) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteRequiredMap<T>(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, System.Collections.Generic.IDictionary<string!, T>? elements, System.Action<Microsoft.OpenApi.IOpenApiWriter!, T>! action) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteRequiredObject<T>(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, T? value, System.Action<Microsoft.OpenApi.IOpenApiWriter!, T>! action) -> void
+static Microsoft.OpenApi.OpenApiWriterExtensions.WriteRequiredProperty(this Microsoft.OpenApi.IOpenApiWriter! writer, string! name, string? value) -> void
+static Microsoft.OpenApi.Reader.JsonPointerExtensions.Find(this Microsoft.OpenApi.JsonPointer! currentPointer, System.Text.Json.Nodes.JsonNode! baseJsonNode) -> System.Text.Json.Nodes.JsonNode?
+static Microsoft.OpenApi.Reader.OpenApiModelFactory.Load(System.IO.MemoryStream! stream, string? format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null) -> Microsoft.OpenApi.Reader.ReadResult!
+static Microsoft.OpenApi.Reader.OpenApiModelFactory.Load<T>(System.IO.MemoryStream! input, Microsoft.OpenApi.OpenApiSpecVersion version, string? format, Microsoft.OpenApi.OpenApiDocument! openApiDocument, out Microsoft.OpenApi.Reader.OpenApiDiagnostic! diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null) -> T?
+static Microsoft.OpenApi.Reader.OpenApiModelFactory.LoadAsync(string! url, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null, System.Threading.CancellationToken token = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult!>!
+static Microsoft.OpenApi.Reader.OpenApiModelFactory.LoadAsync(System.IO.Stream! input, string? format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult!>!
+static Microsoft.OpenApi.Reader.OpenApiModelFactory.LoadAsync<T>(string! url, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.OpenApiDocument! openApiDocument, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null, System.Threading.CancellationToken token = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<T?>!
+static Microsoft.OpenApi.Reader.OpenApiModelFactory.LoadAsync<T>(System.IO.Stream! input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.OpenApiDocument! openApiDocument, string? format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null, System.Threading.CancellationToken token = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<T?>!
+static Microsoft.OpenApi.Reader.OpenApiModelFactory.Parse(string! input, string? format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null) -> Microsoft.OpenApi.Reader.ReadResult!
+static Microsoft.OpenApi.Reader.OpenApiModelFactory.Parse<T>(string! input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.OpenApiDocument! openApiDocument, out Microsoft.OpenApi.Reader.OpenApiDiagnostic! diagnostic, string? format = null, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null) -> T?
+static Microsoft.OpenApi.Reader.OpenApiVersionExtensionMethods.is2_0(this string! version) -> bool
+static Microsoft.OpenApi.Reader.OpenApiVersionExtensionMethods.is3_0(this string! version) -> bool
+static Microsoft.OpenApi.Reader.OpenApiVersionExtensionMethods.is3_1(this string! version) -> bool
+static Microsoft.OpenApi.RuntimeExpression.Build(string! expression) -> Microsoft.OpenApi.RuntimeExpression!
+static Microsoft.OpenApi.SourceExpression.Build(string! expression) -> Microsoft.OpenApi.SourceExpression!
+static Microsoft.OpenApi.ValidationContextExtensions.CreateError(this Microsoft.OpenApi.IValidationContext! context, string! ruleName, string! message) -> void
+static Microsoft.OpenApi.ValidationContextExtensions.CreateWarning(this Microsoft.OpenApi.IValidationContext! context, string! ruleName, string! message) -> void
+static Microsoft.OpenApi.ValidationRuleSet.AddValidationRules(Microsoft.OpenApi.ValidationRuleSet! ruleSet, System.Collections.Generic.Dictionary<System.Type!, System.Collections.Generic.List<Microsoft.OpenApi.ValidationRule!>!>! rules) -> void
+static Microsoft.OpenApi.ValidationRuleSet.GetDefaultRuleSet() -> Microsoft.OpenApi.ValidationRuleSet!
+static Microsoft.OpenApi.ValidationRuleSet.GetEmptyRuleSet() -> Microsoft.OpenApi.ValidationRuleSet!
+static readonly Microsoft.OpenApi.OpenApiConstants.defaultUrl -> System.Uri!
+static readonly Microsoft.OpenApi.OpenApiConstants.version2_0 -> System.Version!
+static readonly Microsoft.OpenApi.OpenApiConstants.version3_0_0 -> System.Version!
+virtual Microsoft.OpenApi.BaseOpenApiReference.SerializeAdditionalV31Properties(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.BaseOpenApiReference.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.BaseOpenApiReference.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.BaseOpenApiReference.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.BaseOpenApiReference.SetAdditional31MetadataFromMapNode(System.Text.Json.Nodes.JsonObject! jsonObject) -> void
+virtual Microsoft.OpenApi.BaseOpenApiReferenceHolder<T, U, V>.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.BaseOpenApiReferenceHolder<T, U, V>.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.BaseOpenApiReferenceHolder<T, U, V>.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.BaseOpenApiReferenceHolder<T, U, V>.Target.get -> U?
+virtual Microsoft.OpenApi.OpenApiCallback.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiCallback.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiCallback.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiComponents.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiComponents.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiComponents.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiContact.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiContact.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiContact.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiEncoding.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiEncoding.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiEncoding.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiExample.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiExample.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiExample.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiExternalDocs.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiExternalDocs.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiExternalDocs.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiHeader.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiHeader.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiHeader.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiLicense.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiLicense.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiLicense.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiLink.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiLink.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiLink.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiMediaType.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiMediaType.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiMediaType.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiOAuthFlows.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiOAuthFlows.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiOAuthFlows.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiOperation.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiOperation.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiOperation.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiParameter.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiParameter.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiParameter.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiPathItem.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiPathItem.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiPathItem.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiRequestBody.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiRequestBody.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiRequestBody.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiResponse.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiResponse.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiResponse.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiSchema.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiSchema.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiSchema.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiSecurityRequirement.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiSecurityRequirement.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiSecurityRequirement.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiSecurityScheme.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiSecurityScheme.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiSecurityScheme.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiServer.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiServer.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiServer.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiTag.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiTag.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiTag.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Enter(string! segment) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Exit() -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.IOpenApiCallback! callback) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.IOpenApiExample! example) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.IOpenApiExtensible! openApiExtensible) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.IOpenApiExtension! openApiExtension) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.IOpenApiHeader! header) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.IOpenApiLink! link) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.IOpenApiParameter! parameter) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.IOpenApiPathItem! pathItem) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.IOpenApiReferenceHolder! referenceHolder) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.IOpenApiRequestBody! requestBody) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.IOpenApiResponse! response) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.IOpenApiSchema! schema) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.IOpenApiSecurityScheme! securityScheme) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiComponents! components) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiContact! contact) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiDocument! doc) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiEncoding! encoding) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiExternalDocs! externalDocs) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiInfo! info) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiLicense! license) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiMediaType! mediaType) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiOAuthFlow! openApiOAuthFlow) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiOperation! operation) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiPaths! paths) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiResponses! response) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiSecurityRequirement! securityRequirement) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiServer! server) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiServerVariable! serverVariable) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiTag! tag) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(Microsoft.OpenApi.OpenApiTagReference! tag) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiCallback!>! callbacks) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExample!>! examples) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiHeader!>! headers) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiLink!>! links) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiPathItem!>! webhooks) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiEncoding!>! encodings) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiMediaType!>! content) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.OpenApiServerVariable!>! serverVariables) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary<System.Net.Http.HttpMethod!, Microsoft.OpenApi.OpenApiOperation!>! operations) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.IList<Microsoft.OpenApi.IOpenApiParameter!>! parameters) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiSecurityRequirement!>! openApiSecurityRequirements) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.IList<Microsoft.OpenApi.OpenApiServer!>! servers) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.ISet<Microsoft.OpenApi.OpenApiTag!>! openApiTags) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.ISet<Microsoft.OpenApi.OpenApiTagReference!>! openApiTags) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Collections.Generic.List<Microsoft.OpenApi.IOpenApiExample!>! example) -> void
+virtual Microsoft.OpenApi.OpenApiVisitorBase.Visit(System.Text.Json.Nodes.JsonNode! node) -> void
+virtual Microsoft.OpenApi.OpenApiWriterBase.DecreaseIndentation() -> void
+virtual Microsoft.OpenApi.OpenApiWriterBase.IncreaseIndentation() -> void
+virtual Microsoft.OpenApi.OpenApiWriterBase.WriteEnumerable<T>(System.Collections.Generic.IEnumerable<T>! collection) -> void
+virtual Microsoft.OpenApi.OpenApiWriterBase.WriteIndentation() -> void
+virtual Microsoft.OpenApi.OpenApiWriterBase.WriteValue(bool value) -> void
+virtual Microsoft.OpenApi.OpenApiWriterBase.WriteValue(decimal value) -> void
+virtual Microsoft.OpenApi.OpenApiWriterBase.WriteValue(double value) -> void
+virtual Microsoft.OpenApi.OpenApiWriterBase.WriteValue(float value) -> void
+virtual Microsoft.OpenApi.OpenApiWriterBase.WriteValue(int value) -> void
+virtual Microsoft.OpenApi.OpenApiWriterBase.WriteValue(long value) -> void
+virtual Microsoft.OpenApi.OpenApiWriterBase.WriteValue(object? value) -> void
+virtual Microsoft.OpenApi.OpenApiWriterBase.WriteValue(System.DateTime value) -> void
+virtual Microsoft.OpenApi.OpenApiWriterBase.WriteValue(System.DateTimeOffset value) -> void
+virtual Microsoft.OpenApi.OpenApiXml.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiXml.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+virtual Microsoft.OpenApi.OpenApiXml.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
