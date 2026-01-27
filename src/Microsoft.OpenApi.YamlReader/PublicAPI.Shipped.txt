@@ -1,0 +1,17 @@
+#nullable enable
+Microsoft.OpenApi.Reader.OpenApiReaderSettingsExtensions
+Microsoft.OpenApi.YamlReader.OpenApiYamlReader
+Microsoft.OpenApi.YamlReader.OpenApiYamlReader.OpenApiYamlReader() -> void
+Microsoft.OpenApi.YamlReader.OpenApiYamlReader.Read(System.IO.MemoryStream! input, System.Uri! location, Microsoft.OpenApi.Reader.OpenApiReaderSettings! settings) -> Microsoft.OpenApi.Reader.ReadResult!
+Microsoft.OpenApi.YamlReader.OpenApiYamlReader.ReadAsync(System.IO.Stream! input, System.Uri! location, Microsoft.OpenApi.Reader.OpenApiReaderSettings! settings, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Microsoft.OpenApi.Reader.ReadResult!>!
+Microsoft.OpenApi.YamlReader.OpenApiYamlReader.ReadFragment<T>(System.IO.MemoryStream! input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.OpenApiDocument! openApiDocument, out Microsoft.OpenApi.Reader.OpenApiDiagnostic! diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null) -> T?
+Microsoft.OpenApi.YamlReader.YamlConverter
+static Microsoft.OpenApi.Reader.OpenApiReaderSettingsExtensions.AddYamlReader(this Microsoft.OpenApi.Reader.OpenApiReaderSettings! settings) -> void
+static Microsoft.OpenApi.YamlReader.OpenApiYamlReader.Read(System.Text.Json.Nodes.JsonNode! jsonNode, System.Uri! location, Microsoft.OpenApi.Reader.OpenApiReaderSettings! settings) -> Microsoft.OpenApi.Reader.ReadResult!
+static Microsoft.OpenApi.YamlReader.OpenApiYamlReader.ReadFragment<T>(System.Text.Json.Nodes.JsonNode! input, Microsoft.OpenApi.OpenApiSpecVersion version, Microsoft.OpenApi.OpenApiDocument! openApiDocument, out Microsoft.OpenApi.Reader.OpenApiDiagnostic! diagnostic, Microsoft.OpenApi.Reader.OpenApiReaderSettings? settings = null) -> T?
+static Microsoft.OpenApi.YamlReader.YamlConverter.ToJsonArray(this SharpYaml.Serialization.YamlSequenceNode! yaml) -> System.Text.Json.Nodes.JsonArray!
+static Microsoft.OpenApi.YamlReader.YamlConverter.ToJsonNode(this SharpYaml.Serialization.YamlDocument! yaml) -> System.Text.Json.Nodes.JsonNode!
+static Microsoft.OpenApi.YamlReader.YamlConverter.ToJsonNode(this SharpYaml.Serialization.YamlNode! yaml) -> System.Text.Json.Nodes.JsonNode!
+static Microsoft.OpenApi.YamlReader.YamlConverter.ToJsonNode(this SharpYaml.Serialization.YamlStream! yaml) -> System.Collections.Generic.IEnumerable<System.Text.Json.Nodes.JsonNode!>!
+static Microsoft.OpenApi.YamlReader.YamlConverter.ToJsonObject(this SharpYaml.Serialization.YamlMappingNode! yaml) -> System.Text.Json.Nodes.JsonObject!
+static Microsoft.OpenApi.YamlReader.YamlConverter.ToYamlNode(this System.Text.Json.Nodes.JsonNode! json) -> SharpYaml.Serialization.YamlNode!
