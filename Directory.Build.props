@@ -20,9 +20,5 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Condition="!$(MSBuildProjectName.EndsWith('Tests'))" Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
-    <PackageReference Condition="!$(MSBuildProjectName.EndsWith('Tests'))" Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 </Project>
