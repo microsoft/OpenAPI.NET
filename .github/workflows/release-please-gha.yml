@@ -27,6 +27,30 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - name: Validate PublicAPI.Unshipped.txt files are empty
+        shell: pwsh
+        run: |
+          $unshippedFiles = Get-ChildItem 'src/ ' -Recurse -Filter *.Unshipped.txt | Select -ExpandProperty FullName
+          
+          $hasUnshippedAPIs = $false
+          
+          foreach ($file in $unshippedFiles) {
+            $content = Get-Content -Path $file -Raw
+            # Remove the #nullable enable line and any whitespace
+            $trimmedContent = $content -replace '^\s*#nullable enable\s*$', '' -replace '^\s+', ''
+            
+            if ($trimmedContent -ne '') {
+              Write-Error "❌ $file contains unshipped APIs. Please promote them to PublicAPI.Shipped.txt before releasing.`nContent:`n$content"
+              $hasUnshippedAPIs = $true
+            }
+          }
+          
+          if ($hasUnshippedAPIs) {
+            exit 1
+          }
+          
+          Write-Output "✅ All PublicAPI.Unshipped.txt files are clean"
+
       - name: Generate GitHub App token
         id: app-token
         uses: actions/create-github-app-token@v2
