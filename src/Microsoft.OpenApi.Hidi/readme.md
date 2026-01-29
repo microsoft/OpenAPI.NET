@@ -14,7 +14,7 @@ Hidi has these key capabilities that enable you to build different scenarios off
 ## Installation
 
 Install [Microsoft.OpenApi.Hidi](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi/1.0.0-preview4) package from NuGet by running the following command:  
- 
+
 ### .NET CLI(Global)
 
 ```bash
@@ -23,12 +23,18 @@ dotnet tool install --global Microsoft.OpenApi.Hidi --prerelease
  
 ### .NET CLI(local)
 
-```bash 
+```bash
 dotnet new tool-manifest #if you are setting up the OpenAPI.NET repo 
 dotnet tool install --local Microsoft.OpenApi.Hidi --prerelease 
 ```
- 
- 
+
+### Docker
+
+Hidi is also available as a Docker image:
+
+```bash
+docker pull mcr.microsoft.com/openapi/hidi
+```
  
 ## How to use Hidi
 
