@@ -514,7 +514,8 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.NotSame(baseSchema.UnevaluatedPropertiesSchema, actualSchema.UnevaluatedPropertiesSchema);
             
             // Verify that changing the copy doesn't affect the original
-            actualSchema.UnevaluatedPropertiesSchema.MaxLength = 200;
+            var actualSchemaTyped = Assert.IsType<OpenApiSchema>(actualSchema.UnevaluatedPropertiesSchema);
+            actualSchemaTyped.MaxLength = 200;
             Assert.Equal(100, baseSchema.UnevaluatedPropertiesSchema.MaxLength);
         }
 
