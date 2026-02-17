@@ -146,12 +146,22 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "unevaluatedProperties",
-            (o, n, _) =>
+            (o, n, t) =>
             {
-                var unevaluatedProps = n.GetScalarValue();
-                if (unevaluatedProps != null)
+                // Handle both boolean (false/true) and schema object cases
+                var scalarValue = n.GetScalarValue();
+                if (scalarValue != null)
                 {
-                    o.UnevaluatedProperties = bool.Parse(unevaluatedProps);
+                    // Boolean case: false means no unevaluated properties, true is default (ignore)
+                    if (bool.TryParse(scalarValue, out var boolValue))
+                    {
+                        o.UnevaluatedProperties = boolValue;
+                    }
+                }
+                else
+                {
+                    // Schema object case: deserialize as schema
+                    o.UnevaluatedPropertiesSchema = LoadSchema(n, t);
                 }
             }
         },
