@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public IList<JsonNode>? Enum { get => Target?.Enum; }
         /// <inheritdoc/>
-        public bool UnevaluatedProperties { get => Target?.UnevaluatedProperties ?? false; }
+        public bool UnevaluatedProperties { get => Target?.UnevaluatedProperties ?? true; }
         /// <inheritdoc/>
         public IOpenApiSchema? UnevaluatedPropertiesSchema { get => (Target as IOpenApiSchemaWithUnevaluatedProperties)?.UnevaluatedPropertiesSchema; }
         /// <inheritdoc/>

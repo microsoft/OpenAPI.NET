@@ -232,7 +232,7 @@ namespace Microsoft.OpenApi
         public IList<JsonNode>? Enum { get; set; }
 
         /// <inheritdoc />
-        public bool UnevaluatedProperties { get; set; }
+        public bool UnevaluatedProperties { get; set; } = true;
 
         /// <inheritdoc />
         public IOpenApiSchema? UnevaluatedPropertiesSchema { get; set; }
