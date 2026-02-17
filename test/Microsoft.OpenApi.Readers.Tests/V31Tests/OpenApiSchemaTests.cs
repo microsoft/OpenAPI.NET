@@ -707,5 +707,113 @@ description: Schema for a person object
             Assert.Equal("integer", type.ToSingleIdentifier());
             Assert.Throws<InvalidOperationException>(() => types.ToSingleIdentifier());
         }
+
+        // UnevaluatedProperties deserialization tests
+        [Fact]
+        public void ParseSchemaWithUnevaluatedPropertiesBooleanFalse()
+        {
+            // Arrange
+            var schema = @"{
+  ""type"": ""object"",
+  ""unevaluatedProperties"": false
+}";
+
+            var expected = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.Object,
+                UnevaluatedProperties = false
+            };
+
+            // Act
+            var actual = OpenApiModelFactory.Parse<OpenApiSchema>(schema, OpenApiSpecVersion.OpenApi3_1, new(), out _);
+
+            // Assert
+            Assert.Equivalent(expected, actual);
+        }
+
+        [Fact]
+        public void ParseSchemaWithUnevaluatedPropertiesBooleanTrue()
+        {
+            // Arrange - true should be parsed but is the default, effectively a no-op
+            var schema = @"{
+  ""type"": ""object"",
+  ""unevaluatedProperties"": true
+}";
+
+            var expected = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.Object,
+                UnevaluatedProperties = true
+            };
+
+            // Act
+            var actual = OpenApiModelFactory.Parse<OpenApiSchema>(schema, OpenApiSpecVersion.OpenApi3_1, new(), out _);
+
+            // Assert
+            Assert.Equivalent(expected, actual);
+        }
+
+        [Fact]
+        public void ParseSchemaWithUnevaluatedPropertiesSchema()
+        {
+            // Arrange
+            var schema = @"{
+  ""type"": ""object"",
+  ""unevaluatedProperties"": {
+    ""type"": ""string""
+  }
+}";
+
+            var expected = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.Object,
+                UnevaluatedPropertiesSchema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String
+                }
+            };
+
+            // Act
+            var actual = OpenApiModelFactory.Parse<OpenApiSchema>(schema, OpenApiSpecVersion.OpenApi3_1, new(), out _);
+
+            // Assert
+            Assert.Equivalent(expected, actual);
+        }
+
+        [Fact]
+        public void ParseSchemaWithUnevaluatedPropertiesComplexSchema()
+        {
+            // Arrange
+            var schema = @"{
+  ""type"": ""object"",
+  ""properties"": {
+    ""name"": { ""type"": ""string"" }
+  },
+  ""unevaluatedProperties"": {
+    ""type"": ""number"",
+    ""minimum"": ""0""
+  }
+}";
+
+            var expected = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.Object,
+                Properties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["name"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                },
+                UnevaluatedPropertiesSchema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.Number,
+                    Minimum = "0"
+                }
+            };
+
+            // Act
+            var actual = OpenApiModelFactory.Parse<OpenApiSchema>(schema, OpenApiSpecVersion.OpenApi3_1, new(), out _);
+
+            // Assert
+            Assert.Equivalent(expected, actual);
+        }
     }
 }
