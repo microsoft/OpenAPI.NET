@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// The Schema Object allows the definition of input and output data types.
     /// </summary>
-    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema, IMetadataContainer
+    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema, IOpenApiSchemaWithUnevaluatedProperties, IMetadataContainer
     {
         /// <inheritdoc />
         public string? Title { get; set; }
@@ -235,6 +235,9 @@ namespace Microsoft.OpenApi
         public bool UnevaluatedProperties { get; set; }
 
         /// <inheritdoc />
+        public IOpenApiSchema? UnevaluatedPropertiesSchema { get; set; }
+
+        /// <inheritdoc />
         public OpenApiExternalDocs? ExternalDocs { get; set; }
 
         /// <inheritdoc />
@@ -277,6 +280,10 @@ namespace Microsoft.OpenApi
             DynamicRef = schema.DynamicRef ?? DynamicRef;
             Definitions = schema.Definitions != null ? new Dictionary<string, IOpenApiSchema>(schema.Definitions) : null;
             UnevaluatedProperties = schema.UnevaluatedProperties;
+            if (schema is IOpenApiSchemaWithUnevaluatedProperties schemaWithUnevaluated)
+            {
+                UnevaluatedPropertiesSchema = schemaWithUnevaluated.UnevaluatedPropertiesSchema?.CreateShallowCopy();
+            }
             ExclusiveMaximum = schema.ExclusiveMaximum ?? ExclusiveMaximum;
             ExclusiveMinimum = schema.ExclusiveMinimum ?? ExclusiveMinimum;
             if (schema is OpenApiSchema eMSchema)
@@ -560,7 +567,20 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, s) => s.SerializeAsV31(w));
             writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);
             writer.WriteProperty(OpenApiConstants.DynamicAnchor, DynamicAnchor);
-            writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties, false);
+            
+            // UnevaluatedProperties: similar to AdditionalProperties, serialize as schema if present, else as boolean
+            if (UnevaluatedPropertiesSchema is not null)
+            {
+                writer.WriteOptionalObject(
+                    OpenApiConstants.UnevaluatedProperties,
+                    UnevaluatedPropertiesSchema,
+                    (w, s) => s.SerializeAsV31(w));
+            }
+            else if (!UnevaluatedProperties)
+            {
+                writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties);
+            }
+            // true is the default, no need to write it out
             writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (nodeWriter, s) => nodeWriter.WriteAny(s));
             writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, (w, s) => s.SerializeAsV31(w));
             writer.WriteOptionalMap(OpenApiConstants.DependentRequired, DependentRequired, (w, s) => w.WriteValue(s));

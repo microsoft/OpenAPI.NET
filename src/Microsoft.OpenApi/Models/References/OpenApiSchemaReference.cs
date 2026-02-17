@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Schema reference object
     /// </summary>
-    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema
+    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema, IOpenApiSchemaWithUnevaluatedProperties
     {
 
         /// <summary>
@@ -145,6 +145,8 @@ namespace Microsoft.OpenApi
         public IList<JsonNode>? Enum { get => Target?.Enum; }
         /// <inheritdoc/>
         public bool UnevaluatedProperties { get => Target?.UnevaluatedProperties ?? false; }
+        /// <inheritdoc/>
+        public IOpenApiSchema? UnevaluatedPropertiesSchema { get => (Target as IOpenApiSchemaWithUnevaluatedProperties)?.UnevaluatedPropertiesSchema; }
         /// <inheritdoc/>
         public OpenApiExternalDocs? ExternalDocs { get => Target?.ExternalDocs; }
         /// <inheritdoc/>
