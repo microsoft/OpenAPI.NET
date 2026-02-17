@@ -551,14 +551,14 @@ namespace Microsoft.OpenApi
                 if (UnevaluatedPropertiesSchema is not null)
                 {
                     writer.WriteOptionalObject(
-                        "x-jsonschema-unevaluatedProperties",
+                        OpenApiConstants.UnevaluatedPropertiesExtension,
                         UnevaluatedPropertiesSchema,
                         callback);
                 }
                 // Write boolean false as extension if explicitly set to false
                 else if (!UnevaluatedProperties)
                 {
-                    writer.WritePropertyName("x-jsonschema-unevaluatedProperties");
+                    writer.WritePropertyName(OpenApiConstants.UnevaluatedPropertiesExtension);
                     writer.WriteValue(false);
                 }
             }
@@ -824,14 +824,14 @@ namespace Microsoft.OpenApi
             if (UnevaluatedPropertiesSchema is not null)
             {
                 writer.WriteOptionalObject(
-                    "x-jsonschema-unevaluatedProperties",
+                    OpenApiConstants.UnevaluatedPropertiesExtension,
                     UnevaluatedPropertiesSchema,
                     (w, s) => s.SerializeAsV2(w));
             }
             // Write boolean false as extension if explicitly set to false
             else if (!UnevaluatedProperties)
             {
-                writer.WritePropertyName("x-jsonschema-unevaluatedProperties");
+                writer.WritePropertyName(OpenApiConstants.UnevaluatedPropertiesExtension);
                 writer.WriteValue(false);
             }
 
