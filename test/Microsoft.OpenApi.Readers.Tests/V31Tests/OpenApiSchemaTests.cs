@@ -815,5 +815,34 @@ description: Schema for a person object
             // Assert
             Assert.Equivalent(expected, actual);
         }
+
+        [Fact]
+        public void ParseSchemaWithoutUnevaluatedPropertiesDefaultsToTrue()
+        {
+            // Arrange - no unevaluatedProperties property should default to true (allow all)
+            var schema = @"{
+  ""type"": ""object"",
+  ""properties"": {
+    ""name"": { ""type"": ""string"" }
+  }
+}";
+
+            var expected = new OpenApiSchema()
+            {
+                Type = JsonSchemaType.Object,
+                Properties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["name"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                },
+                UnevaluatedProperties = true // Default value
+            };
+
+            // Act
+            var actual = OpenApiModelFactory.Parse<OpenApiSchema>(schema, OpenApiSpecVersion.OpenApi3_1, new(), out _);
+
+            // Assert
+            Assert.Equivalent(expected, actual);
+            Assert.True(actual.UnevaluatedProperties); // Explicitly verify the default
+        }
     }
 }

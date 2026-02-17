@@ -280,9 +280,9 @@ namespace Microsoft.OpenApi
             DynamicRef = schema.DynamicRef ?? DynamicRef;
             Definitions = schema.Definitions != null ? new Dictionary<string, IOpenApiSchema>(schema.Definitions) : null;
             UnevaluatedProperties = schema.UnevaluatedProperties;
-            if (schema is IOpenApiSchemaWithUnevaluatedProperties schemaWithUnevaluated)
+            if (schema is IOpenApiSchemaWithUnevaluatedProperties { UnevaluatedPropertiesSchema: { } unevaluatedSchema })
             {
-                UnevaluatedPropertiesSchema = schemaWithUnevaluated.UnevaluatedPropertiesSchema?.CreateShallowCopy();
+                UnevaluatedPropertiesSchema = unevaluatedSchema.CreateShallowCopy();
             }
             ExclusiveMaximum = schema.ExclusiveMaximum ?? ExclusiveMaximum;
             ExclusiveMinimum = schema.ExclusiveMinimum ?? ExclusiveMinimum;
@@ -539,8 +539,28 @@ namespace Microsoft.OpenApi
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
+            // For versions < 3.1, write unevaluatedProperties as an extension
+            if (version < OpenApiSpecVersion.OpenApi3_1)
+            {
+                // Write UnevaluatedPropertiesSchema as extension if present
+                if (UnevaluatedPropertiesSchema is not null)
+                {
+                    writer.WriteOptionalObject(
+                        "x-jsonschema-unevaluatedProperties",
+                        UnevaluatedPropertiesSchema,
+                        callback);
+                }
+                // Write boolean false as extension if explicitly set to false
+                else if (!UnevaluatedProperties)
+                {
+                    writer.WritePropertyName("x-jsonschema-unevaluatedProperties");
+                    writer.WriteValue(false);
+                }
+            }
+
             // extensions
             writer.WriteExtensions(Extensions, version);
+
 
             // Unrecognized keywords
             if (UnrecognizedKeywords is not null && UnrecognizedKeywords.Any())
@@ -794,6 +814,21 @@ namespace Microsoft.OpenApi
 
             // x-nullable extension
             SerializeNullable(writer, OpenApiSpecVersion.OpenApi2_0);
+
+            // Write UnevaluatedPropertiesSchema as extension if present
+            if (UnevaluatedPropertiesSchema is not null)
+            {
+                writer.WriteOptionalObject(
+                    "x-jsonschema-unevaluatedProperties",
+                    UnevaluatedPropertiesSchema,
+                    (w, s) => s.SerializeAsV2(w));
+            }
+            // Write boolean false as extension if explicitly set to false
+            else if (!UnevaluatedProperties)
+            {
+                writer.WritePropertyName("x-jsonschema-unevaluatedProperties");
+                writer.WriteValue(false);
+            }
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
