@@ -1237,13 +1237,54 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
-        public async Task SerializeUnevaluatedPropertiesNotEmittedInEarlierVersions(OpenApiSpecVersion version)
+        public async Task SerializeUnevaluatedPropertiesAsExtensionInEarlierVersions(OpenApiSpecVersion version)
         {
-            var expected = @"{ }";
-            // Given - UnevaluatedProperties should not be emitted in versions < 3.1
+            var expected = @"{ ""x-jsonschema-unevaluatedProperties"": false }";
+            // Given - UnevaluatedProperties should be emitted as extension in versions < 3.1
             var schema = new OpenApiSchema
             {
                 UnevaluatedProperties = false
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializeUnevaluatedPropertiesSchemaAsExtensionInEarlierVersions(OpenApiSpecVersion version)
+        {
+            var expected = @"{ ""x-jsonschema-unevaluatedProperties"": { ""type"": ""string"" } }";
+            // Given - UnevaluatedPropertiesSchema should be emitted as extension in versions < 3.1
+            var schema = new OpenApiSchema
+            {
+                UnevaluatedPropertiesSchema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String
+                }
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializeUnevaluatedPropertiesTrueNotEmittedInEarlierVersions(OpenApiSpecVersion version)
+        {
+            var expected = @"{ }";
+            // Given - UnevaluatedProperties true (default) should not be emitted even as extension
+            var schema = new OpenApiSchema
+            {
+                UnevaluatedProperties = true
             };
 
             // When
