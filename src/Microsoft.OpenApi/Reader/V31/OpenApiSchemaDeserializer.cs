@@ -149,13 +149,12 @@ internal static partial class OpenApiV31Deserializer
             (o, n, t) =>
             {
                 // Handle both boolean (false/true) and schema object cases
-                var scalarValue = n.GetScalarValue();
-                if (scalarValue != null)
+                if (n is ValueNode)
                 {
-                    // Boolean case: false means no unevaluated properties, true is default (ignore)
-                    if (bool.TryParse(scalarValue, out var boolValue))
+                    var value = n.GetScalarValue();
+                    if (value is not null)
                     {
-                        o.UnevaluatedProperties = boolValue;
+                        o.UnevaluatedProperties = bool.Parse(value);
                     }
                 }
                 else
