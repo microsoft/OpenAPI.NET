@@ -1,18 +1,18 @@
 ```
 
-BenchmarkDotNet v0.15.4, Windows 11 (10.0.26200.6899)
-11th Gen Intel Core i7-1185G7 3.00GHz, 1 CPU, 8 logical and 4 physical cores
-.NET SDK 8.0.415
-  [Host]   : .NET 8.0.21 (8.0.21, 8.0.2125.47513), X64 RyuJIT x86-64-v4
-  ShortRun : .NET 8.0.21 (8.0.21, 8.0.2125.47513), X64 RyuJIT x86-64-v4
+BenchmarkDotNet v0.15.8, Linux Ubuntu 24.04.3 LTS (Noble Numbat) (container)
+Intel Xeon Platinum 8370C CPU 2.80GHz (Max: 3.39GHz), 1 CPU, 2 logical cores and 1 physical core
+.NET SDK 8.0.418
+  [Host]   : .NET 8.0.24 (8.0.24, 8.0.2426.7010), X64 RyuJIT x86-64-v4
+  ShortRun : .NET 8.0.24 (8.0.24, 8.0.2426.7010), X64 RyuJIT x86-64-v4
 
 Job=ShortRun  IterationCount=3  LaunchCount=1  
 WarmupCount=3  
 
 ```
-| Method       | Mean           | Error          | StdDev        | Gen0       | Gen1       | Gen2      | Allocated    |
-|------------- |---------------:|---------------:|--------------:|-----------:|-----------:|----------:|-------------:|
-| PetStoreYaml |       913.5 μs |     3,348.1 μs |     183.52 μs |    58.5938 |    11.7188 |         - |    361.25 KB |
-| PetStoreJson |       425.1 μs |       327.5 μs |      17.95 μs |    35.1563 |     5.8594 |         - |    223.39 KB |
-| GHESYaml     | 1,765,825.8 μs | 5,036,336.6 μs | 276,058.60 μs | 60000.0000 | 23000.0000 | 4000.0000 | 345082.98 KB |
-| GHESJson     |   848,197.4 μs | 1,381,723.6 μs |  75,736.93 μs | 33000.0000 | 12000.0000 | 2000.0000 | 206597.63 KB |
+| Method       | Mean           | Error        | StdDev       | Gen0       | Gen1       | Gen2      | Allocated    |
+|------------- |---------------:|-------------:|-------------:|-----------:|-----------:|----------:|-------------:|
+| PetStoreYaml |       594.9 μs |   1,121.5 μs |     61.47 μs |    11.7188 |          - |         - |    361.24 KB |
+| PetStoreJson |       329.4 μs |   1,905.6 μs |    104.45 μs |     7.8125 |     1.9531 |         - |     223.1 KB |
+| GHESYaml     | 1,164,634.7 μs | 868,047.1 μs | 47,580.59 μs | 17000.0000 | 14000.0000 | 3000.0000 | 345072.18 KB |
+| GHESJson     |   462,077.5 μs | 294,835.8 μs | 16,160.94 μs |  8000.0000 |  6000.0000 | 1000.0000 | 206591.14 KB |
