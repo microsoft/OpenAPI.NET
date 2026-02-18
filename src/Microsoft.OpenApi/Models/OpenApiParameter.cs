@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Parameter Object.
     /// </summary>
-    public class OpenApiParameter : IOpenApiExtensible, IOpenApiParameter, IOpenApiContentElement
+    public class OpenApiParameter : IOpenApiExtensible, IOpenApiParameter
     {
         private bool? _explode;
         private ParameterStyle? _style;
@@ -60,15 +60,7 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public JsonNode? Example { get; set; }
 
-        /// <summary>
-        /// A map containing the representations for the parameter.
-        /// The key is the media type and the value describes it.
-        /// The map MUST only contain one entry.
-        /// For more complex scenarios, the content property can define the media type and schema of the parameter.
-        /// A parameter MUST contain either a schema property, or a content property, but not both.
-        /// When example or examples are provided in conjunction with the schema object,
-        /// the example MUST follow the prescribed serialization strategy for the parameter.
-        /// </summary>
+        /// <inheritdoc/>
         public IDictionary<string, IOpenApiMediaType>? Content { get; set; }
 
         /// <inheritdoc/>
@@ -119,11 +111,11 @@ namespace Microsoft.OpenApi
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-        internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
+        internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);
-
+            
             // Validate that Cookie style is only used in OpenAPI 3.2 and later
             if (Style == ParameterStyle.Cookie && version < OpenApiSpecVersion.OpenApi3_2)
             {
@@ -234,8 +226,7 @@ namespace Microsoft.OpenApi
                 // uniqueItems
                 // enum
                 // multipleOf
-                var targetSchema = Schema switch
-                {
+                var targetSchema = Schema switch {
                     OpenApiSchemaReference schemaReference => schemaReference.RecursiveTarget,
                     OpenApiSchema schema => schema,
                     _ => null,
@@ -280,7 +271,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
-
+            
             // Validate that Cookie style is only used in OpenAPI 3.2 and later
             if (Style == ParameterStyle.Cookie)
             {

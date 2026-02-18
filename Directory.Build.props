@@ -12,13 +12,13 @@
     <PackageProjectUrl>https://github.com/Microsoft/OpenAPI.NET</PackageProjectUrl>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <PackageTags>OpenAPI .NET</PackageTags>
-    <Version>3.3.0</Version>
+    <Version>3.3.1</Version>
   </PropertyGroup>
   <!-- https://github.com/clairernovotny/DeterministicBuilds#deterministic-builds -->
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
       <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Condition="!$(MSBuildProjectName.EndsWith('Tests'))" Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+    <PackageReference Condition="!$(MSBuildProjectName.EndsWith('Tests'))" Include="Microsoft.SourceLink.GitHub" Version="10.0.103" PrivateAssets="All"/>
   </ItemGroup>
 </Project>
