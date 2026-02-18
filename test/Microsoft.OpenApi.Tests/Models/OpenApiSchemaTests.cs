@@ -486,6 +486,39 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.NotEqual(baseSchema.Metadata["key1"], actualSchema.Metadata["key1"]);
         }
 
+        [Fact]
+        public void OpenApiSchemaCopyConstructorWithUnevaluatedPropertiesSchemaSucceeds()
+        {
+            var baseSchema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                UnevaluatedProperties = false,
+                UnevaluatedPropertiesSchema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String,
+                    MaxLength = 100
+                }
+            };
+
+            var actualSchema = Assert.IsType<OpenApiSchema>(baseSchema.CreateShallowCopy());
+
+            // Verify boolean property is copied
+            Assert.Equal(baseSchema.UnevaluatedProperties, actualSchema.UnevaluatedProperties);
+            
+            // Verify schema property is copied
+            Assert.NotNull(actualSchema.UnevaluatedPropertiesSchema);
+            Assert.Equal(JsonSchemaType.String, actualSchema.UnevaluatedPropertiesSchema.Type);
+            Assert.Equal(100, actualSchema.UnevaluatedPropertiesSchema.MaxLength);
+
+            // Verify it's a shallow copy (different object reference)
+            Assert.NotSame(baseSchema.UnevaluatedPropertiesSchema, actualSchema.UnevaluatedPropertiesSchema);
+            
+            // Verify that changing the copy doesn't affect the original
+            var actualSchemaTyped = Assert.IsType<OpenApiSchema>(actualSchema.UnevaluatedPropertiesSchema);
+            actualSchemaTyped.MaxLength = 200;
+            Assert.Equal(100, baseSchema.UnevaluatedPropertiesSchema.MaxLength);
+        }
+
         public static TheoryData<JsonNode> SchemaExamples()
         {
             return new()
@@ -1107,6 +1140,158 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
+        }
+
+        // UnevaluatedProperties tests - similar to AdditionalProperties pattern
+        [Fact]
+        public async Task SerializeUnevaluatedPropertiesBooleanDefaultDoesNotEmit()
+        {
+            var expected = @"{ }";
+            // Given - default (not explicitly set) should not emit
+            var schema = new OpenApiSchema();
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeUnevaluatedPropertiesBooleanTrueDoesNotEmit()
+        {
+            var expected = @"{ }";
+            // Given - true (allowing all) is the default, no need to emit
+            var schema = new OpenApiSchema
+            {
+                UnevaluatedProperties = true
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeUnevaluatedPropertiesBooleanFalseEmitsInV31()
+        {
+            var expected = @"{ ""unevaluatedProperties"": false }";
+            // Given
+            var schema = new OpenApiSchema
+            {
+                UnevaluatedProperties = false
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
+        public async Task SerializeUnevaluatedPropertiesSchemaEmits(OpenApiSpecVersion version)
+        {
+            var expected = @"{ ""unevaluatedProperties"": { ""type"": ""string"" } }";
+            // Given
+            var schema = new OpenApiSchema
+            {
+                UnevaluatedPropertiesSchema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String
+                }
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeUnevaluatedPropertiesSchemaTakesPrecedenceOverBoolean()
+        {
+            var expected = @"{ ""unevaluatedProperties"": { ""type"": ""integer"" } }";
+            // Given - schema should take precedence over boolean
+            var schema = new OpenApiSchema
+            {
+                UnevaluatedProperties = false, // This should be ignored
+                UnevaluatedPropertiesSchema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.Integer
+                }
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializeUnevaluatedPropertiesAsExtensionInEarlierVersions(OpenApiSpecVersion version)
+        {
+            var expected = @"{ ""x-jsonschema-unevaluatedProperties"": false }";
+            // Given - UnevaluatedProperties should be emitted as extension in versions < 3.1
+            var schema = new OpenApiSchema
+            {
+                UnevaluatedProperties = false
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializeUnevaluatedPropertiesSchemaAsExtensionInEarlierVersions(OpenApiSpecVersion version)
+        {
+            var expected = @"{ ""x-jsonschema-unevaluatedProperties"": { ""type"": ""string"" } }";
+            // Given - UnevaluatedPropertiesSchema should be emitted as extension in versions < 3.1
+            var schema = new OpenApiSchema
+            {
+                UnevaluatedPropertiesSchema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String
+                }
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializeUnevaluatedPropertiesTrueNotEmittedInEarlierVersions(OpenApiSpecVersion version)
+        {
+            var expected = @"{ }";
+            // Given - UnevaluatedProperties true (default) should not be emitted even as extension
+            var schema = new OpenApiSchema
+            {
+                UnevaluatedProperties = true
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
         internal class SchemaVisitor : OpenApiVisitorBase

@@ -1,1 +1,7 @@
 #nullable enable
+const Microsoft.OpenApi.OpenApiConstants.UnevaluatedPropertiesExtension = "x-jsonschema-unevaluatedProperties" -> string!
+Microsoft.OpenApi.IOpenApiSchemaWithUnevaluatedProperties
+Microsoft.OpenApi.IOpenApiSchemaWithUnevaluatedProperties.UnevaluatedPropertiesSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.UnevaluatedPropertiesSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.UnevaluatedPropertiesSchema.set -> void
+Microsoft.OpenApi.OpenApiSchemaReference.UnevaluatedPropertiesSchema.get -> Microsoft.OpenApi.IOpenApiSchema?

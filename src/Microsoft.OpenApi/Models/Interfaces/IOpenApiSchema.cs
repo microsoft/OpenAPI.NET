@@ -258,8 +258,15 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     public IList<JsonNode>? Enum { get; }
 
     /// <summary>
-    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// Indicates whether unevaluated properties are allowed. When false, no unevaluated properties are permitted.
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-core#name-unevaluatedproperties
+    /// Only serialized when false and UnevaluatedPropertiesSchema (from IOpenApiSchemaWithUnevaluatedProperties) is null.
     /// </summary>
+    /// <remarks>
+    /// NOTE: This property differs from the naming pattern of AdditionalPropertiesAllowed for binary compatibility reasons.
+    /// In the next major version, this will be renamed to UnevaluatedPropertiesAllowed.
+    /// TODO: Rename to UnevaluatedPropertiesAllowed in the next major version.
+    /// </remarks>
     public bool UnevaluatedProperties { get; } 
 
     /// <summary>
