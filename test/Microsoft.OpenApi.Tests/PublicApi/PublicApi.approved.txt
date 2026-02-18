@@ -105,6 +105,10 @@ namespace Microsoft.OpenApi
     {
         System.Collections.Generic.IDictionary<string, object>? Metadata { get; set; }
     }
+    public interface IOAuth2MetadataProvider
+    {
+        System.Uri? OAuth2MetadataUrl { get; }
+    }
     public interface IOpenApiCallback : Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiCallback>
     {
         System.Collections.Generic.Dictionary<Microsoft.OpenApi.RuntimeExpression, Microsoft.OpenApi.IOpenApiPathItem>? PathItems { get; }
@@ -288,7 +292,6 @@ namespace Microsoft.OpenApi
         Microsoft.OpenApi.OpenApiOAuthFlows? Flows { get; }
         Microsoft.OpenApi.ParameterLocation? In { get; }
         string? Name { get; }
-        System.Uri? OAuth2MetadataUrl { get; }
         System.Uri? OpenIdConnectUrl { get; }
         string? Scheme { get; }
         Microsoft.OpenApi.SecuritySchemeType? Type { get; }
@@ -1373,7 +1376,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
-    public class OpenApiSecurityScheme : Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSecurityScheme, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiSecurityScheme>
+    public class OpenApiSecurityScheme : Microsoft.OpenApi.IOAuth2MetadataProvider, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiExtensible, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSecurityScheme, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiSecurityScheme>
     {
         public OpenApiSecurityScheme() { }
         public string? BearerFormat { get; set; }
@@ -1393,7 +1396,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter writer) { }
         public virtual void SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter writer) { }
     }
-    public class OpenApiSecuritySchemeReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiSecurityScheme, Microsoft.OpenApi.IOpenApiSecurityScheme, Microsoft.OpenApi.OpenApiReferenceWithDescription>, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSecurityScheme, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiSecurityScheme>
+    public class OpenApiSecuritySchemeReference : Microsoft.OpenApi.BaseOpenApiReferenceHolder<Microsoft.OpenApi.OpenApiSecurityScheme, Microsoft.OpenApi.IOpenApiSecurityScheme, Microsoft.OpenApi.OpenApiReferenceWithDescription>, Microsoft.OpenApi.IOAuth2MetadataProvider, Microsoft.OpenApi.IOpenApiDescribedElement, Microsoft.OpenApi.IOpenApiElement, Microsoft.OpenApi.IOpenApiReadOnlyExtensible, Microsoft.OpenApi.IOpenApiReferenceable, Microsoft.OpenApi.IOpenApiSecurityScheme, Microsoft.OpenApi.IOpenApiSerializable, Microsoft.OpenApi.IShallowCopyable<Microsoft.OpenApi.IOpenApiSecurityScheme>
     {
         public OpenApiSecuritySchemeReference(string referenceId, Microsoft.OpenApi.OpenApiDocument? hostDocument = null, string? externalResource = null) { }
         public string? BearerFormat { get; }

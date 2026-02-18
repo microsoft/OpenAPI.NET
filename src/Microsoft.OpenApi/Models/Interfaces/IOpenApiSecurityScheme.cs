@@ -5,6 +5,15 @@ namespace Microsoft.OpenApi;
 /// <summary>
 /// Defines the base properties for the security scheme object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
+///
+/// To preserve binary compatibility in minor releases, properties introduced after this interface shipped may be exposed through temporary companion interfaces.
+/// For OAuth2 metadata URL support, cast to <see cref="IOAuth2MetadataProvider"/>:
+/// <code>
+/// if (securityScheme is IOAuth2MetadataProvider provider)
+/// {
+///     var oauth2MetadataUrl = provider.OAuth2MetadataUrl;
+/// }
+/// </code>
 /// </summary>
 public interface IOpenApiSecurityScheme : IOpenApiDescribedElement, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiSecurityScheme>, IOpenApiReferenceable
 {
@@ -45,12 +54,6 @@ public interface IOpenApiSecurityScheme : IOpenApiDescribedElement, IOpenApiRead
     /// REQUIRED. OpenId Connect URL to discover OAuth2 configuration values.
     /// </summary>
     public Uri? OpenIdConnectUrl { get; }
-
-    /// <summary>
-    /// URL to the OAuth2 Authorization Server Metadata document (RFC 8414).
-    /// Note: This field is supported in OpenAPI 3.2.0+ only.
-    /// </summary>
-    public Uri? OAuth2MetadataUrl { get; }
 
     /// <summary>
     /// Specifies that a security scheme is deprecated and SHOULD be transitioned out of usage.
