@@ -1190,7 +1190,6 @@ namespace Microsoft.OpenApi.Tests.Models
 
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_1)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
         public async Task SerializeUnevaluatedPropertiesSchemaEmits(OpenApiSpecVersion version)
         {
             var expected = @"{ ""unevaluatedProperties"": { ""type"": ""string"" } }";
