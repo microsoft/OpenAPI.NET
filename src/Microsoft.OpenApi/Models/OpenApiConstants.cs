@@ -126,6 +126,11 @@ namespace Microsoft.OpenApi
         public const string UnevaluatedProperties = "unevaluatedProperties";
 
         /// <summary>
+        /// Extension: x-jsonschema-unevaluatedProperties
+        /// </summary>
+        public const string UnevaluatedPropertiesExtension = "x-jsonschema-unevaluatedProperties";
+
+        /// <summary>
         /// Field: Version
         /// </summary>
         public const string Version = "version";
