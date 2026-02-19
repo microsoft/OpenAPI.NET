@@ -1,18 +1,18 @@
 ```
 
-BenchmarkDotNet v0.15.8, Linux Ubuntu 24.04.3 LTS (Noble Numbat) (container)
-Intel Xeon Platinum 8370C CPU 2.80GHz (Max: 3.39GHz), 1 CPU, 2 logical cores and 1 physical core
+BenchmarkDotNet v0.15.8, macOS Tahoe 26.3 (25D125) [Darwin 25.3.0]
+Apple M1 Pro, 1 CPU, 10 logical and 10 physical cores
 .NET SDK 8.0.418
-  [Host]   : .NET 8.0.24 (8.0.24, 8.0.2426.7010), X64 RyuJIT x86-64-v4
-  ShortRun : .NET 8.0.24 (8.0.24, 8.0.2426.7010), X64 RyuJIT x86-64-v4
+  [Host]   : .NET 8.0.24 (8.0.24, 8.0.2426.7010), Arm64 RyuJIT armv8.0-a
+  ShortRun : .NET 8.0.24 (8.0.24, 8.0.2426.7010), Arm64 RyuJIT armv8.0-a
 
 Job=ShortRun  IterationCount=3  LaunchCount=1  
 WarmupCount=3  
 
 ```
-| Method       | Mean           | Error        | StdDev       | Gen0       | Gen1       | Gen2      | Allocated    |
-|------------- |---------------:|-------------:|-------------:|-----------:|-----------:|----------:|-------------:|
-| PetStoreYaml |       594.9 μs |   1,121.5 μs |     61.47 μs |    11.7188 |          - |         - |    361.24 KB |
-| PetStoreJson |       329.4 μs |   1,905.6 μs |    104.45 μs |     7.8125 |     1.9531 |         - |     223.1 KB |
-| GHESYaml     | 1,164,634.7 μs | 868,047.1 μs | 47,580.59 μs | 17000.0000 | 14000.0000 | 3000.0000 | 345072.18 KB |
-| GHESJson     |   462,077.5 μs | 294,835.8 μs | 16,160.94 μs |  8000.0000 |  6000.0000 | 1000.0000 | 206591.14 KB |
+| Method       | Mean         | Error         | StdDev       | Gen0       | Gen1       | Gen2      | Allocated    |
+|------------- |-------------:|--------------:|-------------:|-----------:|-----------:|----------:|-------------:|
+| PetStoreYaml |     305.2 μs |     102.37 μs |      5.61 μs |    58.5938 |    11.7188 |         - |    361.39 KB |
+| PetStoreJson |     136.3 μs |      20.80 μs |      1.14 μs |    36.1328 |     7.8125 |         - |    223.26 KB |
+| GHESYaml     | 784,491.3 μs | 271,693.72 μs | 14,892.45 μs | 63000.0000 | 21000.0000 | 8000.0000 | 345349.48 KB |
+| GHESJson     | 368,975.3 μs |  38,641.31 μs |  2,118.06 μs | 36000.0000 | 14000.0000 | 5000.0000 | 223280.98 KB |
