@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - support/v2
+  workflow_dispatch:
 
 jobs:
   promote-apis:
