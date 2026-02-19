@@ -14,18 +14,18 @@ jobs:
       contents: read
     
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-          token: ${{ steps.app-token.outputs.token }}
-      
       - name: Generate GitHub App token
         id: app-token
         uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ vars.RELEASE_PLEASE_TOKEN_PROVIDER_APP_ID }}
           private-key: ${{ secrets.RELEASE_PLEASE_TOKEN_PROVIDER_PEM }}
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
       
       - name: Configure git
         shell: pwsh
@@ -92,7 +92,7 @@ jobs:
         if: steps.check_changes.outputs.has_changes == 'true'
         shell: pwsh
         run: |
-          git add *Shipped.txt
+          git add *hipped.txt
           git commit -m "chore: promote shipped APIs"
           
           $branch = "${{ github.ref_name }}"
