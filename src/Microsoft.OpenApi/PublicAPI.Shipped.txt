@@ -1890,3 +1890,9 @@ virtual Microsoft.OpenApi.OpenApiWriterBase.WriteValue(System.DateTimeOffset val
 virtual Microsoft.OpenApi.OpenApiXml.SerializeAsV2(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
 virtual Microsoft.OpenApi.OpenApiXml.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
 virtual Microsoft.OpenApi.OpenApiXml.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+const Microsoft.OpenApi.OpenApiConstants.UnevaluatedPropertiesExtension = "x-jsonschema-unevaluatedProperties" -> string!
+Microsoft.OpenApi.IOpenApiSchemaWithUnevaluatedProperties
+Microsoft.OpenApi.IOpenApiSchemaWithUnevaluatedProperties.UnevaluatedPropertiesSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.UnevaluatedPropertiesSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.UnevaluatedPropertiesSchema.set -> void
+Microsoft.OpenApi.OpenApiSchemaReference.UnevaluatedPropertiesSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
