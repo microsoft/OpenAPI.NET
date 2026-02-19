@@ -93,6 +93,24 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
+        private static OpenApiSecurityScheme OAuth2MetadataSecurityScheme => new()
+        {
+            Description = "description1",
+            Type = SecuritySchemeType.OAuth2,
+            OAuth2MetadataUrl = new("https://idp.example.com/.well-known/oauth-authorization-server"),
+            Flows = new()
+            {
+                ClientCredentials = new()
+                {
+                    TokenUrl = new("https://idp.example.com/oauth/token"),
+                    Scopes = new Dictionary<string, string>
+                    {
+                        ["scope:one"] = "Scope one"
+                    }
+                }
+            }
+        };
+
         private static OpenApiSecurityScheme OpenIdConnectSecurityScheme => new()
         {
             Description = "description1",
@@ -256,6 +274,62 @@ namespace Microsoft.OpenApi.Tests.Models
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
         }
+
+                [Fact]
+                public async Task SerializeOAuthSecuritySchemeWithMetadataUrlAsV32JsonWorks()
+                {
+                        // Arrange
+                        var expected =
+                                """
+                                {
+                                    "type": "oauth2",
+                                    "description": "description1",
+                                    "oauth2MetadataUrl": "https://idp.example.com/.well-known/oauth-authorization-server",
+                                    "flows": {
+                                        "clientCredentials": {
+                                            "tokenUrl": "https://idp.example.com/oauth/token",
+                                            "scopes": {
+                                                "scope:one": "Scope one"
+                                            }
+                                        }
+                                    }
+                                }
+                                """;
+
+                        // Act
+                        var actual = await OAuth2MetadataSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+
+                        // Assert
+                        Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+                }
+
+                [Fact]
+                public async Task SerializeOAuthSecuritySchemeWithMetadataUrlAsV31JsonOmitsMetadataUrl()
+                {
+                        // Arrange
+                        var expected =
+                                """
+                                {
+                                    "type": "oauth2",
+                                    "description": "description1",
+                                    "x-oauth2-metadata-url": "https://idp.example.com/.well-known/oauth-authorization-server",
+                                    "flows": {
+                                        "clientCredentials": {
+                                            "tokenUrl": "https://idp.example.com/oauth/token",
+                                            "scopes": {
+                                                "scope:one": "Scope one"
+                                            }
+                                        }
+                                    }
+                                }
+                                """;
+
+                        // Act
+                        var actual = await OAuth2MetadataSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+                        // Assert
+                        Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+                }
 
         [Fact]
         public async Task SerializeOAuthMultipleFlowSecuritySchemeAsV3JsonWorks()

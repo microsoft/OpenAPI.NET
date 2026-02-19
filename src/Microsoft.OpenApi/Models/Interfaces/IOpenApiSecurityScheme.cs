@@ -5,6 +5,15 @@ namespace Microsoft.OpenApi;
 /// <summary>
 /// Defines the base properties for the security scheme object.
 /// This interface is provided for type assertions but should not be implemented by package consumers beyond automatic mocking.
+///
+/// To preserve binary compatibility in minor releases, properties introduced after this interface shipped may be exposed through temporary companion interfaces.
+/// For OAuth2 metadata URL support, cast to <see cref="IOAuth2MetadataProvider"/>:
+/// <code>
+/// if (securityScheme is IOAuth2MetadataProvider provider)
+/// {
+///     var oauth2MetadataUrl = provider.OAuth2MetadataUrl;
+/// }
+/// </code>
 /// </summary>
 public interface IOpenApiSecurityScheme : IOpenApiDescribedElement, IOpenApiReadOnlyExtensible, IShallowCopyable<IOpenApiSecurityScheme>, IOpenApiReferenceable
 {

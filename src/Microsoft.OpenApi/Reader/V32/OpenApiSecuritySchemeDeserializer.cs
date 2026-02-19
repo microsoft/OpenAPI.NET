@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -65,6 +65,16 @@ namespace Microsoft.OpenApi.Reader.V32
                         if (connectUrl != null)
                         {
                             o.OpenIdConnectUrl = new(connectUrl, UriKind.RelativeOrAbsolute);
+                        }
+                    }
+                },
+                {
+                    "oauth2MetadataUrl", (o, n, _) =>
+                    {
+                        var metadataUrl = n.GetScalarValue();
+                        if (metadataUrl != null)
+                        {
+                            o.OAuth2MetadataUrl = new(metadataUrl, UriKind.RelativeOrAbsolute);
                         }
                     }
                 },

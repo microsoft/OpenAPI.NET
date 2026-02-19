@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Security Scheme Object.
     /// </summary>
-    public class OpenApiSecurityScheme : IOpenApiExtensible, IOpenApiSecurityScheme
+    public class OpenApiSecurityScheme : IOpenApiExtensible, IOpenApiSecurityScheme, IOAuth2MetadataProvider
     {
         /// <inheritdoc/>
         public SecuritySchemeType? Type { get; set; }
@@ -36,6 +36,9 @@ namespace Microsoft.OpenApi
         public Uri? OpenIdConnectUrl { get; set; }
 
         /// <inheritdoc/>
+        public Uri? OAuth2MetadataUrl { get; set; }
+
+        /// <inheritdoc/>
         public bool Deprecated { get; set; }
 
         /// <inheritdoc/>
@@ -60,6 +63,9 @@ namespace Microsoft.OpenApi
             BearerFormat = securityScheme.BearerFormat ?? BearerFormat;
             Flows = securityScheme.Flows != null ? new(securityScheme.Flows) : null;
             OpenIdConnectUrl = securityScheme.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
+            OAuth2MetadataUrl = securityScheme is IOAuth2MetadataProvider oauth2MetadataProvider && oauth2MetadataProvider.OAuth2MetadataUrl != null
+                ? new Uri(oauth2MetadataProvider.OAuth2MetadataUrl.OriginalString, UriKind.RelativeOrAbsolute)
+                : null;
             Deprecated = securityScheme.Deprecated;
             Extensions = securityScheme.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
         }
@@ -118,7 +124,16 @@ namespace Microsoft.OpenApi
                     break;
                 case SecuritySchemeType.OAuth2:
                     // This property apply to oauth2 type only.
+                    // oauth2MetadataUrl
                     // flows
+                    if (version >= OpenApiSpecVersion.OpenApi3_2)
+                    {
+                        writer.WriteProperty(OpenApiConstants.OAuth2MetadataUrl, OAuth2MetadataUrl?.ToString());
+                    }
+                    else
+                    {
+                        writer.WriteProperty("x-oauth2-metadata-url", OAuth2MetadataUrl?.ToString());
+                    }
                     writer.WriteOptionalObject(OpenApiConstants.Flows, Flows, callback);
                     break;
                 case SecuritySchemeType.OpenIdConnect:
