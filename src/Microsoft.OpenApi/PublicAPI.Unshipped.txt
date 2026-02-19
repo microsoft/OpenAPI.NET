@@ -1,13 +1,1 @@
 #nullable enable
-const Microsoft.OpenApi.OpenApiConstants.OAuth2MetadataUrl = "oauth2MetadataUrl" -> string!
-const Microsoft.OpenApi.OpenApiConstants.UnevaluatedPropertiesExtension = "x-jsonschema-unevaluatedProperties" -> string!
-Microsoft.OpenApi.IOAuth2MetadataProvider
-Microsoft.OpenApi.IOAuth2MetadataProvider.OAuth2MetadataUrl.get -> System.Uri?
-Microsoft.OpenApi.IOpenApiSchemaWithUnevaluatedProperties
-Microsoft.OpenApi.IOpenApiSchemaWithUnevaluatedProperties.UnevaluatedPropertiesSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
-Microsoft.OpenApi.OpenApiSchema.UnevaluatedPropertiesSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
-Microsoft.OpenApi.OpenApiSchema.UnevaluatedPropertiesSchema.set -> void
-Microsoft.OpenApi.OpenApiSchemaReference.UnevaluatedPropertiesSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
-Microsoft.OpenApi.OpenApiSecurityScheme.OAuth2MetadataUrl.get -> System.Uri?
-Microsoft.OpenApi.OpenApiSecurityScheme.OAuth2MetadataUrl.set -> void
-Microsoft.OpenApi.OpenApiSecuritySchemeReference.OAuth2MetadataUrl.get -> System.Uri?
