@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - support/v2
+  workflow_dispatch:
 
 jobs:
   promote-apis:
@@ -17,6 +18,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
       
       - name: Generate GitHub App token
         id: app-token
@@ -32,7 +34,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global url."https://x-access-token:$env:GH_TOKEN@github.com/".insteadOf "https://github.com/"
+          git config --global url."https://$($env:GH_TOKEN)@github.com/".insteadOf "https://github.com/"
       
       - name: Check for existing PR
         id: check_pr
