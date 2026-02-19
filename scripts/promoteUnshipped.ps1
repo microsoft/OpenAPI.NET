@@ -1,5 +1,5 @@
 $nullableConstant = "#nullable enable"
-$unshippedDocuments = ls *.Unshipped* -R | Select-Object -ExpandProperty FullName
+$unshippedDocuments = Get-ChildItem -Filter *.Unshipped* -Recurse | Select-Object -ExpandProperty FullName
 foreach ($unshippedDocumentPath in $unshippedDocuments) {
     $shippedDocumentPath = $unshippedDocumentPath -replace '\.Unshipped', '.Shipped'
     $unshippedDocumentContent = Get-Content $unshippedDocumentPath -Raw
