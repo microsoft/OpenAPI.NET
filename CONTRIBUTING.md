@@ -75,3 +75,52 @@ The recommended commit types used are:
 - __chore__ for miscallaneous non-sdk changesin the repo e.g. removing an unused file
 
 Adding an exclamation mark after the commit type (`feat!`) or footer with the prefix __BREAKING CHANGE:__ will cause an increment of the _major_ version.
+
+## Updates to public API surface
+
+Because we need to maintain a compatible public API surface within a major version, this project is using the public API analyzers to ensure no prior public API is changed/removed inadvertently.
+
+This means that:
+
+- All entries in an __Unshipped__ document need to be moved to the __Shipped__ document before any public release.
+- All new APIs being added need to be __Unshipped__ document before the pull request can be merged, otherwise build will fail with a message like the example below.
+
+```txt
+Error: /home/runner/work/OpenAPI.NET/OpenAPI.NET/src/Microsoft.OpenApi/Models/OpenApiSecurityScheme.cs(39,46): error RS0016: Symbol 'OAuth2MetadataUrl.set' is not part of the declared public API (https://github.com/dotnet/roslyn-analyzers/blob/main/src/PublicApiAnalyzers/PublicApiAnalyzers.Help.md) [/home/runner/work/OpenAPI.NET/OpenAPI.NET/src/Microsoft.OpenApi/Microsoft.OpenApi.csproj::TargetFramework=net8.0]
+```
+
+### Update the unshipped document
+
+To update the unshipped document, simply run the following commands
+
+```shell
+# add the missing public api entries
+dotnet format --diagnostics RS0016
+# discard changes to cs files to avoid creating conflicts
+git checkout *.cs
+```
+
+### Move items from unshipped to unshipped document
+
+```pwsh
+. ./scripts/promoteUnshipped.ps1
+```
+
+> Note: the promotion of APIs is automated through the dedicated workflow and should result in pull requests being automatically opened.
+
+## Updating the benchmark information
+
+To ensure performance of the library does not degrade over time, we have continuous benchmarks running. You might see the continuous integration failing if your pull request changed any model under __src/Microsoft.OpenApi/Models__.
+
+```txt
+Benchmark result for EmptyApiSchema does not match the existing benchmark result (original!=new). Allocated bytes differ: 408 != 416
+```
+
+To update the benchmarks, run the following script:
+
+```shell
+cd performance/benchmark
+dotnet run -c Release
+```
+
+Then commit the report files using a "chore" commit.

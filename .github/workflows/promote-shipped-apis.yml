@@ -1,0 +1,114 @@
+name: Promote Shipped APIs
+
+on:
+  push:
+    branches:
+      - main
+      - support/v2
+
+jobs:
+  promote-apis:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.RELEASE_PLEASE_TOKEN_PROVIDER_APP_ID }}
+          private-key: ${{ secrets.RELEASE_PLEASE_TOKEN_PROVIDER_PEM }}
+      
+      - name: Configure git
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global url."https://x-access-token:$env:GH_TOKEN@github.com/".insteadOf "https://github.com/"
+      
+      - name: Check for existing PR
+        id: check_pr
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          $branch = "${{ github.ref_name }}"
+          $prs = gh pr list --state open --head "promote-shipped-apis-$branch" --json number --jq '.[0].number' 2>$null
+          if ($prs) {
+            echo "pr_number=$prs" >> $env:GITHUB_OUTPUT
+            echo "pr_exists=true" >> $env:GITHUB_OUTPUT
+            Write-Host "Found existing PR: $prs"
+          } else {
+            echo "pr_exists=false" >> $env:GITHUB_OUTPUT
+            Write-Host "No existing PR found"
+          }
+      
+      - name: Checkout existing PR branch
+        if: steps.check_pr.outputs.pr_exists == 'true'
+        shell: pwsh
+        run: |
+          $branch = "${{ github.ref_name }}"
+          $prBranch = "promote-shipped-apis-$branch"
+          
+          git fetch origin
+          git checkout $prBranch
+      
+      - name: Merge trigger branch into PR branch
+        if: steps.check_pr.outputs.pr_exists == 'true'
+        shell: pwsh
+        run: |
+          $branch = "${{ github.ref_name }}"
+          git merge origin/$branch -m "Merge $branch into promote branch"
+      
+      - name: Run promote unshipped script
+        shell: pwsh
+        run: |
+          & .\scripts\promoteUnshipped.ps1
+      
+      - name: Check for changes
+        id: check_changes
+        shell: pwsh
+        run: |
+          $changes = git diff --name-only -- "*Shipped.txt"
+          if ($changes) {
+            echo "has_changes=true" >> $env:GITHUB_OUTPUT
+            Write-Host "Changed files: $changes"
+          } else {
+            echo "has_changes=false" >> $env:GITHUB_OUTPUT
+            Write-Host "No changes detected"
+          }
+      
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        shell: pwsh
+        run: |
+          git add *Shipped.txt
+          git commit -m "chore: promote shipped APIs"
+          
+          $branch = "${{ github.ref_name }}"
+          $prBranch = "promote-shipped-apis-$branch"
+          git push origin $prBranch
+      
+      - name: Create new PR
+        if: steps.check_pr.outputs.pr_exists == 'false' && steps.check_changes.outputs.has_changes == 'true'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          $branch = "${{ github.ref_name }}"
+          $prBranch = "promote-shipped-apis-$branch"
+          $title = "automatic promotion of shipped APIs for $branch"
+          
+          git checkout -b $prBranch
+          git push origin $prBranch
+          
+          gh pr create --title "$title" --base "$branch" --head "$prBranch" --body "Automatically promotes unshipped APIs to shipped after running the promotion script."
+      
