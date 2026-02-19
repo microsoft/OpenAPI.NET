@@ -718,13 +718,31 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public async Task SerializeAdditionalPropertiesAsV2DoesNotEmit()
+        public async Task SerializeAdditionalPropertiesAsV2WithEmptySchemaEmits()
         {
-            var expected = @"{ }";
+            var expected = @"{ ""additionalProperties"": { } }";
             // Given
             var schema = new OpenApiSchema
             {
                 AdditionalProperties = new OpenApiSchema()
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeAdditionalPropertiesAsV2WithRefSchemaEmits()
+        {
+            var expected = @"{ ""type"": ""object"", ""additionalProperties"": { ""$ref"": ""#/definitions/MyModel"" } }";
+            // Given - schema with additionalProperties pointing to a ref (dictionary case)
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                AdditionalProperties = new OpenApiSchemaReference("MyModel", null)
             };
 
             // When
