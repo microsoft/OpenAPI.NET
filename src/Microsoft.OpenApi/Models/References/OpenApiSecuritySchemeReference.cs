@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Security Scheme Object Reference.
     /// </summary>
-    public class OpenApiSecuritySchemeReference : BaseOpenApiReferenceHolder<OpenApiSecurityScheme, IOpenApiSecurityScheme, OpenApiReferenceWithDescription>, IOpenApiSecurityScheme
+    public class OpenApiSecuritySchemeReference : BaseOpenApiReferenceHolder<OpenApiSecurityScheme, IOpenApiSecurityScheme, OpenApiReferenceWithDescription>, IOpenApiSecurityScheme, IOAuth2MetadataProvider
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi
         public Uri? OpenIdConnectUrl { get => Target?.OpenIdConnectUrl; }
 
         /// <inheritdoc/>
-        public Uri? OAuth2MetadataUrl { get => Target?.OAuth2MetadataUrl; }
+        public Uri? OAuth2MetadataUrl { get => Target is IOAuth2MetadataProvider oauth2MetadataProvider ? oauth2MetadataProvider.OAuth2MetadataUrl : null; }
 
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
