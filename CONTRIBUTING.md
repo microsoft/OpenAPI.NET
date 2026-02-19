@@ -105,3 +105,20 @@ git checkout *.cs
 ```pwsh
 . ./scripts/promoteUnshipped.ps1
 ```
+
+## Updating the benchmark information
+
+To ensure performance of the library does not degrade over time, we have continuous benchmarks running. You might see the continuous integration failing if your pull request changed any model under __src/Microsoft.OpenApi/Models__.
+
+```txt
+Benchmark result for EmptyApiSchema does not match the existing benchmark result (original!=new). Allocated bytes differ: 408 != 416
+```
+
+To update the benchmarks, run the following script:
+
+```shell
+cd performance/benchmark
+dotnet run -c Release
+```
+
+Then commit the report files using a "chore" commit.
