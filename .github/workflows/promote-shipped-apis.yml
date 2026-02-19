@@ -10,8 +10,7 @@ jobs:
   promote-apis:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
     
     steps:
       - name: Checkout code
@@ -19,16 +18,27 @@ jobs:
         with:
           fetch-depth: 0
       
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.RELEASE_PLEASE_TOKEN_PROVIDER_APP_ID }}
+          private-key: ${{ secrets.RELEASE_PLEASE_TOKEN_PROVIDER_PEM }}
+      
       - name: Configure git
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global url."https://x-access-token:$env:GH_TOKEN@github.com/".insteadOf "https://github.com/"
       
       - name: Check for existing PR
         id: check_pr
         shell: pwsh
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           $branch = "${{ github.ref_name }}"
           $prs = gh pr list --state open --head "promote-shipped-apis-$branch" --json number --jq '.[0].number' 2>$null
@@ -91,7 +101,7 @@ jobs:
         if: steps.check_pr.outputs.pr_exists == 'false' && steps.check_changes.outputs.has_changes == 'true'
         shell: pwsh
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           $branch = "${{ github.ref_name }}"
           $prBranch = "promote-shipped-apis-$branch"
@@ -102,21 +112,3 @@ jobs:
           
           gh pr create --title "$title" --base "$branch" --head "$prBranch" --body "Automatically promotes unshipped APIs to shipped after running the promotion script."
       
-      - name: Dispatch other workflows
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          $owner = "${{ github.repository_owner }}"
-          $repo = "${{ github.event.repository.name }}"
-          $branch = "${{ github.ref_name }}"
-          
-          # Get all workflows
-          $workflows = gh workflow list --repo "$owner/$repo" --json name --jq '.[].name'
-          
-          foreach ($workflow in $workflows) {
-            if ($workflow -ne "Promote Shipped APIs") {
-              Write-Host "Dispatching workflow: $workflow"
-              gh workflow run "$workflow" --repo "$owner/$repo" --ref "$branch" 2>$null || Write-Host "Could not dispatch $workflow"
-            }
-          }
