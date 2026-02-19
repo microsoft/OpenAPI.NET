@@ -473,3 +473,7 @@ extends:
                       "$(Pipeline.Workspace)"
                   displayName: 'Build and Push Release Image'
                   condition: contains(variables['Build.SourceBranch'], 'refs/tags/v')
+
+# once the nuget has been released, fill this form to get the public documentation updated.
+# https://dev.azure.com/msft-skilling/Content/_workitems/create/User%20Story?templateId=39fb91e3-64a2-4c8a-83db-b2bdf3603dd3&ownerId=c4a28f90-17ae-4384-b514-7273392b082b
+# https://learn.microsoft.com/en-us/dotnet/api/microsoft.openapi
