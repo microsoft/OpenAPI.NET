@@ -106,6 +106,8 @@ git checkout *.cs
 . ./scripts/promoteUnshipped.ps1
 ```
 
+> Note: the promotion of APIs is automated through the dedicated workflow and should result in pull requests being automatically opened.
+
 ## Updating the benchmark information
 
 To ensure performance of the library does not degrade over time, we have continuous benchmarks running. You might see the continuous integration failing if your pull request changed any model under __src/Microsoft.OpenApi/Models__.
