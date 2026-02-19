@@ -95,7 +95,7 @@ jobs:
           
           $branch = "${{ github.ref_name }}"
           $prBranch = "promote-shipped-apis-$branch"
-          git push origin $prBranch
+          git push -u origin HEAD:$prBranch
       
       - name: Create new PR
         if: steps.check_pr.outputs.pr_exists == 'false' && steps.check_changes.outputs.has_changes == 'true'
@@ -106,9 +106,6 @@ jobs:
           $branch = "${{ github.ref_name }}"
           $prBranch = "promote-shipped-apis-$branch"
           $title = "automatic promotion of shipped APIs for $branch"
-          
-          git checkout -b $prBranch
-          git push origin $prBranch
           
           gh pr create --title "$title" --base "$branch" --head "$prBranch" --body "Automatically promotes unshipped APIs to shipped after running the promotion script."
       
