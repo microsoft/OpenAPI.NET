@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.4.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.3.1...v3.4.0) (2026-02-20)
+
+
+### Features
+
+* **securityscheme:** add oauth2MetadataUrl support (OpenAPI 3.2) ([4509488](https://github.com/microsoft/OpenAPI.NET/commit/4509488f2e8725e37a60a3b7a3a8a0b6c0c74378))
+
+
+### Bug Fixes
+
+* implement unevaluatedProperties as schema per JSON Schema 2020-12 ([#2728](https://github.com/microsoft/OpenAPI.NET/issues/2728)) ([7c13fb3](https://github.com/microsoft/OpenAPI.NET/commit/7c13fb3910685b5c17897cd7799b9ef1bba7f80d))
+* **library:** serialize additionalProperties schema in OpenAPI V2 ([f3165fa](https://github.com/microsoft/OpenAPI.NET/commit/f3165fa874a8bb76788684742492f48b20aab892))
+* **library:** serialize additionalProperties schema in OpenAPI V2 documents ([3d07756](https://github.com/microsoft/OpenAPI.NET/commit/3d0775610a9e74b6d5ce845195ccb935576bcd31))
+
 ## [3.3.1](https://github.com/microsoft/OpenAPI.NET/compare/v3.3.0...v3.3.1) (2026-01-22)
 
 
