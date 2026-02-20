@@ -785,9 +785,15 @@ namespace Microsoft.OpenApi
             });
 
             // additionalProperties
-            // a schema cannot be serialized in v2
             // true is the default, no need to write it out
-            if (!AdditionalPropertiesAllowed)
+            if (AdditionalProperties is not null)
+            {
+                writer.WriteOptionalObject(
+                    OpenApiConstants.AdditionalProperties,
+                    AdditionalProperties,
+                    (w, s) => s.SerializeAsV2(w));
+            }
+            else if (!AdditionalPropertiesAllowed)
             {
                 writer.WriteProperty(OpenApiConstants.AdditionalProperties, AdditionalPropertiesAllowed);
             }
