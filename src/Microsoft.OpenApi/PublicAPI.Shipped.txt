@@ -2033,3 +2033,4 @@ Microsoft.OpenApi.OpenApiSchemaReference.UnevaluatedPropertiesSchema.get -> Micr
 Microsoft.OpenApi.OpenApiSecurityScheme.OAuth2MetadataUrl.get -> System.Uri?
 Microsoft.OpenApi.OpenApiSecurityScheme.OAuth2MetadataUrl.set -> void
 Microsoft.OpenApi.OpenApiSecuritySchemeReference.OAuth2MetadataUrl.get -> System.Uri?
+const Microsoft.OpenApi.OpenApiConstants.PatternPropertiesExtension = "x-jsonSchema-patternProperties" -> string!
