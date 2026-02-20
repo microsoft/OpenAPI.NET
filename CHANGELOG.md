@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.7.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.6.1...v2.7.0) (2026-02-20)
+
+
+### Features
+
+* add UnevaluatedPropertiesSchema support to IOpenApiSchema ([fb691d6](https://github.com/microsoft/OpenAPI.NET/commit/fb691d6fb70ccd8786e9125da765197a69279402))
+
+
+### Bug Fixes
+
+* address PR feedback on UnevaluatedProperties implementation ([80fc0f6](https://github.com/microsoft/OpenAPI.NET/commit/80fc0f6af735b3299cfaea6b055e484cfe15e0e1))
+* correct deserialization and test for UnevaluatedPropertiesSchema ([a4d66fc](https://github.com/microsoft/OpenAPI.NET/commit/a4d66fccdd62ab5e7e7f5ea166757e7bc6c6c78c))
+* **library:** serialize additionalProperties schema in OpenAPI V2 ([99b653c](https://github.com/microsoft/OpenAPI.NET/commit/99b653ce3dce19be7882432a3f36282740a839fa))
+* **library:** serialize additionalProperties schema in OpenAPI V2 ([cef7996](https://github.com/microsoft/OpenAPI.NET/commit/cef79963022e1d728846165daeb3609e940c609d))
+
 ## [2.6.1](https://github.com/microsoft/OpenAPI.NET/compare/v2.6.0...v2.6.1) (2026-01-22)
 
 
