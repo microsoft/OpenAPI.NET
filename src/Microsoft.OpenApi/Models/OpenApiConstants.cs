@@ -138,7 +138,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Extension: x-jsonSchema-patternProperties
         /// </summary>
-        public const string PatternPropertiesExtension = "x-jsonSchema-patternProperties";
+        public const string PatternPropertiesExtension = "x-jsonschema-patternProperties";
 
         /// <summary>
         /// Field: Version
