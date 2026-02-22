@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>performance.Descriptions-20260219-140039</title>
+<title>performance.Descriptions-20260222-164854</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -13,8 +13,8 @@
 </head>
 <body>
 <pre><code>
-BenchmarkDotNet v0.15.8, Windows 11 (10.0.26200.7781/25H2/2025Update/HudsonValley2)
-11th Gen Intel Core i7-1185G7 3.00GHz, 1 CPU, 8 logical and 4 physical cores
+BenchmarkDotNet v0.15.8, Windows 11 (10.0.26200.7840/25H2/2025Update/HudsonValley2)
+AMD Ryzen 7 7800X3D 4.20GHz, 1 CPU, 16 logical and 8 physical cores
 .NET SDK 8.0.418
   [Host]   : .NET 8.0.24 (8.0.24, 8.0.2426.7010), X64 RyuJIT x86-64-v4
   ShortRun : .NET 8.0.24 (8.0.24, 8.0.2426.7010), X64 RyuJIT x86-64-v4
@@ -26,10 +26,10 @@ WarmupCount=3
 <table>
 <thead><tr><th>Method</th><th>Mean  </th><th>Error  </th><th>StdDev</th><th>Gen0</th><th>Gen1</th><th>Gen2</th><th>Allocated</th>
 </tr>
-</thead><tbody><tr><td>PetStoreYaml</td><td>405.2 &mu;s</td><td>162.42 &mu;s</td><td>8.90 &mu;s</td><td>58.5938</td><td>11.7188</td><td>-</td><td>361.39 KB</td>
-</tr><tr><td>PetStoreJson</td><td>173.0 &mu;s</td><td>23.21 &mu;s</td><td>1.27 &mu;s</td><td>36.1328</td><td>6.8359</td><td>-</td><td>223.53 KB</td>
-</tr><tr><td>GHESYaml</td><td>951,103.8 &mu;s</td><td>629,262.79 &mu;s</td><td>34,492.02 &mu;s</td><td>60000.0000</td><td>22000.0000</td><td>4000.0000</td><td>345343.16 KB</td>
-</tr><tr><td>GHESJson</td><td>435,425.1 &mu;s</td><td>88,170.37 &mu;s</td><td>4,832.92 &mu;s</td><td>33000.0000</td><td>12000.0000</td><td>2000.0000</td><td>206865.71 KB</td>
+</thead><tbody><tr><td>PetStoreYaml</td><td>265.0 &mu;s</td><td>201.45 &mu;s</td><td>11.04 &mu;s</td><td>5.8594</td><td>-</td><td>-</td><td>361.38 KB</td>
+</tr><tr><td>PetStoreJson</td><td>106.2 &mu;s</td><td>32.80 &mu;s</td><td>1.80 &mu;s</td><td>4.3945</td><td>0.9766</td><td>-</td><td>223.52 KB</td>
+</tr><tr><td>GHESYaml</td><td>635,099.4 &mu;s</td><td>228,119.02 &mu;s</td><td>12,503.97 &mu;s</td><td>9000.0000</td><td>8000.0000</td><td>2000.0000</td><td>345336.55 KB</td>
+</tr><tr><td>GHESJson</td><td>251,638.7 &mu;s</td><td>119,623.42 &mu;s</td><td>6,556.96 &mu;s</td><td>4000.0000</td><td>3000.0000</td><td>1000.0000</td><td>206858.06 KB</td>
 </tr></tbody></table>
 </body>
 </html>
