@@ -35,6 +35,16 @@ public class Descriptions
     {
         return await ParseDocumentAsync(GHESJsonDescriptionUrl, OpenApiConstants.Json);
     }
+    [Benchmark]
+    public async Task<OpenApiDocument> GHESNextYaml()
+    {
+        return await ParseDocumentAsync(GHESNextYamlDescriptionUrl);
+    }
+    [Benchmark]
+    public async Task<OpenApiDocument> GHESNextJson()
+    {
+        return await ParseDocumentAsync(GHESNextJsonDescriptionUrl, OpenApiConstants.Json);
+    }
     private readonly Dictionary<string, MemoryStream> _streams = new(StringComparer.OrdinalIgnoreCase);
     [GlobalSetup]
     public async Task GetAllDescriptions()
@@ -49,12 +59,16 @@ public class Descriptions
         await LoadDocumentFromAssemblyIntoStreams(PetStoreJsonPath);
         await LoadDocumentFromUrlIntoStreams(GHESYamlDescriptionUrl);
         await LoadDocumentFromUrlIntoStreams(GHESJsonDescriptionUrl);
+        await LoadDocumentFromUrlIntoStreams(GHESNextYamlDescriptionUrl);
+        await LoadDocumentFromUrlIntoStreams(GHESNextJsonDescriptionUrl);
     }
     private OpenApiReaderSettings readerSettings;
     private const string PetStoreYamlPath = @"petStore.yaml";
     private const string PetStoreJsonPath = @"petStore.json";
     private const string GHESYamlDescriptionUrl = @"https://raw.githubusercontent.com/github/rest-api-description/aef5e31a2d10fdaab311ec6d18a453021a81383d/descriptions/ghes-3.16/ghes-3.16.2022-11-28.yaml";
     private const string GHESJsonDescriptionUrl = @"https://raw.githubusercontent.com/github/rest-api-description/aef5e31a2d10fdaab311ec6d18a453021a81383d/descriptions/ghes-3.16/ghes-3.16.2022-11-28.json";
+    private const string GHESNextYamlDescriptionUrl = @"https://raw.githubusercontent.com/github/rest-api-description/aef5e31a2d10fdaab311ec6d18a453021a81383d/descriptions-next/ghes-3.16/ghes-3.16.2022-11-28.yaml";
+    private const string GHESNextJsonDescriptionUrl = @"https://raw.githubusercontent.com/github/rest-api-description/aef5e31a2d10fdaab311ec6d18a453021a81383d/descriptions-next/ghes-3.16/ghes-3.16.2022-11-28.json";
     private async Task<OpenApiDocument> ParseDocumentAsync(string fileName, string format = null)
     {
         format ??= OpenApiConstants.Yaml;
