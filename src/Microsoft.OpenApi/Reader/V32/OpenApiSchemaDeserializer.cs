@@ -366,10 +366,10 @@ internal static partial class OpenApiV32Deserializer
 
         var pointer = mapNode.GetReferencePointer();
         var identifier = mapNode.GetJsonSchemaIdentifier();
-        var nodeLocation = node.Context.GetLocation();
 
         if (pointer != null)
         {
+            var nodeLocation = node.Context.GetLocation();
             var reference = GetReferenceIdAndExternalResource(pointer);
             var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
             result.Reference.SetMetadataFromMapNode(mapNode);
