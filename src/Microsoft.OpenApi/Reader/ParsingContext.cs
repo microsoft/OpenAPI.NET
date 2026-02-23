@@ -2,9 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Buffers;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Reader.V2;
 using Microsoft.OpenApi.Reader.V3;
@@ -25,7 +24,7 @@ namespace Microsoft.OpenApi.Reader
         /// <summary>
         /// Extension parsers
         /// </summary>
-        public Dictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>>? ExtensionParsers { get; set; } = 
+        public Dictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>>? ExtensionParsers { get; set; } =
             new();
 
         internal RootNode? RootNode { get; set; }
@@ -180,28 +179,76 @@ namespace Microsoft.OpenApi.Reader
                 return "#/";
             }
 
-            var sb = new StringBuilder("#/");
+            // Calculate required buffer size upfront to avoid resizing
+            int totalLength = 2; // "#/"
             var segments = _currentLocation.ToArray();
-            
+
             for (int i = segments.Length - 1; i >= 0; i--)
             {
                 var segment = segments[i];
-                
-                // Escape ~ and / per RFC 6901
-                if (segment.Contains("~") || segment.Contains("/"))
+                totalLength += segment.Length;
+
+                // Account for escape character expansions (~ -> ~0, / -> ~1)
+                foreach (char c in segment)
                 {
-                    segment = segment.Replace("~", "~0").Replace("/", "~1");
+                    if (c == '~' || c == '/')
+                    {
+                        totalLength++; // Each escape adds one additional character
+                    }
                 }
-                
-                sb.Append(segment);
-                
+
                 if (i > 0)
                 {
-                    sb.Append('/');
+                    totalLength++; // Account for the '/' separator
                 }
             }
 
-            return sb.ToString();
+            char[] rentedBuffer = ArrayPool<char>.Shared.Rent(totalLength);
+
+            try
+            {
+                int position = 0;
+                rentedBuffer[position++] = '#';
+                rentedBuffer[position++] = '/';
+
+                for (int i = segments.Length - 1; i >= 0; i--)
+                {
+                    var segment = segments[i];
+
+                    foreach (char c in segment)
+                    {
+                        if (c == '~')
+                        {
+                            rentedBuffer[position++] = '~';
+                            rentedBuffer[position++] = '0';
+                        }
+                        else if (c == '/')
+                        {
+                            rentedBuffer[position++] = '~';
+                            rentedBuffer[position++] = '1';
+                        }
+                        else
+                        {
+                            rentedBuffer[position++] = c;
+                        }
+                    }
+
+                    if (i > 0)
+                    {
+                        rentedBuffer[position++] = '/';
+                    }
+                }
+
+#if NETSTANDARD2_0
+                return new string(rentedBuffer, 0, position);
+#else
+                return new string(rentedBuffer.AsSpan(0, position));
+#endif
+            }
+            finally
+            {
+                ArrayPool<char>.Shared.Return(rentedBuffer, clearArray: true);
+            }
         }
 
         /// <summary>
