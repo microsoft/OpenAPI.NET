@@ -76,7 +76,7 @@ jobs:
         working-directory: ./performance/benchmark
 
       - name: Publish benchmark results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           if-no-files-found: error
           name: benchmark-results
