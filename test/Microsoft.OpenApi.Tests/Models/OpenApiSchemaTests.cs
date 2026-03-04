@@ -1312,6 +1312,142 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
+        // PatternProperties tests
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
+        public async Task SerializePatternPropertiesAsKeywordInV31AndV32(OpenApiSpecVersion version)
+        {
+            var expected = @"{ ""patternProperties"": { ""^[a-z]+"": { ""type"": ""string"" } } }";
+            // Given - patternProperties should be emitted as a standard keyword in v3.1+
+            var schema = new OpenApiSchema
+            {
+                PatternProperties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["^[a-z]+"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                }
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializePatternPropertiesAsExtensionInEarlierVersions(OpenApiSpecVersion version)
+        {
+            var expected = @"{ ""x-jsonschema-patternProperties"": { ""^[a-z]+"": { ""type"": ""string"" } } }";
+            // Given - patternProperties should be emitted as extension in versions < 3.1
+            var schema = new OpenApiSchema
+            {
+                PatternProperties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["^[a-z]+"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                }
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializeEmptyPatternPropertiesNotEmittedInEarlierVersions(OpenApiSpecVersion version)
+        {
+            var expected = @"{ }";
+            // Given - empty patternProperties should not emit extension
+            var schema = new OpenApiSchema
+            {
+                PatternProperties = new Dictionary<string, IOpenApiSchema>()
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public void DeserializePatternPropertiesExtensionInV2AssignsPatternPropertiesProperty()
+        {
+            // Given - a V2 document with x-jsonschema-patternProperties extension in a definition
+            var jsonContent = """
+            {
+              "swagger": "2.0",
+              "info": { "title": "Test", "version": "1.0" },
+              "paths": {},
+              "definitions": {
+                "TestSchema": {
+                  "type": "object",
+                  "x-jsonschema-patternProperties": {
+                    "^[a-z]+": { "type": "string" }
+                  }
+                }
+              }
+            }
+            """;
+
+            // When
+            var readResult = OpenApiDocument.Parse(jsonContent, "json");
+
+            // Then
+            Assert.Empty(readResult.Diagnostic.Errors);
+            var schema = readResult.Document.Components.Schemas["TestSchema"];
+            Assert.NotNull(schema);
+            Assert.NotNull(schema.PatternProperties);
+            Assert.Single(schema.PatternProperties);
+            Assert.True(schema.PatternProperties.ContainsKey("^[a-z]+"));
+            Assert.Equal(JsonSchemaType.String, schema.PatternProperties["^[a-z]+"].Type);
+            // Extension should NOT be present on the schema (it was consumed)
+            Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey("x-jsonschema-patternProperties"));
+        }
+
+        [Fact]
+        public void DeserializePatternPropertiesExtensionInV3AssignsPatternPropertiesProperty()
+        {
+            // Given - a V3 document with x-jsonschema-patternProperties extension in a component schema
+            var jsonContent = """
+            {
+              "openapi": "3.0.0",
+              "info": { "title": "Test", "version": "1.0" },
+              "paths": {},
+              "components": {
+                "schemas": {
+                  "TestSchema": {
+                    "type": "object",
+                    "x-jsonschema-patternProperties": {
+                      "^[a-z]+": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+            """;
+
+            // When
+            var readResult = OpenApiDocument.Parse(jsonContent, "json");
+
+            // Then
+            Assert.Empty(readResult.Diagnostic.Errors);
+            var schema = readResult.Document.Components.Schemas["TestSchema"];
+            Assert.NotNull(schema);
+            Assert.NotNull(schema.PatternProperties);
+            Assert.Single(schema.PatternProperties);
+            Assert.True(schema.PatternProperties.ContainsKey("^[a-z]+"));
+            Assert.Equal(JsonSchemaType.String, schema.PatternProperties["^[a-z]+"].Type);
+            // Extension should NOT be present on the schema (it was consumed)
+            Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey("x-jsonschema-patternProperties"));
+        }
+
         internal class SchemaVisitor : OpenApiVisitorBase
         {
             public List<string> Titles = new();
