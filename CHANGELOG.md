@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.4.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.3.1...v3.4.0) (2026-03-04)
+
+
+### Features
+
+* **library:** preserve PatternProperties as x-jsonschema-patternProperties extension for OpenAPI v2/v3.0 serialization ([d969fdc](https://github.com/microsoft/OpenAPI.NET/commit/d969fdc12632ad0879b9fe07d3ab736b21ae68cf))
+* **library:** Preserve PatternProperties via x-jsonschema-patternProperties extension for OpenAPI v2/v3.0 ([16ab5e4](https://github.com/microsoft/OpenAPI.NET/commit/16ab5e42bdef6e08e2afaf7ad3921ac8178f059c))
+* **securityscheme:** add oauth2MetadataUrl support (OpenAPI 3.2) ([4509488](https://github.com/microsoft/OpenAPI.NET/commit/4509488f2e8725e37a60a3b7a3a8a0b6c0c74378))
+
+
+### Bug Fixes
+
+* implement unevaluatedProperties as schema per JSON Schema 2020-12 ([#2728](https://github.com/microsoft/OpenAPI.NET/issues/2728)) ([7c13fb3](https://github.com/microsoft/OpenAPI.NET/commit/7c13fb3910685b5c17897cd7799b9ef1bba7f80d))
+* **library:** serialize additionalProperties schema in OpenAPI V2 ([f3165fa](https://github.com/microsoft/OpenAPI.NET/commit/f3165fa874a8bb76788684742492f48b20aab892))
+* **library:** serialize additionalProperties schema in OpenAPI V2 documents ([3d07756](https://github.com/microsoft/OpenAPI.NET/commit/3d0775610a9e74b6d5ce845195ccb935576bcd31))
+* optimize parsing V3.1 documents by reducing GetLocation method allocation on hot path([#2748](https://github.com/microsoft/OpenAPI.NET/issues/2748)) ([f690681](https://github.com/microsoft/OpenAPI.NET/commit/f6906811e616f8e6875b8d839137c846fc7bbd9e))
+
 ## [3.3.1](https://github.com/microsoft/OpenAPI.NET/compare/v3.3.0...v3.3.1) (2026-01-22)
 
 
