@@ -536,6 +536,11 @@ namespace Microsoft.OpenApi
         public const string PatternProperties = "patternProperties";
 
         /// <summary>
+        /// Extension: x-jsonschema-patternProperties
+        /// </summary>
+        public const string PatternPropertiesExtension = "x-jsonschema-patternProperties";
+
+        /// <summary>
         /// Field: AdditionalProperties
         /// </summary>
         public const string AdditionalProperties = "additionalProperties";
