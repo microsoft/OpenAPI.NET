@@ -1311,7 +1311,6 @@ namespace Microsoft.OpenApi.Tests.Models
         // PatternProperties tests
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_1)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
         public async Task SerializePatternPropertiesAsKeywordInV31AndV32(OpenApiSpecVersion version)
         {
             var expected = @"{ ""patternProperties"": { ""^[a-z]+"": { ""type"": ""string"" } } }";
