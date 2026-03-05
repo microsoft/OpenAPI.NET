@@ -556,6 +556,12 @@ namespace Microsoft.OpenApi
                     writer.WritePropertyName(OpenApiConstants.UnevaluatedPropertiesExtension);
                     writer.WriteValue(false);
                 }
+
+                // Write patternProperties as an extension
+                if (PatternProperties is { Count: > 0 })
+                {
+                    writer.WriteOptionalMap(OpenApiConstants.PatternPropertiesExtension, PatternProperties, callback);
+                }
             }
 
             // extensions
@@ -834,6 +840,12 @@ namespace Microsoft.OpenApi
             {
                 writer.WritePropertyName(OpenApiConstants.UnevaluatedPropertiesExtension);
                 writer.WriteValue(false);
+            }
+
+            // Write patternProperties as an extension
+            if (PatternProperties is { Count: > 0 })
+            {
+                writer.WriteOptionalMap(OpenApiConstants.PatternPropertiesExtension, PatternProperties, (w, s) => s.SerializeAsV2(w));
             }
 
             // extensions

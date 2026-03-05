@@ -241,6 +241,10 @@ namespace Microsoft.OpenApi.Reader.V2
                 "example",
                 (o, n, _) => o.Example = n.CreateAny()
             },
+            {
+                OpenApiConstants.PatternPropertiesExtension,
+                (o, n, t) => o.PatternProperties = n.CreateMap(LoadSchema, t)
+            },
         };
 
         private static readonly PatternFieldMap<OpenApiSchema> _openApiSchemaPatternFields = new PatternFieldMap<OpenApiSchema>
