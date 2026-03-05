@@ -276,6 +276,10 @@ namespace Microsoft.OpenApi.Reader.V3
                     }
                 }
             },
+            {
+                OpenApiConstants.PatternPropertiesExtension,
+                (o, n, t) => o.PatternProperties = n.CreateMap(LoadSchema, t)
+            },
         };
 
         private static readonly PatternFieldMap<OpenApiSchema> _openApiSchemaPatternFields = new()

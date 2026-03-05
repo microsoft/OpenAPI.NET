@@ -497,11 +497,6 @@ namespace Microsoft.OpenApi
 
             var hasPatternPropertiesForV30 = version == OpenApiSpecVersion.OpenApi3_0 && PatternProperties is { Count: > 0 };
 
-            if (hasPatternPropertiesForV30)
-            {
-                writer.WriteOptionalMap(OpenApiConstants.PatternPropertiesExtension, PatternProperties, callback);
-            }
-
             // additionalProperties
             if (AdditionalProperties is not null && version >= OpenApiSpecVersion.OpenApi3_0)
             {
@@ -583,6 +578,12 @@ namespace Microsoft.OpenApi
                 {
                     writer.WritePropertyName(OpenApiConstants.UnevaluatedPropertiesExtension);
                     writer.WriteValue(false);
+                }
+
+                // Write patternProperties as an extension
+                if (PatternProperties is { Count: > 0 })
+                {
+                    writer.WriteOptionalMap(OpenApiConstants.PatternPropertiesExtension, PatternProperties, callback);
                 }
             }
 
@@ -860,10 +861,31 @@ namespace Microsoft.OpenApi
                     s.SerializeAsV2(w);
             });
 
+            var hasPatternProperties = PatternProperties is { Count: > 0 };
             // additionalProperties
-            // a schema cannot be serialized in v2
             // true is the default, no need to write it out
-            if (!AdditionalPropertiesAllowed)
+            if (AdditionalProperties is not null)
+            {
+                writer.WriteOptionalObject(
+                    OpenApiConstants.AdditionalProperties,
+                    AdditionalProperties,
+                    (w, s) => s.SerializeAsV2(w));
+            }
+            else if (hasPatternProperties)
+            {
+                if (TryGetPatternPropertiesFallbackSchema(out var fallbackSchema) && fallbackSchema is not null)
+                {
+                    writer.WriteOptionalObject(
+                        OpenApiConstants.AdditionalProperties,
+                        fallbackSchema,
+                        (w, s) => s.SerializeAsV2(w));
+                }
+                else
+                {
+                    writer.WriteProperty(OpenApiConstants.AdditionalProperties, true);
+                }
+            }
+            else if (!AdditionalPropertiesAllowed)
             {
                 writer.WriteProperty(OpenApiConstants.AdditionalProperties, AdditionalPropertiesAllowed);
             }
@@ -904,6 +926,12 @@ namespace Microsoft.OpenApi
             {
                 writer.WritePropertyName(OpenApiConstants.UnevaluatedPropertiesExtension);
                 writer.WriteValue(false);
+            }
+
+            // Write patternProperties as an extension
+            if (PatternProperties is { Count: > 0 })
+            {
+                writer.WriteOptionalMap(OpenApiConstants.PatternPropertiesExtension, PatternProperties, (w, s) => s.SerializeAsV2(w));
             }
 
             // extensions

@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi
         public const string UnevaluatedPropertiesExtension = "x-jsonschema-unevaluatedProperties";
 
         /// <summary>
-        /// Extension: x-jsonSchema-patternProperties
+        /// Extension: x-jsonschema-patternProperties
         /// </summary>
         public const string PatternPropertiesExtension = "x-jsonschema-patternProperties";
 
