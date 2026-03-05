@@ -1896,3 +1896,4 @@ Microsoft.OpenApi.IOpenApiSchemaWithUnevaluatedProperties.UnevaluatedPropertiesS
 Microsoft.OpenApi.OpenApiSchema.UnevaluatedPropertiesSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
 Microsoft.OpenApi.OpenApiSchema.UnevaluatedPropertiesSchema.set -> void
 Microsoft.OpenApi.OpenApiSchemaReference.UnevaluatedPropertiesSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
+const Microsoft.OpenApi.OpenApiConstants.PatternPropertiesExtension = "x-jsonschema-patternProperties" -> string!
