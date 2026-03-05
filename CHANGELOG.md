@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.7.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.6.1...v2.7.0) (2026-03-05)
+
+
+### Features
+
+* add UnevaluatedPropertiesSchema support to IOpenApiSchema ([fb691d6](https://github.com/microsoft/OpenAPI.NET/commit/fb691d6fb70ccd8786e9125da765197a69279402))
+* **library:** preserve PatternProperties as x-jsonschema-patternProperties extension for OpenAPI v2/v3.0 serialization ([dd5085a](https://github.com/microsoft/OpenAPI.NET/commit/dd5085a394d8ab23208c12be9bbcbd25bed6ce3f))
+
+
+### Bug Fixes
+
+* address PR feedback on UnevaluatedProperties implementation ([80fc0f6](https://github.com/microsoft/OpenAPI.NET/commit/80fc0f6af735b3299cfaea6b055e484cfe15e0e1))
+* correct deserialization and test for UnevaluatedPropertiesSchema ([a4d66fc](https://github.com/microsoft/OpenAPI.NET/commit/a4d66fccdd62ab5e7e7f5ea166757e7bc6c6c78c))
+* **library:** serialize additionalProperties schema in OpenAPI V2 ([99b653c](https://github.com/microsoft/OpenAPI.NET/commit/99b653ce3dce19be7882432a3f36282740a839fa))
+* **library:** serialize additionalProperties schema in OpenAPI V2 ([cef7996](https://github.com/microsoft/OpenAPI.NET/commit/cef79963022e1d728846165daeb3609e940c609d))
+* optimize parsing V3.1 documents by reducing GetLocation method allocation on hot path([#2748](https://github.com/microsoft/OpenAPI.NET/issues/2748)) ([91e697b](https://github.com/microsoft/OpenAPI.NET/commit/91e697bee0be8d263d883ce5c4e328d46d9caa7c))
+* optimize parsing V3.1 documents by reducing GetLocation method allocation on hot path([#2748](https://github.com/microsoft/OpenAPI.NET/issues/2748)) ([06c58a5](https://github.com/microsoft/OpenAPI.NET/commit/06c58a536570ca1af6188cb17d1d0dae208a051c))
+
 ## [2.6.1](https://github.com/microsoft/OpenAPI.NET/compare/v2.6.0...v2.6.1) (2026-01-22)
 
 
