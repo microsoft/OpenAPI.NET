@@ -656,14 +656,11 @@ namespace Microsoft.OpenApi
                 return false;
             }
 
-            foreach (var schema in PatternProperties.Skip(1).Select(static x => x.Value))
+            if (PatternProperties.Skip(1)
+                .Any(x => SerializeSchemaToComparableJsonNode(x.Value) is not {} schemaNode || !JsonNode.DeepEquals(baselineNode, schemaNode)))
             {
-                var schemaNode = SerializeSchemaToComparableJsonNode(schema);
-                if (schemaNode is null || !JsonNode.DeepEquals(baselineNode, schemaNode))
-                {
-                    fallbackSchema = null;
-                    return false;
-                }
+                fallbackSchema = null;
+                return false;
             }
 
             return true;
