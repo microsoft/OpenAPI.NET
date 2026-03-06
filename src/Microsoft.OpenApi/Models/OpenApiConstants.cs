@@ -136,6 +136,11 @@ namespace Microsoft.OpenApi
         public const string UnevaluatedPropertiesExtension = "x-jsonschema-unevaluatedProperties";
 
         /// <summary>
+        /// Extension: x-jsonschema-patternProperties
+        /// </summary>
+        public const string PatternPropertiesExtension = "x-jsonschema-patternProperties";
+
+        /// <summary>
         /// Field: Version
         /// </summary>
         public const string Version = "version";
@@ -534,11 +539,6 @@ namespace Microsoft.OpenApi
         /// Field: Pattern Properties
         /// </summary>
         public const string PatternProperties = "patternProperties";
-
-        /// <summary>
-        /// Extension: x-jsonschema-patternProperties
-        /// </summary>
-        public const string PatternPropertiesExtension = "x-jsonschema-patternProperties";
 
         /// <summary>
         /// Field: AdditionalProperties
