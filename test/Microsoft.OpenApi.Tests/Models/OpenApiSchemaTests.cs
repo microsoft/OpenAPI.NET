@@ -847,6 +847,128 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
+        public async Task SerializePatternPropertiesAsV3EmitsExtensionAndSchemaFallback()
+        {
+            // Given
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                AdditionalPropertiesAllowed = false,
+                PatternProperties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["^[a-z][a-z0-9_]*$"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.Integer,
+                        Format = "int32"
+                    }
+                }
+            };
+
+            var expected =
+                """
+                {
+                  "type": "object",
+                  "x-jsonschema-patternProperties": {
+                    "^[a-z][a-z0-9_]*$": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  },
+                  "additionalProperties": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+                """;
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializePatternPropertiesAsV3EmitsExtensionAndTrueFallbackWhenSchemasDiffer()
+        {
+            // Given
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                PatternProperties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["^[a-z]+$"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String
+                    },
+                    ["^[0-9]+$"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.Integer,
+                        Format = "int32"
+                    }
+                }
+            };
+
+            var expected =
+                """
+                {
+                  "type": "object",
+                  "x-jsonschema-patternProperties": {
+                    "^[a-z]+$": {
+                      "type": "string"
+                    },
+                    "^[0-9]+$": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  },
+                  "additionalProperties": true
+                }
+                """;
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializePatternPropertiesAsV31RemainsStandardKeyword()
+        {
+            // Given
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                PatternProperties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["^[a-z]+$"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String
+                    }
+                }
+            };
+
+            var expected =
+                """
+                {
+                  "type": "object",
+                  "patternProperties": {
+                    "^[a-z]+$": {
+                      "type": "string"
+                    }
+                  }
+                }
+                """;
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
         public async Task SerializeOneOfWithNullAsV3ShouldUseNullableAsync()
         {
             // Arrange - oneOf with null and a reference-like schema
@@ -1340,7 +1462,21 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         public async Task SerializePatternPropertiesAsExtensionInEarlierVersions(OpenApiSpecVersion version)
         {
-            var expected = @"{ ""x-jsonschema-patternProperties"": { ""^[a-z]+"": { ""type"": ""string"" } } }";
+            var expected = """
+            {
+                "additionalProperties":
+                {
+                    "type": "string"
+                },
+                "x-jsonschema-patternProperties":
+                {
+                    "^[a-z]+":
+                    {
+                        "type": "string"
+                    }
+                }
+            }
+            """;
             // Given - patternProperties should be emitted as extension in versions < 3.1
             var schema = new OpenApiSchema
             {

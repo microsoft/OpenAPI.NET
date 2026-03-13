@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -493,6 +495,8 @@ namespace Microsoft.OpenApi
             // properties
             writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, callback);
 
+            var hasPatternPropertiesForV30 = version == OpenApiSpecVersion.OpenApi3_0 && PatternProperties is { Count: > 0 };
+
             // additionalProperties
             if (AdditionalProperties is not null && version >= OpenApiSpecVersion.OpenApi3_0)
             {
@@ -500,6 +504,20 @@ namespace Microsoft.OpenApi
                     OpenApiConstants.AdditionalProperties,
                     AdditionalProperties,
                     callback);
+            }
+            else if (hasPatternPropertiesForV30)
+            {
+                if (TryGetPatternPropertiesFallbackSchema(out var fallbackSchema) && fallbackSchema is not null)
+                {
+                    writer.WriteOptionalObject(
+                        OpenApiConstants.AdditionalProperties,
+                        fallbackSchema,
+                        callback);
+                }
+                else
+                {
+                    writer.WriteProperty(OpenApiConstants.AdditionalProperties, true);
+                }
             }
             // true is the default, no need to write it out
             else if (!AdditionalPropertiesAllowed)
@@ -615,6 +633,51 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (nodeWriter, s) => nodeWriter.WriteAny(s));
             writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, (w, s) => s.SerializeAsV31(w));
             writer.WriteOptionalMap(OpenApiConstants.DependentRequired, DependentRequired, (w, s) => w.WriteValue(s));
+        }
+
+        private bool TryGetPatternPropertiesFallbackSchema(out IOpenApiSchema? fallbackSchema)
+        {
+            fallbackSchema = null;
+            if (PatternProperties is not { Count: > 0 })
+            {
+                return false;
+            }
+
+            fallbackSchema = PatternProperties.First().Value;
+            if (PatternProperties.Count == 1)
+            {
+                return fallbackSchema is not null;
+            }
+
+            var baselineNode = SerializeSchemaToComparableJsonNode(fallbackSchema);
+            if (baselineNode is null)
+            {
+                fallbackSchema = null;
+                return false;
+            }
+
+            if (PatternProperties.Skip(1)
+                .Any(x => SerializeSchemaToComparableJsonNode(x.Value) is not {} schemaNode || !JsonNode.DeepEquals(baselineNode, schemaNode)))
+            {
+                fallbackSchema = null;
+                return false;
+            }
+
+            return true;
+        }
+
+        private static JsonNode? SerializeSchemaToComparableJsonNode(IOpenApiSchema schema)
+        {
+            if (schema is not IOpenApiSerializable serializableSchema)
+            {
+                return null;
+            }
+
+            using var stringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var jsonWriter = new OpenApiJsonWriter(stringWriter, new OpenApiJsonWriterSettings { Terse = true });
+            serializableSchema.SerializeAsV31(jsonWriter);
+
+            return JsonNode.Parse(stringWriter.ToString());
         }
 
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
@@ -795,6 +858,7 @@ namespace Microsoft.OpenApi
                     s.SerializeAsV2(w);
             });
 
+            var hasPatternProperties = PatternProperties is { Count: > 0 };
             // additionalProperties
             // true is the default, no need to write it out
             if (AdditionalProperties is not null)
@@ -803,6 +867,20 @@ namespace Microsoft.OpenApi
                     OpenApiConstants.AdditionalProperties,
                     AdditionalProperties,
                     (w, s) => s.SerializeAsV2(w));
+            }
+            else if (hasPatternProperties)
+            {
+                if (TryGetPatternPropertiesFallbackSchema(out var fallbackSchema) && fallbackSchema is not null)
+                {
+                    writer.WriteOptionalObject(
+                        OpenApiConstants.AdditionalProperties,
+                        fallbackSchema,
+                        (w, s) => s.SerializeAsV2(w));
+                }
+                else
+                {
+                    writer.WriteProperty(OpenApiConstants.AdditionalProperties, true);
+                }
             }
             else if (!AdditionalPropertiesAllowed)
             {
