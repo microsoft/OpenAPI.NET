@@ -1308,6 +1308,111 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
+        [Theory]
+        [InlineData(JsonSchemaType.Array, "array")]
+        [InlineData(JsonSchemaType.String, "string")]
+        [InlineData(JsonSchemaType.Number, "number")]
+        [InlineData(JsonSchemaType.Integer, "integer")]
+        [InlineData(JsonSchemaType.Boolean, "boolean")]
+        [InlineData(JsonSchemaType.Null, "null")]
+        public async Task SerializeUnevaluatedPropertiesFalseNotEmittedForNonObjectType(JsonSchemaType nonObjectType, string typeName)
+        {
+            var expected = $@"{{ ""type"": ""{typeName}"" }}";
+            // Given - unevaluatedProperties should not be emitted when type is explicitly set to a non-object type
+            var schema = new OpenApiSchema
+            {
+                Type = nonObjectType,
+                UnevaluatedProperties = false
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(JsonSchemaType.Array, "array")]
+        [InlineData(JsonSchemaType.String, "string")]
+        [InlineData(JsonSchemaType.Number, "number")]
+        [InlineData(JsonSchemaType.Integer, "integer")]
+        [InlineData(JsonSchemaType.Boolean, "boolean")]
+        [InlineData(JsonSchemaType.Null, "null")]
+        public async Task SerializeUnevaluatedPropertiesSchemaNotEmittedForNonObjectType(JsonSchemaType nonObjectType, string typeName)
+        {
+            var expected = $@"{{ ""type"": ""{typeName}"" }}";
+            // Given - unevaluatedProperties schema should not be emitted when type is explicitly set to a non-object type
+            var schema = new OpenApiSchema
+            {
+                Type = nonObjectType,
+                UnevaluatedPropertiesSchema = new OpenApiSchema { Type = JsonSchemaType.String }
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, JsonSchemaType.Array)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, JsonSchemaType.String)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, JsonSchemaType.Array)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, JsonSchemaType.String)]
+        public async Task SerializeUnevaluatedPropertiesNotEmittedAsExtensionForNonObjectType(OpenApiSpecVersion version, JsonSchemaType nonObjectType)
+        {
+            // Given - unevaluatedProperties should not be emitted as extension when type is a non-object type
+            var schema = new OpenApiSchema
+            {
+                Type = nonObjectType,
+                UnevaluatedProperties = false
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            // Then - should not contain unevaluatedProperties extension
+            var parsed = JsonNode.Parse(actual)!.AsObject();
+            Assert.False(parsed.ContainsKey(OpenApiConstants.UnevaluatedPropertiesExtension));
+        }
+
+        [Fact]
+        public async Task SerializeUnevaluatedPropertiesFalseStillEmittedForObjectType()
+        {
+            var expected = @"{ ""type"": ""object"", ""unevaluatedProperties"": false }";
+            // Given - unevaluatedProperties should still be emitted for object type
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                UnevaluatedProperties = false
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeUnevaluatedPropertiesFalseStillEmittedWhenTypeNotSet()
+        {
+            var expected = @"{ ""unevaluatedProperties"": false }";
+            // Given - unevaluatedProperties should still be emitted when type is not explicitly set
+            var schema = new OpenApiSchema
+            {
+                UnevaluatedProperties = false
+            };
+
+            // When
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
         // PatternProperties tests
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_1)]

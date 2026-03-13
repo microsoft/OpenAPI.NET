@@ -542,19 +542,24 @@ namespace Microsoft.OpenApi
             // For versions < 3.1, write unevaluatedProperties as an extension
             if (version < OpenApiSpecVersion.OpenApi3_1)
             {
-                // Write UnevaluatedPropertiesSchema as extension if present
-                if (UnevaluatedPropertiesSchema is not null)
+                // Only emit unevaluatedProperties when the type could include objects.
+                // Skip when type is explicitly set to a non-object type (array, string, number, integer, boolean, null).
+                if (!Type.HasValue || (Type.Value & JsonSchemaType.Object) != 0)
                 {
-                    writer.WriteOptionalObject(
-                        OpenApiConstants.UnevaluatedPropertiesExtension,
-                        UnevaluatedPropertiesSchema,
-                        callback);
-                }
-                // Write boolean false as extension if explicitly set to false
-                else if (!UnevaluatedProperties)
-                {
-                    writer.WritePropertyName(OpenApiConstants.UnevaluatedPropertiesExtension);
-                    writer.WriteValue(false);
+                    // Write UnevaluatedPropertiesSchema as extension if present
+                    if (UnevaluatedPropertiesSchema is not null)
+                    {
+                        writer.WriteOptionalObject(
+                            OpenApiConstants.UnevaluatedPropertiesExtension,
+                            UnevaluatedPropertiesSchema,
+                            callback);
+                    }
+                    // Write boolean false as extension if explicitly set to false
+                    else if (!UnevaluatedProperties)
+                    {
+                        writer.WritePropertyName(OpenApiConstants.UnevaluatedPropertiesExtension);
+                        writer.WriteValue(false);
+                    }
                 }
 
                 // Write patternProperties as an extension
@@ -594,19 +599,23 @@ namespace Microsoft.OpenApi
             writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);
             writer.WriteProperty(OpenApiConstants.DynamicAnchor, DynamicAnchor);
             
-            // UnevaluatedProperties: similar to AdditionalProperties, serialize as schema if present, else as boolean
-            if (UnevaluatedPropertiesSchema is not null)
+            // UnevaluatedProperties: similar to AdditionalProperties, serialize as schema if present, else as boolean.
+            // Only emit when the type could include objects.
+            // Skip when type is explicitly set to a non-object type (array, string, number, integer, boolean, null).
+            if (!Type.HasValue || (Type.Value & JsonSchemaType.Object) != 0)
             {
-                writer.WriteOptionalObject(
-                    OpenApiConstants.UnevaluatedProperties,
-                    UnevaluatedPropertiesSchema,
-                    (w, s) => s.SerializeAsV31(w));
+                if (UnevaluatedPropertiesSchema is not null)
+                {
+                    writer.WriteOptionalObject(
+                        OpenApiConstants.UnevaluatedProperties,
+                        UnevaluatedPropertiesSchema,
+                        (w, s) => s.SerializeAsV31(w));
+                }
+                else if (!UnevaluatedProperties)
+                {
+                    writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties);
+                }
             }
-            else if (!UnevaluatedProperties)
-            {
-                writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties);
-            }
-            // true is the default, no need to write it out
             writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (nodeWriter, s) => nodeWriter.WriteAny(s));
             writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, (w, s) => s.SerializeAsV31(w));
             writer.WriteOptionalMap(OpenApiConstants.DependentRequired, DependentRequired, (w, s) => w.WriteValue(s));
@@ -827,19 +836,24 @@ namespace Microsoft.OpenApi
             // x-nullable extension
             SerializeNullable(writer, OpenApiSpecVersion.OpenApi2_0);
 
-            // Write UnevaluatedPropertiesSchema as extension if present
-            if (UnevaluatedPropertiesSchema is not null)
+            // Write UnevaluatedPropertiesSchema as extension if present.
+            // Only emit when the type could include objects.
+            // Skip when type is explicitly set to a non-object type (array, string, number, integer, boolean, null).
+            if (!Type.HasValue || (Type.Value & JsonSchemaType.Object) != 0)
             {
-                writer.WriteOptionalObject(
-                    OpenApiConstants.UnevaluatedPropertiesExtension,
-                    UnevaluatedPropertiesSchema,
-                    (w, s) => s.SerializeAsV2(w));
-            }
-            // Write boolean false as extension if explicitly set to false
-            else if (!UnevaluatedProperties)
-            {
-                writer.WritePropertyName(OpenApiConstants.UnevaluatedPropertiesExtension);
-                writer.WriteValue(false);
+                if (UnevaluatedPropertiesSchema is not null)
+                {
+                    writer.WriteOptionalObject(
+                        OpenApiConstants.UnevaluatedPropertiesExtension,
+                        UnevaluatedPropertiesSchema,
+                        (w, s) => s.SerializeAsV2(w));
+                }
+                // Write boolean false as extension if explicitly set to false
+                else if (!UnevaluatedProperties)
+                {
+                    writer.WritePropertyName(OpenApiConstants.UnevaluatedPropertiesExtension);
+                    writer.WriteValue(false);
+                }
             }
 
             // Write patternProperties as an extension
