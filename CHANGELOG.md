@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.4.1](https://github.com/microsoft/OpenAPI.NET/compare/v3.4.0...v3.4.1) (2026-03-13)
+
+
+### Bug Fixes
+
+* **library:** do not emit unevaluatedProperties for non-object schemas ([852fb4c](https://github.com/microsoft/OpenAPI.NET/commit/852fb4c744c51099a629d90797a2803d3bbdfc2a))
+* **library:** do not emit unevaluatedProperties for non-object schemas ([19538aa](https://github.com/microsoft/OpenAPI.NET/commit/19538aa169b708dac3baf04a1315bed1dd25eac6))
+
 ## [3.4.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.3.1...v3.4.0) (2026-03-04)
 
 
