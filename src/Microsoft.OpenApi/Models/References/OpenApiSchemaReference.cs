@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Schema reference object
     /// </summary>
-    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema, IOpenApiSchemaWithUnevaluatedProperties
+    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema, IOpenApiSchemaWithUnevaluatedProperties, IOpenApiExtensible
     {
 
         /// <summary>
