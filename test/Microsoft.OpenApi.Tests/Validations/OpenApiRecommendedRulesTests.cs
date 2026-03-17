@@ -200,7 +200,7 @@ public static class OpenApiRecommendedRulesTests
         Assert.NotNull(warnings);
         var warning = Assert.Single(warnings);
         Assert.Equal("GET operations should not have a request body.", warning.Message);
-        Assert.Equal("#/paths//people/get/requestBody", warning.Pointer);
+        Assert.Equal("#/paths/~1people/get/requestBody", warning.Pointer);
     }
 
     [Fact]
