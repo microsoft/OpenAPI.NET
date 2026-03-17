@@ -215,6 +215,38 @@ namespace Microsoft.OpenApi.Tests.Models.References
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeSchemaReferenceAsV2JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange - Extensions should NOT appear in v2 output
+            var reference = new OpenApiSchemaReference("Pet", null)
+            {
+                Title = "Reference Title",
+                Description = "Reference Description",
+                ReadOnly = true,
+                WriteOnly = false,
+                Deprecated = true,
+                Default = JsonValue.Create("reference default"),
+                Examples = new List<JsonNode> { JsonValue.Create("reference example") },
+                Extensions = new Dictionary<string, IOpenApiExtension>
+                {
+                    ["x-custom"] = new JsonNodeExtension(JsonValue.Create("custom value"))
+                }
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            reference.SerializeAsV2(writer);
+            await writer.FlushAsync();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
         [Fact]
         public void ParseSchemaReferenceWithAnnotationsWorks()
         {
