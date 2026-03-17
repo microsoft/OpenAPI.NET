@@ -158,7 +158,11 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public OpenApiXml? Xml { get => Target?.Xml; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions
+        {
+            get => Reference.Extensions ?? Target?.Extensions;
+            set => Reference.Extensions = value;
+        }
 
         /// <inheritdoc/>
         public IDictionary<string, JsonNode>? UnrecognizedKeywords { get => Target?.UnrecognizedKeywords; }
@@ -170,6 +174,12 @@ namespace Microsoft.OpenApi
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeAsWithoutLoops(writer, (w, element) => (element is IOpenApiSchema s ? CopyReferenceAsTargetElementWithOverrides(s) : element).SerializeAsV31(w));
+        }
+
+        /// <inheritdoc/>
+        public override void SerializeAsV32(IOpenApiWriter writer)
+        {
+            SerializeAsWithoutLoops(writer, (w, element) => (element is IOpenApiSchema s ? CopyReferenceAsTargetElementWithOverrides(s) : element).SerializeAsV32(w));
         }
 
         /// <inheritdoc/>
