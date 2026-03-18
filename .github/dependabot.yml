@@ -16,6 +16,9 @@ updates:
       MicrosoftExtensions:
         patterns:
           - "Microsoft.Extensions.*"
+      coverlet:
+        patterns:
+          - "coverlet.*"
   - package-ecosystem: dotnet-sdk
     directory: /
     schedule:
