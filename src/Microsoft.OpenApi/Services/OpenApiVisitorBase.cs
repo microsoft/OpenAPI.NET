@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json.Nodes;
@@ -27,7 +28,16 @@ namespace Microsoft.OpenApi
         /// <param name="segment">Identifier for context</param>
         public virtual void Enter(string segment)
         {
-            this._path.Push(segment);
+            if (string.IsNullOrEmpty(segment))
+            {
+                this._path.Push(string.Empty);
+                return;
+            }
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP1_0_OR_GREATER
+            this._path.Push(segment.Replace("~", "~0", StringComparison.Ordinal).Replace("/", "~1", StringComparison.OrdinalIgnoreCase));
+#else
+            this._path.Push(segment.Replace("~", "~0").Replace("/", "~1"));
+#endif
         }
 
         /// <summary>
@@ -41,7 +51,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Pointer to source of validation error in document
         /// </summary>
-        public string PathString { get => "#/" + String.Join("/", _path.Reverse()); }
+        public string PathString { get => "#/" + string.Join("/", _path.Reverse()); }
 
         /// <summary>
         /// Visits <see cref="OpenApiDocument"/>
