@@ -2,6 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.OpenApi
 {
@@ -74,28 +76,49 @@ namespace Microsoft.OpenApi
                 {
                     if (reference.RecursiveTarget is null)
                     {
+                        var segments = GetSegments().ToArray();
+                        EnterSegments(segments);
                         // The reference was not followed to a valid schema somewhere in the document
-                        context.Enter(GetSegment());
                         context.CreateWarning(ruleName, string.Format(SRResource.Validation_SchemaReferenceDoesNotExist, reference.Reference.ReferenceV3));
-                        context.Exit();
+                        ExitSegments(segments.Length);
                     }
                 }
                 catch (InvalidOperationException ex)
                 {
-                    context.Enter(GetSegment());
+                    var segments = GetSegments().ToArray();
+                    EnterSegments(segments);
                     context.CreateWarning(ruleName, ex.Message);
-                    context.Exit();
+                    ExitSegments(segments.Length);
                 }
 
-                string GetSegment()
+                void ExitSegments(int length)
                 {
-                    // Trim off the leading "#/" as the context is already at the root of the document
-                    return
-#if NET8_0_OR_GREATER
-                        $"{PathString[2..]}/$ref";
+                    for (var i = 0; i < length; i++)
+                    {
+                        context.Exit();
+                    }
+                }
+
+                void EnterSegments(string[] segments)
+                {
+                    foreach (var segment in segments)
+                    {
+                        context.Enter(segment);
+                    }
+                }
+
+                IEnumerable<string> GetSegments()
+                {
+                    foreach (var segment in this.PathString.Substring(2).Split('/'))
+                    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP1_0_OR_GREATER
+                        yield return segment.Replace("~1", "/", StringComparison.OrdinalIgnoreCase).Replace("~0", "~", StringComparison.OrdinalIgnoreCase);
 #else
-                        PathString.Substring(2) + "/$ref";
+                        yield return segment.Replace("~1", "/").Replace("~0", "~");
 #endif
+                    }
+                    yield return "$ref";
+                    // Trim off the leading "#/" as the context is already at the root of the document
                 }
             }
         }

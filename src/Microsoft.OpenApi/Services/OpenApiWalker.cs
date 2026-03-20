@@ -1276,15 +1276,6 @@ namespace Microsoft.OpenApi
             }
         }
 
-        private static string ReplaceSlashes(string value)
-        {
-#if NET8_0_OR_GREATER
-            return value.Replace("/", "~1", StringComparison.Ordinal);
-#else
-            return value.Replace("/", "~1");
-#endif
-        }
-
         /// <summary>
         /// Adds a segment to the context path to enable pointing to the current location in the document
         /// </summary>
@@ -1294,7 +1285,7 @@ namespace Microsoft.OpenApi
         /// <param name="walk">An action that walks objects within the context.</param>
         private void WalkItem<T>(string context, T state, Action<OpenApiWalker, T> walk)
         {
-            _visitor.Enter(ReplaceSlashes(context));
+            _visitor.Enter(context);
             walk(this, state);
             _visitor.Exit();
         }
@@ -1309,7 +1300,7 @@ namespace Microsoft.OpenApi
         /// <param name="walk">An action that walks objects within the context.</param>
         private void WalkItem<T>(string context, T state, Action<OpenApiWalker, T, bool> walk, bool isComponent)
         {
-            _visitor.Enter(ReplaceSlashes(context));
+            _visitor.Enter(context);
             walk(this, state, isComponent);
             _visitor.Exit();
         }
@@ -1330,7 +1321,7 @@ namespace Microsoft.OpenApi
         {
             if (state != null && state.Count > 0)
             {
-                _visitor.Enter(ReplaceSlashes(context));
+                _visitor.Enter(context);
 
                 foreach (var item in state)
                 {
