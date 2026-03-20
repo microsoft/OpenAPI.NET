@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using Humanizer;
-using Humanizer.Inflections;
 using Microsoft.OpenApi.Hidi.Extensions;
 
 namespace Microsoft.OpenApi.Hidi.Formatters
