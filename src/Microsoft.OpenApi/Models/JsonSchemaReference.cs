@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -156,10 +156,10 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         }
 
         // Extensions (properties starting with "x-")
-        foreach (var property in jsonObject)
+        foreach (var property in jsonObject
+                    .Where(static p => p.Key.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase)))
         {
-            if (property.Key.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase)
-                && property.Value is JsonNode extensionValue)
+            if (property.Value is JsonNode extensionValue)
             {
                 Extensions ??= new Dictionary<string, IOpenApiExtension>(StringComparer.OrdinalIgnoreCase);
                 Extensions[property.Key] = new JsonNodeExtension(extensionValue.DeepClone());
