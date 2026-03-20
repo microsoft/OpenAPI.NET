@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.5.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.4.0...v3.5.0) (2026-03-20)
+
+
+### Features
+
+* **library:** add Extensions support for schema references in v3.1/v3.2; add SerializeAsV32 with loop detection ([9b422bf](https://github.com/microsoft/OpenAPI.NET/commit/9b422bfbe1459588821ab011ba470336c63e4958))
+
+
+### Bug Fixes
+
+* a bug where path parameter validation would fail if they contained forbidden JSON pointer characters ([ef55b2c](https://github.com/microsoft/OpenAPI.NET/commit/ef55b2ce664014a854dbd4275e3fed783bc53385))
+* a bug where path parameter validation would fail if they contained forbidden JSON pointer characters ([4b3164a](https://github.com/microsoft/OpenAPI.NET/commit/4b3164a76b316951cb043aebf950663a17e51c90))
+* double encoding of json pointer for invalid reference rule ([b246cd0](https://github.com/microsoft/OpenAPI.NET/commit/b246cd0bafde78892aa22e6ffe046cf5a438eb7d))
+* encoding of special characters for JSON paths ([4c757e1](https://github.com/microsoft/OpenAPI.NET/commit/4c757e1e9806f95ed598f349e4fc35a0307b9342))
+* **library:** do not emit unevaluatedProperties for non-object schemas ([852fb4c](https://github.com/microsoft/OpenAPI.NET/commit/852fb4c744c51099a629d90797a2803d3bbdfc2a))
+* **library:** do not emit unevaluatedProperties for non-object schemas ([19538aa](https://github.com/microsoft/OpenAPI.NET/commit/19538aa169b708dac3baf04a1315bed1dd25eac6))
+* **library:** enforce spec-compliant $ref serialization; add Extensions support for schema references in v3.1/v3.2 ([9bf61de](https://github.com/microsoft/OpenAPI.NET/commit/9bf61de9c10092f744ab38fe0a41bd6adb8351d4))
+* potential double encoding of paths ([471a61a](https://github.com/microsoft/OpenAPI.NET/commit/471a61a2567bb517ede94f0bec1a53ef806b2db3))
+
 ## [3.4.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.3.1...v3.4.0) (2026-03-04)
 
 
