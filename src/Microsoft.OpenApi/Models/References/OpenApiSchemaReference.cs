@@ -177,12 +177,6 @@ namespace Microsoft.OpenApi
         }
 
         /// <inheritdoc/>
-        public override void SerializeAsV32(IOpenApiWriter writer)
-        {
-            SerializeAsWithoutLoops(writer, (w, element) => (element is IOpenApiSchema s ? CopyReferenceAsTargetElementWithOverrides(s) : element).SerializeAsV32(w));
-        }
-
-        /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeAsWithoutLoops(writer, (w, element) => element.SerializeAsV3(w));

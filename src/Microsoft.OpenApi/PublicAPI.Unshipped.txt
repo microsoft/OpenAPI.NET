@@ -2,4 +2,3 @@
 Microsoft.OpenApi.JsonSchemaReference.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
 Microsoft.OpenApi.JsonSchemaReference.Extensions.set -> void
 Microsoft.OpenApi.OpenApiSchemaReference.Extensions.set -> void
-override Microsoft.OpenApi.OpenApiSchemaReference.SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
