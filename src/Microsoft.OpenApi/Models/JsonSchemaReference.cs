@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -53,6 +53,12 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
     public IList<JsonNode>? Examples { get; set; }
 
     /// <summary>
+    /// Extension data for this schema reference. Only allowed in OpenAPI 3.1 and later.
+    /// Extensions are NOT written when serializing for OpenAPI 2.0 or 3.0.
+    /// </summary>
+    public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
+
+    /// <summary>
     /// Parameterless constructor
     /// </summary>
     public JsonSchemaReference() { }
@@ -69,6 +75,7 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         ReadOnly = reference.ReadOnly;
         WriteOnly = reference.WriteOnly;
         Examples = reference.Examples;
+        Extensions = reference.Extensions != null ? new Dictionary<string, IOpenApiExtension>(reference.Extensions) : null;
     }
 
     /// <inheritdoc/>
@@ -106,6 +113,7 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         {
             writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (w, e) => w.WriteAny(e));
         }
+        writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_1);
     }
 
     /// <inheritdoc/>
@@ -145,6 +153,16 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         if (jsonObject.TryGetPropertyValue(OpenApiConstants.Examples, out var examplesNode) && examplesNode is JsonArray examplesArray)
         {
             Examples = examplesArray.OfType<JsonNode>().ToList();
+        }
+
+        // Extensions (properties starting with "x-")
+        foreach (var property in jsonObject
+                    .Where(static p => p.Key.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase)
+                            && p.Value is not null))
+        {
+            var extensionValue = property.Value!;
+            Extensions ??= new Dictionary<string, IOpenApiExtension>(StringComparer.OrdinalIgnoreCase);
+            Extensions[property.Key] = new JsonNodeExtension(extensionValue.DeepClone());
         }
     }
 }
