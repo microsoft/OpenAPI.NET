@@ -2034,3 +2034,7 @@ Microsoft.OpenApi.OpenApiSecurityScheme.OAuth2MetadataUrl.get -> System.Uri?
 Microsoft.OpenApi.OpenApiSecurityScheme.OAuth2MetadataUrl.set -> void
 Microsoft.OpenApi.OpenApiSecuritySchemeReference.OAuth2MetadataUrl.get -> System.Uri?
 const Microsoft.OpenApi.OpenApiConstants.PatternPropertiesExtension = "x-jsonschema-patternProperties" -> string!
+Microsoft.OpenApi.JsonSchemaReference.Extensions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiExtension!>?
+Microsoft.OpenApi.JsonSchemaReference.Extensions.set -> void
+Microsoft.OpenApi.OpenApiSchemaReference.Extensions.set -> void
+override Microsoft.OpenApi.OpenApiSchemaReference.SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
