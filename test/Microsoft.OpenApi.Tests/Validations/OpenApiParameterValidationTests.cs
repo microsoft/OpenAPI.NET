@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             validator.Enter("{parameter1}");
             var walker = new OpenApiWalker(validator);
-            walker.Walk(parameter);
+            walker.Walk((IOpenApiParameter)parameter);
 
             warnings = validator.Warnings;
             var result = !warnings.Any();
@@ -245,6 +245,36 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Assert
             Assert.False(result);
+        }
+
+        [Fact]
+        public void PathParameterValidationShouldNotThrowWithEmptyParameterName()
+        {
+            // Arrange
+            var parameter = new OpenApiParameter
+            {
+                Name = string.Empty,
+                In = ParameterLocation.Path,
+                Required = true,
+                Schema = new OpenApiSchema()
+                {
+                    Type = JsonSchemaType.String,
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            validator.Enter("paths");
+            validator.Enter("/{}");
+            validator.Enter("get");
+            validator.Enter("parameters");
+            validator.Enter("1");
+
+            var walker = new OpenApiWalker(validator);
+            var exception = Record.Exception(() => walker.Walk((IOpenApiParameter)parameter));
+
+            // Assert
+            Assert.Null(exception);
         }
     }
 }
