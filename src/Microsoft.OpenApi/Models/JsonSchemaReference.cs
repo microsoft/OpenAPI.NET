@@ -157,10 +157,10 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
 
         // Extensions (properties starting with "x-")
         foreach (var property in jsonObject
-                    .Where(static p => p.Key.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase))
-                    .Where(static p => p.Value is JsonNode))
+                    .Where(static p => p.Key.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase)
+                            && p.Value is not null))
         {
-            var extensionValue = (JsonNode)property.Value!;
+            var extensionValue = property.Value!;
             Extensions ??= new Dictionary<string, IOpenApiExtension>(StringComparer.OrdinalIgnoreCase);
             Extensions[property.Key] = new JsonNodeExtension(extensionValue.DeepClone());
         }
