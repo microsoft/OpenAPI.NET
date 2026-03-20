@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
-            walker.Walk(schema);
+            walker.Walk((IOpenApiSchema)schema);
 
             warnings = validator.Warnings;
             var result = !warnings.Any();
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
-            walker.Walk(schema);
+            walker.Walk((IOpenApiSchema)schema);
 
             warnings = validator.Warnings;
             bool result = !warnings.Any();
@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
-            walker.Walk(schema);
+            walker.Walk((IOpenApiSchema)schema);
 
             warnings = validator.Warnings;
             var result = !warnings.Any();

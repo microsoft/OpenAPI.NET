@@ -33,10 +33,19 @@ namespace Microsoft.OpenApi
                 this._path.Push(string.Empty);
                 return;
             }
+            this._path.Push(EncodeJsonPointerSegment(segment));
+        }
+
+        internal static string EncodeJsonPointerSegment(string? segment)
+        {
+            if (string.IsNullOrEmpty(segment))
+            {
+                return string.Empty;
+            }
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP1_0_OR_GREATER
-            this._path.Push(segment.Replace("~", "~0", StringComparison.Ordinal).Replace("/", "~1", StringComparison.OrdinalIgnoreCase));
+            return segment.Replace("~", "~0", StringComparison.Ordinal).Replace("/", "~1", StringComparison.OrdinalIgnoreCase);
 #else
-            this._path.Push(segment.Replace("~", "~0").Replace("/", "~1"));
+            return segment!.Replace("~", "~0").Replace("/", "~1");
 #endif
         }
 

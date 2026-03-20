@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi
                 (context, parameter) =>
                 {
                     if (parameter.In == ParameterLocation.Path &&
-                           !(context.PathString.Contains("{" + parameter.Name + "}") || context.PathString.Contains("#/components")))
+                           !(context.PathString.Contains("{" + OpenApiVisitorBase.EncodeJsonPointerSegment(parameter.Name) + "}") || context.PathString.Contains("#/components")))
                     {
                         context.Enter("in");
                         context.CreateError(
