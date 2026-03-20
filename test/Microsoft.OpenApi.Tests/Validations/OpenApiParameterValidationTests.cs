@@ -203,7 +203,42 @@ namespace Microsoft.OpenApi.Validations.Tests
             validator.Enter("1");
 
             var walker = new OpenApiWalker(validator);
-            walker.Walk(parameter);
+            walker.Walk((IOpenApiParameter)parameter);
+
+            errors = validator.Errors;
+            var result = errors.Any();
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void PathParameterInThePathShouldBeOkWithSlashInParameterName()
+        {
+            // Arrange
+            IEnumerable<OpenApiError> errors;
+
+            var parameter = new OpenApiParameter
+            {
+                Name = "parameter/1",
+                In = ParameterLocation.Path,
+                Required = true,
+                Schema = new OpenApiSchema()
+                {
+                    Type = JsonSchemaType.String,
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            validator.Enter("paths");
+            validator.Enter("/{parameter/1}");
+            validator.Enter("get");
+            validator.Enter("parameters");
+            validator.Enter("1");
+
+            var walker = new OpenApiWalker(validator);
+            walker.Walk((IOpenApiParameter)parameter);
 
             errors = validator.Errors;
             var result = errors.Any();
