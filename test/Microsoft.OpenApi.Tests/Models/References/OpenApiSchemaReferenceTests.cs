@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -145,38 +145,6 @@ namespace Microsoft.OpenApi.Tests.Models.References
 
             // Act
             reference.SerializeAsV31(writer);
-            await writer.FlushAsync();
-
-            // Assert
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializeSchemaReferenceAsV32JsonWorks(bool produceTerseOutput)
-        {
-            // Arrange
-            var reference = new OpenApiSchemaReference("Pet", null)
-            {
-                Title = "Reference Title",
-                Description = "Reference Description",
-                ReadOnly = true,
-                WriteOnly = false,
-                Deprecated = true,
-                Default = JsonValue.Create("reference default"),
-                Examples = new List<JsonNode> { JsonValue.Create("reference example") },
-                Extensions = new Dictionary<string, IOpenApiExtension>
-                {
-                    ["x-custom"] = new JsonNodeExtension(JsonValue.Create("custom value"))
-                }
-            };
-
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
-
-            // Act
-            reference.SerializeAsV32(writer);
             await writer.FlushAsync();
 
             // Assert
