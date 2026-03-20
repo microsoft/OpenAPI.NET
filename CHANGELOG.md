@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.7.1](https://github.com/microsoft/OpenAPI.NET/compare/v2.7.0...v2.7.1) (2026-03-20)
+
+
+### Bug Fixes
+
+* a bug where path parameter validation would fail if they contained forbidden JSON pointer characters ([2efd2b2](https://github.com/microsoft/OpenAPI.NET/commit/2efd2b2e48be072f092115dface6cea3e0ba7182))
+* **library:** do not emit unevaluatedProperties for non-object schemas ([28d614f](https://github.com/microsoft/OpenAPI.NET/commit/28d614f3a8a4e98cfe202ab0f1ff8d75241bbdf8))
+* **library:** enforce spec-compliant $ref serialization; add Extensions support for schema references in v3.1/v3.2 ([7640a8a](https://github.com/microsoft/OpenAPI.NET/commit/7640a8aacea475505b64c9dc60f73f905909f5e7))
+
 ## [2.7.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.6.1...v2.7.0) (2026-03-05)
 
 
