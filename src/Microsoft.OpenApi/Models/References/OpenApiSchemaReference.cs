@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Schema reference object
     /// </summary>
-    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema, IOpenApiSchemaWithUnevaluatedProperties
+    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema, IOpenApiSchemaWithUnevaluatedProperties, IOpenApiExtensible
     {
 
         /// <summary>
@@ -158,7 +158,11 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public OpenApiXml? Xml { get => Target?.Xml; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions
+        {
+            get => Reference.Extensions ?? Target?.Extensions;
+            set => Reference.Extensions = value;
+        }
 
         /// <inheritdoc/>
         public IDictionary<string, JsonNode>? UnrecognizedKeywords { get => Target?.UnrecognizedKeywords; }

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -133,7 +133,11 @@ namespace Microsoft.OpenApi.Tests.Models.References
                 WriteOnly = false,
                 Deprecated = true,
                 Default = JsonValue.Create("reference default"),
-                Examples = new List<JsonNode> { JsonValue.Create("reference example") }
+                Examples = new List<JsonNode> { JsonValue.Create("reference example") },
+                Extensions = new Dictionary<string, IOpenApiExtension>
+                {
+                    ["x-custom"] = new JsonNodeExtension(JsonValue.Create("custom value"))
+                }
             };
 
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -152,7 +156,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
         [InlineData(false)]
         public async Task SerializeSchemaReferenceAsV3JsonWorks(bool produceTerseOutput)
         {
-            // Arrange
+            // Arrange - Extensions should NOT appear in v3.0 output
             var reference = new OpenApiSchemaReference("Pet", null)
             {
                 Title = "Reference Title",
@@ -161,7 +165,11 @@ namespace Microsoft.OpenApi.Tests.Models.References
                 WriteOnly = false,
                 Deprecated = true,
                 Default = JsonValue.Create("reference default"),
-                Examples = new List<JsonNode> { JsonValue.Create("reference example") }
+                Examples = new List<JsonNode> { JsonValue.Create("reference example") },
+                Extensions = new Dictionary<string, IOpenApiExtension>
+                {
+                    ["x-custom"] = new JsonNodeExtension(JsonValue.Create("custom value"))
+                }
             };
 
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -169,6 +177,38 @@ namespace Microsoft.OpenApi.Tests.Models.References
 
             // Act
             reference.SerializeAsV3(writer);
+            await writer.FlushAsync();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeSchemaReferenceAsV2JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange - Extensions should NOT appear in v2 output
+            var reference = new OpenApiSchemaReference("Pet", null)
+            {
+                Title = "Reference Title",
+                Description = "Reference Description",
+                ReadOnly = true,
+                WriteOnly = false,
+                Deprecated = true,
+                Default = JsonValue.Create("reference default"),
+                Examples = new List<JsonNode> { JsonValue.Create("reference example") },
+                Extensions = new Dictionary<string, IOpenApiExtension>
+                {
+                    ["x-custom"] = new JsonNodeExtension(JsonValue.Create("custom value"))
+                }
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            reference.SerializeAsV2(writer);
             await writer.FlushAsync();
 
             // Assert
@@ -255,6 +295,121 @@ namespace Microsoft.OpenApi.Tests.Models.References
             Assert.NotNull(targetSchema);
             Assert.Equal("Original Pet Title", targetSchema.Title);
             Assert.Equal("Original Pet Description", targetSchema.Description);
+        }
+
+        [Fact]
+        public void ParseSchemaReferenceWithExtensionsWorks()
+        {
+            // Arrange
+            var jsonContent = @"{
+  ""openapi"": ""3.1.0"",
+  ""info"": {
+    ""title"": ""Test API"",
+    ""version"": ""1.0.0""
+  },
+  ""paths"": {
+    ""/test"": {
+      ""get"": {
+        ""responses"": {
+          ""200"": {
+            ""description"": ""OK"",
+            ""content"": {
+              ""application/json"": {
+                ""schema"": {
+                  ""$ref"": ""#/components/schemas/Pet"",
+                  ""description"": ""A pet object"",
+                  ""x-custom-extension"": ""custom value"",
+                  ""x-another-extension"": 42
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  ""components"": {
+    ""schemas"": {
+      ""Pet"": {
+        ""type"": ""object"",
+        ""properties"": {
+          ""name"": {
+            ""type"": ""string""
+          }
+        }
+      }
+    }
+  }
+}";
+
+            // Act
+            var readResult = OpenApiDocument.Parse(jsonContent, "json");
+            var document = readResult.Document;
+
+            // Assert
+            Assert.NotNull(document);
+            Assert.Empty(readResult.Diagnostic.Errors);
+
+            var schema = document.Paths["/test"].Operations[HttpMethod.Get]
+                .Responses["200"].Content["application/json"].Schema;
+
+            Assert.IsType<OpenApiSchemaReference>(schema);
+            var schemaRef = (OpenApiSchemaReference)schema;
+
+            // Test that reference-level extensions are parsed
+            Assert.NotNull(schemaRef.Extensions);
+            Assert.Contains("x-custom-extension", schemaRef.Extensions.Keys);
+            Assert.Contains("x-another-extension", schemaRef.Extensions.Keys);
+        }
+
+        [Fact]
+        public async Task SchemaReferenceExtensionsNotWrittenInV30()
+        {
+            // Arrange
+            var reference = new OpenApiSchemaReference("Pet", null)
+            {
+                Description = "Local description",
+                Extensions = new Dictionary<string, IOpenApiExtension>
+                {
+                    ["x-custom"] = new JsonNodeExtension(JsonValue.Create("custom value"))
+                }
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = true });
+
+            // Act
+            reference.SerializeAsV3(writer);
+            await writer.FlushAsync();
+            var output = outputStringWriter.ToString();
+
+            // Assert: In v3.0, ONLY $ref should appear - no description, no extensions
+            Assert.Equal(@"{""$ref"":""#/components/schemas/Pet""}", output);
+        }
+
+        [Fact]
+        public async Task SchemaReferenceExtensionsNotWrittenInV2()
+        {
+            // Arrange
+            var reference = new OpenApiSchemaReference("Pet", null)
+            {
+                Description = "Local description",
+                Extensions = new Dictionary<string, IOpenApiExtension>
+                {
+                    ["x-custom"] = new JsonNodeExtension(JsonValue.Create("custom value"))
+                }
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = true });
+
+            // Act
+            reference.SerializeAsV2(writer);
+            await writer.FlushAsync();
+            var output = outputStringWriter.ToString();
+
+            // Assert: In v2, ONLY $ref should appear - no description, no extensions
+            Assert.Equal(@"{""$ref"":""#/definitions/Pet""}", output);
         }
     }
 }

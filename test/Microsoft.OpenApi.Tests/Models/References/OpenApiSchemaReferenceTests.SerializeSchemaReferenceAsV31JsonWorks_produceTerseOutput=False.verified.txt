@@ -7,5 +7,6 @@
   "examples": [
     "reference example"
   ],
+  "x-custom": "custom value",
   "$ref": "#/components/schemas/Pet"
 }
