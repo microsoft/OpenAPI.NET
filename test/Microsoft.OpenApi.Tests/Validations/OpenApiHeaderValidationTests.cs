@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
-            walker.Walk(header);
+            walker.Walk((IOpenApiHeader)header);
 
             warnings = validator.Warnings;
             var result = !warnings.Any();
