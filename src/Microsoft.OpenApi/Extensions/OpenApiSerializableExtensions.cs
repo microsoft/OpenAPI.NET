@@ -20,11 +20,27 @@ namespace Microsoft.OpenApi
         /// <param name="element">The Open API element.</param>
         /// <param name="stream">The output stream.</param>
         /// <param name="specVersion">The Open API specification version.</param>
+        /// <param name="settings">Optional JSON writer settings to control output formatting (e.g. compact vs indented).</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        public static Task SerializeAsJsonAsync<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, CancellationToken cancellationToken = default)
+        public static Task SerializeAsJsonAsync<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, OpenApiJsonWriterSettings? settings = null, CancellationToken cancellationToken = default)
             where T : IOpenApiSerializable
         {
-            return element.SerializeAsync(stream, specVersion, OpenApiConstants.Json, cancellationToken);
+            return element.SerializeAsync(stream, specVersion, OpenApiConstants.Json, settings, cancellationToken);
+        }
+
+        // 3.5 BACKCOMPAT OVERLOAD -- DO NOT TOUCH
+        /// <summary>
+        /// Serialize the <see cref="IOpenApiSerializable"/> to the Open API document (JSON) using the given stream and specification version.
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
+        /// <param name="element">The Open API element.</param>
+        /// <param name="stream">The output stream.</param>
+        /// <param name="specVersion">The Open API specification version.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static Task SerializeAsJsonAsync<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, CancellationToken cancellationToken)
+            where T : IOpenApiSerializable
+        {
+            return element.SerializeAsJsonAsync(stream, specVersion, null, cancellationToken);
         }
 
         /// <summary>
@@ -41,6 +57,7 @@ namespace Microsoft.OpenApi
             return element.SerializeAsync(stream, specVersion, OpenApiConstants.Yaml, cancellationToken);
         }
 
+        // 3.5 BACKCOMPAT OVERLOAD -- DO NOT TOUCH
         /// <summary>
         /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document using
         /// the given stream, specification version and the format.
@@ -56,7 +73,7 @@ namespace Microsoft.OpenApi
             Stream stream,
             OpenApiSpecVersion specVersion,
             string format,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
             where T : IOpenApiSerializable
         {
             return element.SerializeAsync(stream, specVersion, format, null, cancellationToken);
@@ -96,6 +113,7 @@ namespace Microsoft.OpenApi
             return element.SerializeAsync(writer, specVersion, cancellationToken);
         }
 
+        // 3.5 BACKCOMPAT OVERLOAD -- DO NOT TOUCH
         /// <summary>
         /// Serializes the <see cref="IOpenApiSerializable"/> to Open API document using the given specification version and writer.
         /// </summary>
@@ -104,7 +122,7 @@ namespace Microsoft.OpenApi
         /// <param name="writer">The output writer.</param>
         /// <param name="specVersion">Version of the specification the output should conform to</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        public static Task SerializeAsync<T>(this T element, IOpenApiWriter writer, OpenApiSpecVersion specVersion, CancellationToken cancellationToken = default)
+        public static Task SerializeAsync<T>(this T element, IOpenApiWriter writer, OpenApiSpecVersion specVersion, CancellationToken cancellationToken)
             where T : IOpenApiSerializable
         {
             Utils.CheckArgumentNull(element);
@@ -141,14 +159,47 @@ namespace Microsoft.OpenApi
         /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
         /// <param name="element">The Open API element.</param>
         /// <param name="specVersion">The Open API specification version.</param>
+        /// <param name="settings">JSON writer settings to control output formatting (e.g. compact vs indented).</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         public static Task<string> SerializeAsJsonAsync<T>(
             this T element,
             OpenApiSpecVersion specVersion,
-            CancellationToken cancellationToken = default)
+            OpenApiJsonWriterSettings settings,
+            CancellationToken cancellationToken)
+            where T : IOpenApiSerializable
+        {
+            return element.SerializeAsync(specVersion, OpenApiConstants.Json, settings, cancellationToken);
+        }
+
+        // 3.5 BACKCOMPAT OVERLOAD -- DO NOT TOUCH
+        /// <summary>
+        /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document as a string in JSON format.
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
+        /// <param name="element">The Open API element.</param>
+        /// <param name="specVersion">The Open API specification version.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static Task<string> SerializeAsJsonAsync<T>(
+            this T element,
+            OpenApiSpecVersion specVersion,
+            CancellationToken cancellationToken)
             where T : IOpenApiSerializable
         {
             return element.SerializeAsync(specVersion, OpenApiConstants.Json, cancellationToken);
+        }
+
+        /// <summary>
+        /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document as a string in JSON format using default settings.
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
+        /// <param name="element">The Open API element.</param>
+        /// <param name="specVersion">The Open API specification version.</param>
+        public static Task<string> SerializeAsJsonAsync<T>(
+            this T element,
+            OpenApiSpecVersion specVersion)
+            where T : IOpenApiSerializable
+        {
+            return element.SerializeAsJsonAsync(specVersion, default(CancellationToken));
         }
 
         /// <summary>
@@ -174,18 +225,20 @@ namespace Microsoft.OpenApi
         /// <param name="element">The Open API element.</param>
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="format">Open API document format.</param>
+        /// <param name="settings">Provide configuration settings for controlling writing output</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         public static async Task<string> SerializeAsync<T>(
             this T element,
             OpenApiSpecVersion specVersion,
             string format,
-            CancellationToken cancellationToken = default)
+            OpenApiWriterSettings settings,
+            CancellationToken cancellationToken)
             where T : IOpenApiSerializable
         {
             Utils.CheckArgumentNull(element);
 
             using var stream = new MemoryStream();
-            await element.SerializeAsync(stream, specVersion, format, cancellationToken).ConfigureAwait(false);
+            await element.SerializeAsync(stream, specVersion, format, settings, cancellationToken).ConfigureAwait(false);
             stream.Position = 0;
 
             using var streamReader = new StreamReader(stream);
@@ -194,6 +247,41 @@ namespace Microsoft.OpenApi
 #else
             return await streamReader.ReadToEndAsync().ConfigureAwait(false);
 #endif
+        }
+
+        // 3.5 BACKCOMPAT OVERLOAD -- DO NOT TOUCH
+        /// <summary>
+        /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document as a string in the given format.
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
+        /// <param name="element">The Open API element.</param>
+        /// <param name="specVersion">The Open API specification version.</param>
+        /// <param name="format">Open API document format.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static Task<string> SerializeAsync<T>(
+            this T element,
+            OpenApiSpecVersion specVersion,
+            string format,
+            CancellationToken cancellationToken)
+            where T : IOpenApiSerializable
+        {
+            return element.SerializeAsync(specVersion, format, new OpenApiWriterSettings(), cancellationToken);
+        }
+
+        /// <summary>
+        /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document as a string in the given format using default settings.
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
+        /// <param name="element">The Open API element.</param>
+        /// <param name="specVersion">The Open API specification version.</param>
+        /// <param name="format">Open API document format.</param>
+        public static Task<string> SerializeAsync<T>(
+            this T element,
+            OpenApiSpecVersion specVersion,
+            string format)
+            where T : IOpenApiSerializable
+        {
+            return element.SerializeAsync(specVersion, format, default(CancellationToken));
         }
     }
 }
