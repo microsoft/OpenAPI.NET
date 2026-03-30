@@ -79,11 +79,7 @@ namespace Microsoft.OpenApi
 
             writer.WriteStartObject();
 
-            // Reaching this point means the reference to a specific OpenApiSecurityScheme fails.
-            // We are not able to serialize this SecurityScheme/Scopes key value pair since we do not know what
-            // string to output.
-
-            foreach (var securitySchemeAndScopesValuePair in this.Where(static p => p.Key?.Target is not null))
+            foreach (var securitySchemeAndScopesValuePair in this.Where(static p => CanSerializeSecurityScheme(p.Key)))
             {
                 var securityScheme = securitySchemeAndScopesValuePair.Key;
                 var scopes = securitySchemeAndScopesValuePair.Value;
@@ -101,6 +97,25 @@ namespace Microsoft.OpenApi
             }
 
             writer.WriteEndObject();
+        }
+
+        private static bool CanSerializeSecurityScheme(OpenApiSecuritySchemeReference? securityScheme)
+        {
+            if (securityScheme is null)
+            {
+                return false;
+            }
+
+            if (securityScheme.Target is not null)
+            {
+                return true;
+            }
+
+            var schemeId = securityScheme.Reference?.Id;
+            var securitySchemes = securityScheme.Reference?.HostDocument?.Components?.SecuritySchemes;
+            return !string.IsNullOrEmpty(schemeId)
+                && securitySchemes is not null
+                && securitySchemes.ContainsKey(schemeId!);
         }
 
         /// <summary>
