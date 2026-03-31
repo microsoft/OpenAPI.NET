@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
@@ -2357,6 +2358,55 @@ components:
             var actualOperation = doc.Paths["/repairs"]!.Operations![HttpMethod.Get];
             Assert.NotNull(actualOperation.Security);
             Assert.Empty(actualOperation.Security);
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        public async Task SerializeDocumentWithSecurityRequirementAsJsonWorks(OpenApiSpecVersion openApiSpecVersion)
+        {
+            // Arrange
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test", Version = "1.0" },
+                Components = new OpenApiComponents
+                {
+                    SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>(StringComparer.Ordinal)
+                    {
+                        ["Bearer"] = new OpenApiSecurityScheme
+                        {
+                            Type = SecuritySchemeType.Http,
+                            Scheme = "Bearer",
+                            BearerFormat = "JWT",
+                        },
+                    },
+                },
+            };
+
+            doc.Security =
+            [
+                new OpenApiSecurityRequirement
+                {
+                    { new OpenApiSecuritySchemeReference("Bearer", doc), [] },
+                },
+            ];
+
+            var expected =
+                """
+                [
+                  {
+                    "Bearer": []
+                  }
+                ]
+                """;
+
+            // Act
+            var actual = await doc.SerializeAsJsonAsync(openApiSpecVersion);
+
+            // Assert
+            var actualSecurity = JsonNode.Parse(actual)?["security"];
+            Assert.NotNull(actualSecurity);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), actualSecurity));
         }
     }
 }
