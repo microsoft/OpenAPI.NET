@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.2](https://github.com/microsoft/OpenAPI.NET/compare/v2.7.1...v2.7.2) (2026-03-31)
+
+
+### Bug Fixes
+
+* security requirement reference serialization ([0945eec](https://github.com/microsoft/OpenAPI.NET/commit/0945eec2be73e663cb7bfb910aa37885cb92040e))
+
 ## [2.7.1](https://github.com/microsoft/OpenAPI.NET/compare/v2.7.0...v2.7.1) (2026-03-20)
 
 
