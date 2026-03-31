@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.1](https://github.com/microsoft/OpenAPI.NET/compare/v3.5.0...v3.5.1) (2026-03-31)
+
+
+### Bug Fixes
+
+* security scheme references serialization ([a5acb89](https://github.com/microsoft/OpenAPI.NET/commit/a5acb896cb46a58702c07bc742b5e114ba90f95a))
+
 ## [3.5.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.4.0...v3.5.0) (2026-03-20)
 
 
