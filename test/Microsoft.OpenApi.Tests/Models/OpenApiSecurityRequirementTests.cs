@@ -130,8 +130,10 @@ namespace Microsoft.OpenApi.Tests.Models
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
-        [Fact]
-        public async Task SerializeSecurityRequirementWithReferencedSecuritySchemeAsV3JsonWorks()
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        public async Task SerializeSecurityRequirementWithReferencedSecuritySchemeAsJsonWorks(OpenApiSpecVersion openApiSpecVersion)
         {
             // Arrange
             var expected =
@@ -151,41 +153,16 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await SecurityRequirementWithReferencedSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await SecurityRequirementWithReferencedSecurityScheme.SerializeAsJsonAsync(openApiSpecVersion);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
-        [Fact]
-        public async Task SerializeSecurityRequirementWithReferencedSecuritySchemeAsV2JsonWorks()
-        {
-            // Arrange
-            var expected =
-                """
-                {
-                  "scheme1": [
-                    "scope1",
-                    "scope2",
-                    "scope3"
-                  ],
-                  "scheme2": [
-                    "scope4",
-                    "scope5"
-                  ],
-                  "scheme3": [ ]
-                }
-                """;
-
-            // Act
-            var actual = await SecurityRequirementWithReferencedSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
-
-            // Assert
-            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
-        }
-
-        [Fact]
-        public async Task SerializeSecurityRequirementWithUnreferencedSecuritySchemeAsV3JsonShouldSkipUnserializableKeyValuePair()
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        public async Task SerializeSecurityRequirementWithUnreferencedSecuritySchemeAsJsonShouldSkipUnserializableKeyValuePair(OpenApiSpecVersion openApiSpecVersion)
         {
             // Arrange
             var expected =
@@ -201,31 +178,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
-
-            // Assert
-            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
-        }
-
-        [Fact]
-        public async Task SerializeSecurityRequirementWithUnreferencedSecuritySchemeAsV2JsonShouldSkipUnserializableKeyValuePair()
-        {
-            // Arrange
-            var expected =
-                """
-                {
-                  "scheme1": [
-                    "scope1",
-                    "scope2",
-                    "scope3"
-                  ],
-                  "scheme3": [ ]
-                }
-                """;
-
-            // Act
-            var actual =
-                await SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJsonAsync(openApiSpecVersion);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
