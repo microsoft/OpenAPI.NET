@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.29](https://github.com/microsoft/OpenAPI.NET/compare/v1.6.28...v1.6.29) (2026-04-14)
+
+
+### Bug Fixes
+
+* **hidi:** update Microsoft.OpenApi.OData to 1.7.6 ([11ba851](https://github.com/microsoft/OpenAPI.NET/commit/11ba851eb7d0d8be034903a0163dcb84955fd3ce))
+* **hidi:** update Microsoft.OpenApi.OData to 1.7.6 ([f596327](https://github.com/microsoft/OpenAPI.NET/commit/f5963276f95d1808177e5ada9025192d2ce5540a)), closes [#2813](https://github.com/microsoft/OpenAPI.NET/issues/2813)
+
 ## [1.6.28](https://github.com/microsoft/openapi.net/compare/v1.6.27...v1.6.28) (2025-10-06)
 
 
