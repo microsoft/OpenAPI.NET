@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.5.2](https://github.com/microsoft/OpenAPI.NET/compare/v3.5.1...v3.5.2) (2026-04-14)
+
+
+### Bug Fixes
+
+* **hidi:** update Microsoft.OpenApi.OData to 3.2.1 ([b0a68fb](https://github.com/microsoft/OpenAPI.NET/commit/b0a68fbe53593139ba51e758bcc01fcd188d7cb8))
+* **hidi:** update Microsoft.OpenApi.OData to 3.2.1 ([8c22ab2](https://github.com/microsoft/OpenAPI.NET/commit/8c22ab2b3a885344197bf0f05d6df63ecb771927)), closes [#2811](https://github.com/microsoft/OpenAPI.NET/issues/2811)
+
 ## [3.5.1](https://github.com/microsoft/OpenAPI.NET/compare/v3.5.0...v3.5.1) (2026-03-31)
 
 
