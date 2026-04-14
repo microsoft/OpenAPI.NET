@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.7.3](https://github.com/microsoft/OpenAPI.NET/compare/v2.7.2...v2.7.3) (2026-04-14)
+
+
+### Bug Fixes
+
+* **hidi:** update Microsoft.OpenApi.OData to 2.2.1 ([1e01cd5](https://github.com/microsoft/OpenAPI.NET/commit/1e01cd5e2f881fffb8848f6df0d5268162f276d8))
+* **hidi:** update Microsoft.OpenApi.OData to 2.2.1 ([c890703](https://github.com/microsoft/OpenAPI.NET/commit/c89070396bbbf36632d542f46743a3e6ced6f0e2)), closes [#2812](https://github.com/microsoft/OpenAPI.NET/issues/2812)
+
 ## [2.7.2](https://github.com/microsoft/OpenAPI.NET/compare/v2.7.1...v2.7.2) (2026-03-31)
 
 
