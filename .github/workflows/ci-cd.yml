@@ -13,10 +13,15 @@ jobs:
       ARTIFACTS_FOLDER: ${{ github.workspace }}/Artifacts
       GITHUB_RUN_NUMBER: ${{ github.run_number }}
     steps:
-      - name: Setup .NET
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.x
 
       - name: Checkout repository
         id: checkout_repo
@@ -29,13 +34,13 @@ jobs:
         id: build_projects
         shell: pwsh
         run: |
-          dotnet build Microsoft.OpenApi.sln -c Release
+          dotnet build Microsoft.OpenApi.slnx -c Release
 
       - name: Run unit tests
         id: run_unit_tests
         shell: pwsh
         run: |
-          dotnet test Microsoft.OpenApi.sln -c Release -v n
+          dotnet test Microsoft.OpenApi.slnx -c Release -v n
 
   validate-trimming:
     name: Validate Project for Trimming
@@ -43,13 +48,18 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Setup .NET
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
 
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.x
+
       - name: Validate Trimming warnings
-        run: dotnet publish -c Release -r win-x64 /p:TreatWarningsAsErrors=true /warnaserror -f net8.0
+        run: dotnet publish -c Release -r win-x64 /p:TreatWarningsAsErrors=true /warnaserror -f net10.0
         working-directory: ./test/Microsoft.OpenApi.Trimming.Tests
 
   validate-performance:
@@ -60,10 +70,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup .NET
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.x
 
       - name: Copy committed results
         run: |
