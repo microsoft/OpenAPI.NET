@@ -1,14 +1,17 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+#pragma warning disable OAI020 // Internal implementation uses experimental APIs
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.OpenApi;
 
 /// <summary>
 /// Provides helper methods for converting OpenAPI JSON Pointer paths between specification versions.
 /// </summary>
+[Experimental("OAI020", UrlFormat = "https://aka.ms/openapi/net/experimental/{0}")]
 public static class OpenApiPathHelper
 {
     private static readonly Dictionary<OpenApiSpecVersion, IOpenApiPathRepresentationPolicy[]> _policies = new()

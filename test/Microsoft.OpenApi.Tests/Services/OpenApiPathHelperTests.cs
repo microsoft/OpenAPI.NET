@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 #nullable enable
+#pragma warning disable OAI020 // Type is for evaluation purposes only
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Services;
