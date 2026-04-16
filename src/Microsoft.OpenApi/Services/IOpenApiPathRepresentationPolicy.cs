@@ -3,22 +3,19 @@
 
 namespace Microsoft.OpenApi;
 /// <summary>
-/// Defines a policy for matching and transforming OpenAPI JSON Pointer paths
+/// Defines a policy for matching and transforming OpenAPI JSON Pointer path segments
 /// between specification versions.
 /// </summary>
 internal interface IOpenApiPathRepresentationPolicy
 {
     /// <summary>
-    /// Determines whether this policy can handle the given path.
+    /// Attempts to transform the given path segments to the equivalent in the target version.
     /// </summary>
-    /// <param name="path">The JSON Pointer path to evaluate.</param>
-    /// <returns><c>true</c> if this policy applies to the given path; otherwise, <c>false</c>.</returns>
-    bool IsMatch(string path);
-
-    /// <summary>
-    /// Transforms the given path to its equivalent in the target specification version.
-    /// </summary>
-    /// <param name="path">The JSON Pointer path to transform.</param>
-    /// <returns>The transformed path, or <c>null</c> if the path has no equivalent in the target version.</returns>
-    string? GetVersionedPath(string path);
+    /// <param name="segments">The pre-parsed path segments (without the <c>#/</c> prefix).</param>
+    /// <param name="result">
+    /// When this method returns <c>true</c>, contains the transformed path or <c>null</c>
+    /// if the path has no equivalent in the target version.
+    /// </param>
+    /// <returns><c>true</c> if this policy handled the path; <c>false</c> to try the next policy.</returns>
+    bool TryGetVersionedPath(string[] segments, out string? result);
 }

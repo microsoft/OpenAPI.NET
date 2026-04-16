@@ -52,11 +52,18 @@ public static class OpenApiPathHelper
             return path;
         }
 
+        // Parse once, share across all policies.
+        var segments = GetSegments(path);
+        if (segments.Length == 0)
+        {
+            return path;
+        }
+
         foreach (var policy in matchingPolicies)
         {
-            if (policy.IsMatch(path))
+            if (policy.TryGetVersionedPath(segments, out var result))
             {
-                return policy.GetVersionedPath(path);
+                return result;
             }
         }
 
@@ -73,37 +80,87 @@ public static class OpenApiPathHelper
             return [];
         }
 
-        ReadOnlySpan<char> span = path.AsSpan();
-        if (span.StartsWith("#/".AsSpan(), StringComparison.Ordinal))
-        {
-            span = span.Slice(2);
-        }
-
-        if (span.IsEmpty)
+        // Work on the original string directly to avoid an extra allocation from span.ToString().
+        var startIndex = path.StartsWith("#/", StringComparison.Ordinal) ? 2 : 0;
+        if (startIndex >= path.Length)
         {
             return [];
         }
 
-        return span.ToString().Split('/');
+        return path.Substring(startIndex).Split('/');
     }
 
     /// <summary>
-    /// Rebuilds a JSON Pointer path from segments.
+    /// Rebuilds a JSON Pointer path from segments, allocating only one string.
     /// </summary>
-    internal static string BuildPath(string[] segments)
+    /// <param name="segments">The segment buffer.</param>
+    /// <param name="length">The number of segments to use from the buffer.</param>
+    internal static string BuildPath(string[] segments, int length)
     {
-        return "#/" + string.Join("/", segments);
+#if NET8_0_OR_GREATER
+        // Pre-calculate total length: "#/" + segments joined by "/"
+        var totalLength = 2; // "#/"
+        for (var i = 0; i < length; i++)
+        {
+            if (i > 0)
+            {
+                totalLength++; // "/"
+            }
+
+            totalLength += segments[i].Length;
+        }
+
+        return string.Create(totalLength, (segments, length), static (span, state) =>
+        {
+            span[0] = '#';
+            span[1] = '/';
+            var pos = 2;
+            for (var i = 0; i < state.length; i++)
+            {
+                if (i > 0)
+                {
+                    span[pos++] = '/';
+                }
+
+                state.segments[i].AsSpan().CopyTo(span.Slice(pos));
+                pos += state.segments[i].Length;
+            }
+        });
+#else
+        var sb = new System.Text.StringBuilder(2 + length * 8);
+        sb.Append("#/");
+        for (var i = 0; i < length; i++)
+        {
+            if (i > 0)
+            {
+                sb.Append('/');
+            }
+
+            sb.Append(segments[i]);
+        }
+
+        return sb.ToString();
+#endif
     }
 
     /// <summary>
-    /// Removes segments at the specified indices by building a new array without them.
+    /// Copies segments into the target buffer, skipping a contiguous range.
+    /// Returns the number of segments written.
     /// </summary>
-    internal static string[] RemoveSegments(string[] segments, int startIndex, int count)
+    internal static int CopySkipping(string[] source, int sourceLength, string[] target, int skipStart, int skipCount)
     {
-        var result = new string[segments.Length - count];
-        Array.Copy(segments, 0, result, 0, startIndex);
-        Array.Copy(segments, startIndex + count, result, startIndex, segments.Length - startIndex - count);
-        return result;
+        var written = 0;
+        for (var i = 0; i < sourceLength; i++)
+        {
+            if (i >= skipStart && i < skipStart + skipCount)
+            {
+                continue;
+            }
+
+            target[written++] = source[i];
+        }
+
+        return written;
     }
 }
 
@@ -125,22 +182,27 @@ internal sealed class V2UnsupportedPathPolicy : IOpenApiPathRepresentationPolicy
         OpenApiConstants.MediaTypes,
     };
 
-    public bool IsMatch(string path)
+    // Segments that are always unsupported regardless of position (except index 0 which is checked separately).
+    private static readonly HashSet<string> UnsupportedSegments = new(StringComparer.Ordinal)
     {
-        var segments = OpenApiPathHelper.GetSegments(path);
+        OpenApiConstants.Servers,
+        OpenApiConstants.Callbacks,
+        OpenApiConstants.Links,
+        OpenApiConstants.RequestBody,
+    };
+
+    public bool TryGetVersionedPath(string[] segments, out string? result)
+    {
+        result = null;
+
         if (segments.Length == 0)
         {
             return false;
         }
 
-        // Top-level servers: #/servers/**
-        if (string.Equals(segments[0], OpenApiConstants.Servers, StringComparison.Ordinal))
-        {
-            return true;
-        }
-
-        // Top-level webhooks: #/webhooks/**
-        if (string.Equals(segments[0], OpenApiConstants.Webhooks, StringComparison.Ordinal))
+        // Top-level: #/servers/** or #/webhooks/**
+        if (string.Equals(segments[0], OpenApiConstants.Servers, StringComparison.Ordinal) ||
+            string.Equals(segments[0], OpenApiConstants.Webhooks, StringComparison.Ordinal))
         {
             return true;
         }
@@ -153,31 +215,13 @@ internal sealed class V2UnsupportedPathPolicy : IOpenApiPathRepresentationPolicy
             return true;
         }
 
-        // Walk through segments looking for v3-only constructs in context
+        // Walk through segments looking for v3-only constructs
         for (var i = 1; i < segments.Length; i++)
         {
             var segment = segments[i];
 
-            // servers at any nested level (path-item/operation level)
-            if (string.Equals(segment, OpenApiConstants.Servers, StringComparison.Ordinal))
-            {
-                return true;
-            }
-
-            // callbacks at operation level
-            if (string.Equals(segment, OpenApiConstants.Callbacks, StringComparison.Ordinal))
-            {
-                return true;
-            }
-
-            // links at response level
-            if (string.Equals(segment, OpenApiConstants.Links, StringComparison.Ordinal))
-            {
-                return true;
-            }
-
-            // inline requestBody at operation level
-            if (string.Equals(segment, OpenApiConstants.RequestBody, StringComparison.Ordinal))
+            // servers, callbacks, links, requestBody at any nested level
+            if (UnsupportedSegments.Contains(segment))
             {
                 return true;
             }
@@ -193,8 +237,6 @@ internal sealed class V2UnsupportedPathPolicy : IOpenApiPathRepresentationPolicy
 
         return false;
     }
-
-    public string? GetVersionedPath(string path) => null;
 }
 
 /// <summary>
@@ -203,23 +245,23 @@ internal sealed class V2UnsupportedPathPolicy : IOpenApiPathRepresentationPolicy
 /// </summary>
 internal sealed class V3_0UnsupportedPathPolicy : IOpenApiPathRepresentationPolicy
 {
-    public bool IsMatch(string path)
+    public bool TryGetVersionedPath(string[] segments, out string? result)
     {
-        var segments = OpenApiPathHelper.GetSegments(path);
-        if (segments.Length == 0)
+        result = null;
+
+        if (segments.Length > 0 &&
+            string.Equals(segments[0], OpenApiConstants.Webhooks, StringComparison.Ordinal))
         {
-            return false;
+            return true;
         }
 
-        // webhooks were added in v3.1
-        return string.Equals(segments[0], OpenApiConstants.Webhooks, StringComparison.Ordinal);
+        return false;
     }
-
-    public string? GetVersionedPath(string path) => null;
 }
 
 /// <summary>
-/// Renames v3 component paths to their v2 equivalents.
+/// Renames v3 component paths to their v2 equivalents and applies nested transformations
+/// (content unwrapping, header schema unwrapping) in a single pass.
 /// <list type="bullet">
 ///   <item><c>#/components/schemas/{name}/**</c> → <c>#/definitions/{name}/**</c></item>
 ///   <item><c>#/components/parameters/{name}/**</c> → <c>#/parameters/{name}/**</c></item>
@@ -237,38 +279,49 @@ internal sealed class V2ComponentRenamePolicy : IOpenApiPathRepresentationPolicy
         [OpenApiConstants.SecuritySchemes] = OpenApiConstants.SecurityDefinitions,
     };
 
-    public bool IsMatch(string path)
+    public bool TryGetVersionedPath(string[] segments, out string? result)
     {
-        var segments = OpenApiPathHelper.GetSegments(path);
+        result = null;
 
-        return segments.Length >= 2 &&
-               string.Equals(segments[0], OpenApiConstants.Components, StringComparison.Ordinal) &&
-               ComponentMappings.ContainsKey(segments[1]);
-    }
+        if (segments.Length < 2 ||
+            !string.Equals(segments[0], OpenApiConstants.Components, StringComparison.Ordinal) ||
+            !ComponentMappings.TryGetValue(segments[1], out var v2Name))
+        {
+            return false;
+        }
 
-    public string? GetVersionedPath(string path)
-    {
-        var segments = OpenApiPathHelper.GetSegments(path);
-        var v2Name = ComponentMappings[segments[1]];
+        // Build the transformed path in one pass:
+        // - Skip "components" (index 0), replace component type (index 1) with v2 name
+        // - Apply content unwrapping and header schema unwrapping inline
+        var buffer = new string[segments.Length]; // upper bound
+        var written = 0;
+        buffer[written++] = v2Name;
 
-        // Remove "components" (index 0) and replace the component type name (index 1)
-        segments[1] = v2Name;
-        var result = OpenApiPathHelper.RemoveSegments(segments, 0, 1);
+        for (var i = 2; i < segments.Length; i++)
+        {
+            // Content unwrapping: skip "content" and "{mediaType}" after "responses/{code}"
+            if (string.Equals(segments[i], OpenApiConstants.Content, StringComparison.Ordinal) &&
+                i >= 3 &&
+                string.Equals(segments[i - 2], OpenApiConstants.Responses, StringComparison.Ordinal) &&
+                i + 1 < segments.Length)
+            {
+                i++; // skip mediaType too
+                continue;
+            }
 
-        // Apply further transformations to the result (e.g., schema unwrapping within components)
-        var resultPath = OpenApiPathHelper.BuildPath(result);
-        return ApplyNestedTransformations(resultPath);
-    }
+            // Header schema unwrapping: skip "schema" after "headers/{name}"
+            if (string.Equals(segments[i], OpenApiConstants.Schema, StringComparison.Ordinal) &&
+                i >= 3 &&
+                string.Equals(segments[i - 2], OpenApiConstants.Headers, StringComparison.Ordinal))
+            {
+                continue;
+            }
 
-    private static string? ApplyNestedTransformations(string path)
-    {
-        // After renaming, a component response might still have content/{mt}/schema
-        // e.g. #/components/responses/NotFound/content/application~1json/schema →
-        //       #/responses/NotFound/schema (needs content unwrapping)
-        var segments = OpenApiPathHelper.GetSegments(path);
-        segments = V2ResponseContentUnwrappingPolicy.UnwrapContentSegments(segments);
-        segments = V2HeaderSchemaUnwrappingPolicy.UnwrapHeaderSchemaSegments(segments);
-        return OpenApiPathHelper.BuildPath(segments);
+            buffer[written++] = segments[i];
+        }
+
+        result = OpenApiPathHelper.BuildPath(buffer, written);
+        return true;
     }
 }
 
@@ -278,55 +331,32 @@ internal sealed class V2ComponentRenamePolicy : IOpenApiPathRepresentationPolicy
 /// </summary>
 internal sealed class V2ResponseContentUnwrappingPolicy : IOpenApiPathRepresentationPolicy
 {
-    public bool IsMatch(string path)
+    public bool TryGetVersionedPath(string[] segments, out string? result)
     {
-        var segments = OpenApiPathHelper.GetSegments(path);
-        return FindContentIndex(segments) >= 0;
-    }
+        result = null;
 
-    public string? GetVersionedPath(string path)
-    {
-        var segments = OpenApiPathHelper.GetSegments(path);
-        segments = UnwrapContentSegments(segments);
-        return OpenApiPathHelper.BuildPath(segments);
-    }
-
-    /// <summary>
-    /// Finds the "content" segment that follows a "responses/{code}" sequence.
-    /// Returns the index of "content", or -1 if not found.
-    /// </summary>
-    private static int FindContentIndex(string[] segments)
-    {
-        // Look for: responses / {code} / content / {mediaType}
+        // Find: responses / {code} / content / {mediaType}
+        var contentIndex = -1;
         for (var i = 0; i < segments.Length - 3; i++)
         {
             if (string.Equals(segments[i], OpenApiConstants.Responses, StringComparison.Ordinal) &&
                 string.Equals(segments[i + 2], OpenApiConstants.Content, StringComparison.Ordinal))
             {
-                return i + 2;
+                contentIndex = i + 2;
+                break;
             }
         }
 
-        return -1;
-    }
-
-    /// <summary>
-    /// Removes the "content" and "{mediaType}" segments from a response path.
-    /// </summary>
-    internal static string[] UnwrapContentSegments(string[] segments)
-    {
-        // Look for: responses / {code} / content / {mediaType} / ...
-        for (var i = 0; i < segments.Length - 3; i++)
+        if (contentIndex < 0)
         {
-            if (string.Equals(segments[i], OpenApiConstants.Responses, StringComparison.Ordinal) &&
-                string.Equals(segments[i + 2], OpenApiConstants.Content, StringComparison.Ordinal))
-            {
-                // Remove "content" (i+2) and "{mediaType}" (i+3)
-                return OpenApiPathHelper.RemoveSegments(segments, i + 2, 2);
-            }
+            return false;
         }
 
-        return segments;
+        // Remove "content" and "{mediaType}" — copy segments skipping those two
+        var buffer = new string[segments.Length - 2];
+        var written = OpenApiPathHelper.CopySkipping(segments, segments.Length, buffer, contentIndex, 2);
+        result = OpenApiPathHelper.BuildPath(buffer, written);
+        return true;
     }
 }
 
@@ -336,54 +366,31 @@ internal sealed class V2ResponseContentUnwrappingPolicy : IOpenApiPathRepresenta
 /// </summary>
 internal sealed class V2HeaderSchemaUnwrappingPolicy : IOpenApiPathRepresentationPolicy
 {
-    public bool IsMatch(string path)
+    public bool TryGetVersionedPath(string[] segments, out string? result)
     {
-        var segments = OpenApiPathHelper.GetSegments(path);
-        return FindHeaderSchemaIndex(segments) >= 0;
-    }
+        result = null;
 
-    public string? GetVersionedPath(string path)
-    {
-        var segments = OpenApiPathHelper.GetSegments(path);
-        segments = UnwrapHeaderSchemaSegments(segments);
-        return OpenApiPathHelper.BuildPath(segments);
-    }
-
-    /// <summary>
-    /// Finds the "schema" segment that follows a "headers/{name}" sequence.
-    /// Returns the index of "schema", or -1 if not found.
-    /// </summary>
-    private static int FindHeaderSchemaIndex(string[] segments)
-    {
-        // Look for: headers / {name} / schema
+        // Find: headers / {name} / schema
+        var schemaIndex = -1;
         for (var i = 0; i < segments.Length - 2; i++)
         {
             if (string.Equals(segments[i], OpenApiConstants.Headers, StringComparison.Ordinal) &&
                 string.Equals(segments[i + 2], OpenApiConstants.Schema, StringComparison.Ordinal))
             {
-                return i + 2;
+                schemaIndex = i + 2;
+                break;
             }
         }
 
-        return -1;
-    }
-
-    /// <summary>
-    /// Removes the "schema" segment from a header path.
-    /// </summary>
-    internal static string[] UnwrapHeaderSchemaSegments(string[] segments)
-    {
-        // Look for: headers / {name} / schema
-        for (var i = 0; i < segments.Length - 2; i++)
+        if (schemaIndex < 0)
         {
-            if (string.Equals(segments[i], OpenApiConstants.Headers, StringComparison.Ordinal) &&
-                string.Equals(segments[i + 2], OpenApiConstants.Schema, StringComparison.Ordinal))
-            {
-                // Remove "schema" (i+2)
-                return OpenApiPathHelper.RemoveSegments(segments, i + 2, 1);
-            }
+            return false;
         }
 
-        return segments;
+        // Remove "schema" — copy segments skipping that one
+        var buffer = new string[segments.Length - 1];
+        var written = OpenApiPathHelper.CopySkipping(segments, segments.Length, buffer, schemaIndex, 1);
+        result = OpenApiPathHelper.BuildPath(buffer, written);
+        return true;
     }
 }
