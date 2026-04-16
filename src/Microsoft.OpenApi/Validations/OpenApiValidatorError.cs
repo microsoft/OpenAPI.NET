@@ -20,5 +20,23 @@ namespace Microsoft.OpenApi
         /// Name of rule that detected the error.
         /// </summary>
         public string RuleName { get; set; }
+
+        /// <summary>
+        /// Gets the error pointer translated to the equivalent path for the specified OpenAPI version.
+        /// </summary>
+        /// <param name="targetVersion">The target OpenAPI specification version.</param>
+        /// <returns>
+        /// The equivalent pointer in the target version, the original pointer if no transformation is needed,
+        /// or <c>null</c> if the pointer has no equivalent in the target version.
+        /// </returns>
+        public string? GetVersionedPointer(OpenApiSpecVersion targetVersion)
+        {
+            if (Pointer is null)
+            {
+                return null;
+            }
+
+            return OpenApiPathHelper.GetVersionedPath(Pointer, targetVersion);
+        }
     }
 }

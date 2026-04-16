@@ -1,1 +1,4 @@
 #nullable enable
+Microsoft.OpenApi.OpenApiPathHelper
+static Microsoft.OpenApi.OpenApiPathHelper.GetVersionedPath(string! path, Microsoft.OpenApi.OpenApiSpecVersion targetVersion) -> string?
+Microsoft.OpenApi.OpenApiValidatorError.GetVersionedPointer(Microsoft.OpenApi.OpenApiSpecVersion targetVersion) -> string?
