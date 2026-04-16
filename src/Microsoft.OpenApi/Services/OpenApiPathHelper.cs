@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Microsoft.OpenApi;
 
@@ -59,12 +60,10 @@ public static class OpenApiPathHelper
             return path;
         }
 
-        foreach (var policy in matchingPolicies)
+        string? versionedPath = null;
+        if (matchingPolicies.Any(policy => policy.TryGetVersionedPath(segments, out versionedPath)))
         {
-            if (policy.TryGetVersionedPath(segments, out var result))
-            {
-                return result;
-            }
+            return versionedPath;
         }
 
         return path;
