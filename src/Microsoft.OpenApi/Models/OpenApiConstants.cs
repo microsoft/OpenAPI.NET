@@ -31,6 +31,11 @@ namespace Microsoft.OpenApi
         public const string Yml = "yml";
 
         /// <summary>
+        /// Field: Toml
+        /// </summary>
+        public const string Toml = "toml";
+
+        /// <summary>
         /// Field: Info
         /// </summary>
         public const string Info = "info";

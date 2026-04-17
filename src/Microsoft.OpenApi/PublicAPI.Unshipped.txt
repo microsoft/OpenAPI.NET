@@ -1,1 +1,26 @@
 #nullable enable
+const Microsoft.OpenApi.OpenApiConstants.Toml = "toml" -> string!
+Microsoft.OpenApi.OpenApiTomlWriter
+Microsoft.OpenApi.OpenApiTomlWriter.OpenApiTomlWriter(System.IO.TextWriter! textWriter) -> void
+Microsoft.OpenApi.OpenApiTomlWriter.OpenApiTomlWriter(System.IO.TextWriter! textWriter, Microsoft.OpenApi.OpenApiWriterSettings? settings) -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.BaseIndentation.get -> int
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteEndArray() -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteEndObject() -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteNull() -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WritePropertyName(string! name) -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteRaw(string! value) -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteStartArray() -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteStartObject() -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteValue(bool value) -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteValue(decimal value) -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteValue(double value) -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteValue(float value) -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteValue(int value) -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteValue(long value) -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteValue(object? value) -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteValue(string! value) -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteValue(System.DateTime value) -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteValue(System.DateTimeOffset value) -> void
+override Microsoft.OpenApi.OpenApiTomlWriter.WriteValueSeparator() -> void
+static Microsoft.OpenApi.OpenApiSerializableExtensions.SerializeAsTomlAsync<T>(this T element, Microsoft.OpenApi.OpenApiSpecVersion specVersion, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string!>!
+static Microsoft.OpenApi.OpenApiSerializableExtensions.SerializeAsTomlAsync<T>(this T element, System.IO.Stream! stream, Microsoft.OpenApi.OpenApiSpecVersion specVersion, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
