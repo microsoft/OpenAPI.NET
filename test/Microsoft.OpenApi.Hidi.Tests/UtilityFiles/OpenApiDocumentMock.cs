@@ -6,7 +6,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
     /// <summary>
     /// Mock class that creates a sample OpenAPI document.
     /// </summary>
-    public static class OpenApiDocumentMock
+    internal static class OpenApiDocumentMock
     {
         /// <summary>
         /// Creates an OpenAPI document.

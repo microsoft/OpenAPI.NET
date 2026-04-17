@@ -1,0 +1,23 @@
+<Solution>
+  <Folder Name="/performance/">
+    <Project Path="performance/resultsComparer/resultsComparer.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="build.cmd" />
+    <File Path="readme.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj" />
+    <Project Path="src/Microsoft.OpenApi.Workbench/Microsoft.OpenApi.Workbench.csproj" />
+    <Project Path="src/Microsoft.OpenApi.YamlReader/Microsoft.OpenApi.YamlReader.csproj" />
+    <Project Path="src/Microsoft.OpenApi/Microsoft.OpenApi.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Microsoft.OpenApi.Hidi.Tests/Microsoft.OpenApi.Hidi.Tests.csproj" />
+    <Project Path="test/Microsoft.OpenApi.Readers.Tests/Microsoft.OpenApi.Readers.Tests.csproj" />
+    <Project Path="test/Microsoft.OpenApi.Tests/Microsoft.OpenApi.Tests.csproj" />
+    <Project Path="test/Microsoft.OpenApi.Trimming.Tests/Microsoft.OpenApi.Trimming.Tests.csproj" />
+  </Folder>
+  <Project Path="performance/benchmark/PerformanceTests.csproj" />
+</Solution>
