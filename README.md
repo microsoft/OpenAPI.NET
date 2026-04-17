@@ -98,7 +98,7 @@ In order to test the validity of an OpenApi document, we avail the following too
     #### Installation guidelines:
     1. Clone the repo locally by running this command:
         `git clone https://github.com/microsoft/OpenAPI.NET.git`
-    2. Open the solution file `(.sln)` in the root of the project with Visual Studio
+    2. Open the solution file `(.slnx)` in the root of the project with Visual Studio
     3. Navigate to the `src/Microsoft.OpenApi.Workbench` directory and set it as the startup project
     4. Run the project and you'll see a GUI pop up resembling the one below:
     
