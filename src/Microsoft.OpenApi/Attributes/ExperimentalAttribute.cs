@@ -4,9 +4,9 @@
 // Polyfill for ExperimentalAttribute which is only available in .NET 8+.
 // Since the compiler queries for this attribute by name, having it source-included
 // is sufficient for the compiler to recognize it.
+#if !NET8_0_OR_GREATER
 namespace System.Diagnostics.CodeAnalysis
 {
-#if !NET8_0_OR_GREATER
     /// <summary>
     /// Indicates that an API is experimental and it may change in the future.
     /// </summary>
@@ -42,5 +42,5 @@ namespace System.Diagnostics.CodeAnalysis
         /// </summary>
         public string? UrlFormat { get; set; }
     }
-#endif
 }
+#endif

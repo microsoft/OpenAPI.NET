@@ -27,7 +27,7 @@ public static class OpenApiPathHelper
         ],
         [OpenApiSpecVersion.OpenApi3_0] =
         [
-            new V3_0UnsupportedPathPolicy(),
+            new V30UnsupportedPathPolicy(),
         ],
     };
 
@@ -242,7 +242,7 @@ internal sealed class V2UnsupportedPathPolicy : IOpenApiPathRepresentationPolicy
 /// Returns null for paths that have no equivalent in OpenAPI v3.0.
 /// Covers: webhooks (added in v3.1).
 /// </summary>
-internal sealed class V3_0UnsupportedPathPolicy : IOpenApiPathRepresentationPolicy
+internal sealed class V30UnsupportedPathPolicy : IOpenApiPathRepresentationPolicy
 {
     public bool TryGetVersionedPath(string[] segments, out string? result)
     {
