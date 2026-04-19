@@ -21,6 +21,7 @@ public static class OpenApiPathHelper
         [
             // Order matters: null policies first, then transformations.
             new V2UnsupportedPathPolicy(),
+            new V2RequestBodyToBodyParameterPolicy(),
             new V2ComponentRenamePolicy(),
             new V2ResponseContentUnwrappingPolicy(),
             new V2HeaderSchemaUnwrappingPolicy(),
@@ -187,7 +188,6 @@ internal sealed class V2UnsupportedPathPolicy : IOpenApiPathRepresentationPolicy
         OpenApiConstants.Servers,
         OpenApiConstants.Callbacks,
         OpenApiConstants.Links,
-        OpenApiConstants.RequestBody,
     };
 
     public bool TryGetVersionedPath(string[] segments, out string? result)
@@ -235,6 +235,69 @@ internal sealed class V2UnsupportedPathPolicy : IOpenApiPathRepresentationPolicy
         }
 
         return false;
+    }
+}
+
+/// <summary>
+/// Maps v3 <c>requestBody</c> paths to their v2 <c>in:body</c> parameter equivalents.
+/// <list type="bullet">
+///   <item><c>.../requestBody</c> → <c>.../parameters/0</c></item>
+///   <item><c>.../requestBody/content/{mediaType}/schema/**</c> → <c>.../parameters/0/schema/**</c></item>
+///   <item><c>.../requestBody/{prop}</c> → <c>.../parameters/0/{prop}</c></item>
+/// </list>
+/// </summary>
+internal sealed class V2RequestBodyToBodyParameterPolicy : IOpenApiPathRepresentationPolicy
+{
+    public bool TryGetVersionedPath(string[] segments, out string? result)
+    {
+        result = null;
+
+        // Find requestBody segment
+        var requestBodyIndex = -1;
+        for (var i = 0; i < segments.Length; i++)
+        {
+            if (string.Equals(segments[i], OpenApiConstants.RequestBody, StringComparison.Ordinal))
+            {
+                requestBodyIndex = i;
+                break;
+            }
+        }
+
+        if (requestBodyIndex < 0)
+        {
+            return false;
+        }
+
+        // +1 because requestBody (1 segment) is replaced by parameters/0 (2 segments)
+        var buffer = new string[segments.Length + 1];
+        var written = 0;
+
+        // Copy segments before requestBody
+        for (var i = 0; i < requestBodyIndex; i++)
+        {
+            buffer[written++] = segments[i];
+        }
+
+        // Replace requestBody with parameters/0
+        buffer[written++] = OpenApiConstants.Parameters;
+        buffer[written++] = "0";
+
+        // Skip content/{mediaType} if both segments immediately follow requestBody
+        var next = requestBodyIndex + 1;
+        if (next + 1 < segments.Length &&
+            string.Equals(segments[next], OpenApiConstants.Content, StringComparison.Ordinal))
+        {
+            next += 2; // skip "content" and "{mediaType}"
+        }
+
+        // Copy remaining segments
+        for (var i = next; i < segments.Length; i++)
+        {
+            buffer[written++] = segments[i];
+        }
+
+        result = OpenApiPathHelper.BuildPath(buffer, written);
+        return true;
     }
 }
 

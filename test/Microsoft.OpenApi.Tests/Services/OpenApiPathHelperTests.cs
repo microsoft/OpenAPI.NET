@@ -137,12 +137,15 @@ public class OpenApiPathHelperTests
     }
 
     [Theory]
-    [InlineData("#/paths/~1items/post/requestBody")]
-    [InlineData("#/paths/~1items/post/requestBody/content/application~1json/schema")]
-    public void V2_InlineRequestBody_ReturnsNull(string path)
+    [InlineData("#/paths/~1items/post/requestBody", "#/paths/~1items/post/parameters/0")]
+    [InlineData("#/paths/~1items/post/requestBody/content/application~1json/schema", "#/paths/~1items/post/parameters/0/schema")]
+    [InlineData("#/paths/~1items/post/requestBody/content/application~1json/schema/properties/id", "#/paths/~1items/post/parameters/0/schema/properties/id")]
+    [InlineData("#/paths/~1items/post/requestBody/description", "#/paths/~1items/post/parameters/0/description")]
+    [InlineData("#/paths/~1items/post/requestBody/required", "#/paths/~1items/post/parameters/0/required")]
+    public void V2_InlineRequestBody_MappedToBodyParameter(string input, string expected)
     {
-        var result = OpenApiPathHelper.GetVersionedPath(path, OpenApiSpecVersion.OpenApi2_0);
-        Assert.Null(result);
+        var result = OpenApiPathHelper.GetVersionedPath(input, OpenApiSpecVersion.OpenApi2_0);
+        Assert.Equal(expected, result);
     }
 
     [Theory]
