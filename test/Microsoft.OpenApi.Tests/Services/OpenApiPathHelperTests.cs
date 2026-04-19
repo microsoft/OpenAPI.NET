@@ -280,6 +280,84 @@ public class OpenApiPathHelperTests
 
     #endregion
 
+    #region V2 rooting / false-positive guards
+
+    // V2ResponseContentUnwrappingPolicy false positives: "responses" and "content" are schema property names.
+    [Theory]
+    [InlineData("#/paths/~1items/get/responses/200/schema/properties/responses/200/content/application~1json")]
+    [InlineData("#/x-ms-sneaky-extension/additionalReference/responses/data/content/0")]
+    [InlineData("#/paths/~1items/get/parameters/0/schema/properties/responses/200/content/application~1json/schema")]
+    public void V2_ResponsesContentInsideSchemaOrExtension_NotUnwrapped(string path)
+    {
+        var result = OpenApiPathHelper.GetVersionedPath(path, OpenApiSpecVersion.OpenApi2_0);
+        Assert.Equal(path, result);
+    }
+
+    // V2RequestBodyToBodyParameterPolicy false positives: "requestBody" is a schema property name.
+    [Theory]
+    [InlineData("#/paths/~1items/get/responses/200/schema/properties/requestBody/content/application~1json/schema")]
+    [InlineData("#/paths/~1items/get/responses/200/schema/properties/requestBody/description")]
+    public void V2_RequestBodyInsideSchemaProperties_NotConvertedToBodyParameter(string path)
+    {
+        var result = OpenApiPathHelper.GetVersionedPath(path, OpenApiSpecVersion.OpenApi2_0);
+        Assert.Equal(path, result);
+    }
+
+    // V2HeaderSchemaUnwrappingPolicy false positives: "headers" is a schema property name.
+    [Theory]
+    [InlineData("#/paths/~1items/get/responses/200/schema/properties/headers/X-My-Header/schema/type")]
+    [InlineData("#/paths/~1items/get/responses/200/schema/properties/headers/X-My-Header/schema")]
+    public void V2_HeaderSchemaInsideSchemaProperties_NotUnwrapped(string path)
+    {
+        var result = OpenApiPathHelper.GetVersionedPath(path, OpenApiSpecVersion.OpenApi2_0);
+        Assert.Equal(path, result);
+    }
+
+    // V2UnsupportedPathPolicy false positives: unsupported keywords are schema property names.
+    [Theory]
+    [InlineData("#/paths/~1items/get/responses/200/schema/properties/servers/0")]
+    [InlineData("#/paths/~1items/get/responses/200/schema/properties/callbacks/onEvent")]
+    [InlineData("#/paths/~1items/get/responses/200/schema/properties/links/item")]
+    public void V2_UnsupportedKeywordsInsideSchemaProperties_NotReturnedNull(string path)
+    {
+        var result = OpenApiPathHelper.GetVersionedPath(path, OpenApiSpecVersion.OpenApi2_0);
+        Assert.Equal(path, result);
+    }
+
+    // V2ComponentRenamePolicy false positives: "content" after a property named "responses" in a schema.
+    [Fact]
+    public void V2_ComponentSchemaWithResponsesPropertyContainingContent_ContentNotUnwrapped()
+    {
+        // components/schemas/MyModel has a property "responses" whose value has a "content" property.
+        // The inline content-unwrapping should NOT fire here.
+        var path = "#/components/schemas/MyModel/properties/responses/properties/content/properties/foo";
+        var result = OpenApiPathHelper.GetVersionedPath(path, OpenApiSpecVersion.OpenApi2_0);
+        // Only the component rename applies (#/components/schemas → #/definitions).
+        Assert.Equal("#/definitions/MyModel/properties/responses/properties/content/properties/foo", result);
+    }
+
+    [Fact]
+    public void V2_ComponentSchemaWithRequestBodyPropertyInSchema_RequestBodyNotConvertedToBodyParameter()
+    {
+        // A component schema with a property named "requestBody" — component rename applies but
+        // requestBody → body parameter conversion should NOT fire.
+        var path = "#/components/schemas/Pet/properties/requestBody/content/application~1json";
+        var result = OpenApiPathHelper.GetVersionedPath(path, OpenApiSpecVersion.OpenApi2_0);
+        Assert.Equal("#/definitions/Pet/properties/requestBody/content/application~1json", result);
+    }
+
+    [Fact]
+    public void V2_ComponentSchemaWithHeadersPropertyInSchema_HeaderSchemaNotUnwrapped()
+    {
+        // A component schema with a property named "headers" — component rename applies but
+        // headers/schema unwrapping should NOT fire.
+        var path = "#/components/schemas/Pet/properties/headers/Content-Type/schema";
+        var result = OpenApiPathHelper.GetVersionedPath(path, OpenApiSpecVersion.OpenApi2_0);
+        Assert.Equal("#/definitions/Pet/properties/headers/Content-Type/schema", result);
+    }
+
+    #endregion
+
     #region OpenApiValidatorError.GetVersionedPointer
 
     [Fact]

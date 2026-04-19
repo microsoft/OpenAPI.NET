@@ -144,6 +144,33 @@ public static class OpenApiPathHelper
     }
 
     /// <summary>
+    /// HTTP method names used to identify operation-level structural positions in the path.
+    /// </summary>
+    internal static readonly HashSet<string> HttpMethods = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "get", "post", "put", "delete", "patch", "options", "head", "trace",
+    };
+
+    /// <summary>
+    /// Returns <c>true</c> if any segment before <paramref name="exclusiveUpperBound"/> indicates
+    /// that the path has descended into a JSON Schema property tree — meaning subsequent segment
+    /// names are schema property/key names rather than OpenAPI structural keywords.
+    /// </summary>
+    internal static bool IsSchemaContext(string[] segments, int exclusiveUpperBound)
+    {
+        for (var i = 0; i < exclusiveUpperBound; i++)
+        {
+            if (string.Equals(segments[i], OpenApiConstants.Properties, StringComparison.Ordinal) ||
+                string.Equals(segments[i], OpenApiConstants.AdditionalProperties, StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Copies segments into the target buffer, skipping a contiguous range.
     /// Returns the number of segments written.
     /// </summary>
@@ -166,8 +193,7 @@ public static class OpenApiPathHelper
 
 /// <summary>
 /// Returns null for paths that have no equivalent in OpenAPI v2 (Swagger).
-/// Covers: servers, webhooks, callbacks, links, requestBody (inline),
-/// encoding, and unsupported component types.
+/// Covers: servers, webhooks, callbacks, links, encoding, and unsupported component types.
 /// </summary>
 internal sealed class V2UnsupportedPathPolicy : IOpenApiPathRepresentationPolicy
 {
@@ -219,7 +245,14 @@ internal sealed class V2UnsupportedPathPolicy : IOpenApiPathRepresentationPolicy
         {
             var segment = segments[i];
 
-            // servers, callbacks, links, requestBody at any nested level
+            // Skip segments that are inside a schema property tree — they are property names,
+            // not structural OpenAPI keywords.
+            if (OpenApiPathHelper.IsSchemaContext(segments, i))
+            {
+                continue;
+            }
+
+            // servers, callbacks, links at any nested level
             if (UnsupportedSegments.Contains(segment))
             {
                 return true;
@@ -252,11 +285,13 @@ internal sealed class V2RequestBodyToBodyParameterPolicy : IOpenApiPathRepresent
     {
         result = null;
 
-        // Find requestBody segment
+        // Find requestBody immediately after an HTTP method — operation-level requestBody only.
+        // This prevents false positives when "requestBody" is a schema property name.
         var requestBodyIndex = -1;
-        for (var i = 0; i < segments.Length; i++)
+        for (var i = 1; i < segments.Length; i++)
         {
-            if (string.Equals(segments[i], OpenApiConstants.RequestBody, StringComparison.Ordinal))
+            if (string.Equals(segments[i], OpenApiConstants.RequestBody, StringComparison.Ordinal) &&
+                OpenApiPathHelper.HttpMethods.Contains(segments[i - 1]))
             {
                 requestBodyIndex = i;
                 break;
@@ -364,6 +399,7 @@ internal sealed class V2ComponentRenamePolicy : IOpenApiPathRepresentationPolicy
             // Content unwrapping: skip "content" and "{mediaType}" after "responses/{code}"
             if (string.Equals(segments[i], OpenApiConstants.Content, StringComparison.Ordinal) &&
                 i >= 3 &&
+                !OpenApiPathHelper.IsSchemaContext(segments, i) &&
                 string.Equals(segments[i - 2], OpenApiConstants.Responses, StringComparison.Ordinal) &&
                 i + 1 < segments.Length)
             {
@@ -374,6 +410,7 @@ internal sealed class V2ComponentRenamePolicy : IOpenApiPathRepresentationPolicy
             // Header schema unwrapping: skip "schema" after "headers/{name}"
             if (string.Equals(segments[i], OpenApiConstants.Schema, StringComparison.Ordinal) &&
                 i >= 3 &&
+                !OpenApiPathHelper.IsSchemaContext(segments, i) &&
                 string.Equals(segments[i - 2], OpenApiConstants.Headers, StringComparison.Ordinal))
             {
                 continue;
@@ -397,11 +434,15 @@ internal sealed class V2ResponseContentUnwrappingPolicy : IOpenApiPathRepresenta
     {
         result = null;
 
-        // Find: responses / {code} / content / {mediaType}
+        // Find: {method} / responses / {code} / content / {mediaType}
+        // Require the HTTP method immediately before "responses" to anchor this to a real
+        // operation response, preventing false positives from schema properties named "responses"
+        // or from extension paths that happen to match the pattern.
         var contentIndex = -1;
-        for (var i = 0; i < segments.Length - 3; i++)
+        for (var i = 1; i < segments.Length - 3; i++)
         {
             if (string.Equals(segments[i], OpenApiConstants.Responses, StringComparison.Ordinal) &&
+                OpenApiPathHelper.HttpMethods.Contains(segments[i - 1]) &&
                 string.Equals(segments[i + 2], OpenApiConstants.Content, StringComparison.Ordinal))
             {
                 contentIndex = i + 2;
@@ -433,10 +474,12 @@ internal sealed class V2HeaderSchemaUnwrappingPolicy : IOpenApiPathRepresentatio
         result = null;
 
         // Find: headers / {name} / schema
+        // Guard against schema property trees where "headers" is just a property name.
         var schemaIndex = -1;
         for (var i = 0; i < segments.Length - 2; i++)
         {
             if (string.Equals(segments[i], OpenApiConstants.Headers, StringComparison.Ordinal) &&
+                !OpenApiPathHelper.IsSchemaContext(segments, i) &&
                 string.Equals(segments[i + 2], OpenApiConstants.Schema, StringComparison.Ordinal))
             {
                 schemaIndex = i + 2;
