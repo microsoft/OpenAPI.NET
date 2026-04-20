@@ -116,6 +116,9 @@ foreach (var error in validator.Errors)
 | `#/components/securitySchemes/{name}/**` | `#/securityDefinitions/{name}/**` |
 | `.../responses/{code}/content/{mediaType}/schema/**` | `.../responses/{code}/schema/**` |
 | `.../headers/{name}/schema/**` | `.../headers/{name}/**` |
+| `.../{method}/requestBody` | `.../{method}/parameters/0` |
+| `.../{method}/requestBody/content/{mediaType}/schema/**` | `.../{method}/parameters/0/schema/**` |
+| `.../{method}/requestBody/{prop}` | `.../{method}/parameters/0/{prop}` |
 
 ### Paths With No v2 Equivalent (returns `null`)
 
@@ -123,7 +126,6 @@ foreach (var error in validator.Errors)
 - `#/webhooks/**`
 - `.../callbacks/**`
 - `.../links/**`
-- `.../requestBody/**`
 - `.../content/{mediaType}/encoding/**`
 - `#/components/examples/**`, `#/components/headers/**`, `#/components/pathItems/**`,
   `#/components/links/**`, `#/components/callbacks/**`, `#/components/requestBodies/**`,
