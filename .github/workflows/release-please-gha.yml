@@ -22,7 +22,16 @@ permissions:
   contents: read
 
 jobs:
+  check-secret:
+    runs-on: ubuntu-latest
+    outputs:
+      has-token: ${{ steps.check.outputs.has-token }}
+    steps:
+      - id: check
+        run: echo "has-token=${{ secrets.RELEASE_PLEASE_TOKEN_PROVIDER_PEM != '' }}" >> $GITHUB_OUTPUT
   release:
+    needs: check-secret
+    if: needs.check-secret.outputs.has-token == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
