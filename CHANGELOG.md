@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.7.4](https://github.com/microsoft/OpenAPI.NET/compare/v2.7.3...v2.7.4) (2026-04-27)
+
+
+### Bug Fixes
+
+* null reference exception for boolean component schemas ([cc13028](https://github.com/microsoft/OpenAPI.NET/commit/cc13028ab39a4d39c844e0e835557e07fb5db4bf))
+* **schema:** support boolean schemas in deserializer for OpenAPI 3.1/3.2 ([48aaf23](https://github.com/microsoft/OpenAPI.NET/commit/48aaf236d8495b9070faf7f057e64a17f5f2c5fc))
+
+
+### Performance Improvements
+
+* **schema:** optimize boolean schema deserialization ([fe6f513](https://github.com/microsoft/OpenAPI.NET/commit/fe6f5138b8fbb2368c9a011df77a940089e91647))
+
 ## [2.7.3](https://github.com/microsoft/OpenAPI.NET/compare/v2.7.2...v2.7.3) (2026-04-14)
 
 
