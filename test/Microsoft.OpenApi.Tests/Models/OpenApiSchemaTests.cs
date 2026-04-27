@@ -204,14 +204,18 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        [Fact]
-        public async Task SerializeBasicSchemaAsV3JsonWorks()
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
+        public async Task SerializeBasicSchemaAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
             var expected = @"{ }";
 
             // Act
-            var actual = await BasicSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BasicSchema.SerializeAsJsonAsync(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
