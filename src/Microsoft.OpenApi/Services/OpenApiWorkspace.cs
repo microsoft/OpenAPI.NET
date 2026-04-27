@@ -93,6 +93,7 @@ namespace Microsoft.OpenApi
             {
                 foreach (var item in document.Components.Schemas)
                 {
+                    if (item.Value == null) continue;
                     location = item.Value.Id ?? baseUri + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                     RegisterComponent(location, item.Value);
                 }
@@ -103,6 +104,7 @@ namespace Microsoft.OpenApi
             {
                 foreach (var item in document.Components.Parameters)
                 {
+                    if (item.Value == null) continue;
                     location = baseUri + ReferenceType.Parameter.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                     RegisterComponent(location, item.Value);
                 }
@@ -113,6 +115,7 @@ namespace Microsoft.OpenApi
             {
                 foreach (var item in document.Components.Responses)
                 {
+                    if (item.Value == null) continue;
                     location = baseUri + ReferenceType.Response.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                     RegisterComponent(location, item.Value);
                 }
@@ -123,6 +126,7 @@ namespace Microsoft.OpenApi
             {
                 foreach (var item in document.Components.RequestBodies)
                 {
+                    if (item.Value == null) continue;
                     location = baseUri + ReferenceType.RequestBody.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                     RegisterComponent(location, item.Value);
                 }
@@ -133,6 +137,7 @@ namespace Microsoft.OpenApi
             {
                 foreach (var item in document.Components.Links)
                 {
+                    if (item.Value == null) continue;
                     location = baseUri + ReferenceType.Link.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                     RegisterComponent(location, item.Value);
                 }
@@ -143,6 +148,7 @@ namespace Microsoft.OpenApi
             {
                 foreach (var item in document.Components.Callbacks)
                 {
+                    if (item.Value == null) continue;
                     location = baseUri + ReferenceType.Callback.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                     RegisterComponent(location, item.Value);
                 }
@@ -153,6 +159,7 @@ namespace Microsoft.OpenApi
             {
                 foreach (var item in document.Components.PathItems)
                 {
+                    if (item.Value == null) continue;
                     location = baseUri + ReferenceType.PathItem.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                     RegisterComponent(location, item.Value);
                 }
@@ -163,6 +170,7 @@ namespace Microsoft.OpenApi
             {
                 foreach (var item in document.Components.Examples)
                 {
+                    if (item.Value == null) continue;
                     location = baseUri + ReferenceType.Example.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                     RegisterComponent(location, item.Value);
                 }
@@ -173,6 +181,7 @@ namespace Microsoft.OpenApi
             {
                 foreach (var item in document.Components.Headers)
                 {
+                    if (item.Value == null) continue;
                     location = baseUri + ReferenceType.Header.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                     RegisterComponent(location, item.Value);
                 }
@@ -183,6 +192,7 @@ namespace Microsoft.OpenApi
             {
                 foreach (var item in document.Components.SecuritySchemes)
                 {
+                    if (item.Value == null) continue;
                     location = baseUri + ReferenceType.SecurityScheme.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                     RegisterComponent(location, item.Value);
                 }
