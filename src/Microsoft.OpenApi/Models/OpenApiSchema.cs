@@ -11,6 +11,12 @@ namespace Microsoft.OpenApi
 {
     /// <summary>
     /// The Schema Object allows the definition of input and output data types.
+    /// 
+    /// For OpenAPI 3.1+ (JSON Schema 2020-12), this class supports boolean schemas:
+    /// - Deserialization: The boolean literal <c>true</c> deserializes to an empty schema (allows any value).
+    ///   The boolean literal <c>false</c> deserializes to a schema with <see cref="Not"/> set to an empty schema (disallows any value).
+    /// - Serialization: To produce something functionally equivalent to boolean schemas, create an empty <see cref="OpenApiSchema"/>
+    ///   for "true" behavior, or create a schema with only <see cref="Not"/> set to an empty schema for "false" behavior.
     /// </summary>
     public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema, IOpenApiSchemaWithUnevaluatedProperties, IMetadataContainer
     {
