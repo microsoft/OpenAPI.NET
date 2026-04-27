@@ -366,6 +366,23 @@ internal static partial class OpenApiV31Deserializer
 
     public static IOpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)
     {
+        // Handle boolean schemas (true/false) for JSON Schema 2020-12 compatibility
+        if (node is ValueNode valueNode)
+        {
+            var value = valueNode.GetScalarValue();
+            if (value != null && bool.TryParse(value, out var boolValue))
+            {
+                var boolSchema = new OpenApiSchema();
+                if (!boolValue)
+                {
+                    // false schema: represents "not valid" -> convert to "not: {}"
+                    boolSchema.Not = new OpenApiSchema();
+                }
+                // true schema: represents "always valid" -> return empty schema (default)
+                return boolSchema;
+            }
+        }
+
         var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
 
         var pointer = mapNode.GetReferencePointer();
