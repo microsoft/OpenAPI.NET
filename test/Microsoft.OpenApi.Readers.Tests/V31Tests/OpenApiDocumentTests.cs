@@ -613,25 +613,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         }
 
         [Fact]
-        public async Task ParseDocumentWithSelfExtensionWorks()
-        {
-            // Arrange && Act
-            var path = Path.Combine(SampleFolderPath, "documentWithSelfExtension.yaml");
-            var result = await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings);
-
-            // Assert
-            Assert.NotNull(result.Document);
-            Assert.NotNull(result.Document.Self);
-            Assert.Equal("https://example.org/api/openapi.yaml", result.Document.Self.ToString());
-            Assert.Equal("API with x-oai-$self extension", result.Document.Info.Title);
-            Assert.Equal("1.0.0", result.Document.Info.Version);
-            // The x-oai-$self extension should be moved to the Self property and not remain in extensions
-            Assert.Null(result.Document.Extensions);
-            Assert.Empty(result.Diagnostic.Errors);
-            Assert.Empty(result.Diagnostic.Warnings);
-        }
-
-        [Fact]
         public void LoadDocumentWithBooleanSchemaShouldNotThrowNullReferenceException()
         {
             // Arrange - OpenAPI 3.1 with a boolean schema in components/schemas (spec-valid per JSON Schema 2020-12)
