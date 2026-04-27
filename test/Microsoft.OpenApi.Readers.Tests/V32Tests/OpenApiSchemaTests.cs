@@ -699,7 +699,7 @@ description: Schema for a person object
         [Theory]
         [InlineData("{}")]
         [InlineData("true")]
-        public void DeserializeBasicSchemaWorks(string schemaSource)
+        public void DeserializeTrueSchemaParsesAsEmptySchema(string schemaSource)
         {
             // Arrange & Act
             var schema = OpenApiModelFactory.Parse<OpenApiSchema>(schemaSource, OpenApiSpecVersion.OpenApi3_2, new(), out _, OpenApiConstants.Json);
