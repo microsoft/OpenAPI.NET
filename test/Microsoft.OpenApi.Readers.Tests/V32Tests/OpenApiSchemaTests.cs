@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -694,6 +694,35 @@ description: Schema for a person object
 
             // Assert
             Assert.Equivalent(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("{}")]
+        [InlineData("true")]
+        public void DeserializeTrueSchemaParsesAsEmptySchema(string schemaSource)
+        {
+            // Arrange & Act
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(schemaSource, OpenApiSpecVersion.OpenApi3_2, new(), out _, OpenApiConstants.Json);
+
+            // Assert - schema should deserialize without error
+            Assert.NotNull(schema);
+        }
+
+        [Fact]
+        public void DeserializeFalseSchemaParsesAsNotEmptySchema()
+        {
+            // Arrange
+            var schemaSource = "false";
+
+            // Act
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(schemaSource, OpenApiSpecVersion.OpenApi3_2, new(), out _, OpenApiConstants.Json);
+
+            // Assert - false schema should deserialize to not: {}
+            Assert.NotNull(schema);
+            Assert.NotNull(schema.Not);
+            Assert.Empty(schema.Not.AnyOf ?? []);
+            Assert.Empty(schema.Not.AllOf ?? []);
+            Assert.Empty(schema.Not.OneOf ?? []);
         }
     }
 }

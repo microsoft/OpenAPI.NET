@@ -645,6 +645,24 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             Assert.Empty(result.Diagnostic.Errors);
             Assert.Empty(result.Diagnostic.Warnings);
         }
+
+        [Fact]
+        public void LoadDocumentWithBooleanSchemaShouldNotThrowNullReferenceException()
+        {
+            // Arrange - OpenAPI 3.2 with a boolean schema in components/schemas (spec-valid per JSON Schema 2020-12)
+            var bytes = "{\"openapi\":\"3.2.0\",\"components\":{\"schemas\":{\"X\":true}}}"u8.ToArray();
+            using var ms = new MemoryStream(bytes);
+
+            // Act & Assert - should not throw NullReferenceException
+            var exception = Record.Exception(() => OpenApiDocument.Load(ms, format: null, new OpenApiReaderSettings()));
+            
+            // The parser should handle the boolean schema gracefully
+            // Either accepting it or surfacing a structured diagnostic, but not throwing NullReferenceException
+            if (exception != null)
+            {
+                Assert.IsNotType<NullReferenceException>(exception);
+            }
+        }
     }
 }
 
