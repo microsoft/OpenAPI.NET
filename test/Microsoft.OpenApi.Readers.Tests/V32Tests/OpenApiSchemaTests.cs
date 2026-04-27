@@ -707,6 +707,23 @@ description: Schema for a person object
             // Assert - schema should deserialize without error
             Assert.NotNull(schema);
         }
+
+        [Fact]
+        public void DeserializeFalseSchemaParsesAsNotEmptySchema()
+        {
+            // Arrange
+            var schemaSource = "false";
+
+            // Act
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(schemaSource, OpenApiSpecVersion.OpenApi3_2, new(), out _);
+
+            // Assert - false schema should deserialize to not: {}
+            Assert.NotNull(schema);
+            Assert.NotNull(schema.Not);
+            Assert.Empty(schema.Not.AnyOf ?? []);
+            Assert.Empty(schema.Not.AllOf ?? []);
+            Assert.Empty(schema.Not.OneOf ?? []);
+        }
     }
 }
 
