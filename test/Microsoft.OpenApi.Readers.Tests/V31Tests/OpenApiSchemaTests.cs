@@ -851,7 +851,7 @@ description: Schema for a person object
         public void DeserializeBasicSchemaWorks(string schemaSource)
         {
             // Arrange & Act
-            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(schemaSource, OpenApiSpecVersion.OpenApi3_1, new(), out _);
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(schemaSource, OpenApiSpecVersion.OpenApi3_1, new(), out _, OpenApiConstants.Json);
 
             // Assert - schema should deserialize without error
             Assert.NotNull(schema);
@@ -864,7 +864,7 @@ description: Schema for a person object
             var schemaSource = "false";
 
             // Act
-            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(schemaSource, OpenApiSpecVersion.OpenApi3_1, new(), out _);
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(schemaSource, OpenApiSpecVersion.OpenApi3_1, new(), out _, OpenApiConstants.Json);
 
             // Assert - false schema should deserialize to not: {}
             Assert.NotNull(schema);
