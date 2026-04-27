@@ -29,6 +29,17 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <summary>
+        /// Attempts to get the underlying value directly as the specified type without string conversion.
+        /// </summary>
+        /// <typeparam name="T">The type to retrieve the value as.</typeparam>
+        /// <param name="value">The retrieved value if successful.</param>
+        /// <returns>True if the value was successfully converted to the specified type; otherwise, false.</returns>
+        public bool TryGetValue<T>(out T? value)
+        {
+            return _node.TryGetValue(out value);
+        }
+
+        /// <summary>
         /// Create a <see cref="JsonNode"/>
         /// </summary>
         /// <returns>The created Any object.</returns>
