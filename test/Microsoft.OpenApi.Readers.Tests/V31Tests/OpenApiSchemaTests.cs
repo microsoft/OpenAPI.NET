@@ -844,5 +844,17 @@ description: Schema for a person object
             Assert.Equivalent(expected, actual);
             Assert.True(actual.UnevaluatedProperties); // Explicitly verify the default
         }
+
+        [Theory]
+        [InlineData("{}")]
+        [InlineData("true")]
+        public void DeserializeBasicSchemaWorks(string schemaSource)
+        {
+            // Arrange & Act
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(schemaSource, OpenApiSpecVersion.OpenApi3_1, new(), out _);
+
+            // Assert - schema should deserialize without error
+            Assert.NotNull(schema);
+        }
     }
 }
