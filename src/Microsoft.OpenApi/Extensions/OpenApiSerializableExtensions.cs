@@ -42,6 +42,20 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
+        /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document (TOML) using the given stream and specification version.
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
+        /// <param name="element">The Open API element.</param>
+        /// <param name="stream">The output stream.</param>
+        /// <param name="specVersion">The Open API specification version.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static Task SerializeAsTomlAsync<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, CancellationToken cancellationToken = default)
+            where T : IOpenApiSerializable
+        {
+            return element.SerializeAsync(stream, specVersion, OpenApiConstants.Toml, cancellationToken);
+        }
+
+        /// <summary>
         /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document using
         /// the given stream, specification version and the format.
         /// </summary>
@@ -91,6 +105,7 @@ namespace Microsoft.OpenApi
                 OpenApiConstants.Json when settings is OpenApiJsonWriterSettings jsonSettings => new OpenApiJsonWriter(streamWriter, jsonSettings),
                 OpenApiConstants.Json => new OpenApiJsonWriter(streamWriter, settings),
                 OpenApiConstants.Yaml => new OpenApiYamlWriter(streamWriter, settings),
+                OpenApiConstants.Toml => new OpenApiTomlWriter(streamWriter, settings),
                 _ => throw new OpenApiException(string.Format(SRResource.OpenApiFormatNotSupported, format)),
             };
             return element.SerializeAsync(writer, specVersion, cancellationToken);
@@ -165,6 +180,22 @@ namespace Microsoft.OpenApi
             where T : IOpenApiSerializable
         {
             return element.SerializeAsync(specVersion, OpenApiConstants.Yaml, cancellationToken);
+        }
+
+        /// <summary>
+        /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document as a string in TOML format.
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
+        /// <param name="element">The Open API element.</param>
+        /// <param name="specVersion">The Open API specification version.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static Task<string> SerializeAsTomlAsync<T>(
+            this T element,
+            OpenApiSpecVersion specVersion,
+            CancellationToken cancellationToken = default)
+            where T : IOpenApiSerializable
+        {
+            return element.SerializeAsync(specVersion, OpenApiConstants.Toml, cancellationToken);
         }
 
         /// <summary>
