@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -120,14 +120,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseBasicOperationShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicOperation.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(_basicOperation, operation);
@@ -137,15 +137,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public async Task ParseBasicOperationTwiceShouldYieldSameObject()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = new MemoryStream(
                 Encoding.Default.GetBytes(await _basicOperation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0))))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(_basicOperation, operation);
@@ -155,14 +155,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseOperationWithBodyShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithBody.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
 
             // Assert
             operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
@@ -172,15 +172,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public async Task ParseOperationWithBodyTwiceShouldYieldSameObject()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = new MemoryStream(
                 Encoding.Default.GetBytes(await _operationWithBody.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0))))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
 
             // Assert
             operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
@@ -190,14 +190,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseOperationWithResponseExamplesShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithResponseExamples.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
 
             // Assert
             operation.Should().BeEquivalentTo(
@@ -256,12 +256,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseOperationWithEmptyProducesArraySetsResponseSchemaIfExists()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithEmptyProducesArrayInResponse.json"));
-            node = TestHelper.CreateYamlMapNode(stream);
+            node = TestHelper.CreateYamlJsonNode(stream);
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
             var expected = @"{
   ""produces"": [
     ""application/octet-stream""
@@ -292,12 +292,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseOperationWithBodyAndEmptyConsumesSetsRequestBodySchemaIfExists()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithBodyAndEmptyConsumes.yaml"));
-            node = TestHelper.CreateYamlMapNode(stream);
+            node = TestHelper.CreateYamlJsonNode(stream);
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
 
             // Assert
             operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
@@ -307,14 +307,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public async Task ParseV2ResponseWithExamplesExtensionWorks()
         {            
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "opWithResponseExamplesExtension.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
             var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
@@ -357,14 +357,14 @@ responses:
         public async Task LoadV3ExamplesInResponseAsExtensionsWorks()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "v3OperationWithResponseExamples.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var operation = OpenApiV3Deserializer.LoadOperation(node, new());
+            var operation = OpenApiV3Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
             var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
@@ -407,14 +407,14 @@ responses:
         public async Task LoadV2OperationWithBodyParameterExamplesWorks()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "opWithBodyParameterExamples.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
             var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
@@ -458,14 +458,14 @@ responses: { }";
         public async Task LoadV3ExamplesInRequestBodyParameterAsExtensionsWorks()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "v3OperationWithBodyParameterExamples.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var operation = OpenApiV3Deserializer.LoadOperation(node, new());
+            var operation = OpenApiV3Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
             var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert

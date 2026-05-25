@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -15,33 +17,30 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             {
                 OpenApiConstants.Name,
-                (o, n, _) => o.Name = n.GetScalarValue()
+                (o, n, _, c) => o.Name = n.GetScalarValue()
             },
             {
                 OpenApiConstants.Description,
-                (o, n, _) => o.Description = n.GetScalarValue()
+                (o, n, _, c) => o.Description = n.GetScalarValue()
             },
             {
                 OpenApiConstants.ExternalDocs,
-                (o, n, t) => o.ExternalDocs = LoadExternalDocs(n, t)
+                (o, n, t, c) => o.ExternalDocs = LoadExternalDocs(n, t, c)
             }
         };
 
         private static readonly PatternFieldMap<OpenApiTag> _tagPatternFields = new()
         {
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
         };
 
-        public static OpenApiTag LoadTag(ParseNode n, OpenApiDocument hostDocument)
+        public static OpenApiTag LoadTag(JsonNode n, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = n.CheckMapNode("tag");
+            var JsonObject = n.CheckMapNode("tag", context);
 
             var domainObject = new OpenApiTag();
 
-            foreach (var propertyNode in mapNode)
-            {
-                propertyNode.ParseField(domainObject, _tagFixedFields, _tagPatternFields, hostDocument);
-            }
+            ParseMap(JsonObject, domainObject, _tagFixedFields, _tagPatternFields, hostDocument, context);
 
             return domainObject;
         }

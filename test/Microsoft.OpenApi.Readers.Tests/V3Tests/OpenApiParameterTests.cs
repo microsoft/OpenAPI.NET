@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -354,12 +354,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             document.Workspace.RegisterComponents(document);
 
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithRef.yaml"));
-            var node = TestHelper.CreateYamlMapNode(stream);
+            var node = TestHelper.CreateYamlJsonNode(stream);
 
             var expected = document.Components.Parameters["tagsParameter"];
 
             // Act
-            var param = OpenApiV3Deserializer.LoadParameter(node, document);
+            var param = OpenApiV3Deserializer.LoadParameter(node, document, new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(expected, param);

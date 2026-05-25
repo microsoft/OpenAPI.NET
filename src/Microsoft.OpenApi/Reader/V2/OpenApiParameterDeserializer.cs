@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +20,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 {
                     "name",
-                    (o, n, t) => o.Name = n.GetScalarValue()
+                    (o, n, t, c) => o.Name = n.GetScalarValue()
                 },
                 {
                     "in",
@@ -26,11 +28,11 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "description",
-                    (o, n, t) => o.Description = n.GetScalarValue()
+                    (o, n, t, c) => o.Description = n.GetScalarValue()
                 },
                 {
                     "required",
-                    (o, n, t) =>
+                    (o, n, t, c) =>
                     {
                         var required = n.GetScalarValue();
                         if (required != null)
@@ -41,7 +43,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "deprecated",
-                    (o, n, t) =>
+                    (o, n, t, c) =>
                     {
                         var deprecated = n.GetScalarValue();
                         if (deprecated != null)
@@ -52,7 +54,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "allowEmptyValue",
-                    (o, n, t) =>
+                    (o, n, t, c) =>
                     {
                         var allowEmptyValue = n.GetScalarValue();
                         if (allowEmptyValue != null)
@@ -63,7 +65,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "type",
-                    (o, n, t) =>
+                    (o, n, t, c) =>
                     {
                         var type = n.GetScalarValue();
                         if (type != null)
@@ -79,11 +81,11 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "items",
-                    (o, n, t) => GetOrCreateSchema(o).Items = LoadSchema(n, t)
+                    (o, n, t, c) => GetOrCreateSchema(o).Items = LoadSchema(n, t, c)
                 },
                 {
                     "collectionFormat",
-                    (o, n, t) =>
+                    (o, n, t, c) =>
                     {
                         var collectionFormat = n.GetScalarValue();
                         if (collectionFormat != null)
@@ -94,11 +96,11 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "format",
-                    (o, n, t) => GetOrCreateSchema(o).Format = n.GetScalarValue()
+                    (o, n, t, c) => GetOrCreateSchema(o).Format = n.GetScalarValue()
                 },
                 {
                     "minimum",
-                    (o, n, t) =>
+                    (o, n, t, c) =>
                     {
                         var min = n.GetScalarValue();
                         if (!string.IsNullOrEmpty(min))
@@ -109,7 +111,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "maximum",
-                    (o, n, t) =>
+                    (o, n, t, c) =>
                     {
                         var max = n.GetScalarValue();
                         if (!string.IsNullOrEmpty(max))
@@ -120,7 +122,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "maxLength",
-                    (o, n, t) =>
+                    (o, n, t, c) =>
                     {
                         var maxLength = n.GetScalarValue();
                         if (maxLength != null)
@@ -131,7 +133,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "minLength",
-                    (o, n, t) =>
+                    (o, n, t, c) =>
                     {
                         var minLength = n.GetScalarValue();
                         if (minLength != null)
@@ -142,7 +144,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "readOnly",
-                    (o, n, t) =>
+                    (o, n, t, c) =>
                     {
                         var readOnly = n.GetScalarValue();
                         if (readOnly != null)
@@ -153,19 +155,19 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "default",
-                    (o, n, t) => GetOrCreateSchema(o).Default = n.CreateAny()
+                    (o, n, t, c) => GetOrCreateSchema(o).Default = n.CreateAny()
                 },
                 {
                     "pattern",
-                    (o, n, t) => GetOrCreateSchema(o).Pattern = n.GetScalarValue()
+                    (o, n, t, c) => GetOrCreateSchema(o).Pattern = n.GetScalarValue()
                 },
                 {
                     "enum",
-                    (o, n, t) => GetOrCreateSchema(o).Enum = n.CreateListOfAny()
+                    (o, n, t, c) => GetOrCreateSchema(o).Enum = n.CreateListOfAny(c)
                 },
                 {
                     "schema",
-                    (o, n, t) => o.Schema = LoadSchema(n, t)
+                    (o, n, t, c) => o.Schema = LoadSchema(n, t, c)
                 },
                 {
                     "x-examples",
@@ -177,7 +179,7 @@ namespace Microsoft.OpenApi.Reader.V2
             new()
             {
                 {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase) && !s.Equals(OpenApiConstants.ExamplesExtension, StringComparison.OrdinalIgnoreCase),
-                    (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))} 
+                    (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))} 
             };
 
         private static void LoadStyle(OpenApiParameter p, string v)
@@ -209,10 +211,10 @@ namespace Microsoft.OpenApi.Reader.V2
             }
         }
 
-        private static void LoadParameterExamplesExtension(OpenApiParameter parameter, ParseNode node, OpenApiDocument? hostDocument)
+        private static void LoadParameterExamplesExtension(OpenApiParameter parameter, JsonNode node, OpenApiDocument? hostDocument, ParsingContext context)
         {
-            var examples = LoadExamplesExtension(node);
-            node.Context.SetTempStorage(TempStorageKeys.Examples, examples, parameter);
+            var examples = LoadExamplesExtension(node, context);
+            context.SetTempStorage(TempStorageKeys.Examples, examples, parameter);
         }
 
         private static OpenApiSchema GetOrCreateSchema(OpenApiParameter p)
@@ -223,22 +225,22 @@ namespace Microsoft.OpenApi.Reader.V2
             };
         }
 
-        private static void ProcessIn(OpenApiParameter o, ParseNode n, OpenApiDocument hostDocument)
+        private static void ProcessIn(OpenApiParameter o, JsonNode n, OpenApiDocument hostDocument, ParsingContext context)
         {
             var value = n.GetScalarValue();
             switch (value)
             {
                 case "body":
-                    n.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, true);
-                    n.Context.SetTempStorage(TempStorageKeys.BodyParameter, o);
+                    context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, true);
+                    context.SetTempStorage(TempStorageKeys.BodyParameter, o);
                     break;
                 case "formData":
-                    n.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, true);
-                    var formParameters = n.Context.GetFromTempStorage<List<OpenApiParameter>>("formParameters");
+                    context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, true);
+                    var formParameters = context.GetFromTempStorage<List<OpenApiParameter>>("formParameters");
                     if (formParameters == null)
                     {
                         formParameters = new();
-                        n.Context.SetTempStorage("formParameters", formParameters);
+                        context.SetTempStorage("formParameters", formParameters);
                     }
 
                     formParameters.Add(o);
@@ -257,19 +259,19 @@ namespace Microsoft.OpenApi.Reader.V2
             }
         }
 
-        public static IOpenApiParameter? LoadParameter(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiParameter? LoadParameter(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            return LoadParameter(node, false, hostDocument);
+            return LoadParameter(node, false, hostDocument, context);
         }
 
-        public static IOpenApiParameter? LoadParameter(ParseNode node, bool loadRequestBody, OpenApiDocument hostDocument)
+        public static IOpenApiParameter? LoadParameter(JsonNode node, bool loadRequestBody, OpenApiDocument hostDocument, ParsingContext context)
         {
             // Reset the local variables every time this method is called.
-            node.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, false);
+            context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, false);
 
-            var mapNode = node.CheckMapNode("parameter");
+            var JsonObject = node.CheckMapNode("parameter", context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = JsonObject.GetReferencePointer();
 
             if (pointer != null)
             {
@@ -279,25 +281,25 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var parameter = new OpenApiParameter();
 
-            ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields, doc: hostDocument);
+            ParseMap(JsonObject, parameter, _parameterFixedFields, _parameterPatternFields, hostDocument, context);
 
-            var schema = node.Context.GetFromTempStorage<IOpenApiSchema>("schema");
+            var schema = context.GetFromTempStorage<IOpenApiSchema>("schema");
             if (schema != null)
             {
                 parameter.Schema = schema;
-                node.Context.SetTempStorage("schema", null);
+                context.SetTempStorage("schema", null);
             }
 
             // load examples from storage and add them to the parameter
-            var examples = node.Context.GetFromTempStorage<Dictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, parameter);
+            var examples = context.GetFromTempStorage<Dictionary<string, IOpenApiExample>>(TempStorageKeys.Examples, parameter);
             if (examples != null)
             {
                 parameter.Examples = examples;
-                node.Context.SetTempStorage("examples", null);
+                context.SetTempStorage("examples", null);
             }
 
             var isBodyOrFormData = false;
-            var paramData = node.Context.GetFromTempStorage<object>(TempStorageKeys.ParameterIsBodyOrFormData);
+            var paramData = context.GetFromTempStorage<object>(TempStorageKeys.ParameterIsBodyOrFormData);
             if (paramData is bool boolValue)
             {
                 isBodyOrFormData = boolValue;

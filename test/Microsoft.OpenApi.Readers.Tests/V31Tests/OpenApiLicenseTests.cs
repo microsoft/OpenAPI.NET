@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.IO;
@@ -27,10 +27,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var context = new ParsingContext(diagnostic);
 
             var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
+            var node = asJsonNode;
 
             // Act
-            var license = OpenApiV31Deserializer.LoadLicense(node, new());
+            var license = OpenApiV31Deserializer.LoadLicense(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(

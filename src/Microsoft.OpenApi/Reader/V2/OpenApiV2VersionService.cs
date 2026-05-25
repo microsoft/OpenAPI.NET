@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 using System.Collections.Generic;
@@ -20,7 +22,7 @@ namespace Microsoft.OpenApi.Reader.V2
         {
         }
 
-        private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> _loaders = new()
+        private readonly Dictionary<Type, Func<JsonNode, OpenApiDocument, ParsingContext, object?>> _loaders = new()
         {
             [typeof(JsonNodeExtension)] = OpenApiV2Deserializer.LoadAny,
             [typeof(OpenApiContact)] = OpenApiV2Deserializer.LoadContact,
@@ -41,13 +43,13 @@ namespace Microsoft.OpenApi.Reader.V2
             [typeof(OpenApiXml)] = OpenApiV2Deserializer.LoadXml
         };
 
-        public override OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
+        public override OpenApiDocument LoadDocument(JsonNode JsonNode, Uri location, ParsingContext context)
         {
-            return OpenApiV2Deserializer.LoadOpenApi(rootNode, location);
+            return OpenApiV2Deserializer.LoadOpenApi(JsonNode, location, context);
         }
-        internal override Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> Loaders => _loaders;
+        internal override Dictionary<Type, Func<JsonNode, OpenApiDocument, ParsingContext, object?>> Loaders => _loaders;
 
-        public override string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
+        public override string GetReferenceScalarValues(JsonObject JsonObject, string scalarValue)
         {
             throw new InvalidOperationException();
         }

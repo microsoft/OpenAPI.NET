@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests
 {
-    public class ParseNodeTests
+    public class JsonNodeParsingTests
     {
         [Fact]
         public void BrokenSimpleList()
@@ -58,4 +58,3 @@ namespace Microsoft.OpenApi.Tests
         }
     }
 }
-

@@ -1,20 +1,26 @@
-﻿using System.Linq;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Reader;
 
-public class MapNodeTests
+public class JsonNodeHelperTests
 {
     [Fact]
     public void DoesNotFailOnNullValue()
     {
-        var jsonNode = JsonNode.Parse("{\"key\": null}");
-        var mapNode = new MapNode(new ParsingContext(new()), jsonNode);
+        var jsonObject = JsonNode.Parse("{\"key\": null}")?.AsObject();
+        var context = new ParsingContext(new());
+        JsonNode actual = null;
 
-        Assert.NotNull(mapNode);
-        Assert.Single(mapNode);
-        Assert.True(mapNode.First().Value.JsonNode.IsJsonNullSentinel());
+        jsonObject.ParseMap(
+            new object(),
+            new FixedFieldMap<object>(),
+            new PatternFieldMap<object>(),
+            new OpenApiDocument(),
+            context,
+            (_, _, value) => actual = value);
+
+        Assert.True(actual.IsJsonNullSentinel());
     }
 }

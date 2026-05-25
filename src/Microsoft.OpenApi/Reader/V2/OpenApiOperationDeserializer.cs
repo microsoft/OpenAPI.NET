@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -18,16 +18,17 @@ namespace Microsoft.OpenApi.Reader.V2
             new()
             {
                 {
-                    "tags", (o, n, doc) => {
+                    "tags", (o, n, doc, c) => {
                         if (n.CreateSimpleList(
-                            (valueNode, doc) =>
+                            (jsonNode, document) =>
                             {
-                                var val = valueNode.GetScalarValue();
+                                var val = jsonNode.GetScalarValue();
                                 if (string.IsNullOrEmpty(val))
                                     return null;   // Avoid exception on empty tag, we'll remove these from the list further on
-                                return LoadTagByReference(val , doc);
-                                },
-                            doc)
+                                return LoadTagByReference(val!, document);
+                            },
+                            doc,
+                            c)
                         // Filter out empty tags instead of excepting on them
                         .OfType<OpenApiTagReference>().ToList() is {Count: > 0} tags)
                         {
@@ -37,49 +38,49 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "summary",
-                    (o, n, _) => o.Summary = n.GetScalarValue()
+                    (o, n, _, c) => o.Summary = n.GetScalarValue()
                 },
                 {
                     "description",
-                    (o, n, _) => o.Description = n.GetScalarValue()
+                    (o, n, _, c) => o.Description = n.GetScalarValue()
                 },
                 {
                     "externalDocs",
-                    (o, n, t) => o.ExternalDocs = LoadExternalDocs(n, t)
+                    (o, n, t, c) => o.ExternalDocs = LoadExternalDocs(n, t, c)
                 },
                 {
                     "operationId",
-                    (o, n, _) => o.OperationId = n.GetScalarValue()
+                    (o, n, _, c) => o.OperationId = n.GetScalarValue()
                 },
                 {
                     "parameters",
-                    (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)
+                    (o, n, t, c) => o.Parameters = n.CreateList(LoadParameter, t, c)
                         .OfType<IOpenApiParameter>()
                         .ToList()
                 },
                 {
-                    "consumes", (_, n, doc) => {
-                        var consumes = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc);
+                    "consumes", (_, n, doc, c) => {
+                        var consumes = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc, c);
                         if (consumes.Count > 0) {
-                            n.Context.SetTempStorage(TempStorageKeys.OperationConsumes,consumes);
+                            c.SetTempStorage(TempStorageKeys.OperationConsumes,consumes);
                         }
                     }
                 },
                 {
-                    "produces", (_, n, doc) => {
-                        var produces = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc);
+                    "produces", (_, n, doc, c) => {
+                        var produces = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc, c);
                         if (produces.Count > 0) {
-                            n.Context.SetTempStorage(TempStorageKeys.OperationProduces, produces);
+                            c.SetTempStorage(TempStorageKeys.OperationProduces, produces);
                         }
                     }
                 },
                 {
                     "responses",
-                    (o, n, t) => o.Responses = LoadResponses(n, t)
+                    (o, n, t, c) => o.Responses = LoadResponses(n, t, c)
                 },
                 {
                     "deprecated",
-                    (o, n, _) =>
+                    (o, n, _, c) =>
                     {
                         var deprecated = n.GetScalarValue();
                         if (deprecated != null)
@@ -90,9 +91,9 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "security",
-                    (o, n, t) => { if (n.JsonNode is JsonArray)
+                    (o, n, t, c) => { if (n is JsonArray)
                     {
-                        o.Security = n.CreateList(LoadSecurityRequirement, t); 
+                        o.Security = n.CreateList(LoadSecurityRequirement, t, c); 
                     } }
                 },
             };
@@ -100,7 +101,7 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
         private static readonly FixedFieldMap<OpenApiResponses> _responsesFixedFields = new();
@@ -108,61 +109,62 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiResponses> _responsesPatternFields =
             new()
             {
-                {s => !s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, t) => o.Add(p, LoadResponse(n, t))},
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => !s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, t, c) => o.Add(p, LoadResponse(n, t, c))},
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        internal static OpenApiOperation LoadOperation(ParseNode node, OpenApiDocument hostDocument)
+        internal static OpenApiOperation LoadOperation(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
             // Reset these temp storage parameters for each operation.
-            node.Context.SetTempStorage(TempStorageKeys.BodyParameter, null);
-            node.Context.SetTempStorage(TempStorageKeys.FormParameters, null);
-            node.Context.SetTempStorage(TempStorageKeys.OperationProduces, null);
-            node.Context.SetTempStorage(TempStorageKeys.OperationConsumes, null);
+            context.SetTempStorage(TempStorageKeys.BodyParameter, null);
+            context.SetTempStorage(TempStorageKeys.FormParameters, null);
+            context.SetTempStorage(TempStorageKeys.OperationProduces, null);
+            context.SetTempStorage(TempStorageKeys.OperationConsumes, null);
 
-            var mapNode = node.CheckMapNode("Operation");
+            var JsonObject = node.CheckMapNode("Operation", context);
 
             var operation = new OpenApiOperation();
 
-            ParseMap(mapNode, operation, _operationFixedFields, _operationPatternFields, doc: hostDocument);
+            ParseMap(JsonObject, operation, _operationFixedFields, _operationPatternFields, hostDocument, context);
 
             // Build request body based on information determined while parsing OpenApiOperation
-            var bodyParameter = node.Context.GetFromTempStorage<OpenApiParameter>(TempStorageKeys.BodyParameter);
+            var bodyParameter = context.GetFromTempStorage<OpenApiParameter>(TempStorageKeys.BodyParameter);
             if (bodyParameter != null)
             {
-                operation.RequestBody = CreateRequestBody(node.Context, bodyParameter);
+                operation.RequestBody = CreateRequestBody(context, bodyParameter);
             }
             else
             {
-                var formParameters = node.Context.GetFromTempStorage<List<OpenApiParameter>>(TempStorageKeys.FormParameters);
+                var formParameters = context.GetFromTempStorage<List<OpenApiParameter>>(TempStorageKeys.FormParameters);
                 if (formParameters != null)
                 {
-                    operation.RequestBody = CreateFormBody(node.Context, formParameters);
+                    operation.RequestBody = CreateFormBody(context, formParameters);
                 }
             }
 
+            var operationProduces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces);
             var responses = operation.Responses;
-            if (responses is not null)
+            if ((operationProduces is not null || JsonObject.ContainsKey("produces")) && responses is not null)
             {
                 foreach (var response in responses.Values.OfType<OpenApiResponse>())
                 {
-                    ProcessProduces(node.CheckMapNode("responses"), response, node.Context);
+                    ProcessProduces(JsonObject, response, context);
                 }
             }            
 
             // Reset so that it's not picked up later
-            node.Context.SetTempStorage(TempStorageKeys.OperationProduces, null);
+            context.SetTempStorage(TempStorageKeys.OperationProduces, null);
 
             return operation;
         }
 
-        public static OpenApiResponses LoadResponses(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiResponses LoadResponses(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("Responses");
+            var JsonObject = node.CheckMapNode("Responses", context);
 
             var domainObject = new OpenApiResponses();
 
-            ParseMap(mapNode, domainObject, _responsesFixedFields, _responsesPatternFields, doc: hostDocument);
+            ParseMap(JsonObject, domainObject, _responsesFixedFields, _responsesPatternFields, hostDocument, context);
 
             return domainObject;
         }

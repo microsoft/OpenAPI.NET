@@ -1,4 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+using System.Text.Json.Nodes;
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -250,10 +251,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicPathItemWithFormData.yaml"));
-            var node = TestHelper.CreateYamlMapNode(stream);
+            var node = TestHelper.CreateYamlJsonNode(stream);
 
             // Act
-            var pathItem = OpenApiV2Deserializer.LoadPathItem(node, new());
+            var pathItem = OpenApiV2Deserializer.LoadPathItem(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(_basicPathItemWithFormData, pathItem);
@@ -263,14 +264,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParsePathItemWithFormDataPathParameterShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathItemWithFormDataPathParameter.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var pathItem = OpenApiV2Deserializer.LoadPathItem(node, new());
+            var pathItem = OpenApiV2Deserializer.LoadPathItem(node, new(), new ParsingContext(new()));
 
             // Assert
             // FormData parameters at in the path level are pushed into Operation request bodies.
@@ -282,14 +283,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParsePathItemBodyDataPathParameterShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathItemWithBodyPathParameter.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var pathItem = OpenApiV2Deserializer.LoadPathItem(node, new());
+            var pathItem = OpenApiV2Deserializer.LoadPathItem(node, new(), new ParsingContext(new()));
 
             // Assert
             // FormData parameters at in the path level are pushed into Operation request bodies.
