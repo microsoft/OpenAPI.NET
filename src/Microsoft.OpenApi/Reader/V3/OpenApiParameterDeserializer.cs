@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -16,12 +18,12 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "name",
-                    (o, n,_) => o.Name = n.GetScalarValue()
+                    (o, n, _, c) => o.Name = n.GetScalarValue()
                 },
                 {
-                    "in", (o, n, _) =>
+                    "in", (o, n, _, c) =>
                     {
-                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(n.Context, out var _in))
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(c, out var _in))
                         {
                             return;
                         }
@@ -30,11 +32,11 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "description",
-                    (o, n, _) => o.Description = n.GetScalarValue()
+                    (o, n, _, c) => o.Description = n.GetScalarValue()
                 },
                 {
                     "required",
-                    (o, n, t) =>
+                    (o, n, t, c) =>
                     {
                         var required = n.GetScalarValue();
                         if (required != null)
@@ -45,7 +47,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "deprecated",
-                    (o, n, t) =>
+                    (o, n, t, c) =>
                     {
                         var deprecated = n.GetScalarValue();
                         if (deprecated != null)
@@ -56,7 +58,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "allowEmptyValue",
-                    (o, n, t) =>
+                    (o, n, t, c) =>
                     {
                         var allowEmptyValue = n.GetScalarValue();
                         if (allowEmptyValue != null)
@@ -67,7 +69,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "allowReserved",
-                    (o, n, _) =>
+                    (o, n, _, c) =>
                     {
                         var allowReserved = n.GetScalarValue();
                         if (allowReserved != null)
@@ -78,9 +80,9 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "style",
-                    (o, n, _) => 
+                    (o, n, _, c) => 
                     {
-                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(n.Context, out var style))
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(c, out var style))
                         {
                             return;
                         }
@@ -89,7 +91,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "explode",
-                    (o, n, _) =>
+                    (o, n, _, c) =>
                     {
                         var explode = n.GetScalarValue();
                         if (explode != null)
@@ -100,26 +102,26 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "schema",
-                    (o, n, t) => o.Schema = LoadSchema(n, t)
+                    (o, n, t, c) => o.Schema = LoadSchema(n, t, c)
                 },
                 {
                     "content",
-                    (o, n, t) => o.Content = n.CreateMap(LoadMediaType, t)
+                    (o, n, t, c) => o.Content = n.CreateMap(LoadMediaType, t, c)
                 },
                 {
                     "examples",
-                    (o, n, t) => o.Examples = n.CreateMap(LoadExample, t)
+                    (o, n, t, c) => o.Examples = n.CreateMap(LoadExample, t, c)
                 },
                 {
                     "example",
-                    (o, n, _) => o.Example = n.CreateAny()
+                    (o, n, _, c) => o.Example = n.CreateAny()
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
         private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields = new()
@@ -146,11 +148,11 @@ namespace Microsoft.OpenApi.Reader.V3
             }
         };
 
-        public static IOpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiParameter LoadParameter(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("parameter");
+            var JsonObject = node.CheckMapNode("parameter", context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = JsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
@@ -159,9 +161,9 @@ namespace Microsoft.OpenApi.Reader.V3
 
             var parameter = new OpenApiParameter();
 
-            ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields, hostDocument);
-            ProcessAnyFields(mapNode, parameter, _parameterAnyFields);
-            ProcessAnyMapFields(mapNode, parameter, _parameterAnyMapOpenApiExampleFields);
+            ParseMap(JsonObject, parameter, _parameterFixedFields, _parameterPatternFields, hostDocument, context);
+            ProcessAnyFields(JsonObject, parameter, _parameterAnyFields, context);
+            ProcessAnyMapFields(JsonObject, parameter, _parameterAnyMapOpenApiExampleFields, context);
 
             return parameter;
         }

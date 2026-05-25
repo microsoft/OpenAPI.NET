@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -14,39 +14,39 @@ internal static partial class OpenApiV32Deserializer
     {
         {
             "title",
-            (o, n, _) => o.Title = n.GetScalarValue()
+            (o, n, _, c) => o.Title = n.GetScalarValue()
         },
         {
             "$schema",
-            (o, n, _) => { if (n.GetScalarValue() is string {} sSchema && Uri.TryCreate(sSchema, UriKind.Absolute, out var schema)) {o.Schema = schema;}}
+            (o, n, _, c) => { if (n.GetScalarValue() is string {} sSchema && Uri.TryCreate(sSchema, UriKind.Absolute, out var schema)) {o.Schema = schema;}}
         },
         {
             "$id",
-            (o, n, _) => o.Id = n.GetScalarValue()
+            (o, n, _, c) => o.Id = n.GetScalarValue()
         },
         {
             "$comment",
-            (o, n, _) => o.Comment = n.GetScalarValue()
+            (o, n, _, c) => o.Comment = n.GetScalarValue()
         },
         {
             "$vocabulary",
-            (o, n, _) => o.Vocabulary = n.CreateSimpleMap(LoadBool).ToDictionary(kvp => kvp.Key, kvp => kvp.Value ?? false)
+            (o, n, _, c) => o.Vocabulary = n.CreateSimpleMap(LoadBool, c).ToDictionary(kvp => kvp.Key, kvp => kvp.Value ?? false)
         },
         {
             "$dynamicRef",
-            (o, n, _) => o.DynamicRef = n.GetScalarValue()
+            (o, n, _, c) => o.DynamicRef = n.GetScalarValue()
         },
         {
             "$dynamicAnchor",
-            (o, n, _) => o.DynamicAnchor = n.GetScalarValue()
+            (o, n, _, c) => o.DynamicAnchor = n.GetScalarValue()
         },
         {
             "$defs",
-            (o, n, t) => o.Definitions = n.CreateMap(LoadSchema, t)
+            (o, n, t, c) => o.Definitions = n.CreateMap(LoadSchema, t, c)
         },
             {
             "multipleOf",
-            (o, n, _) =>
+            (o, n, _, c) =>
             {
                 var multipleOf = n.GetScalarValue();
                 if (multipleOf != null)
@@ -57,7 +57,7 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "maximum",
-            (o, n,_) =>
+            (o, n, _, c) =>
             {
                 var max = n.GetScalarValue();
                 if (!string.IsNullOrEmpty(max))
@@ -68,11 +68,11 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "exclusiveMaximum",
-            (o, n, _) => o.ExclusiveMaximum = n.GetScalarValue()
+            (o, n, _, c) => o.ExclusiveMaximum = n.GetScalarValue()
         },
         {
             "minimum",
-            (o, n, _) =>
+            (o, n, _, c) =>
             {
                 var min = n.GetScalarValue();
                 if (!string.IsNullOrEmpty(min))
@@ -83,11 +83,11 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "exclusiveMinimum",
-            (o, n, _) => o.ExclusiveMinimum = n.GetScalarValue()
+            (o, n, _, c) => o.ExclusiveMinimum = n.GetScalarValue()
         },
         {
             "maxLength",
-            (o, n, _) =>
+            (o, n, _, c) =>
             {
                 var maxLength = n.GetScalarValue();
                 if (maxLength != null)
@@ -98,7 +98,7 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "minLength",
-            (o, n, _) =>
+            (o, n, _, c) =>
             {
                 var minLength = n.GetScalarValue();
                 if (minLength != null)
@@ -109,11 +109,11 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "pattern",
-            (o, n, _) => o.Pattern = n.GetScalarValue()
+            (o, n, _, c) => o.Pattern = n.GetScalarValue()
         },
         {
             "maxItems",
-            (o, n, _) =>
+            (o, n, _, c) =>
             {
                 var maxItems = n.GetScalarValue();
                 if (maxItems != null)
@@ -124,7 +124,7 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "minItems",
-            (o, n, _) =>
+            (o, n, _, c) =>
             {
                 var minItems = n.GetScalarValue();
                 if (minItems != null)
@@ -135,7 +135,7 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "uniqueItems",
-            (o, n, _) =>
+            (o, n, _, c) =>
             {
                 var uniqueItems = n.GetScalarValue();
                 if (uniqueItems != null)
@@ -146,10 +146,10 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "unevaluatedProperties",
-            (o, n, t) =>
+            (o, n, t, c) =>
             {
                 // Handle both boolean (false/true) and schema object cases
-                if (n is ValueNode)
+                if (n is JsonValue)
                 {
                     var value = n.GetScalarValue();
                     if (value is not null)
@@ -160,13 +160,13 @@ internal static partial class OpenApiV32Deserializer
                 else
                 {
                     // Schema object case: deserialize as schema
-                    o.UnevaluatedPropertiesSchema = LoadSchema(n, t);
+                    o.UnevaluatedPropertiesSchema = LoadSchema(n, t, c);
                 }
             }
         },
         {
             "maxProperties",
-            (o, n, _) =>
+            (o, n, _, c) =>
             {
                 var maxProps = n.GetScalarValue();
                 if (maxProps != null)
@@ -177,7 +177,7 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "minProperties",
-            (o, n, _) =>
+            (o, n, _, c) =>
             {
                 var minProps = n.GetScalarValue();
                 if (minProps != null)
@@ -188,26 +188,26 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "required",
-            (o, n, doc) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc).Where(s => s != null))
+            (o, n, doc, c) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc, c).OfType<string>())
         },
         {
             "enum",
-            (o, n, _) => o.Enum = n.CreateListOfAny()
+            (o, n, _, c) => o.Enum = n.CreateListOfAny(c)
         },
         {
             "type",
-            (o, n, doc) => 
+            (o, n, doc, c) => 
             {
                 // Preserve any Null flag set by a preceding "nullable: true" handler
                 var preserveNull = o.Type.HasValue && o.Type.Value.HasFlag(JsonSchemaType.Null);
-                if (n is ValueNode)
+                if (n is JsonValue)
                 {
                     var parsedType = n.GetScalarValue()?.ToJsonSchemaType();
                     o.Type = preserveNull ? parsedType | JsonSchemaType.Null : parsedType;
                 }
                 else
                 {
-                    var list = n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc);
+                    var list = n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc, c);
                     JsonSchemaType combinedType = preserveNull ? JsonSchemaType.Null : 0;
                     foreach(var type in list.Where(static t => t is not null).Select(static t => t!.ToJsonSchemaType()))
                     {
@@ -219,40 +219,40 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "const",
-            (o, n, _) => o.Const = n.GetScalarValue()
+            (o, n, _, c) => o.Const = n.GetScalarValue()
         },
         {
             "allOf",
-            (o, n, t) => o.AllOf = n.CreateList(LoadSchema, t)
+            (o, n, t, c) => o.AllOf = n.CreateList(LoadSchema, t, c)
         },
         {
             "oneOf",
-            (o, n, t) => o.OneOf = n.CreateList(LoadSchema, t)
+            (o, n, t, c) => o.OneOf = n.CreateList(LoadSchema, t, c)
         },
         {
             "anyOf",
-            (o, n, t) => o.AnyOf = n.CreateList(LoadSchema, t)
+            (o, n, t, c) => o.AnyOf = n.CreateList(LoadSchema, t, c)
         },
         {
             "not",
-            (o, n, doc) => o.Not = LoadSchema(n, doc)
+            (o, n, doc, c) => o.Not = LoadSchema(n, doc, c)
         },
         {
             "items",
-            (o, n, doc) => o.Items = LoadSchema(n, doc)
+            (o, n, doc, c) => o.Items = LoadSchema(n, doc, c)
         },
         {
             "properties",
-            (o, n, t) => o.Properties = n.CreateMap(LoadSchema, t)
+            (o, n, t, c) => o.Properties = n.CreateMap(LoadSchema, t, c)
         },
         {
             "patternProperties",
-            (o, n, t) => o.PatternProperties = n.CreateMap(LoadSchema, t)
+            (o, n, t, c) => o.PatternProperties = n.CreateMap(LoadSchema, t, c)
         },
         {
-            "additionalProperties", (o, n, doc) =>
+            "additionalProperties", (o, n, doc, c) =>
             {
-                if (n is ValueNode)
+                if (n is JsonValue)
                 {
                     var value = n.GetScalarValue();
                     if (value is not null)
@@ -262,25 +262,25 @@ internal static partial class OpenApiV32Deserializer
                 }
                 else
                 {
-                    o.AdditionalProperties = LoadSchema(n, doc);
+                    o.AdditionalProperties = LoadSchema(n, doc, c);
                 }
             }
         },
         {
             "description",
-            (o, n, _) => o.Description = n.GetScalarValue()
+            (o, n, _, c) => o.Description = n.GetScalarValue()
         },
         {
             "format",
-            (o, n, _) => o.Format = n.GetScalarValue()
+            (o, n, _, c) => o.Format = n.GetScalarValue()
         },
         {
             "default",
-            (o, n, _) => o.Default = n.CreateAny()
+            (o, n, _, c) => o.Default = n.CreateAny()
         },
         {
             "nullable",
-            (o, n, _) => 
+            (o, n, _, c) => 
             {
                 var value = n.GetScalarValue();
                 if (value is not null)
@@ -298,11 +298,11 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "discriminator",
-            (o, n, doc) => o.Discriminator = LoadDiscriminator(n, doc)
+            (o, n, doc, c) => o.Discriminator = LoadDiscriminator(n, doc, c)
         },
         {
             "readOnly",
-            (o, n, _) =>
+            (o, n, _, c) =>
             {
                 var readOnly = n.GetScalarValue();
                 if (readOnly != null)
@@ -313,7 +313,7 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "writeOnly",
-            (o, n, _) =>
+            (o, n, _, c) =>
             {
                 var writeOnly = n.GetScalarValue();
                 if (writeOnly != null)
@@ -324,23 +324,23 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "xml",
-            (o, n, doc) => o.Xml = LoadXml(n, doc)
+            (o, n, doc, c) => o.Xml = LoadXml(n, doc, c)
         },
         {
             "externalDocs",
-            (o, n, doc) => o.ExternalDocs = LoadExternalDocs(n, doc)
+            (o, n, doc, c) => o.ExternalDocs = LoadExternalDocs(n, doc, c)
         },
         {
             "example",
-            (o, n, _) => o.Example = n.CreateAny()
+            (o, n, _, c) => o.Example = n.CreateAny()
         },
         {
             "examples",
-            (o, n, _) => o.Examples = n.CreateListOfAny()
+            (o, n, _, c) => o.Examples = n.CreateListOfAny(c)
         },
         {
             "deprecated",
-            (o, n, t) =>
+            (o, n, t, c) =>
             {
                 var deprecated = n.GetScalarValue();
                 if (deprecated != null)
@@ -351,22 +351,22 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "dependentRequired",
-            (o, n, doc) =>
+            (o, n, doc, c) =>
             {
-                o.DependentRequired = n.CreateArrayMap((n2, p) => n2.GetScalarValue(), doc);
+                o.DependentRequired = n.CreateArrayMap((n2, p) => n2.GetScalarValue()!, doc, c);
             }
         },
     };
 
     private static readonly PatternFieldMap<OpenApiSchema> _openApiSchemaPatternFields = new()
     {
-        {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+        {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
     };
 
-    public static IOpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)
+    public static IOpenApiSchema LoadSchema(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
     {
         // Handle boolean schemas (true/false) for JSON Schema 2020-12 compatibility
-        if (node is ValueNode valueNode && valueNode.TryGetValue<bool>(out var boolValue))
+        if (node is JsonValue jsonValue && jsonValue.TryGetValue<bool>(out var boolValue))
         {
             var boolSchema = new OpenApiSchema();
             if (!boolValue)
@@ -378,38 +378,29 @@ internal static partial class OpenApiV32Deserializer
             return boolSchema;
         }
 
-        var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
+        var JsonObject = node.CheckMapNode(OpenApiConstants.Schema, context);
 
-        var pointer = mapNode.GetReferencePointer();
-        var identifier = mapNode.GetJsonSchemaIdentifier();
+        var pointer = JsonObject.GetReferencePointer();
+        var identifier = JsonObject.GetJsonSchemaIdentifier();
 
         if (pointer != null)
         {
-            var nodeLocation = node.Context.GetLocation();
+            var nodeLocation = context.GetLocation();
             var reference = GetReferenceIdAndExternalResource(pointer);
             var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
-            result.Reference.SetMetadataFromMapNode(mapNode);
+            result.Reference.SetMetadataFromJsonObject(JsonObject);
             result.Reference.SetJsonPointerPath(pointer, nodeLocation);
             return result;
         }            
 
         var schema = new OpenApiSchema();
 
-        foreach (var propertyNode in mapNode)
-        {
-            bool isRecognized = _openApiSchemaFixedFields.ContainsKey(propertyNode.Name) ||
-                    _openApiSchemaPatternFields.Any(p => p.Key(propertyNode.Name));
-
-            if (isRecognized)
-            {
-                propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument);
-            }
-            else if (propertyNode.JsonNode is not null)
+        JsonObject.ParseMap(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context,
+            static (schema, name, value) =>
             {
                 schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
-                schema.UnrecognizedKeywords[propertyNode.Name] = propertyNode.JsonNode;
-            }
-        }
+                schema.UnrecognizedKeywords[name] = value;
+            });
 
         if (schema.Extensions is not null && schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
         {
@@ -430,4 +421,3 @@ internal static partial class OpenApiV32Deserializer
         return schema;
     }
 }
-

@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -16,7 +18,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 {
                     OpenApiConstants.Description,
-                    (o, n, _) =>
+                    (o, n, _, c) =>
                     {
                         var description = n.GetScalarValue();
                         if (description != null)
@@ -27,7 +29,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     OpenApiConstants.Url,
-                    (o, n, _) =>
+                    (o, n, _, c) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -41,16 +43,16 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiExternalDocs> _externalDocsPatternFields =
                 new()
                 {
-                    {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+                    {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
                     };
 
-        public static OpenApiExternalDocs LoadExternalDocs(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiExternalDocs LoadExternalDocs(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("externalDocs");
+            var JsonObject = node.CheckMapNode("externalDocs", context);
 
             var externalDocs = new OpenApiExternalDocs();
 
-            ParseMap(mapNode, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields, doc: hostDocument);
+            ParseMap(JsonObject, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields, hostDocument, context);
 
             return externalDocs;
         }

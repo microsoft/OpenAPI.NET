@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Text.Json.Nodes;
+
 using System;
 using System.Collections.Generic;
 
@@ -20,7 +22,7 @@ namespace Microsoft.OpenApi.Reader.V32
         {
         }
 
-        private readonly Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> _loaders = new Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>>
+        private readonly Dictionary<Type, Func<JsonNode, OpenApiDocument, ParsingContext, object?>> _loaders = new Dictionary<Type, Func<JsonNode, OpenApiDocument, ParsingContext, object?>>
         {
             [typeof(JsonNodeExtension)] = OpenApiV32Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV32Deserializer.LoadCallback,
@@ -54,11 +56,11 @@ namespace Microsoft.OpenApi.Reader.V32
             [typeof(OpenApiSchemaReference)] = OpenApiV32Deserializer.LoadMapping
         };
 
-        public override OpenApiDocument LoadDocument(RootNode rootNode, Uri location)
+        public override OpenApiDocument LoadDocument(JsonNode JsonNode, Uri location, ParsingContext context)
         {
-            return OpenApiV32Deserializer.LoadOpenApi(rootNode, location);
+            return OpenApiV32Deserializer.LoadOpenApi(JsonNode, location, context);
         }
-        internal override Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> Loaders => _loaders;
+        internal override Dictionary<Type, Func<JsonNode, OpenApiDocument, ParsingContext, object?>> Loaders => _loaders;
 
     }
 }

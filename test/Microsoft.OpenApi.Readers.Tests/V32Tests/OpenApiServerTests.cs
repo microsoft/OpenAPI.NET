@@ -27,10 +27,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             var context = new ParsingContext(diagnostic);
 
             var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
+            var node = asJsonNode;
 
             // Act
-            var openApiServer = OpenApiV32Deserializer.LoadServer(node, new());
+            var openApiServer = OpenApiV32Deserializer.LoadServer(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equal("https://dev.example.com", openApiServer.Url);
@@ -55,10 +55,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             var context = new ParsingContext(diagnostic);
 
             var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
+            var node = asJsonNode;
 
             // Act
-            var openApiServer = OpenApiV32Deserializer.LoadServer(node, new());
+            var openApiServer = OpenApiV32Deserializer.LoadServer(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equal("https://example.com", openApiServer.Url);

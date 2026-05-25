@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 using System.Linq;
@@ -13,33 +15,27 @@ namespace Microsoft.OpenApi.Reader.V3
     internal static partial class OpenApiV3Deserializer
     {
         private static void ParseMap<T>(
-            MapNode? mapNode,
+            JsonObject? jsonObject,
             T domainObject,
             FixedFieldMap<T> fixedFieldMap,
             PatternFieldMap<T> patternFieldMap, 
-            OpenApiDocument hostDocument)
+            OpenApiDocument hostDocument,
+            ParsingContext context)
         {
-            if (mapNode == null)
-            {
-                return;
-            }
-
-            foreach (var propertyNode in mapNode)
-            {
-                propertyNode.ParseField(domainObject, fixedFieldMap, patternFieldMap, hostDocument);
-            }
+            jsonObject.ParseMap(domainObject, fixedFieldMap, patternFieldMap, hostDocument, context);
         }
 
         private static void ProcessAnyFields<T>(
-            MapNode mapNode,
+            JsonObject jsonObject,
             T domainObject,
-            AnyFieldMap<T> anyFieldMap)
+            AnyFieldMap<T> anyFieldMap,
+            ParsingContext context)
         {
             foreach (var anyFieldName in anyFieldMap.Keys.ToList())
             {
                 try
                 {
-                    mapNode.Context.StartObject(anyFieldName);
+                    context.StartObject(anyFieldName);
 
                     var any = anyFieldMap[anyFieldName].PropertyGetter(domainObject);
 
@@ -54,32 +50,33 @@ namespace Microsoft.OpenApi.Reader.V3
                 }
                 catch (OpenApiException exception)
                 {
-                    exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new(exception));
+                    exception.Pointer = context.GetLocation();
+                    context.Diagnostic.Errors.Add(new(exception));
                 }
                 finally
                 {
-                    mapNode.Context.EndObject();
+                    context.EndObject();
                 }
             }
         }
 
         private static void ProcessAnyMapFields<T, U>(
-            MapNode mapNode,
+            JsonObject jsonObject,
             T domainObject,
-            AnyMapFieldMap<T, U> anyMapFieldMap)
+            AnyMapFieldMap<T, U> anyMapFieldMap,
+            ParsingContext context)
         {
             foreach (var anyMapFieldName in anyMapFieldMap.Keys.ToList())
             {
                 try
                 {
-                    mapNode.Context.StartObject(anyMapFieldName);
+                    context.StartObject(anyMapFieldName);
                     var mapElements = anyMapFieldMap[anyMapFieldName].PropertyMapGetter(domainObject);
                     if (mapElements is not null)
                     {
                         foreach (var propertyMapElement in mapElements)
                         {
-                            mapNode.Context.StartObject(propertyMapElement.Key);
+                            context.StartObject(propertyMapElement.Key);
 
                             if (propertyMapElement.Value != null)
                             {
@@ -94,17 +91,17 @@ namespace Microsoft.OpenApi.Reader.V3
                 }
                 catch (OpenApiException exception)
                 {
-                    exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new(exception));
+                    exception.Pointer = context.GetLocation();
+                    context.Diagnostic.Errors.Add(new(exception));
                 }
                 finally
                 {
-                    mapNode.Context.EndObject();
+                    context.EndObject();
                 }
             }
         }
 
-        private static RuntimeExpressionAnyWrapper LoadRuntimeExpressionAnyWrapper(ParseNode node)
+        private static RuntimeExpressionAnyWrapper LoadRuntimeExpressionAnyWrapper(JsonNode node)
         {
             var value = node.GetScalarValue();
 
@@ -123,14 +120,14 @@ namespace Microsoft.OpenApi.Reader.V3
             };
         }
 
-        public static JsonNodeExtension LoadAny(ParseNode node, OpenApiDocument hostDocument)
+        public static JsonNodeExtension LoadAny(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
             return new JsonNodeExtension(node.CreateAny());
         }
 
-        private static IOpenApiExtension LoadExtension(string name, ParseNode node)
+        private static IOpenApiExtension LoadExtension(string name, JsonNode node, ParsingContext context)
         {
-            if (node.Context.ExtensionParsers is not null && node.Context.ExtensionParsers.TryGetValue(name, out var parser))
+            if (context.ExtensionParsers is not null && context.ExtensionParsers.TryGetValue(name, out var parser))
             {
                 try
                 {
@@ -142,15 +139,15 @@ namespace Microsoft.OpenApi.Reader.V3
                 }
                 catch (OpenApiException ex)
                 {
-                    ex.Pointer = node.Context.GetLocation();
-                    node.Context.Diagnostic.Errors.Add(new(ex));
+                    ex.Pointer = context.GetLocation();
+                    context.Diagnostic.Errors.Add(new(ex));
                 }
             }
 
             return new JsonNodeExtension(node.CreateAny());
         }
 
-        private static string? LoadString(ParseNode node)
+        private static string? LoadString(JsonNode node)
         {
             return node.GetScalarValue();
         }

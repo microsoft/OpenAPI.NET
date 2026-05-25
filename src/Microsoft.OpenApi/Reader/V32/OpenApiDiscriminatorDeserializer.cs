@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V32
 {
@@ -12,21 +13,21 @@ namespace Microsoft.OpenApi.Reader.V32
             new()
             {
                 {
-                    "propertyName", (o, n, _) =>
+                    "propertyName", (o, n, _, c) =>
                     {
                         o.PropertyName = n.GetScalarValue();
                     }
                 },
                 {
-                    "mapping", (o, n, doc) =>
+                    "mapping", (o, n, doc, c) =>
                     {
-                        o.Mapping = n.CreateSimpleMap((node) => LoadMapping(node, doc));
+                        o.Mapping = n.CreateSimpleMap(node => LoadMapping(node, doc, c), c);
                     }
                 },
                  {
-                    "defaultMapping", (o, n, doc) =>
+                    "defaultMapping", (o, n, doc, c) =>
                     {
-                        o.DefaultMapping = LoadMapping(n, doc);
+                        o.DefaultMapping = LoadMapping(n, doc, c);
                     }
                 }
             };
@@ -34,23 +35,20 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly PatternFieldMap<OpenApiDiscriminator> _discriminatorPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static OpenApiDiscriminator LoadDiscriminator(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiDiscriminator LoadDiscriminator(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("discriminator");
+            var JsonObject = node.CheckMapNode("discriminator", context);
 
             var discriminator = new OpenApiDiscriminator();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(discriminator, _discriminatorFixedFields, _discriminatorPatternFields, hostDocument);
-            }
+            ParseMap(JsonObject, discriminator, _discriminatorFixedFields, _discriminatorPatternFields, hostDocument, context);
 
             return discriminator;
         }
 
-        public static OpenApiSchemaReference LoadMapping(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiSchemaReference LoadMapping(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
             var pointer = node.GetScalarValue() ?? throw new InvalidOperationException("Could not get a pointer reference");
             var reference = GetReferenceIdAndExternalResource(pointer);

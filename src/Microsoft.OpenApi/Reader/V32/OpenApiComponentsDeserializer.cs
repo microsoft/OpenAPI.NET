@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Text.Json.Nodes;
+
 using System;
 
 namespace Microsoft.OpenApi.Reader.V32
@@ -13,31 +15,31 @@ namespace Microsoft.OpenApi.Reader.V32
     {
         private static readonly FixedFieldMap<OpenApiComponents> _componentsFixedFields = new()
         {
-        {"schemas", (o, n, t) => o.Schemas = n.CreateMap(LoadSchema, t)},
-        {"responses", (o, n, t) => o.Responses = n.CreateMap(LoadResponse, t)},
-        {"parameters", (o, n, t) => o.Parameters = n.CreateMap(LoadParameter, t)},
-        {"examples", (o, n, t) => o.Examples = n.CreateMap(LoadExample, t)},
-        {"requestBodies", (o, n, t) => o.RequestBodies = n.CreateMap(LoadRequestBody, t)},
-        {"headers", (o, n, t) => o.Headers = n.CreateMap(LoadHeader, t)},
-        {"securitySchemes", (o, n, t) => o.SecuritySchemes = n.CreateMap(LoadSecurityScheme, t)},
-        {"links", (o, n, t) => o.Links = n.CreateMap(LoadLink, t)},
-        {"callbacks", (o, n, t) => o.Callbacks = n.CreateMap(LoadCallback, t)},
-        {"pathItems", (o, n, t) => o.PathItems = n.CreateMap(LoadPathItem, t)},
-        {"mediaTypes", (o, n, t) => o.MediaTypes = n.CreateMap(LoadMediaType, t)}
+        {"schemas", (o, n, t, c) => o.Schemas = n.CreateMap(LoadSchema, t, c)},
+        {"responses", (o, n, t, c) => o.Responses = n.CreateMap(LoadResponse, t, c)},
+        {"parameters", (o, n, t, c) => o.Parameters = n.CreateMap(LoadParameter, t, c)},
+        {"examples", (o, n, t, c) => o.Examples = n.CreateMap(LoadExample, t, c)},
+        {"requestBodies", (o, n, t, c) => o.RequestBodies = n.CreateMap(LoadRequestBody, t, c)},
+        {"headers", (o, n, t, c) => o.Headers = n.CreateMap(LoadHeader, t, c)},
+        {"securitySchemes", (o, n, t, c) => o.SecuritySchemes = n.CreateMap(LoadSecurityScheme, t, c)},
+        {"links", (o, n, t, c) => o.Links = n.CreateMap(LoadLink, t, c)},
+        {"callbacks", (o, n, t, c) => o.Callbacks = n.CreateMap(LoadCallback, t, c)},
+        {"pathItems", (o, n, t, c) => o.PathItems = n.CreateMap(LoadPathItem, t, c)},
+        {"mediaTypes", (o, n, t, c) => o.MediaTypes = n.CreateMap(LoadMediaType, t, c)}
     };
 
         private static readonly PatternFieldMap<OpenApiComponents> _componentsPatternFields =
             new()
             {
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static OpenApiComponents LoadComponents(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiComponents LoadComponents(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("components");
+            var JsonObject = node.CheckMapNode("components", context);
             var components = new OpenApiComponents();
 
-            ParseMap(mapNode, components, _componentsFixedFields, _componentsPatternFields, hostDocument);
+            ParseMap(JsonObject, components, _componentsFixedFields, _componentsPatternFields, hostDocument, context);
 
             return components;
         }

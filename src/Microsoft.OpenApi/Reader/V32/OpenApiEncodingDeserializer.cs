@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V32
 {
@@ -11,39 +12,39 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly FixedFieldMap<OpenApiEncoding> _encodingFixedFields = new()
         {
             {
-                "contentType", (o, n, _) =>
+                "contentType", (o, n, _, c) =>
                 {
                     o.ContentType = n.GetScalarValue();
                 }
             },
             {
-                "headers", (o, n, t) =>
+                "headers", (o, n, t, c) =>
                 {
-                    o.Headers = n.CreateMap(LoadHeader, t);
+                    o.Headers = n.CreateMap(LoadHeader, t, c);
                 }
             },
             {
-                "encoding", (o, n, t) =>
+                "encoding", (o, n, t, c) =>
                 {
-                    o.Encoding = n.CreateMap(LoadEncoding, t);
+                    o.Encoding = n.CreateMap(LoadEncoding, t, c);
                 }
             },
             {
-                "itemEncoding", (o, n, t) =>
+                "itemEncoding", (o, n, t, c) =>
                 {
-                    o.ItemEncoding = LoadEncoding(n, t);
+                    o.ItemEncoding = LoadEncoding(n, t, c);
                 }
             },
             {
-                "prefixEncoding", (o, n, t) =>
+                "prefixEncoding", (o, n, t, c) =>
                 {
-                    o.PrefixEncoding = n.CreateList(LoadEncoding, t);
+                    o.PrefixEncoding = n.CreateList(LoadEncoding, t, c);
                 }
             },
             {
-                "style", (o, n, _) =>
+                "style", (o, n, _, c) =>
                 {
-                    if(!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(n.Context, out var style))
+                    if(!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(c, out var style))
                     {
                         return;
                     }
@@ -51,7 +52,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 }
             },
             {
-                "explode", (o, n, _) =>
+                "explode", (o, n, _, c) =>
                 {
                     var explode = n.GetScalarValue();
                     if (explode is not null)
@@ -61,7 +62,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 }
             },
             {
-                "allowReserved", (o, n, _) =>
+                "allowReserved", (o, n, _, c) =>
                 {
                     var allowReserved = n.GetScalarValue();
                     if (allowReserved is not null)
@@ -75,18 +76,15 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly PatternFieldMap<OpenApiEncoding> _encodingPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static OpenApiEncoding LoadEncoding(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiEncoding LoadEncoding(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("encoding");
+            var JsonObject = node.CheckMapNode("encoding", context);
 
             var encoding = new OpenApiEncoding();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(encoding, _encodingFixedFields, _encodingPatternFields, hostDocument);
-            }
+            ParseMap(JsonObject, encoding, _encodingFixedFields, _encodingPatternFields, hostDocument, context);
 
             return encoding;
         }

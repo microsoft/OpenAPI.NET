@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -23,14 +23,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseSchemaWithDefaultShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "schemaWithDefault.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var schema = OpenApiV2Deserializer.LoadSchema(node, new());
+            var schema = OpenApiV2Deserializer.LoadSchema(node, new(), new ParsingContext(new()));
 
             // Assert
             schema.Should().BeEquivalentTo(new OpenApiSchema
@@ -45,14 +45,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseSchemaWithExampleShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "schemaWithExample.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var schema = OpenApiV2Deserializer.LoadSchema(node, new());
+            var schema = OpenApiV2Deserializer.LoadSchema(node, new(), new ParsingContext(new()));
 
             // Assert
             schema.Should().BeEquivalentTo(
@@ -68,14 +68,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseSchemaWithEnumShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "schemaWithEnum.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var schema = OpenApiV2Deserializer.LoadSchema(node, new());
+            var schema = OpenApiV2Deserializer.LoadSchema(node, new(), new ParsingContext(new()));
 
             // Assert
             var expected = new OpenApiSchema

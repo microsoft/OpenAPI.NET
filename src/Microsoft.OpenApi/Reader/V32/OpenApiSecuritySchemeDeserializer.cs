@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -15,9 +17,9 @@ namespace Microsoft.OpenApi.Reader.V32
             new()
             {
                 {
-                    "type", (o, n, _) =>
+                    "type", (o, n, _, c) =>
                     {
-                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<SecuritySchemeType>(n.Context, out var type))
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<SecuritySchemeType>(c, out var type))
                         {
                             return;
                         }
@@ -25,21 +27,21 @@ namespace Microsoft.OpenApi.Reader.V32
                     }
                 },
                 {
-                    "description", (o, n, _) =>
+                    "description", (o, n, _, c) =>
                     {
                         o.Description = n.GetScalarValue();
                     }
                 },
                 {
-                    "name", (o, n, _) =>
+                    "name", (o, n, _, c) =>
                     {
                         o.Name = n.GetScalarValue();
                     }
                 },
                 {
-                    "in", (o, n, _) =>
+                    "in", (o, n, _, c) =>
                     {
-                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(n.Context, out var _in))
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(c, out var _in))
                         {
                             return;
                         }
@@ -47,19 +49,19 @@ namespace Microsoft.OpenApi.Reader.V32
                     }
                 },
                 {
-                    "scheme", (o, n, _) =>
+                    "scheme", (o, n, _, c) =>
                     {
                         o.Scheme = n.GetScalarValue();
                     }
                 },
                 {
-                    "bearerFormat", (o, n, _) =>
+                    "bearerFormat", (o, n, _, c) =>
                     {
                         o.BearerFormat = n.GetScalarValue();
                     }
                 },
                 {
-                    "openIdConnectUrl", (o, n, _) =>
+                    "openIdConnectUrl", (o, n, _, c) =>
                     {
                         var connectUrl = n.GetScalarValue();
                         if (connectUrl != null)
@@ -69,7 +71,7 @@ namespace Microsoft.OpenApi.Reader.V32
                     }
                 },
                 {
-                    "oauth2MetadataUrl", (o, n, _) =>
+                    "oauth2MetadataUrl", (o, n, _, c) =>
                     {
                         var metadataUrl = n.GetScalarValue();
                         if (metadataUrl != null)
@@ -79,13 +81,13 @@ namespace Microsoft.OpenApi.Reader.V32
                     }
                 },
                 {
-                    "flows", (o, n, t) =>
+                    "flows", (o, n, t, c) =>
                     {
-                        o.Flows = LoadOAuthFlows(n, t);
+                        o.Flows = LoadOAuthFlows(n, t, c);
                     }
                 },
                 {
-                    "deprecated", (o, n, _) =>
+                    "deprecated", (o, n, _, c) =>
                     {
                         var deprecated = n.GetScalarValue();
                         if (deprecated != null)
@@ -99,27 +101,24 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly PatternFieldMap<OpenApiSecurityScheme> _securitySchemePatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static IOpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiSecurityScheme LoadSecurityScheme(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("securityScheme");
+            var JsonObject = node.CheckMapNode("securityScheme", context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = JsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var securitySchemeReference = new OpenApiSecuritySchemeReference(reference.Item1, hostDocument, reference.Item2);
-                securitySchemeReference.Reference.SetMetadataFromMapNode(mapNode);
+                securitySchemeReference.Reference.SetMetadataFromJsonObject(JsonObject);
                 return securitySchemeReference;
             }
 
             var securityScheme = new OpenApiSecurityScheme();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields, hostDocument);
-            }
+            ParseMap(JsonObject, securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields, hostDocument, context);
 
             return securityScheme;
         }

@@ -26,9 +26,9 @@ public class OpenApiExampleReferenceDeserializerTests
             Description = "This is an example description",
         });
         var jsonNode = JsonNode.Parse(json);
-        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+        var parseNode = jsonNode;
 
-        var result = OpenApiV32Deserializer.LoadExample(parseNode, hostDocument);
+        var result = OpenApiV32Deserializer.LoadExample(parseNode, hostDocument, new ParsingContext(new()));
 
         Assert.NotNull(result);
         var resultReference = Assert.IsType<OpenApiExampleReference>(result);

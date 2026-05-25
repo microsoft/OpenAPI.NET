@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -15,45 +17,45 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "operationRef",
-                (o, n, _) => o.OperationRef = n.GetScalarValue()
+                (o, n, _, c) => o.OperationRef = n.GetScalarValue()
             },
             {
                 "operationId",
-                (o, n, _) => o.OperationId = n.GetScalarValue()
+                (o, n, _, c) => o.OperationId = n.GetScalarValue()
             },
             {
                 "parameters",
-                (o, n, _) => o.Parameters = n.CreateSimpleMap(LoadRuntimeExpressionAnyWrapper)
+                (o, n, _, c) => o.Parameters = n.CreateSimpleMap(LoadRuntimeExpressionAnyWrapper, c)
             },
             {
                 "requestBody",
-                (o, n, _) => o.RequestBody = LoadRuntimeExpressionAnyWrapper(n)
+                (o, n, _, c) => o.RequestBody = LoadRuntimeExpressionAnyWrapper(n)
             },
             {
                 "description",
-                (o, n, _) => o.Description = n.GetScalarValue()
+                (o, n, _, c) => o.Description = n.GetScalarValue()
             },
-            {"server", (o, n, t) => o.Server = LoadServer(n, t)}
+            {"server", (o, n, t, c) => o.Server = LoadServer(n, t, c)}
         };
 
         private static readonly PatternFieldMap<OpenApiLink> _linkPatternFields = new()
         {
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))},
         };
 
-        public static IOpenApiLink LoadLink(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiLink LoadLink(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("link");
+            var JsonObject = node.CheckMapNode("link", context);
             var link = new OpenApiLink();
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = JsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 return new OpenApiLinkReference(reference.Item1, hostDocument, reference.Item2);
             }
 
-            ParseMap(mapNode, link, _linkFixedFields, _linkPatternFields, hostDocument);
+            ParseMap(JsonObject, link, _linkFixedFields, _linkPatternFields, hostDocument, context);
 
             return link;
         }

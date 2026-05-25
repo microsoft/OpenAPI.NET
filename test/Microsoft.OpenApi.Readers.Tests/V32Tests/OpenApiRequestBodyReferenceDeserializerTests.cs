@@ -24,9 +24,9 @@ public class OpenApiRequestBodyReferenceDeserializerTests
             Description = "This is a request body description",
         });
         var jsonNode = JsonNode.Parse(json);
-        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+        var parseNode = jsonNode;
 
-        var result = OpenApiV32Deserializer.LoadRequestBody(parseNode, hostDocument);
+        var result = OpenApiV32Deserializer.LoadRequestBody(parseNode, hostDocument, new ParsingContext(new()));
 
         Assert.NotNull(result);
         var resultReference = Assert.IsType<OpenApiRequestBodyReference>(result);

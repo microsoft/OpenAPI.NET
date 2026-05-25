@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -16,15 +18,15 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "description",
-                    (o, n, _) => o.Description = n.GetScalarValue()
+                    (o, n, _, c) => o.Description = n.GetScalarValue()
                 },
                 {
                     "content",
-                    (o, n, t) => o.Content = n.CreateMap(LoadMediaType, t)
+                    (o, n, t, c) => o.Content = n.CreateMap(LoadMediaType, t, c)
                 },
                 {
                     "required",
-                    (o, n, _) =>
+                    (o, n, _, c) =>
                     {
                         var required = n.GetScalarValue();
                         if (required != null)
@@ -38,14 +40,14 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly PatternFieldMap<OpenApiRequestBody> _requestBodyPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static IOpenApiRequestBody LoadRequestBody(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiRequestBody LoadRequestBody(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("requestBody");
+            var JsonObject = node.CheckMapNode("requestBody", context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = JsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
@@ -53,10 +55,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
 
             var requestBody = new OpenApiRequestBody();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(requestBody, _requestBodyFixedFields, _requestBodyPatternFields, hostDocument);
-            }
+            ParseMap(JsonObject, requestBody, _requestBodyFixedFields, _requestBodyPatternFields, hostDocument, context);
 
             return requestBody;
         }

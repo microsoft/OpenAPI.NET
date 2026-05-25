@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 using System.Linq;
@@ -21,7 +23,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 {
                     "type",
-                    (o, n, _) =>
+                    (o, n, _, c) =>
                     {
                         var type = n.GetScalarValue();
                         switch (type)
@@ -40,16 +42,16 @@ namespace Microsoft.OpenApi.Reader.V2
                                 break;
 
                             default:
-                                n.Context.Diagnostic.Errors.Add(new OpenApiError(n.Context.GetLocation(), $"Security scheme type {type} is not recognized."));
+                                c.Diagnostic.Errors.Add(new OpenApiError(c.GetLocation(), $"Security scheme type {type} is not recognized."));
                                 break;
                         }
                     }
                 },
-                {"description", (o, n, _) => o.Description = n.GetScalarValue()},
-                {"name", (o, n, _) => o.Name = n.GetScalarValue()},
-                {"in", (o, n, _) =>
+                {"description", (o, n, _, c) => o.Description = n.GetScalarValue()},
+                {"name", (o, n, _, c) => o.Name = n.GetScalarValue()},
+                {"in", (o, n, _, c) =>
                     {
-                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(n.Context, out var _in))
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(c, out var _in))
                         {
                             return;
                         }
@@ -57,11 +59,11 @@ namespace Microsoft.OpenApi.Reader.V2
                     }
                 },
                 {
-                    "flow", (_, n, _) => _flowValue = n.GetScalarValue()
+                    "flow", (_, n, _, c) => _flowValue = n.GetScalarValue()
                 },
                 {
                     "authorizationUrl",
-                    (_, n, _) =>
+                    (_, n, _, c) =>
                     {
                         var scalarValue = n.GetScalarValue();
                         if (_flow is not null && scalarValue is not null)
@@ -72,7 +74,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "tokenUrl",
-                    (_, n, _) =>
+                    (_, n, _, c) =>
                     {
                         var scalarValue = n.GetScalarValue();
                         if (_flow is not null && scalarValue is not null)
@@ -82,11 +84,11 @@ namespace Microsoft.OpenApi.Reader.V2
                     }
                 },
                 {
-                    "scopes", (_, n, _) =>
+                    "scopes", (_, n, _, c) =>
                     {
                         if (_flow is not null)
                         {
-                            _flow.Scopes = n.CreateSimpleMap(LoadString)
+                            _flow.Scopes = n.CreateSimpleMap(LoadString, c)
                                 .Where(kv => kv.Value != null)
                                 .ToDictionary(kv => kv.Key, kv => kv.Value!);
                         } 
@@ -97,23 +99,20 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiSecurityScheme> _securitySchemePatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static IOpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiSecurityScheme LoadSecurityScheme(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
             // Reset the local variables every time this method is called.
             // TODO: Change _flow to a tempStorage variable to make the deserializer thread-safe.
             _flowValue = null;
             _flow = new();
 
-            var mapNode = node.CheckMapNode("securityScheme");
+            var JsonObject = node.CheckMapNode("securityScheme", context);
 
             var securityScheme = new OpenApiSecurityScheme();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields, hostDocument);
-            }
+            ParseMap(JsonObject, securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields, hostDocument, context);
 
             // Put the Flow object in the right Flows property based on the string in "flow"
             if (_flowValue == OpenApiConstants.Implicit)

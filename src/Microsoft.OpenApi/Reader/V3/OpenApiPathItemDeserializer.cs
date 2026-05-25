@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 using System.Net.Http;
@@ -16,39 +18,39 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "summary",
-                (o, n, _) => o.Summary = n.GetScalarValue()
+                (o, n, _, c) => o.Summary = n.GetScalarValue()
             },
             {
                 "description",
-                (o, n, _) => o.Description = n.GetScalarValue()
+                (o, n, _, c) => o.Description = n.GetScalarValue()
             },
-            {"get", (o, n, t) => o.AddOperation(HttpMethod.Get, LoadOperation(n, t))},
-            {"put", (o, n, t) => o.AddOperation(HttpMethod.Put, LoadOperation(n, t))},
-            {"post", (o, n, t) => o.AddOperation(HttpMethod.Post, LoadOperation(n, t))},
-            {"delete", (o, n, t) => o.AddOperation(HttpMethod.Delete, LoadOperation(n, t))},
-            {"options", (o, n, t) => o.AddOperation(HttpMethod.Options, LoadOperation(n, t))},
-            {"head", (o, n, t) => o.AddOperation(HttpMethod.Head, LoadOperation(n, t))},
+            {"get", (o, n, t, c) => o.AddOperation(HttpMethod.Get, LoadOperation(n, t, c))},
+            {"put", (o, n, t, c) => o.AddOperation(HttpMethod.Put, LoadOperation(n, t, c))},
+            {"post", (o, n, t, c) => o.AddOperation(HttpMethod.Post, LoadOperation(n, t, c))},
+            {"delete", (o, n, t, c) => o.AddOperation(HttpMethod.Delete, LoadOperation(n, t, c))},
+            {"options", (o, n, t, c) => o.AddOperation(HttpMethod.Options, LoadOperation(n, t, c))},
+            {"head", (o, n, t, c) => o.AddOperation(HttpMethod.Head, LoadOperation(n, t, c))},
 #if NETSTANDARD2_1_OR_GREATER
-            {"patch", (o, n, t) => o.AddOperation(HttpMethod.Patch, LoadOperation(n, t))},
+            {"patch", (o, n, t, c) => o.AddOperation(HttpMethod.Patch, LoadOperation(n, t, c))},
 #else
-            {"patch", (o, n, t) => o.AddOperation(new HttpMethod("PATCH"), LoadOperation(n, t))},
+            {"patch", (o, n, t, c) => o.AddOperation(new HttpMethod("PATCH"), LoadOperation(n, t, c))},
 #endif
-            {"trace", (o, n, t) => o.AddOperation(HttpMethod.Trace, LoadOperation(n, t))},
-            {"servers", (o, n, t) => o.Servers = n.CreateList(LoadServer, t)},
-            {"parameters", (o, n, t) => o.Parameters = n.CreateList(LoadParameter, t)}
+            {"trace", (o, n, t, c) => o.AddOperation(HttpMethod.Trace, LoadOperation(n, t, c))},
+            {"servers", (o, n, t, c) => o.Servers = n.CreateList(LoadServer, t, c)},
+            {"parameters", (o, n, t, c) => o.Parameters = n.CreateList(LoadParameter, t, c)}
         };
 
         private static readonly PatternFieldMap<OpenApiPathItem> _pathItemPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static IOpenApiPathItem LoadPathItem(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiPathItem LoadPathItem(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("PathItem");
+            var JsonObject = node.CheckMapNode("PathItem", context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = JsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
@@ -57,7 +59,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             var pathItem = new OpenApiPathItem();
 
-            ParseMap(mapNode, pathItem, _pathItemFixedFields, _pathItemPatternFields, hostDocument);
+            ParseMap(JsonObject, pathItem, _pathItemFixedFields, _pathItemPatternFields, hostDocument, context);
 
             return pathItem;
         }

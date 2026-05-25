@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -15,11 +17,11 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "name",
-                (o, n, _) => o.Name = n.GetScalarValue()
+                (o, n, _, c) => o.Name = n.GetScalarValue()
             },
             {
                 "url",
-                (o, n, _) =>
+                (o, n, _, c) =>
                 {
                     var url = n.GetScalarValue();
                     if (url != null)
@@ -32,16 +34,16 @@ namespace Microsoft.OpenApi.Reader.V3
 
         private static readonly PatternFieldMap<OpenApiLicense> _licensePatternFields = new()
         {
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
         };
 
-        internal static OpenApiLicense LoadLicense(ParseNode node, OpenApiDocument hostDocument)
+        internal static OpenApiLicense LoadLicense(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("License");
+            var JsonObject = node.CheckMapNode("License", context);
 
             var license = new OpenApiLicense();
 
-            ParseMap(mapNode, license, _licenseFixedFields, _licensePatternFields, hostDocument);
+            ParseMap(JsonObject, license, _licenseFixedFields, _licensePatternFields, hostDocument, context);
 
             return license;
         }

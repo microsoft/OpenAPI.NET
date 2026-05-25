@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Text.Json.Nodes;
+
 using System.Linq;
 
 namespace Microsoft.OpenApi.Reader.V32
@@ -11,17 +13,17 @@ namespace Microsoft.OpenApi.Reader.V32
     /// </summary>
     internal static partial class OpenApiV32Deserializer
     {
-        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiSecurityRequirement LoadSecurityRequirement(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("security");
+            var JsonObject = node.CheckMapNode("security", context);
 
             var securityRequirement = new OpenApiSecurityRequirement();
 
-            foreach (var property in mapNode)
+            foreach (var property in JsonObject)
             {
-                var scheme = LoadSecuritySchemeByReference(property.Name, hostDocument);
+                var scheme = LoadSecuritySchemeByReference(property.Key, hostDocument);
 
-                var scopes = property.Value.CreateSimpleList((n2, p) => n2.GetScalarValue(), hostDocument)
+                var scopes = property.Value.CreateSimpleList((n2, p) => n2.GetScalarValue(), hostDocument, context)
                                     .OfType<string>()
                                     .ToList();
                 if (scheme != null)
@@ -30,8 +32,8 @@ namespace Microsoft.OpenApi.Reader.V32
                 }
                 else
                 {
-                    mapNode.Context.Diagnostic.Errors.Add(
-                        new OpenApiError(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
+                    context.Diagnostic.Errors.Add(
+                        new OpenApiError(context.GetLocation(), $"Scheme {property.Key} is not found"));
                 }
             }
 
@@ -44,4 +46,3 @@ namespace Microsoft.OpenApi.Reader.V32
         }
     }
 }
-

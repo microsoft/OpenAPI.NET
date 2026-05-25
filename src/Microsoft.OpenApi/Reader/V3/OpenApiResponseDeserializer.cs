@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -15,26 +17,26 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "description",
-                (o, n, _) => o.Description = n.GetScalarValue()
+                (o, n, _, c) => o.Description = n.GetScalarValue()
             },
             {
                 "headers",
-                (o, n, t) => o.Headers = n.CreateMap(LoadHeader, t)
+                (o, n, t, c) => o.Headers = n.CreateMap(LoadHeader, t, c)
             },
             {
                 "content",
-                 (o, n, t) => o.Content = n.CreateMap(LoadMediaType, t)
+                 (o, n, t, c) => o.Content = n.CreateMap(LoadMediaType, t, c)
             },
             {
                 "links",
-                (o, n, t) => o.Links = n.CreateMap(LoadLink, t)
+                (o, n, t, c) => o.Links = n.CreateMap(LoadLink, t, c)
             }
         };
 
         private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => 
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => 
                 {
                     if (p.Equals("x-oai-summary", StringComparison.OrdinalIgnoreCase))
                     {
@@ -42,16 +44,16 @@ namespace Microsoft.OpenApi.Reader.V3
                     }
                     else
                     {
-                        o.AddExtension(p, LoadExtension(p,n));
+                        o.AddExtension(p, LoadExtension(p, n, c));
                     }
                 }}
             };
 
-        public static IOpenApiResponse LoadResponse(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiResponse LoadResponse(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("response");
+            var JsonObject = node.CheckMapNode("response", context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = JsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
@@ -59,7 +61,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
 
             var response = new OpenApiResponse();
-            ParseMap(mapNode, response, _responseFixedFields, _responsePatternFields, hostDocument);
+            ParseMap(JsonObject, response, _responseFixedFields, _responsePatternFields, hostDocument, context);
 
             return response;
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Nodes;
 using System.Linq;
 
 namespace Microsoft.OpenApi.Reader.V32
@@ -14,7 +15,7 @@ namespace Microsoft.OpenApi.Reader.V32
             {
                 {
                     "authorizationUrl",
-                    (o, n, _) =>
+                    (o, n, _, c) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -25,7 +26,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 },
                 {
                     "tokenUrl",
-                    (o, n, _) =>
+                    (o, n, _, c) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -36,7 +37,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 },
                 {
                     "refreshUrl",
-                    (o, n, _) =>
+                    (o, n, _, c) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -47,7 +48,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 },
                 {
                     "deviceAuthorizationUrl",
-                    (o, n, _) =>
+                    (o, n, _, c) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -56,24 +57,21 @@ namespace Microsoft.OpenApi.Reader.V32
                         }
                     }
                 },
-                {"scopes", (o, n, _) => o.Scopes = n.CreateSimpleMap(LoadString).Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value!)}
+                {"scopes", (o, n, _, c) => o.Scopes = n.CreateSimpleMap(LoadString, c).Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value!)}
             };
 
         private static readonly PatternFieldMap<OpenApiOAuthFlow> _oAuthFlowPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static OpenApiOAuthFlow LoadOAuthFlow(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiOAuthFlow LoadOAuthFlow(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("OAuthFlow");
+            var JsonObject = node.CheckMapNode("OAuthFlow", context);
 
             var oauthFlow = new OpenApiOAuthFlow();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(oauthFlow, _oAuthFlowFixedFileds, _oAuthFlowPatternFields, hostDocument);
-            }
+            ParseMap(JsonObject, oauthFlow, _oAuthFlowFixedFileds, _oAuthFlowPatternFields, hostDocument, context);
 
             return oauthFlow;
         }

@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -14,31 +16,31 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly FixedFieldMap<OpenApiTag> _tagFixedFields = new()
         {
             {
-                OpenApiConstants.Name, (o, n, _) =>
+                OpenApiConstants.Name, (o, n, _, c) =>
                 {
                     o.Name = n.GetScalarValue();
                 }
             },
             {
-                OpenApiConstants.Description, (o, n, _) =>
+                OpenApiConstants.Description, (o, n, _, c) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
             },
             {
-                OpenApiConstants.ExternalDocs, (o, n, t) =>
+                OpenApiConstants.ExternalDocs, (o, n, t, c) =>
                 {
-                    o.ExternalDocs = LoadExternalDocs(n, t);
+                    o.ExternalDocs = LoadExternalDocs(n, t, c);
                 }
             },
             {
-                OpenApiConstants.Summary, (o, n, _) =>
+                OpenApiConstants.Summary, (o, n, _, c) =>
                 {
                     o.Summary = n.GetScalarValue();
                 }
             },
             {
-                "parent", (o, n, doc) =>
+                "parent", (o, n, doc, c) =>
                 {
                     var tagName = n.GetScalarValue();
                     if (tagName != null)
@@ -48,7 +50,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 }
             },
             {
-                "kind", (o, n, _) =>
+                "kind", (o, n, _, c) =>
                 {
                     o.Kind = n.GetScalarValue();
                 }
@@ -58,22 +60,18 @@ namespace Microsoft.OpenApi.Reader.V32
 
         private static readonly PatternFieldMap<OpenApiTag> _tagPatternFields = new()
         {
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
         };
 
-        public static OpenApiTag LoadTag(ParseNode n, OpenApiDocument hostDocument)
+        public static OpenApiTag LoadTag(JsonNode n, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = n.CheckMapNode("tag");
+            var JsonObject = n.CheckMapNode("tag", context);
 
             var domainObject = new OpenApiTag();
 
-            foreach (var propertyNode in mapNode)
-            {
-                propertyNode.ParseField(domainObject, _tagFixedFields, _tagPatternFields, hostDocument);
-            }
+            ParseMap(JsonObject, domainObject, _tagFixedFields, _tagPatternFields, hostDocument, context);
 
             return domainObject;
         }
     }
 }
-

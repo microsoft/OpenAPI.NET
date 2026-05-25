@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V32
 {
@@ -11,33 +12,33 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly FixedFieldMap<OpenApiResponse> _responseFixedFields = new()
         {
             {
-                "summary", (o, n, _) =>
+                "summary", (o, n, _, c) =>
                 {
                     o.Summary = n.GetScalarValue();
                 }
             },
             {
-                "description", (o, n, _) =>
+                "description", (o, n, _, c) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
             },
             {
-                "headers", (o, n, t) =>
+                "headers", (o, n, t, c) =>
                 {
-                    o.Headers = n.CreateMap(LoadHeader, t);
+                    o.Headers = n.CreateMap(LoadHeader, t, c);
                 }
             },
             {
-                "content", (o, n, t) =>
+                "content", (o, n, t, c) =>
                 {
-                    o.Content = n.CreateMap(LoadMediaType, t);
+                    o.Content = n.CreateMap(LoadMediaType, t, c);
                 }
             },
             {
-                "links", (o, n, t) =>
+                "links", (o, n, t, c) =>
                 {
-                    o.Links = n.CreateMap(LoadLink, t);
+                    o.Links = n.CreateMap(LoadLink, t, c);
                 }
             }
         };
@@ -45,24 +46,24 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static IOpenApiResponse LoadResponse(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiResponse LoadResponse(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("response");
+            var JsonObject = node.CheckMapNode("response", context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = JsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var responseReference = new OpenApiResponseReference(reference.Item1, hostDocument, reference.Item2);
-                responseReference.Reference.SetMetadataFromMapNode(mapNode);
+                responseReference.Reference.SetMetadataFromJsonObject(JsonObject);
                 return responseReference;
             }
 
             var response = new OpenApiResponse();
-            ParseMap(mapNode, response, _responseFixedFields, _responsePatternFields, hostDocument);
+            ParseMap(JsonObject, response, _responseFixedFields, _responsePatternFields, hostDocument, context);
 
             return response;
         }

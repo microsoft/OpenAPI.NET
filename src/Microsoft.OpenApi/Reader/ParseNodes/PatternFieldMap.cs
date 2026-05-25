@@ -3,10 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader
 {
-    internal class PatternFieldMap<T> : Dictionary<Func<string, bool>, Action<T, string, ParseNode, OpenApiDocument>>
+    internal class PatternFieldMap<T> : Dictionary<Func<string, bool>, Action<T, string, JsonNode, OpenApiDocument, ParsingContext>>
     {
     }
 }

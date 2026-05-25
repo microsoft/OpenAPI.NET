@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Reader
         public Dictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>>? ExtensionParsers { get; set; } =
             new();
 
-        internal RootNode? RootNode { get; set; }
+        internal JsonNode? JsonNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new();
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace Microsoft.OpenApi.Reader
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
         public OpenApiDocument Parse(JsonNode jsonNode, Uri location)
         {
-            RootNode = new RootNode(this, jsonNode);
+            JsonNode = jsonNode;
 
-            var inputVersion = GetVersion(RootNode);
+            var inputVersion = GetVersion(jsonNode);
 
             OpenApiDocument doc;
 
@@ -72,26 +72,26 @@ namespace Microsoft.OpenApi.Reader
             {
                 case string version when version.is2_0():
                     VersionService = new OpenApiV2VersionService(Diagnostic);
-                    doc = VersionService.LoadDocument(RootNode, location);
+                    doc = VersionService.LoadDocument(jsonNode, location, this);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
                     ValidateRequiredFields(doc, version);
                     break;
 
                 case string version when version.is3_0():
                     VersionService = new OpenApiV3VersionService(Diagnostic);
-                    doc = VersionService.LoadDocument(RootNode, location);
+                    doc = VersionService.LoadDocument(jsonNode, location, this);
                     this.Diagnostic.SpecificationVersion = version.is3_1() ? OpenApiSpecVersion.OpenApi3_1 : OpenApiSpecVersion.OpenApi3_0;
                     ValidateRequiredFields(doc, version);
                     break;
                 case string version when version.is3_1():
                     VersionService = new OpenApiV31VersionService(Diagnostic);
-                    doc = VersionService.LoadDocument(RootNode, location);
+                    doc = VersionService.LoadDocument(jsonNode, location, this);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_1;
                     ValidateRequiredFields(doc, version);
                     break;
                 case string version when version.is3_2():
                     VersionService = new OpenApiV32VersionService(Diagnostic);
-                    doc = VersionService.LoadDocument(RootNode, location);
+                    doc = VersionService.LoadDocument(jsonNode, location, this);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_2;
                     ValidateRequiredFields(doc, version);
                     break;
@@ -111,28 +111,26 @@ namespace Microsoft.OpenApi.Reader
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
         public T? ParseFragment<T>(JsonNode jsonNode, OpenApiSpecVersion version, OpenApiDocument openApiDocument) where T : IOpenApiElement
         {
-            var node = ParseNode.Create(this, jsonNode);
-
             var element = default(T);
 
             switch (version)
             {
                 case OpenApiSpecVersion.OpenApi2_0:
                     VersionService = new OpenApiV2VersionService(Diagnostic);
-                    element = this.VersionService.LoadElement<T>(node, openApiDocument);
+                    element = this.VersionService.LoadElement<T>(jsonNode, openApiDocument, this);
                     break;
 
                 case OpenApiSpecVersion.OpenApi3_0:
                     this.VersionService = new OpenApiV3VersionService(Diagnostic);
-                    element = this.VersionService.LoadElement<T>(node, openApiDocument);
+                    element = this.VersionService.LoadElement<T>(jsonNode, openApiDocument, this);
                     break;
                 case OpenApiSpecVersion.OpenApi3_1:
                     this.VersionService = new OpenApiV31VersionService(Diagnostic);
-                    element = this.VersionService.LoadElement<T>(node, openApiDocument);
+                    element = this.VersionService.LoadElement<T>(jsonNode, openApiDocument, this);
                     break;
                 case OpenApiSpecVersion.OpenApi3_2:
                     this.VersionService = new OpenApiV32VersionService(Diagnostic);
-                    element = this.VersionService.LoadElement<T>(node, openApiDocument);
+                    element = this.VersionService.LoadElement<T>(jsonNode, openApiDocument, this);
                     break;
             }
 
@@ -142,18 +140,19 @@ namespace Microsoft.OpenApi.Reader
         /// <summary>
         /// Gets the version of the Open API document.
         /// </summary>
-        private static string GetVersion(RootNode rootNode)
+        private static string GetVersion(JsonNode JsonNode)
         {
-            var versionNode = rootNode.Find(new("/openapi"));
+            var versionNode = new JsonPointer("/openapi").Find(JsonNode);
 
             if (versionNode is not null)
             {
-                return versionNode.GetScalarValue().Replace("\"", string.Empty);
+                return versionNode.GetScalarValue()?.Replace("\"", string.Empty)
+                    ?? throw new OpenApiException("Version node not found.");
             }
 
-            versionNode = rootNode.Find(new("/swagger"));
+            versionNode = new JsonPointer("/swagger").Find(JsonNode);
 
-            return versionNode?.GetScalarValue().Replace("\"", string.Empty) ?? throw new OpenApiException("Version node not found.");
+            return versionNode?.GetScalarValue()?.Replace("\"", string.Empty) ?? throw new OpenApiException("Version node not found.");
         }
 
         /// <summary>
@@ -305,10 +304,10 @@ namespace Microsoft.OpenApi.Reader
         }
         private void ValidateRequiredFields(OpenApiDocument doc, string version)
         {
-            if ((version.is2_0() || version.is3_0()) && (doc.Paths == null) && RootNode is not null)
+            if ((version.is2_0() || version.is3_0()) && (doc.Paths == null) && JsonNode is not null)
             {
                 // paths is a required field in OpenAPI 2.0 and 3.0 but optional in 3.1
-                RootNode.Context.Diagnostic.Errors.Add(new OpenApiError("", $"Paths is a REQUIRED field at {RootNode.Context.GetLocation()}"));
+                Diagnostic.Errors.Add(new OpenApiError("", $"Paths is a REQUIRED field at {GetLocation()}"));
             }
         }
     }

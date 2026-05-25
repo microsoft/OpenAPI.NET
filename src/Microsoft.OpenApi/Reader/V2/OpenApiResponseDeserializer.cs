@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 using System.Collections.Generic;
@@ -17,11 +19,11 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             {
                 "description",
-                (o, n, _) => o.Description = n.GetScalarValue()
+                (o, n, _, c) => o.Description = n.GetScalarValue()
             },
             {
                 "headers",
-                (o, n, t) => o.Headers = n.CreateMap(LoadHeader, t)
+                (o, n, t, c) => o.Headers = n.CreateMap(LoadHeader, t, c)
             },
             {
                 "examples", LoadExamples
@@ -31,7 +33,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "schema",
-                (o, n, t) => n.Context.SetTempStorage(TempStorageKeys.ResponseSchema, LoadSchema(n, t), o)
+                (o, n, t, c) => c.SetTempStorage(TempStorageKeys.ResponseSchema, LoadSchema(n, t, c), o)
             },
         };
 
@@ -39,7 +41,7 @@ namespace Microsoft.OpenApi.Reader.V2
             new()
             {
                 {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase) && !s.Equals(OpenApiConstants.ExamplesExtension, StringComparison.OrdinalIgnoreCase), 
-                    (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+                    (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields =
@@ -54,7 +56,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 }
             };
 
-        private static void ProcessProduces(MapNode mapNode, OpenApiResponse response, ParsingContext context)
+        private static void ProcessProduces(JsonObject JsonObject, OpenApiResponse response, ParsingContext context)
         {
             if (response.Content == null)
             {
@@ -80,7 +82,7 @@ namespace Microsoft.OpenApi.Reader.V2
                     if (schema != null)
                     {
                         openApiMediaType.Schema = schema;
-                        ProcessAnyFields(mapNode, openApiMediaType, _mediaTypeAnyFields);
+                        ProcessAnyFields(JsonObject, openApiMediaType, _mediaTypeAnyFields, context);
                     }
                 }
                 else
@@ -100,58 +102,58 @@ namespace Microsoft.OpenApi.Reader.V2
             context.SetTempStorage(TempStorageKeys.ResponseProducesSet, true, response);
         }
 
-        private static void LoadResponseExamplesExtension(OpenApiResponse response, ParseNode node, OpenApiDocument? hostDocument)
+        private static void LoadResponseExamplesExtension(OpenApiResponse response, JsonNode node, OpenApiDocument? hostDocument, ParsingContext context)
         {
-            var examples = LoadExamplesExtension(node);
-            node.Context.SetTempStorage(TempStorageKeys.Examples, examples, response);
+            var examples = LoadExamplesExtension(node, context);
+            context.SetTempStorage(TempStorageKeys.Examples, examples, response);
         }
 
-        private static Dictionary<string, IOpenApiExample> LoadExamplesExtension(ParseNode node)
+        private static Dictionary<string, IOpenApiExample> LoadExamplesExtension(JsonNode node, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode(OpenApiConstants.ExamplesExtension);
+            var JsonObject = node.CheckMapNode(OpenApiConstants.ExamplesExtension, context);
             var examples = new Dictionary<string, IOpenApiExample>();
 
-            foreach (var examplesNode in mapNode)
+            foreach (var examplesNode in JsonObject)
             {
                 // Load the media type node as an OpenApiExample object
                 var example = new OpenApiExample();
-                var exampleNode = examplesNode.Value.CheckMapNode(examplesNode.Name);
-                foreach (var valueNode in exampleNode)
+                var exampleNode = examplesNode.Value.CheckMapNode(examplesNode.Key, context);
+                foreach (var JsonNode in exampleNode)
                 {
-                    switch (valueNode.Name.ToLowerInvariant())
+                    switch (JsonNode.Key.ToLowerInvariant())
                     {
                         case "summary":
-                            example.Summary = valueNode.Value.GetScalarValue();
+                            example.Summary = JsonNode.Value.GetScalarValue();
                             break;
                         case "description":
-                            example.Description = valueNode.Value.GetScalarValue();
+                            example.Description = JsonNode.Value.GetScalarValue();
                             break;
                         case "value":
-                            example.Value = valueNode.Value.CreateAny();
+                            example.Value = JsonNode.Value.CreateAny();
                             break;
                         case "externalValue":
-                            example.ExternalValue = valueNode.Value.GetScalarValue();
+                            example.ExternalValue = JsonNode.Value.GetScalarValue();
                             break;
                     }
                 }
 
-                examples.Add(examplesNode.Name, example);
+                examples.Add(examplesNode.Key, example);
             }
 
             return examples;
         }
 
-        private static void LoadExamples(OpenApiResponse response, ParseNode node, OpenApiDocument? hostDocument)
+        private static void LoadExamples(OpenApiResponse response, JsonNode node, OpenApiDocument? hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("examples");
+            var JsonObject = node.CheckMapNode("examples", context);
 
-            foreach (var mediaTypeNode in mapNode)
+            foreach (var mediaTypeNode in JsonObject)
             {
-                LoadExample(response, mediaTypeNode.Name, mediaTypeNode.Value);
+                LoadExample(response, mediaTypeNode.Key, mediaTypeNode.Value, context);
             }
         }
 
-        private static void LoadExample(OpenApiResponse response, string mediaType, ParseNode node)
+        private static void LoadExample(OpenApiResponse response, string mediaType, JsonNode? node, ParsingContext context)
         {
             var exampleNode = node.CreateAny();
 
@@ -166,7 +168,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 mediaTypeObject = new()
                 {
-                    Schema = node.Context.GetFromTempStorage<IOpenApiSchema>(TempStorageKeys.ResponseSchema, response)
+                    Schema = context.GetFromTempStorage<IOpenApiSchema>(TempStorageKeys.ResponseSchema, response)
                 };
                 response.Content.Add(mediaType, mediaTypeObject);
             }
@@ -174,11 +176,11 @@ namespace Microsoft.OpenApi.Reader.V2
             mediaTypeObject.Example = exampleNode;
         }
 
-        public static IOpenApiResponse LoadResponse(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiResponse LoadResponse(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("response");
+            var JsonObject = node.CheckMapNode("response", context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = JsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
@@ -187,17 +189,14 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var response = new OpenApiResponse();
 
-            foreach (var property in mapNode)
-            {
-                property.ParseField(response, _responseFixedFields, _responsePatternFields, hostDocument);
-            }
+            ParseMap(JsonObject, response, _responseFixedFields, _responsePatternFields, hostDocument, context);
             if (response.Content?.Values is not null)
             {
                 foreach (var mediaType in response.Content.Values.OfType<OpenApiMediaType>())
                 {
                     if (mediaType.Schema != null)
                     {
-                        ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
+                        ProcessAnyFields(JsonObject, mediaType, _mediaTypeAnyFields, context);
                     }
                 }
             }

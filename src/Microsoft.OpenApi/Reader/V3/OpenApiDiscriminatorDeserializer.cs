@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -16,29 +18,26 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "propertyName",
-                    (o, n, _) => o.PropertyName = n.GetScalarValue()
+                    (o, n, _, c) => o.PropertyName = n.GetScalarValue()
                 },
                 {
                     "mapping",
-                    (o, n, doc) => o.Mapping = n.CreateSimpleMap((node) => LoadMapping(node, doc))
+                    (o, n, doc, c) => o.Mapping = n.CreateSimpleMap(node => LoadMapping(node, doc, c), c)
                 }
             };
 
         private static readonly PatternFieldMap<OpenApiDiscriminator> _discriminatorPatternFields = new() {};
 
-        public static OpenApiDiscriminator LoadDiscriminator(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiDiscriminator LoadDiscriminator(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("discriminator");
+            var JsonObject = node.CheckMapNode("discriminator", context);
 
             var discriminator = new OpenApiDiscriminator();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(discriminator, _discriminatorFixedFields, _discriminatorPatternFields, hostDocument);
-            }
+            ParseMap(JsonObject, discriminator, _discriminatorFixedFields, _discriminatorPatternFields, hostDocument, context);
 
             return discriminator;
         }
-        public static OpenApiSchemaReference LoadMapping(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiSchemaReference LoadMapping(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
             var pointer = node.GetScalarValue() ?? throw new InvalidOperationException("Could not get a pointer reference");
             var reference = GetReferenceIdAndExternalResource(pointer);

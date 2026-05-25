@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 using System.Linq;
@@ -17,7 +19,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "authorizationUrl",
-                    (o, n, _) =>
+                    (o, n, _, c) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -28,7 +30,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "tokenUrl",
-                    (o, n, _) =>
+                    (o, n, _, c) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -39,7 +41,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "refreshUrl",
-                    (o, n, _) =>
+                    (o, n, _, c) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -48,13 +50,13 @@ namespace Microsoft.OpenApi.Reader.V3
                         }
                     }
                 },
-                {"scopes", (o, n, _) => o.Scopes = n.CreateSimpleMap(LoadString).Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value!)}
+                {"scopes", (o, n, _, c) => o.Scopes = n.CreateSimpleMap(LoadString, c).Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value!)}
             };
 
         private static readonly PatternFieldMap<OpenApiOAuthFlow> _oAuthFlowPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) =>
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) =>
                 {
                     if (p.Equals("x-oai-deviceAuthorizationUrl", StringComparison.OrdinalIgnoreCase))
                     {
@@ -66,20 +68,17 @@ namespace Microsoft.OpenApi.Reader.V3
                     }
                     else
                     {
-                        o.AddExtension(p, LoadExtension(p, n));
+                        o.AddExtension(p, LoadExtension(p, n, c));
                     }
                 }}
             };
 
-        public static OpenApiOAuthFlow LoadOAuthFlow(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiOAuthFlow LoadOAuthFlow(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("OAuthFlow");
+            var JsonObject = node.CheckMapNode("OAuthFlow", context);
 
             var oauthFlow = new OpenApiOAuthFlow();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(oauthFlow, _oAuthFlowFixedFields, _oAuthFlowPatternFields, hostDocument);
-            }
+            ParseMap(JsonObject, oauthFlow, _oAuthFlowFixedFields, _oAuthFlowPatternFields, hostDocument, context);
 
             return oauthFlow;
         }

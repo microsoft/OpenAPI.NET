@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -15,35 +17,35 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "summary",
-                (o, n, _) => o.Summary = n.GetScalarValue()
+                (o, n, _, c) => o.Summary = n.GetScalarValue()
             },
             {
                 "description",
-                (o, n, _) => o.Description = n.GetScalarValue()
+                (o, n, _, c) => o.Description = n.GetScalarValue()
             },
             {
                 "value",
-                (o, n, _) => o.Value = n.CreateAny()
+                (o, n, _, c) => o.Value = n.CreateAny()
             },
             {
                 "externalValue",
-                (o, n, _) => o.ExternalValue = n.GetScalarValue()
+                (o, n, _, c) => o.ExternalValue = n.GetScalarValue()
             },
         };
 
         private static readonly PatternFieldMap<OpenApiExample> _examplePatternFields =
             new()
             {
-                {s => s.Equals("x-oai-dataValue", StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.DataValue = n.CreateAny()},
-                {s => s.Equals("x-oai-serializedValue", StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.SerializedValue = n.GetScalarValue()},
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.Equals("x-oai-dataValue", StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.DataValue = n.CreateAny()},
+                {s => s.Equals("x-oai-serializedValue", StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.SerializedValue = n.GetScalarValue()},
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static IOpenApiExample LoadExample(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiExample LoadExample(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("example");
+            var JsonObject = node.CheckMapNode("example", context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = JsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
@@ -51,10 +53,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
 
             var example = new OpenApiExample();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(example, _exampleFixedFields, _examplePatternFields, hostDocument);
-            }
+            ParseMap(JsonObject, example, _exampleFixedFields, _examplePatternFields, hostDocument, context);
 
             return example;
         }

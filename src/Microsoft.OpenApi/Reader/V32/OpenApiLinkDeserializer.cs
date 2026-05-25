@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V32
 {
@@ -11,58 +12,58 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly FixedFieldMap<OpenApiLink> _linkFixedFields = new()
         {
             {
-                "operationRef", (o, n, _) =>
+                "operationRef", (o, n, _, c) =>
                 {
                     o.OperationRef = n.GetScalarValue();
                 }
             },
             {
-                "operationId", (o, n, _) =>
+                "operationId", (o, n, _, c) =>
                 {
                     o.OperationId = n.GetScalarValue();
                 }
             },
             {
-                "parameters", (o, n, _) =>
+                "parameters", (o, n, _, c) =>
                 {
-                    o.Parameters = n.CreateSimpleMap(LoadRuntimeExpressionAnyWrapper);
+                    o.Parameters = n.CreateSimpleMap(LoadRuntimeExpressionAnyWrapper, c);
                 }
             },
             {
-                "requestBody", (o, n, _) =>
+                "requestBody", (o, n, _, c) =>
                 {
                     o.RequestBody = LoadRuntimeExpressionAnyWrapper(n);
                 }
             },
             {
-                "description", (o, n, _) =>
+                "description", (o, n, _, c) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
             },
-            {"server", (o, n, t) => o.Server = LoadServer(n, t)}
+            {"server", (o, n, t, c) => o.Server = LoadServer(n, t, c)}
         };
 
         private static readonly PatternFieldMap<OpenApiLink> _linkPatternFields = new()
         {
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))},
         };
 
-        public static IOpenApiLink LoadLink(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiLink LoadLink(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("link");
+            var JsonObject = node.CheckMapNode("link", context);
             var link = new OpenApiLink();
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = JsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var linkReference = new OpenApiLinkReference(reference.Item1, hostDocument, reference.Item2);
-                linkReference.Reference.SetMetadataFromMapNode(mapNode);
+                linkReference.Reference.SetMetadataFromJsonObject(JsonObject);
                 return linkReference;
             }
 
-            ParseMap(mapNode, link, _linkFixedFields, _linkPatternFields, hostDocument);
+            ParseMap(JsonObject, link, _linkFixedFields, _linkPatternFields, hostDocument, context);
 
             return link;
         }

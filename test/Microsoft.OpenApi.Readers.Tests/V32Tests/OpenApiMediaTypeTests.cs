@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
@@ -101,14 +102,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
   }
 }
 ";
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "examplesWithEmptyArray.json")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var mediaType = OpenApiV32Deserializer.LoadMediaType(node, new());
+            var mediaType = OpenApiV32Deserializer.LoadMediaType(node, new(), new ParsingContext(new()));
             var serialized = await mediaType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
 
             // Assert
