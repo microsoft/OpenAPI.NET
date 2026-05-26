@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.7.5](https://github.com/microsoft/OpenAPI.NET/compare/v2.7.4...v2.7.5) (2026-05-26)
+
+
+### Bug Fixes
+
+* **library:** handle circular schema references ([acd5088](https://github.com/microsoft/OpenAPI.NET/commit/acd5088e822ca6bfab3b5726b8114d81ed35d3f0))
+* **library:** handle circular schema references ([6bcac39](https://github.com/microsoft/OpenAPI.NET/commit/6bcac3995314f71028d234270abd6fc4773aabf6))
+
 ## [2.7.4](https://github.com/microsoft/OpenAPI.NET/compare/v2.7.3...v2.7.4) (2026-04-27)
 
 
