@@ -881,8 +881,14 @@ namespace Microsoft.OpenApi
         /// </summary>
         internal void Walk(IOpenApiSchema? schema, bool isComponent = false)
         {
-            if (schema == null || schema is IOpenApiReferenceHolder holder && ProcessAsReference(holder, isComponent))
+            if (schema == null)
             {
+                return;
+            }
+
+            if (schema is IOpenApiReferenceHolder holder)
+            {
+                Walk(holder);
                 return;
             }
 
@@ -1330,19 +1336,6 @@ namespace Microsoft.OpenApi
 
                 _visitor.Exit();
             }
-        }
-
-        /// <summary>
-        /// Identify if an element is just a reference to a component, or an actual component
-        /// </summary>
-        private bool ProcessAsReference(IOpenApiReferenceHolder referenceableHolder, bool isComponent = false)
-        {
-            var isReference = !isComponent || referenceableHolder.UnresolvedReference;
-            if (isReference)
-            {
-                Walk(referenceableHolder);
-            }
-            return isReference;
         }
 
         private void WalkTags<T>(ISet<T> tags, Action<OpenApiWalker, T> walk)
