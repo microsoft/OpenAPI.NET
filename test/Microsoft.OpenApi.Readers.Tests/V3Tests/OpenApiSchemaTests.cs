@@ -133,6 +133,18 @@ get:
                 }, openApiAny);
         }
 
+        [Theory]
+        [InlineData(@"{ ""nullable"": true, ""type"": ""string"" }")]
+        [InlineData(@"{ ""type"": ""string"", ""nullable"": true }")]
+        public void ParseSchemaWithNullableBeforeOrAfterTypePreservesNullFlag(string schemaJson)
+        {
+            // Act
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(schemaJson, OpenApiSpecVersion.OpenApi3_0, new(), out _, "json", SettingsFixture.ReaderSettings);
+
+            // Assert
+            Assert.Equal(JsonSchemaType.String | JsonSchemaType.Null, schema.Type);
+        }
+
         [Fact]
         public void ParseDictionarySchemaShouldSucceed()
         {
