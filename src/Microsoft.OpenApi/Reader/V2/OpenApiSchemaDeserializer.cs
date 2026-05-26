@@ -208,7 +208,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "default",
-                (o, n, _, c) => o.Default = n.CreateAny()
+                (o, n, _, c) => o.Default = n
             },
             {
                 "discriminator", (o, n, _, c) =>
@@ -240,7 +240,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "example",
-                (o, n, _, c) => o.Example = n.CreateAny()
+                (o, n, _, c) => o.Example = n
             },
             {
                 OpenApiConstants.PatternPropertiesExtension,

@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "example",
-                    (o, n, _, c) => o.Example = n.CreateAny()
+                    (o, n, _, c) => o.Example = n
                 },
             };
 

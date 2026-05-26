@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Reader.V2
                             example.Description = JsonNode.Value.GetScalarValue();
                             break;
                         case "value":
-                            example.Value = JsonNode.Value.CreateAny();
+                            example.Value = JsonNode.Value ?? JsonNullSentinel.JsonNull;
                             break;
                         case "externalValue":
                             example.ExternalValue = JsonNode.Value.GetScalarValue();
@@ -155,7 +155,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private static void LoadExample(OpenApiResponse response, string mediaType, JsonNode? node, ParsingContext context)
         {
-            var exampleNode = node.CreateAny();
+            var exampleNode = node ?? JsonNullSentinel.JsonNull;
 
             response.Content ??= new Dictionary<string, IOpenApiMediaType>();
 

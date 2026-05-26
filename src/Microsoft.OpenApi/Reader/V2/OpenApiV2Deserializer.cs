@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
         public static JsonNode LoadAny(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            return node.CreateAny();
+            return node;
         }
 
         private static IOpenApiExtension LoadExtension(string name, JsonNode node, ParsingContext context)
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 try
                 {
-                    return parser(node.CreateAny(), OpenApiSpecVersion.OpenApi2_0);
+                    return parser(node, OpenApiSpecVersion.OpenApi2_0);
                 }
                 catch (OpenApiException ex)
                 {
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 }
             }
 
-            return new JsonNodeExtension(node.CreateAny());
+            return new JsonNodeExtension(node);
         }
 
         private static string? LoadString(JsonNode node)

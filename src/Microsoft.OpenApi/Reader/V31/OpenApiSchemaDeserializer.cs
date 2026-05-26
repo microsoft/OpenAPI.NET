@@ -276,7 +276,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "default",
-            (o, n, _, c) => o.Default = n.CreateAny()
+            (o, n, _, c) => o.Default = n
         },
         {
             "nullable",
@@ -332,7 +332,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "example",
-            (o, n, _, c) => o.Example = n.CreateAny()
+            (o, n, _, c) => o.Example = n
         },
         {
             "examples",
