@@ -10,6 +10,96 @@ namespace Microsoft.OpenApi.Tests.Reader;
 public class OpenApiModelFactoryTests
 {
     [Fact]
+    public async Task LoadDocumentWithCircularSchemaPropertyReferencesShouldSucceed()
+    {
+        var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.json");
+        await File.WriteAllTextAsync(filePath, """
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Test",
+        "version": "0.0.1"
+    },
+    "paths": {},
+    "components": {
+        "schemas": {
+            "A": {
+                "properties": {
+                    "b": {
+                        "$ref": "#/components/schemas/B"
+                    }
+                }
+            },
+            "B": {
+                "properties": {
+                    "a": {
+                        "$ref": "#/components/schemas/A"
+                    }
+                }
+            }
+        }
+    }
+}
+""");
+
+        try
+        {
+            var result = await OpenApiDocument.LoadAsync(filePath);
+
+            Assert.NotNull(result.Document);
+            Assert.Empty(result.Diagnostic.Errors);
+
+            var schemaA = Assert.IsType<OpenApiSchema>(result.Document.Components.Schemas["A"]);
+            var schemaBReference = Assert.IsType<OpenApiSchemaReference>(schemaA.Properties["b"]);
+            Assert.Same(result.Document.Components.Schemas["B"], schemaBReference.Target);
+        }
+        finally
+        {
+            File.Delete(filePath);
+        }
+    }
+
+    [Fact]
+    public async Task LoadDocumentWithCircularRootSchemaReferencesShouldReturnDiagnosticWarning()
+    {
+        var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.json");
+        await File.WriteAllTextAsync(filePath, """
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Test",
+        "version": "0.0.1"
+    },
+    "paths": {},
+    "components": {
+        "schemas": {
+            "A": {
+                "$ref": "#/components/schemas/B"
+            },
+            "B": {
+                "$ref": "#/components/schemas/A"
+            }
+        }
+    }
+}
+""");
+
+        try
+        {
+            var result = await OpenApiDocument.LoadAsync(filePath);
+
+            Assert.NotNull(result.Document);
+            Assert.Empty(result.Diagnostic.Errors);
+            Assert.Contains(result.Diagnostic.Warnings,
+                warning => warning.Message.StartsWith("Circular reference detected while resolving reference:", StringComparison.Ordinal));
+        }
+        finally
+        {
+            File.Delete(filePath);
+        }
+    }
+
+    [Fact]
     public async Task UsesSettingsBaseUrl()
     {
         var tempFilePathReferee = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());

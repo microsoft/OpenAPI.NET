@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Microsoft.OpenApi;
 /// <summary>
@@ -23,12 +24,23 @@ public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHol
     {
         get
         {
-            return Target switch {
-                BaseOpenApiReferenceHolder<T, U, V> recursiveTarget => recursiveTarget.RecursiveTarget,
-                T concrete => concrete,
-                _ => null
-            };
+            return ResolveRecursiveTarget(new HashSet<BaseOpenApiReferenceHolder<T, U, V>>());
         }
+    }
+
+    private T? ResolveRecursiveTarget(ISet<BaseOpenApiReferenceHolder<T, U, V>> visitedReferences)
+    {
+        if (!visitedReferences.Add(this))
+        {
+            throw new InvalidOperationException($"Circular reference detected while resolving reference: {Reference.ReferenceV3}");
+        }
+
+        return Target switch
+        {
+            BaseOpenApiReferenceHolder<T, U, V> recursiveTarget => recursiveTarget.ResolveRecursiveTarget(visitedReferences),
+            T concrete => concrete,
+            _ => null
+        };
     }
     /// <summary>
     /// Copy the reference as a target element with overrides.
