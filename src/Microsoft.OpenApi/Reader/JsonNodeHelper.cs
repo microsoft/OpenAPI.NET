@@ -5,9 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 
 namespace Microsoft.OpenApi.Reader
 {
@@ -162,11 +160,6 @@ namespace Microsoft.OpenApi.Reader
             return node ?? JsonNullSentinel.JsonNull;
         }
 
-        public static string GetRaw(this JsonNode node)
-        {
-            return JsonSerializer.Serialize(node, SourceGenerationContext.Default.JsonNode);
-        }
-
         public static string? GetScalarValue(this JsonNode? node)
         {
             var scalarNode = node is JsonValue value ? value : throw new OpenApiException("Expected scalar value.");
@@ -182,16 +175,6 @@ namespace Microsoft.OpenApi.Reader
         public static string? GetJsonSchemaIdentifier(this JsonObject jsonObject)
         {
             return jsonObject.TryGetPropertyValue("$id", out var idNode) ? idNode?.GetScalarValue() : null;
-        }
-
-        public static string? GetSummaryValue(this JsonObject jsonObject)
-        {
-            return jsonObject.TryGetPropertyValue("summary", out var summaryNode) ? summaryNode?.GetScalarValue() : null;
-        }
-
-        public static string? GetDescriptionValue(this JsonObject jsonObject)
-        {
-            return jsonObject.TryGetPropertyValue("description", out var descriptionNode) ? descriptionNode?.GetScalarValue() : null;
         }
 
         public static void ParseMap<T>(
@@ -288,7 +271,4 @@ namespace Microsoft.OpenApi.Reader
             }
         }
     }
-
-    [JsonSerializable(typeof(JsonNode))]
-    internal partial class SourceGenerationContext : JsonSerializerContext { }
 }
