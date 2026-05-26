@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.5.4](https://github.com/microsoft/OpenAPI.NET/compare/v3.5.3...v3.5.4) (2026-05-26)
+
+
+### Bug Fixes
+
+* **library:** handle circular schema references ([b3cd42b](https://github.com/microsoft/OpenAPI.NET/commit/b3cd42b7c2405b800e633ce63b044bb2409034a0))
+* **library:** handle circular schema references ([91a989f](https://github.com/microsoft/OpenAPI.NET/commit/91a989fdf412a1267debe925d2d586292fdd297d))
+
 ## [3.5.3](https://github.com/microsoft/OpenAPI.NET/compare/v3.5.2...v3.5.3) (2026-04-27)
 
 
