@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "default",
-                (o, n, _, c) => GetOrCreateSchema(o).Default = n.CreateAny()
+                (o, n, _, c) => GetOrCreateSchema(o).Default = n
             },
             {
                 "maximum",

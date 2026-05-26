@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Reader
                 throw new OpenApiReaderException("Cannot create a list from this type of node.", context);
             }
 
-            return jsonArray.OfType<JsonNode>().Select(static n => n.CreateAny()).Where(static i => i != null).ToList();
+            return jsonArray.OfType<JsonNode>().ToList();
         }
 
         public static List<T> CreateSimpleList<T>(this JsonNode? node, Func<JsonNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument, ParsingContext context)
@@ -153,11 +153,6 @@ namespace Microsoft.OpenApi.Reader
             });
 
             return nodes.ToDictionary(kvp => kvp.key, kvp => kvp.values);
-        }
-
-        public static JsonNode CreateAny(this JsonNode? node)
-        {
-            return node ?? JsonNullSentinel.JsonNull;
         }
 
         public static string? GetScalarValue(this JsonNode? node)

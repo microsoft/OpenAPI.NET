@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 {
                     OpenApiConstants.Example, (o, n, _, c) =>
                     {
-                        o.Example = n.CreateAny();
+                        o.Example = n;
                     }
                 },
                 {
@@ -111,4 +111,3 @@ namespace Microsoft.OpenApi.Reader.V32
         }
     }
 }
-

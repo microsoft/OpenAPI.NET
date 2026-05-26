@@ -114,13 +114,13 @@ namespace Microsoft.OpenApi.Reader.V32
 
             return new RuntimeExpressionAnyWrapper
             {
-                Any = node.CreateAny()
+                Any = node
             };
         }
 
         public static JsonNode LoadAny(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            return node.CreateAny();
+            return node;
         }
 
         private static IOpenApiExtension LoadExtension(string name, JsonNode node, ParsingContext context)
@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Reader.V32
             {
                 try
                 {
-                    return parser(node.CreateAny(), OpenApiSpecVersion.OpenApi3_2);
+                    return parser(node, OpenApiSpecVersion.OpenApi3_2);
                 }
                 catch (OpenApiException ex)
                 {
@@ -138,7 +138,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 }
             }
 
-            return new JsonNodeExtension(node.CreateAny());
+            return new JsonNodeExtension(node);
         }
 
         private static string? LoadString(JsonNode node)

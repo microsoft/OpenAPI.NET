@@ -103,7 +103,7 @@ namespace Microsoft.OpenApi.Reader.V32
             {
                 "example", (o, n, _, c) =>
                 {
-                    o.Example = n.CreateAny();
+                    o.Example = n;
                 }
             },
         };
@@ -133,4 +133,3 @@ namespace Microsoft.OpenApi.Reader.V32
         }
     }
 }
-

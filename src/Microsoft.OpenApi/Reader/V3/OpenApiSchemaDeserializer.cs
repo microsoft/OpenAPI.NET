@@ -214,7 +214,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "default",
-                (o, n, _, c) => o.Default = n.CreateAny()
+                (o, n, _, c) => o.Default = n
             },
             {
                 "nullable",
@@ -265,7 +265,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "example",
-                (o, n, _, c) => o.Example = n.CreateAny()
+                (o, n, _, c) => o.Example = n
             },
             {
                 "deprecated",

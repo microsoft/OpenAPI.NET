@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Reader.V32
             {
                 "value", (o, n, _, c) =>
                 {
-                    o.Value = n.CreateAny();
+                    o.Value = n;
                 }
             },
             {
@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Reader.V32
             {
                 "dataValue", (o, n, _, c) =>
                 {
-                    o.DataValue = n.CreateAny();
+                    o.DataValue = n;
                 }
             },
             {
@@ -76,4 +76,3 @@ namespace Microsoft.OpenApi.Reader.V32
         }
     }
 }
-

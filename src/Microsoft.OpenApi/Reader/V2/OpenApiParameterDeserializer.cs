@@ -155,7 +155,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "default",
-                    (o, n, t, c) => GetOrCreateSchema(o).Default = n.CreateAny()
+                    (o, n, t, c) => GetOrCreateSchema(o).Default = n
                 },
                 {
                     "pattern",

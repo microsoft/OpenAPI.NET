@@ -115,14 +115,14 @@ namespace Microsoft.OpenApi.Reader.V3
 
             return new()
             {
-                Any = node.CreateAny()
+                Any = node
 
             };
         }
 
         public static JsonNodeExtension LoadAny(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            return new JsonNodeExtension(node.CreateAny());
+            return new JsonNodeExtension(node);
         }
 
         private static IOpenApiExtension LoadExtension(string name, JsonNode node, ParsingContext context)
@@ -131,7 +131,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 try
                 {
-                    var result = parser(node.CreateAny(), OpenApiSpecVersion.OpenApi3_0);
+                    var result = parser(node, OpenApiSpecVersion.OpenApi3_0);
                     if (result is { })
                     {
                         return result;
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 }
             }
 
-            return new JsonNodeExtension(node.CreateAny());
+            return new JsonNodeExtension(node);
         }
 
         private static string? LoadString(JsonNode node)
