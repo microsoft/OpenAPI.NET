@@ -131,6 +131,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             Assert.Equivalent(expected, actual);
         }
 
+        [Theory]
+        [InlineData(@"{ ""nullable"": true, ""type"": ""string"" }")]
+        [InlineData(@"{ ""type"": ""string"", ""nullable"": true }")]
+        public void ParseSchemaWithNullableBeforeOrAfterTypePreservesNullFlag(string schemaJson)
+        {
+            // Act
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(schemaJson, OpenApiSpecVersion.OpenApi3_2, new(), out _, "json", SettingsFixture.ReaderSettings);
+
+            // Assert
+            Assert.Equal(JsonSchemaType.String | JsonSchemaType.Null, schema.Type);
+        }
+
         [Fact]
         public void TestSchemaCopyConstructorWithTypeArrayWorks()
         {
