@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.5](https://github.com/microsoft/OpenAPI.NET/compare/v3.5.4...v3.5.5) (2026-05-28)
+
+
+### Bug Fixes
+
+* **reader:** preserve Null flag when nullable appears before type in V3.0/V3.1/V3.2 deserializers ([2b9d7f4](https://github.com/microsoft/OpenAPI.NET/commit/2b9d7f46bfcef3e2d5da3f73fd4bf83be677c79a))
+
 ## [3.5.4](https://github.com/microsoft/OpenAPI.NET/compare/v3.5.3...v3.5.4) (2026-05-26)
 
 
