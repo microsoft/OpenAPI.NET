@@ -9,6 +9,10 @@ jobs:
   ci:
     name: Continuous Integration
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      code-quality: write
+      pull-requests: read
     env:
       ARTIFACTS_FOLDER: ${{ github.workspace }}/Artifacts
       GITHUB_RUN_NUMBER: ${{ github.run_number }}
@@ -27,6 +31,7 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v6
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
@@ -40,7 +45,36 @@ jobs:
         id: run_unit_tests
         shell: pwsh
         run: |
-          dotnet test Microsoft.OpenApi.slnx -c Release -v n
+          dotnet test Microsoft.OpenApi.slnx -c Release --no-build -v n --collect:"XPlat Code Coverage"
+
+      - name: Install report generator
+        shell: pwsh
+        run: |
+          dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      - name: Generate coverage report
+        shell: pwsh
+        run: |
+          reportgenerator -reports:**/coverage.cobertura.xml -targetdir:./reports/coverage -reporttypes:"Html;MarkdownSummaryGithub;Cobertura"
+
+      - name: Add coverage to job summary
+        shell: bash
+        run: |
+          cat ./reports/coverage/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload coverage report
+        if: github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
+        uses: actions/upload-code-coverage@v1
+        with:
+          file: ./reports/coverage/Cobertura.xml
+          language: CSharp
+          label: code-coverage/dotnet
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage
+          path: reports/coverage
 
   validate-trimming:
     name: Validate Project for Trimming
