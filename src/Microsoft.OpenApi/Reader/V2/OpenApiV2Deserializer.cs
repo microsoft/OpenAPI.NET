@@ -25,7 +25,6 @@ namespace Microsoft.OpenApi.Reader.V2
         }
 
         private static void ProcessAnyFields<T>(
-            JsonObject jsonObject,
             T domainObject,
             AnyFieldMap<T> anyFieldMap,
             ParsingContext context)

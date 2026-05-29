@@ -170,8 +170,8 @@ namespace Microsoft.OpenApi.Reader.V31
             var parameter = new OpenApiParameter();
 
             ParseMap(JsonObject, parameter, _parameterFixedFields, _parameterPatternFields, hostDocument, context);
-            ProcessAnyFields(JsonObject, parameter, _parameterAnyFields, context);
-            ProcessAnyMapFields(JsonObject, parameter, _parameterAnyMapOpenApiExampleFields, context);
+            ProcessAnyFields(parameter, _parameterAnyFields, context);
+            ProcessAnyMapFields(parameter, _parameterAnyMapOpenApiExampleFields, context);
 
             return parameter;
         }

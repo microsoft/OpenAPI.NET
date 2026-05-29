@@ -245,14 +245,13 @@ namespace Microsoft.OpenApi.Reader.V2
             if (openApiDoc.Paths != null)
             {
                 ProcessResponsesMediaTypes(
-                    JsonNode.CheckMapNode("OpenAPI", context),
                     openApiDoc.Paths.Values
                         .SelectMany(path => path.Operations?.Values ?? Enumerable.Empty<OpenApiOperation>())
                         .SelectMany(operation => operation.Responses?.Values ?? Enumerable.Empty<IOpenApiResponse>()),
                     context);
             }
 
-            ProcessResponsesMediaTypes(JsonNode.CheckMapNode("OpenAPI", context), openApiDoc.Components?.Responses?.Values, context);
+            ProcessResponsesMediaTypes(openApiDoc.Components?.Responses?.Values, context);
 
             // Post Process OpenApi Object
             if (openApiDoc.Servers == null)
@@ -270,19 +269,19 @@ namespace Microsoft.OpenApi.Reader.V2
             return openApiDoc;
         }
 
-        private static void ProcessResponsesMediaTypes(JsonObject JsonObject, IEnumerable<IOpenApiResponse>? responses, ParsingContext context)
+        private static void ProcessResponsesMediaTypes(IEnumerable<IOpenApiResponse>? responses, ParsingContext context)
         {
             if (responses != null)
             {
                 foreach (var response in responses.OfType<OpenApiResponse>())
                 {
-                    ProcessProduces(JsonObject, response, context);
+                    ProcessProduces(response, context);
 
                     if (response.Content != null)
                     {
                         foreach (var mediaType in response.Content.Values)
                         {
-                            ProcessAnyFields(JsonObject, mediaType, _mediaTypeAnyFields, context);
+                            ProcessAnyFields(mediaType, _mediaTypeAnyFields, context);
                         }
                     }
                 }
