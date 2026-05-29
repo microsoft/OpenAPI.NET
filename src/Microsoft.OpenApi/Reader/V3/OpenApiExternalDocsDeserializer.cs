@@ -19,11 +19,11 @@ namespace Microsoft.OpenApi.Reader.V3
                 // $ref
                 {
                     "description",
-                    (o, n, _, c) => o.Description = n.GetScalarValue()
+                    (o, n, _, _) => o.Description = n.GetScalarValue()
                 },
                 {
                     "url",
-                    (o, n, _, c) =>
+                    (o, n, _, _) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)

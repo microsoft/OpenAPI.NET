@@ -17,11 +17,11 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "url",
-                (o, n, _, c) => o.Url = n.GetScalarValue()
+                (o, n, _, _) => o.Url = n.GetScalarValue()
             },
             {
                 "description",
-                (o, n, _, c) => o.Description = n.GetScalarValue()
+                (o, n, _, _) => o.Description = n.GetScalarValue()
             },
             {
                 "variables",

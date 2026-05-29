@@ -47,8 +47,8 @@ namespace Microsoft.OpenApi.Reader.V2
                         }
                     }
                 },
-                {"description", (o, n, _, c) => o.Description = n.GetScalarValue()},
-                {"name", (o, n, _, c) => o.Name = n.GetScalarValue()},
+                {"description", (o, n, _, _) => o.Description = n.GetScalarValue()},
+                {"name", (o, n, _, _) => o.Name = n.GetScalarValue()},
                 {"in", (o, n, _, c) =>
                     {
                         if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(c, out var _in))
@@ -59,11 +59,11 @@ namespace Microsoft.OpenApi.Reader.V2
                     }
                 },
                 {
-                    "flow", (_, n, _, c) => _flowValue = n.GetScalarValue()
+                    "flow", (_, n, _, _) => _flowValue = n.GetScalarValue()
                 },
                 {
                     "authorizationUrl",
-                    (_, n, _, c) =>
+                    (_, n, _, _) =>
                     {
                         var scalarValue = n.GetScalarValue();
                         if (_flow is not null && scalarValue is not null)
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "tokenUrl",
-                    (_, n, _, c) =>
+                    (_, n, _, _) =>
                     {
                         var scalarValue = n.GetScalarValue();
                         if (_flow is not null && scalarValue is not null)

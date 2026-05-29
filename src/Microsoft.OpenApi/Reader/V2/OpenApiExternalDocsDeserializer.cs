@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 {
                     OpenApiConstants.Description,
-                    (o, n, _, c) =>
+                    (o, n, _, _) =>
                     {
                         var description = n.GetScalarValue();
                         if (description != null)
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     OpenApiConstants.Url,
-                    (o, n, _, c) =>
+                    (o, n, _, _) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)

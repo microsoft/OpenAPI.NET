@@ -14,19 +14,19 @@ internal static partial class OpenApiV31Deserializer
     {
         {
             "title",
-            (o, n, _, c) => o.Title = n.GetScalarValue()
+            (o, n, _, _) => o.Title = n.GetScalarValue()
         },
         {
             "$schema",
-            (o, n, _, c) => { if (n.GetScalarValue() is string {} sSchema && Uri.TryCreate(sSchema, UriKind.Absolute, out var schema)) {o.Schema = schema;}}
+            (o, n, _, _) => { if (n.GetScalarValue() is string {} sSchema && Uri.TryCreate(sSchema, UriKind.Absolute, out var schema)) {o.Schema = schema;}}
         },
         {
             "$id",
-            (o, n, _, c) => o.Id = n.GetScalarValue()
+            (o, n, _, _) => o.Id = n.GetScalarValue()
         },
         {
             "$comment",
-            (o, n, _, c) => o.Comment = n.GetScalarValue()
+            (o, n, _, _) => o.Comment = n.GetScalarValue()
         },
         {
             "$vocabulary",
@@ -34,11 +34,11 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "$dynamicRef",
-            (o, n, _, c) => o.DynamicRef = n.GetScalarValue()
+            (o, n, _, _) => o.DynamicRef = n.GetScalarValue()
         },
         {
             "$dynamicAnchor",
-            (o, n, _, c) => o.DynamicAnchor = n.GetScalarValue()
+            (o, n, _, _) => o.DynamicAnchor = n.GetScalarValue()
         },
         {
             "$defs",
@@ -46,7 +46,7 @@ internal static partial class OpenApiV31Deserializer
         },
             {
             "multipleOf",
-            (o, n, _, c) =>
+            (o, n, _, _) =>
             {
                 var multipleOf = n.GetScalarValue();
                 if (multipleOf != null)
@@ -57,7 +57,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "maximum",
-            (o, n, _, c) =>
+            (o, n, _, _) =>
             {
                 var max = n.GetScalarValue();
                 if (!string.IsNullOrEmpty(max))
@@ -68,11 +68,11 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "exclusiveMaximum",
-            (o, n, _, c) => o.ExclusiveMaximum = n.GetScalarValue()
+            (o, n, _, _) => o.ExclusiveMaximum = n.GetScalarValue()
         },
         {
             "minimum",
-            (o, n, _, c) =>
+            (o, n, _, _) =>
             {
                 var min = n.GetScalarValue();
                 if (!string.IsNullOrEmpty(min))
@@ -83,11 +83,11 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "exclusiveMinimum",
-            (o, n, _, c) => o.ExclusiveMinimum = n.GetScalarValue()
+            (o, n, _, _) => o.ExclusiveMinimum = n.GetScalarValue()
         },
         {
             "maxLength",
-            (o, n, _, c) =>
+            (o, n, _, _) =>
             {
                 var maxLength = n.GetScalarValue();
                 if (maxLength != null)
@@ -98,7 +98,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "minLength",
-            (o, n, _, c) =>
+            (o, n, _, _) =>
             {
                 var minLength = n.GetScalarValue();
                 if (minLength != null)
@@ -109,11 +109,11 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "pattern",
-            (o, n, _, c) => o.Pattern = n.GetScalarValue()
+            (o, n, _, _) => o.Pattern = n.GetScalarValue()
         },
         {
             "maxItems",
-            (o, n, _, c) =>
+            (o, n, _, _) =>
             {
                 var maxItems = n.GetScalarValue();
                 if (maxItems != null)
@@ -124,7 +124,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "minItems",
-            (o, n, _, c) =>
+            (o, n, _, _) =>
             {
                 var minItems = n.GetScalarValue();
                 if (minItems != null)
@@ -135,7 +135,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "uniqueItems",
-            (o, n, _, c) =>
+            (o, n, _, _) =>
             {
                 var uniqueItems = n.GetScalarValue();
                 if (uniqueItems != null)
@@ -166,7 +166,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "maxProperties",
-            (o, n, _, c) =>
+            (o, n, _, _) =>
             {
                 var maxProps = n.GetScalarValue();
                 if (maxProps != null)
@@ -177,7 +177,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "minProperties",
-            (o, n, _, c) =>
+            (o, n, _, _) =>
             {
                 var minProps = n.GetScalarValue();
                 if (minProps != null)
@@ -188,7 +188,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "required",
-            (o, n, doc, c) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc, c).OfType<string>())
+            (o, n, doc, c) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, _) => n2.GetScalarValue(), doc, c).OfType<string>())
         },
         {
             "enum",
@@ -196,7 +196,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "type",
-            (o, n, doc, c) => 
+            (o, n, doc, c) =>
             {
                 // Preserve any Null flag set by a preceding "nullable: true" handler
                 var preserveNull = o.Type.HasValue && o.Type.Value.HasFlag(JsonSchemaType.Null);
@@ -207,7 +207,7 @@ internal static partial class OpenApiV31Deserializer
                 }
                 else
                 {
-                    var list = n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc, c);
+                    var list = n.CreateSimpleList((n2, _) => n2.GetScalarValue(), doc, c);
                     JsonSchemaType combinedType = preserveNull ? JsonSchemaType.Null : 0;
                     foreach(var type in list.Where(static t => t is not null).Select(static t => t!.ToJsonSchemaType()))
                     {
@@ -219,7 +219,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "const",
-            (o, n, _, c) => o.Const = n.GetScalarValue()
+            (o, n, _, _) => o.Const = n.GetScalarValue()
         },
         {
             "allOf",
@@ -268,19 +268,19 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "description",
-            (o, n, _, c) => o.Description = n.GetScalarValue()
+            (o, n, _, _) => o.Description = n.GetScalarValue()
         },
         {
             "format",
-            (o, n, _, c) => o.Format = n.GetScalarValue()
+            (o, n, _, _) => o.Format = n.GetScalarValue()
         },
         {
             "default",
-            (o, n, _, c) => o.Default = n
+            (o, n, _, _) => o.Default = n
         },
         {
             "nullable",
-            (o, n, _, c) => 
+            (o, n, _, _) =>
             {
                 var value = n.GetScalarValue();
                 if (value is not null)
@@ -302,7 +302,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "readOnly",
-            (o, n, _, c) =>
+            (o, n, _, _) =>
             {
                 var readOnly = n.GetScalarValue();
                 if (readOnly != null)
@@ -313,7 +313,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "writeOnly",
-            (o, n, _, c) =>
+            (o, n, _, _) =>
             {
                 var writeOnly = n.GetScalarValue();
                 if (writeOnly != null)
@@ -332,7 +332,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "example",
-            (o, n, _, c) => o.Example = n
+            (o, n, _, _) => o.Example = n
         },
         {
             "examples",
@@ -340,7 +340,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "deprecated",
-            (o, n, t, c) =>
+            (o, n, _, _) =>
             {
                 var deprecated = n.GetScalarValue();
                 if (deprecated != null)
@@ -353,7 +353,7 @@ internal static partial class OpenApiV31Deserializer
             "dependentRequired",
             (o, n, doc, c) =>
             {
-                o.DependentRequired = n.CreateArrayMap((n2, p) => n2.GetScalarValue()!, doc, c);
+                o.DependentRequired = n.CreateArrayMap((n2, _) => n2.GetScalarValue()!, doc, c);
             }
         },
     };
@@ -391,7 +391,7 @@ internal static partial class OpenApiV31Deserializer
             result.Reference.SetMetadataFromJsonObject(jsonObject);
             result.Reference.SetJsonPointerPath(pointer, nodeLocation);
             return result;
-        }            
+        }
 
         var schema = new OpenApiSchema();
 
@@ -408,7 +408,7 @@ internal static partial class OpenApiV31Deserializer
                 schema.Type |= JsonSchemaType.Null;
             else
                 schema.Type = JsonSchemaType.Null;
-            
+
             schema.Extensions.Remove(OpenApiConstants.NullableExtension);
         }
 

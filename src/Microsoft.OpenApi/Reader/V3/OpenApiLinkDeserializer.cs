@@ -17,11 +17,11 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "operationRef",
-                (o, n, _, c) => o.OperationRef = n.GetScalarValue()
+                (o, n, _, _) => o.OperationRef = n.GetScalarValue()
             },
             {
                 "operationId",
-                (o, n, _, c) => o.OperationId = n.GetScalarValue()
+                (o, n, _, _) => o.OperationId = n.GetScalarValue()
             },
             {
                 "parameters",
@@ -29,11 +29,11 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "requestBody",
-                (o, n, _, c) => o.RequestBody = LoadRuntimeExpressionAnyWrapper(n)
+                (o, n, _, _) => o.RequestBody = LoadRuntimeExpressionAnyWrapper(n)
             },
             {
                 "description",
-                (o, n, _, c) => o.Description = n.GetScalarValue()
+                (o, n, _, _) => o.Description = n.GetScalarValue()
             },
             {"server", (o, n, t, c) => o.Server = LoadServer(n, t, c)}
         };

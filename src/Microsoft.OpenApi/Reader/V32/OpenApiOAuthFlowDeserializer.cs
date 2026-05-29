@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Reader.V32
             {
                 {
                     "authorizationUrl",
-                    (o, n, _, c) =>
+                    (o, n, _, _) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 },
                 {
                     "tokenUrl",
-                    (o, n, _, c) =>
+                    (o, n, _, _) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 },
                 {
                     "refreshUrl",
-                    (o, n, _, c) =>
+                    (o, n, _, _) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 },
                 {
                     "deviceAuthorizationUrl",
-                    (o, n, _, c) =>
+                    (o, n, _, _) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)

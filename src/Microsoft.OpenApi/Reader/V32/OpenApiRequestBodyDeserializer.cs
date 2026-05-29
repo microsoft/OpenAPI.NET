@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Reader.V32
             new()
             {
                 {
-                    "description", (o, n, _, c) =>
+                    "description", (o, n, _, _) =>
                     {
                         o.Description = n.GetScalarValue();
                     }
@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Reader.V32
                     }
                 },
                 {
-                    "required", (o, n, _, c) =>
+                    "required", (o, n, _, _) =>
                     {
                         var required = n.GetScalarValue();
                         if (required != null)

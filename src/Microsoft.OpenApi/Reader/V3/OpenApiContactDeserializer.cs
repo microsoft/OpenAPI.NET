@@ -17,15 +17,15 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "name",
-                (o, n, _, c) => o.Name = n.GetScalarValue()
+                (o, n, _, _) => o.Name = n.GetScalarValue()
             },
             {
                 "email",
-                (o, n, _, c) => o.Email = n.GetScalarValue()
+                (o, n, _, _) => o.Email = n.GetScalarValue()
             },
             {
                 "url",
-                (o, n, t, c) =>
+                (o, n, _, _) =>
                 {
                     var url = n.GetScalarValue();
                     if (url != null)

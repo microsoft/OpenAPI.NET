@@ -14,14 +14,14 @@ namespace Microsoft.OpenApi.Reader.V31
             {
                 // $ref
                 {
-                    "description", (o, n, _, c) =>
+                    "description", (o, n, _, _) =>
                     {
                         o.Description = n.GetScalarValue();
                     }
                 },
                 {
                     "url",
-                    (o, n, t, c) =>
+                    (o, n, _, _) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)

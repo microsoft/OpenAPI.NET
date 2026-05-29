@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Reader.V32
             new()
             {
                 {
-                    "propertyName", (o, n, _, c) =>
+                    "propertyName", (o, n, _, _) =>
                     {
                         o.PropertyName = n.GetScalarValue();
                     }

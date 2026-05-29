@@ -16,13 +16,13 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly FixedFieldMap<OpenApiTag> _tagFixedFields = new()
         {
             {
-                OpenApiConstants.Name, (o, n, _, c) =>
+                OpenApiConstants.Name, (o, n, _, _) =>
                 {
                     o.Name = n.GetScalarValue();
                 }
             },
             {
-                OpenApiConstants.Description, (o, n, _, c) =>
+                OpenApiConstants.Description, (o, n, _, _) =>
                 {
                     o.Description = n.GetScalarValue();
                 }

@@ -16,13 +16,13 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly FixedFieldMap<OpenApiTag> _tagFixedFields = new()
         {
             {
-                OpenApiConstants.Name, (o, n, _, c) =>
+                OpenApiConstants.Name, (o, n, _, _) =>
                 {
                     o.Name = n.GetScalarValue();
                 }
             },
             {
-                OpenApiConstants.Description, (o, n, _, c) =>
+                OpenApiConstants.Description, (o, n, _, _) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
@@ -34,13 +34,13 @@ namespace Microsoft.OpenApi.Reader.V32
                 }
             },
             {
-                OpenApiConstants.Summary, (o, n, _, c) =>
+                OpenApiConstants.Summary, (o, n, _, _) =>
                 {
                     o.Summary = n.GetScalarValue();
                 }
             },
             {
-                "parent", (o, n, doc, c) =>
+                "parent", (o, n, doc, _) =>
                 {
                     var tagName = n.GetScalarValue();
                     if (tagName != null)
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 }
             },
             {
-                "kind", (o, n, _, c) =>
+                "kind", (o, n, _, _) =>
                 {
                     o.Kind = n.GetScalarValue();
                 }

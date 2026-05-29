@@ -17,27 +17,27 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "summary",
-                (o, n, _, c) => o.Summary = n.GetScalarValue()
+                (o, n, _, _) => o.Summary = n.GetScalarValue()
             },
             {
                 "description",
-                (o, n, _, c) => o.Description = n.GetScalarValue()
+                (o, n, _, _) => o.Description = n.GetScalarValue()
             },
             {
                 "value",
-                (o, n, _, c) => o.Value = n
+                (o, n, _, _) => o.Value = n
             },
             {
                 "externalValue",
-                (o, n, _, c) => o.ExternalValue = n.GetScalarValue()
+                (o, n, _, _) => o.ExternalValue = n.GetScalarValue()
             },
         };
 
         private static readonly PatternFieldMap<OpenApiExample> _examplePatternFields =
             new()
             {
-                {s => s.Equals("x-oai-dataValue", StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.DataValue = n},
-                {s => s.Equals("x-oai-serializedValue", StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.SerializedValue = n.GetScalarValue()},
+                {s => s.Equals("x-oai-dataValue", StringComparison.OrdinalIgnoreCase), (o, _, n, _, _) => o.DataValue = n},
+                {s => s.Equals("x-oai-serializedValue", StringComparison.OrdinalIgnoreCase), (o, _, n, _, _) => o.SerializedValue = n.GetScalarValue()},
                 {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 

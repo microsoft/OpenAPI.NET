@@ -12,32 +12,32 @@ namespace Microsoft.OpenApi.Reader.V31
         public static readonly FixedFieldMap<OpenApiInfo> InfoFixedFields = new()
         {
             {
-                "title", (o, n, _, c) =>
+                "title", (o, n, _, _) =>
                 {
                     o.Title = n.GetScalarValue();
                 }
             },
             {
-                "version", (o, n, _, c) =>
+                "version", (o, n, _, _) =>
                 {
                     o.Version = n.GetScalarValue();
                 }
             },
             {
-                "summary", (o, n, _, c) =>
+                "summary", (o, n, _, _) =>
                 {
                     o.Summary = n.GetScalarValue();
                 }
             },
             {
-                "description", (o, n, _, c) =>
+                "description", (o, n, _, _) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
             },
             {
                 "termsOfService",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var terms = n.GetScalarValue();
                     if (terms != null)

@@ -14,13 +14,13 @@ namespace Microsoft.OpenApi.Reader.V31
         {
 
             {
-                "summary", (o, n, _, c) =>
+                "summary", (o, n, _, _) =>
                 {
                     o.Summary = n.GetScalarValue();
                 }
             },
             {
-                "description", (o, n, _, c) =>
+                "description", (o, n, _, _) =>
                 {
                     o.Description = n.GetScalarValue();
                 }

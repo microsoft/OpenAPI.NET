@@ -38,11 +38,11 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "summary",
-                    (o, n, _, c) => o.Summary = n.GetScalarValue()
+                    (o, n, _, _) => o.Summary = n.GetScalarValue()
                 },
                 {
                     "description",
-                    (o, n, _, c) => o.Description = n.GetScalarValue()
+                    (o, n, _, _) => o.Description = n.GetScalarValue()
                 },
                 {
                     "externalDocs",
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "operationId",
-                    (o, n, _, c) => o.OperationId = n.GetScalarValue()
+                    (o, n, _, _) => o.OperationId = n.GetScalarValue()
                 },
                 {
                     "parameters",
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "deprecated",
-                    (o, n, _, c) =>
+                    (o, n, _, _) =>
                     {
                         var deprecated = n.GetScalarValue();
                         if (deprecated != null)

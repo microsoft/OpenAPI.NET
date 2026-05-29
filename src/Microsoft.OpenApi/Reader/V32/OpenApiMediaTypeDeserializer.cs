@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Reader.V32
                     }
                 },
                 {
-                    OpenApiConstants.Example, (o, n, _, c) =>
+                    OpenApiConstants.Example, (o, n, _, _) =>
                     {
                         o.Example = n;
                     }

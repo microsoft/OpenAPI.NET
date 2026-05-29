@@ -20,17 +20,17 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     "enum", (o, n, doc, c) =>
                     {
-                        o.Enum = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc, c).OfType<string>().ToList();
+                        o.Enum = n.CreateSimpleList((s, _) => s.GetScalarValue(), doc, c).OfType<string>().ToList();
                     }
                 },
                 {
-                    "default", (o, n, _, c) =>
+                    "default", (o, n, _, _) =>
                     {
                         o.Default = n.GetScalarValue();
                     }
                 },
                 {
-                    "description", (o, n, _, c) =>
+                    "description", (o, n, _, _) =>
                     {
                         o.Description = n.GetScalarValue();
                     }

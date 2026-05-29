@@ -12,20 +12,20 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly FixedFieldMap<OpenApiLicense> _licenseFixedFields = new()
         {
             {
-                "name", (o, n, _, c) =>
+                "name", (o, n, _, _) =>
                 {
                     o.Name = n.GetScalarValue();
                 }
             },
             {
-                "identifier", (o, n, _, c) =>
+                "identifier", (o, n, _, _) =>
                 {
                     o.Identifier = n.GetScalarValue();
                 }
             },
             {
                 "url",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var url = n.GetScalarValue();
                     if (url != null)

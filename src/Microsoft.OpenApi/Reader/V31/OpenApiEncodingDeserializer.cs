@@ -11,7 +11,7 @@ internal static partial class OpenApiV31Deserializer
     private static readonly FixedFieldMap<OpenApiEncoding> _encodingFixedFields = new()
     {
         {
-            "contentType", (o, n, _, c) =>
+            "contentType", (o, n, _, _) =>
             {
                 o.ContentType = n.GetScalarValue();
             }
@@ -33,7 +33,7 @@ internal static partial class OpenApiV31Deserializer
             }
         },
         {
-            "explode", (o, n, _, c) =>
+            "explode", (o, n, _, _) =>
             {
                 var explode = n.GetScalarValue();
                 if (explode is not null)
@@ -43,7 +43,7 @@ internal static partial class OpenApiV31Deserializer
             }
         },
         {
-            "allowReserved", (o, n, _, c) =>
+            "allowReserved", (o, n, _, _) =>
             {
                 var allowReserved = n.GetScalarValue();
                 if (allowReserved is not null)

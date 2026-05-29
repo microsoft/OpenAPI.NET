@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
-                "swagger", (_, _, _, c) => {}
+                "swagger", (_, _, _, _) => {}
                 /* Version is valid field but we already parsed it */
             },
             {"info", (o, n, _, c) => o.Info = LoadInfo(n, o, c)},
@@ -29,13 +29,13 @@ namespace Microsoft.OpenApi.Reader.V2
                 "schemes", (_, n, doc, c) => c.SetTempStorage(
                     "schemes",
                     n.CreateSimpleList(
-                        (s, p) => s.GetScalarValue(), doc, c))
+                        (s, _) => s.GetScalarValue(), doc, c))
             },
             {
                 "consumes",
                 (_, n, doc, c) =>
                 {
-                    var consumes = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc, c);
+                    var consumes = n.CreateSimpleList((s, _) => s.GetScalarValue(), doc, c);
                     if (consumes.Count > 0)
                     {
                         c.SetTempStorage(TempStorageKeys.GlobalConsumes, consumes);
@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "produces", (_, n, doc, c) => {
-                    var produces = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc, c);
+                    var produces = n.CreateSimpleList((s, _) => s.GetScalarValue(), doc, c);
                     if (produces.Count > 0)
                     {
                         c.SetTempStorage(TempStorageKeys.GlobalProduces, produces);

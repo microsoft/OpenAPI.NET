@@ -17,11 +17,11 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             {
                 "name",
-                (o, n, t, c) => o.Name = n.GetScalarValue()
+                (o, n, _, _) => o.Name = n.GetScalarValue()
             },
             {
                 "url",
-                (o, n, t, c) =>
+                (o, n, _, _) =>
                 {
                     var url = n.GetScalarValue();
                     if (url != null)
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "email",
-                (o, n, t, c) => o.Email = n.GetScalarValue()
+                (o, n, _, _) => o.Email = n.GetScalarValue()
             },
         };
 

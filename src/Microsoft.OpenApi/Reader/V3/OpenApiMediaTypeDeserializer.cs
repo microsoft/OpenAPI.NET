@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     OpenApiConstants.Example,
-                    (o, n, _, c) => o.Example = n
+                    (o, n, _, _) => o.Example = n
                 },
                 {
                     OpenApiConstants.Encoding,

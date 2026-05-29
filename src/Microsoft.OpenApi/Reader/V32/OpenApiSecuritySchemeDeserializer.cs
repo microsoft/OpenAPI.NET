@@ -27,13 +27,13 @@ namespace Microsoft.OpenApi.Reader.V32
                     }
                 },
                 {
-                    "description", (o, n, _, c) =>
+                    "description", (o, n, _, _) =>
                     {
                         o.Description = n.GetScalarValue();
                     }
                 },
                 {
-                    "name", (o, n, _, c) =>
+                    "name", (o, n, _, _) =>
                     {
                         o.Name = n.GetScalarValue();
                     }
@@ -49,19 +49,19 @@ namespace Microsoft.OpenApi.Reader.V32
                     }
                 },
                 {
-                    "scheme", (o, n, _, c) =>
+                    "scheme", (o, n, _, _) =>
                     {
                         o.Scheme = n.GetScalarValue();
                     }
                 },
                 {
-                    "bearerFormat", (o, n, _, c) =>
+                    "bearerFormat", (o, n, _, _) =>
                     {
                         o.BearerFormat = n.GetScalarValue();
                     }
                 },
                 {
-                    "openIdConnectUrl", (o, n, _, c) =>
+                    "openIdConnectUrl", (o, n, _, _) =>
                     {
                         var connectUrl = n.GetScalarValue();
                         if (connectUrl != null)
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Reader.V32
                     }
                 },
                 {
-                    "oauth2MetadataUrl", (o, n, _, c) =>
+                    "oauth2MetadataUrl", (o, n, _, _) =>
                     {
                         var metadataUrl = n.GetScalarValue();
                         if (metadataUrl != null)
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Reader.V32
                     }
                 },
                 {
-                    "deprecated", (o, n, _, c) =>
+                    "deprecated", (o, n, _, _) =>
                     {
                         var deprecated = n.GetScalarValue();
                         if (deprecated != null)
