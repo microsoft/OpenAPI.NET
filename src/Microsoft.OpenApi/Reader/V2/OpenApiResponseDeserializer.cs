@@ -118,21 +118,21 @@ namespace Microsoft.OpenApi.Reader.V2
                 // Load the media type node as an OpenApiExample object
                 var example = new OpenApiExample();
                 var exampleNode = examplesNode.Value.CheckMapNode(examplesNode.Key, context);
-                foreach (var JsonNode in exampleNode)
+                foreach (var jsonNode in exampleNode)
                 {
-                    switch (JsonNode.Key.ToLowerInvariant())
+                    switch (jsonNode.Key.ToLowerInvariant())
                     {
                         case "summary":
-                            example.Summary = JsonNode.Value.GetScalarValue();
+                            example.Summary = jsonNode.Value.GetScalarValue();
                             break;
                         case "description":
-                            example.Description = JsonNode.Value.GetScalarValue();
+                            example.Description = jsonNode.Value.GetScalarValue();
                             break;
                         case "value":
-                            example.Value = JsonNode.Value ?? JsonNullSentinel.JsonNull;
+                            example.Value = jsonNode.Value ?? JsonNullSentinel.JsonNull;
                             break;
                         case "externalValue":
-                            example.ExternalValue = JsonNode.Value.GetScalarValue();
+                            example.ExternalValue = jsonNode.Value.GetScalarValue();
                             break;
                     }
                 }
