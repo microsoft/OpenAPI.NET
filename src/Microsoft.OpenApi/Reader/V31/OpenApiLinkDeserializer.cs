@@ -51,19 +51,19 @@ namespace Microsoft.OpenApi.Reader.V31
 
         public static IOpenApiLink LoadLink(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("link", context);
+            var jsonObject = node.CheckMapNode("link", context);
             var link = new OpenApiLink();
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var linkReference = new OpenApiLinkReference(reference.Item1, hostDocument, reference.Item2);
-                linkReference.Reference.SetMetadataFromJsonObject(JsonObject);
+                linkReference.Reference.SetMetadataFromJsonObject(jsonObject);
                 return linkReference;
             }
 
-            ParseMap(JsonObject, link, _linkFixedFields, _linkPatternFields, hostDocument, context);
+            ParseMap(jsonObject, link, _linkFixedFields, _linkPatternFields, hostDocument, context);
 
             return link;
         }

@@ -34,13 +34,13 @@ namespace Microsoft.OpenApi.Reader.V31
             {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
         };
 
-        public static OpenApiDocument LoadOpenApi(JsonNode JsonNode, Uri location, ParsingContext context)
+        public static OpenApiDocument LoadOpenApi(JsonNode jsonNode, Uri location, ParsingContext context)
         {
             var openApiDoc = new OpenApiDocument
             {
                 BaseUri = location
             };
-            var openApiNode = JsonNode.CheckMapNode("OpenAPI", context);
+            var openApiNode = jsonNode.CheckMapNode("OpenAPI", context);
 
             ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields, openApiDoc, context);
 

@@ -69,10 +69,10 @@ namespace Microsoft.OpenApi.Reader.V2
 
         public static OpenApiXml LoadXml(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("xml", context);
+            var jsonObject = node.CheckMapNode("xml", context);
 
             var xml = new OpenApiXml();
-            ParseMap(JsonObject, xml, _xmlFixedFields, _xmlPatternFields, hostDocument, context);
+            ParseMap(jsonObject, xml, _xmlFixedFields, _xmlPatternFields, hostDocument, context);
 
             return xml;
         }

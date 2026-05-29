@@ -121,11 +121,11 @@ namespace Microsoft.OpenApi.Reader.V2
             context.SetTempStorage(TempStorageKeys.OperationProduces, null);
             context.SetTempStorage(TempStorageKeys.OperationConsumes, null);
 
-            var JsonObject = node.CheckMapNode("Operation", context);
+            var jsonObject = node.CheckMapNode("Operation", context);
 
             var operation = new OpenApiOperation();
 
-            ParseMap(JsonObject, operation, _operationFixedFields, _operationPatternFields, hostDocument, context);
+            ParseMap(jsonObject, operation, _operationFixedFields, _operationPatternFields, hostDocument, context);
 
             // Build request body based on information determined while parsing OpenApiOperation
             var bodyParameter = context.GetFromTempStorage<OpenApiParameter>(TempStorageKeys.BodyParameter);
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var operationProduces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces);
             var responses = operation.Responses;
-            if ((operationProduces is not null || JsonObject.ContainsKey("produces")) && responses is not null)
+            if ((operationProduces is not null || jsonObject.ContainsKey("produces")) && responses is not null)
             {
                 foreach (var response in responses.Values.OfType<OpenApiResponse>())
                 {
@@ -160,11 +160,11 @@ namespace Microsoft.OpenApi.Reader.V2
 
         public static OpenApiResponses LoadResponses(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("Responses", context);
+            var jsonObject = node.CheckMapNode("Responses", context);
 
             var domainObject = new OpenApiResponses();
 
-            ParseMap(JsonObject, domainObject, _responsesFixedFields, _responsesPatternFields, hostDocument, context);
+            ParseMap(jsonObject, domainObject, _responsesFixedFields, _responsesPatternFields, hostDocument, context);
 
             return domainObject;
         }

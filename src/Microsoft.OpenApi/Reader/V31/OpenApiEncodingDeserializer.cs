@@ -62,10 +62,10 @@ internal static partial class OpenApiV31Deserializer
 
     public static OpenApiEncoding LoadEncoding(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
     {
-        var JsonObject = node.CheckMapNode("encoding", context);
+        var jsonObject = node.CheckMapNode("encoding", context);
 
         var encoding = new OpenApiEncoding();
-        ParseMap(JsonObject, encoding, _encodingFixedFields, _encodingPatternFields, hostDocument, context);
+        ParseMap(jsonObject, encoding, _encodingFixedFields, _encodingPatternFields, hostDocument, context);
 
         return encoding;
     }

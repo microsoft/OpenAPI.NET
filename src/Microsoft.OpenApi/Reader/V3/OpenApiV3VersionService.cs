@@ -58,9 +58,9 @@ namespace Microsoft.OpenApi.Reader.V3
 
         internal override Dictionary<Type, Func<JsonNode, OpenApiDocument, ParsingContext, object?>> Loaders => _loaders;
 
-        public override OpenApiDocument LoadDocument(JsonNode JsonNode, Uri location, ParsingContext context)
+        public override OpenApiDocument LoadDocument(JsonNode jsonNode, Uri location, ParsingContext context)
         {
-            return OpenApiV3Deserializer.LoadOpenApi(JsonNode, location, context);
+            return OpenApiV3Deserializer.LoadOpenApi(jsonNode, location, context);
         }
     }
 }

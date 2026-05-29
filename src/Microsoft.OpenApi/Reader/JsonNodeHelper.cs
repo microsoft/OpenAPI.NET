@@ -13,12 +13,12 @@ namespace Microsoft.OpenApi.Reader
     {
         public static JsonObject CheckMapNode(this JsonNode? node, string nodeName, ParsingContext context)
         {
-            if (node is not JsonObject JsonObject)
+            if (node is not JsonObject jsonObject)
             {
                 throw new OpenApiReaderException($"{nodeName} must be a map/object", context);
             }
 
-            return JsonObject;
+            return jsonObject;
         }
 
         public static List<T> CreateList<T>(this JsonNode? node, Func<JsonNode, OpenApiDocument, ParsingContext, T> map, OpenApiDocument hostDocument, ParsingContext context)

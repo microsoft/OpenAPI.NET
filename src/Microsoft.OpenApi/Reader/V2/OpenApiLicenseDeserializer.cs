@@ -39,11 +39,11 @@ namespace Microsoft.OpenApi.Reader.V2
 
         public static OpenApiLicense LoadLicense(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("OpenApiLicense", context);
+            var jsonObject = node.CheckMapNode("OpenApiLicense", context);
 
             var license = new OpenApiLicense();
 
-            ParseMap(JsonObject, license, _licenseFixedFields, _licensePatternFields, hostDocument, context);
+            ParseMap(jsonObject, license, _licenseFixedFields, _licensePatternFields, hostDocument, context);
 
             return license;
         }

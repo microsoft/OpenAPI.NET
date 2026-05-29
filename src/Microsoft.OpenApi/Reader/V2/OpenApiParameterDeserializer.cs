@@ -269,9 +269,9 @@ namespace Microsoft.OpenApi.Reader.V2
             // Reset the local variables every time this method is called.
             context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, false);
 
-            var JsonObject = node.CheckMapNode("parameter", context);
+            var jsonObject = node.CheckMapNode("parameter", context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
 
             if (pointer != null)
             {
@@ -281,7 +281,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var parameter = new OpenApiParameter();
 
-            ParseMap(JsonObject, parameter, _parameterFixedFields, _parameterPatternFields, hostDocument, context);
+            ParseMap(jsonObject, parameter, _parameterFixedFields, _parameterPatternFields, hostDocument, context);
 
             var schema = context.GetFromTempStorage<IOpenApiSchema>("schema");
             if (schema != null)

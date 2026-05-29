@@ -39,11 +39,11 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static OpenApiServerVariable LoadServerVariable(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("serverVariable", context);
+            var jsonObject = node.CheckMapNode("serverVariable", context);
 
             var serverVariable = new OpenApiServerVariable();
 
-            ParseMap(JsonObject, serverVariable, _serverVariableFixedFields, _serverVariablePatternFields, hostDocument, context);
+            ParseMap(jsonObject, serverVariable, _serverVariableFixedFields, _serverVariablePatternFields, hostDocument, context);
 
             return serverVariable;
         }

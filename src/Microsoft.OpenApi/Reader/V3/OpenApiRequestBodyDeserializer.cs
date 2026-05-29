@@ -45,9 +45,9 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static IOpenApiRequestBody LoadRequestBody(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("requestBody", context);
+            var jsonObject = node.CheckMapNode("requestBody", context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
 
             var requestBody = new OpenApiRequestBody();
-            ParseMap(JsonObject, requestBody, _requestBodyFixedFields, _requestBodyPatternFields, hostDocument, context);
+            ParseMap(jsonObject, requestBody, _requestBodyFixedFields, _requestBodyPatternFields, hostDocument, context);
 
             return requestBody;
         }

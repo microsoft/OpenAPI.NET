@@ -35,10 +35,10 @@ namespace Microsoft.OpenApi.Reader.V31
 
         public static OpenApiComponents LoadComponents(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("components", context);
+            var jsonObject = node.CheckMapNode("components", context);
             var components = new OpenApiComponents();
 
-            ParseMap(JsonObject, components, _componentsFixedFields, _componentsPatternFields, hostDocument, context);
+            ParseMap(jsonObject, components, _componentsFixedFields, _componentsPatternFields, hostDocument, context);
 
             return components;
         }

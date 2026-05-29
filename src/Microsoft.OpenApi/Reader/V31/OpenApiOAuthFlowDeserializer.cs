@@ -57,10 +57,10 @@ namespace Microsoft.OpenApi.Reader.V31
 
         public static OpenApiOAuthFlow LoadOAuthFlow(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("OAuthFlow", context);
+            var jsonObject = node.CheckMapNode("OAuthFlow", context);
 
             var oauthFlow = new OpenApiOAuthFlow();
-            ParseMap(JsonObject, oauthFlow, _oAuthFlowFixedFileds, _oAuthFlowPatternFields, hostDocument, context);
+            ParseMap(jsonObject, oauthFlow, _oAuthFlowFixedFileds, _oAuthFlowPatternFields, hostDocument, context);
 
             return oauthFlow;
         }

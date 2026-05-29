@@ -175,10 +175,10 @@ namespace Microsoft.OpenApi.Reader.V2
 
         public static IOpenApiHeader LoadHeader(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("header", context);
+            var jsonObject = node.CheckMapNode("header", context);
             var header = new OpenApiHeader();
             
-            ParseMap(JsonObject, header, _headerFixedFields, _headerPatternFields, hostDocument, context);
+            ParseMap(jsonObject, header, _headerFixedFields, _headerPatternFields, hostDocument, context);
 
             var schema = context.GetFromTempStorage<IOpenApiSchema>("schema");
             if (schema != null)

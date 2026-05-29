@@ -55,9 +55,9 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static OpenApiInfo LoadInfo(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("Info", context);
+            var jsonObject = node.CheckMapNode("Info", context);
             var info = new OpenApiInfo();
-            ParseMap(JsonObject, info, InfoFixedFields, InfoPatternFields, hostDocument, context);
+            ParseMap(jsonObject, info, InfoFixedFields, InfoPatternFields, hostDocument, context);
 
             return info;
         }

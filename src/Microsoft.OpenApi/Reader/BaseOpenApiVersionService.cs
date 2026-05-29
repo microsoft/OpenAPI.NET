@@ -19,7 +19,7 @@ internal abstract class BaseOpenApiVersionService : IOpenApiVersionService
 
     internal abstract Dictionary<Type, Func<JsonNode, OpenApiDocument, ParsingContext, object?>> Loaders { get; }
 
-    public abstract OpenApiDocument LoadDocument(JsonNode JsonNode, Uri location, ParsingContext context);
+    public abstract OpenApiDocument LoadDocument(JsonNode jsonNode, Uri location, ParsingContext context);
 
     public T? LoadElement<T>(JsonNode node, OpenApiDocument doc, ParsingContext context) where T : IOpenApiElement
     {
@@ -29,15 +29,15 @@ internal abstract class BaseOpenApiVersionService : IOpenApiVersionService
         }
         return default;
     }
-    public virtual string? GetReferenceScalarValues(JsonObject JsonObject, string scalarValue)
+    public virtual string? GetReferenceScalarValues(JsonObject jsonObject, string scalarValue)
     {
-        if (JsonObject.Any(static x => !"$ref".Equals(x.Key, StringComparison.OrdinalIgnoreCase)) &&
-            JsonObject
+        if (jsonObject.Any(static x => !"$ref".Equals(x.Key, StringComparison.OrdinalIgnoreCase)) &&
+            jsonObject
             .Where(x => x.Key.Equals(scalarValue))
             .Select(static x => x.Value)
-            .OfType<JsonValue>().FirstOrDefault() is {} JsonNode)
+            .OfType<JsonValue>().FirstOrDefault() is {} jsonNode)
         {
-            return JsonNode.GetScalarValue();
+            return jsonNode.GetScalarValue();
         }
 
         return null;

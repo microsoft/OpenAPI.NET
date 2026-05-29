@@ -25,18 +25,18 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Converts a generic JsonNode instance into a strongly typed OpenApiDocument
         /// </summary>
-        /// <param name="JsonNode">JsonNode containing the information to be converted into an OpenAPI Document</param>
+        /// <param name="jsonNode">JsonNode containing the information to be converted into an OpenAPI Document</param>
         /// <param name="location">Location of where the document that is getting loaded is saved</param>
         /// <param name="context">The current parsing context.</param>
         /// <returns>Instance of OpenApiDocument populated with data from JsonNode</returns>
-        OpenApiDocument LoadDocument(JsonNode JsonNode, Uri location, ParsingContext context);
+        OpenApiDocument LoadDocument(JsonNode jsonNode, Uri location, ParsingContext context);
 
         /// <summary>
         /// Gets the description and summary scalar values in a reference object for V3.1 support
         /// </summary>
-        /// <param name="JsonObject">A Json object.</param>
+        /// <param name="jsonObject">A Json object.</param>
         /// <param name="scalarValue">The scalar value we're parsing.</param>
         /// <returns>The resulting node value.</returns>
-        string? GetReferenceScalarValues(JsonObject JsonObject, string scalarValue);
+        string? GetReferenceScalarValues(JsonObject jsonObject, string scalarValue);
     }
 }

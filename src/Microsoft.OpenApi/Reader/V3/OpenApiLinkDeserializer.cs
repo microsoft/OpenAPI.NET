@@ -45,17 +45,17 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static IOpenApiLink LoadLink(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("link", context);
+            var jsonObject = node.CheckMapNode("link", context);
             var link = new OpenApiLink();
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 return new OpenApiLinkReference(reference.Item1, hostDocument, reference.Item2);
             }
 
-            ParseMap(JsonObject, link, _linkFixedFields, _linkPatternFields, hostDocument, context);
+            ParseMap(jsonObject, link, _linkFixedFields, _linkPatternFields, hostDocument, context);
 
             return link;
         }
