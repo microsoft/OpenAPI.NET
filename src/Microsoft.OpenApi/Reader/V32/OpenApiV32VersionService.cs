@@ -56,9 +56,9 @@ namespace Microsoft.OpenApi.Reader.V32
             [typeof(OpenApiSchemaReference)] = OpenApiV32Deserializer.LoadMapping
         };
 
-        public override OpenApiDocument LoadDocument(JsonNode JsonNode, Uri location, ParsingContext context)
+        public override OpenApiDocument LoadDocument(JsonNode jsonNode, Uri location, ParsingContext context)
         {
-            return OpenApiV32Deserializer.LoadOpenApi(JsonNode, location, context);
+            return OpenApiV32Deserializer.LoadOpenApi(jsonNode, location, context);
         }
         internal override Dictionary<Type, Func<JsonNode, OpenApiDocument, ParsingContext, object?>> Loaders => _loaders;
 

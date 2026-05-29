@@ -103,11 +103,11 @@ namespace Microsoft.OpenApi.Reader.V3
 
         internal static OpenApiOperation LoadOperation(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("Operation", context);
+            var jsonObject = node.CheckMapNode("Operation", context);
 
             var operation = new OpenApiOperation();
 
-            ParseMap(JsonObject, operation, _operationFixedFields, _operationPatternFields, hostDocument, context);
+            ParseMap(jsonObject, operation, _operationFixedFields, _operationPatternFields, hostDocument, context);
 
             return operation;
         }

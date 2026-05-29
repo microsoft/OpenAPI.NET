@@ -255,9 +255,9 @@ namespace Microsoft.OpenApi.Reader.V2
 
         public static IOpenApiSchema LoadSchema(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("schema", context);
+            var jsonObject = node.CheckMapNode("schema", context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
@@ -266,7 +266,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var schema = new OpenApiSchema();
  
-            ParseMap(JsonObject, schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context);
+            ParseMap(jsonObject, schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context);
 
             if (schema.Extensions is not null && schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
             {

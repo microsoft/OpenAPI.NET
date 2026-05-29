@@ -44,19 +44,19 @@ namespace Microsoft.OpenApi.Reader.V32
 
         public static IOpenApiRequestBody LoadRequestBody(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("requestBody", context);
+            var jsonObject = node.CheckMapNode("requestBody", context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var requestBodyReference = new OpenApiRequestBodyReference(reference.Item1, hostDocument, reference.Item2);
-                requestBodyReference.Reference.SetMetadataFromJsonObject(JsonObject);
+                requestBodyReference.Reference.SetMetadataFromJsonObject(jsonObject);
                 return requestBodyReference;
             }
 
             var requestBody = new OpenApiRequestBody();
-            ParseMap(JsonObject, requestBody, _requestBodyFixedFields, _requestBodyPatternFields, hostDocument, context);
+            ParseMap(jsonObject, requestBody, _requestBodyFixedFields, _requestBodyPatternFields, hostDocument, context);
 
             return requestBody;
         }

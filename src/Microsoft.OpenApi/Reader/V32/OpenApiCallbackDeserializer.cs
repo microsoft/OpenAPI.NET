@@ -21,19 +21,19 @@ namespace Microsoft.OpenApi.Reader.V32
 
         public static IOpenApiCallback LoadCallback(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("callback", context);
+            var jsonObject = node.CheckMapNode("callback", context);
 
-            if (JsonObject.GetReferencePointer() is { } pointer)
+            if (jsonObject.GetReferencePointer() is { } pointer)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var callbackReference = new OpenApiCallbackReference(reference.Item1, hostDocument, reference.Item2);
-                callbackReference.Reference.SetMetadataFromJsonObject(JsonObject);
+                callbackReference.Reference.SetMetadataFromJsonObject(jsonObject);
                 return callbackReference;
             }
 
             var domainObject = new OpenApiCallback();
 
-            ParseMap(JsonObject, domainObject, _callbackFixedFields, _callbackPatternFields, hostDocument, context);
+            ParseMap(jsonObject, domainObject, _callbackFixedFields, _callbackPatternFields, hostDocument, context);
 
             return domainObject;
         }

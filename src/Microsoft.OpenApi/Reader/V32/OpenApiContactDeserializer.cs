@@ -43,10 +43,10 @@ namespace Microsoft.OpenApi.Reader.V32
 
         public static OpenApiContact LoadContact(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node as JsonObject;
+            var jsonObject = node as JsonObject;
             var contact = new OpenApiContact();
 
-            ParseMap(JsonObject, contact, _contactFixedFields, _contactPatternFields, hostDocument, context);
+            ParseMap(jsonObject, contact, _contactFixedFields, _contactPatternFields, hostDocument, context);
 
             return contact;
         }

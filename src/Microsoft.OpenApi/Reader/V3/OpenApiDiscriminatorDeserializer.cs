@@ -30,10 +30,10 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static OpenApiDiscriminator LoadDiscriminator(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("discriminator", context);
+            var jsonObject = node.CheckMapNode("discriminator", context);
 
             var discriminator = new OpenApiDiscriminator();
-            ParseMap(JsonObject, discriminator, _discriminatorFixedFields, _discriminatorPatternFields, hostDocument, context);
+            ParseMap(jsonObject, discriminator, _discriminatorFixedFields, _discriminatorPatternFields, hostDocument, context);
 
             return discriminator;
         }

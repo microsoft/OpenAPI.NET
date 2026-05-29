@@ -100,19 +100,19 @@ namespace Microsoft.OpenApi.Reader.V31
 
         public static IOpenApiSecurityScheme LoadSecurityScheme(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("securityScheme", context);
+            var jsonObject = node.CheckMapNode("securityScheme", context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var securitySchemeReference = new OpenApiSecuritySchemeReference(reference.Item1, hostDocument, reference.Item2);
-                securitySchemeReference.Reference.SetMetadataFromJsonObject(JsonObject);
+                securitySchemeReference.Reference.SetMetadataFromJsonObject(jsonObject);
                 return securitySchemeReference;
             }
 
             var securityScheme = new OpenApiSecurityScheme();
-            ParseMap(JsonObject, securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields, hostDocument, context);
+            ParseMap(jsonObject, securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields, hostDocument, context);
 
             return securityScheme;
         }

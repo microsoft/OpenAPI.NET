@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -378,24 +378,24 @@ internal static partial class OpenApiV31Deserializer
             return boolSchema;
         }
 
-        var JsonObject = node.CheckMapNode(OpenApiConstants.Schema, context);
+        var jsonObject = node.CheckMapNode(OpenApiConstants.Schema, context);
 
-        var pointer = JsonObject.GetReferencePointer();
-        var identifier = JsonObject.GetJsonSchemaIdentifier();
+        var pointer = jsonObject.GetReferencePointer();
+        var identifier = jsonObject.GetJsonSchemaIdentifier();
 
         if (pointer != null)
         {
             var nodeLocation = context.GetLocation();
             var reference = GetReferenceIdAndExternalResource(pointer);
             var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
-            result.Reference.SetMetadataFromJsonObject(JsonObject);
+            result.Reference.SetMetadataFromJsonObject(jsonObject);
             result.Reference.SetJsonPointerPath(pointer, nodeLocation);
             return result;
         }            
 
         var schema = new OpenApiSchema();
 
-        JsonObject.ParseMap(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context,
+        jsonObject.ParseMap(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context,
             static (schema, name, value) =>
             {
                 schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);

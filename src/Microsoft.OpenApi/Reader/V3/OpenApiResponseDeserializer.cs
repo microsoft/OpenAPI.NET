@@ -51,9 +51,9 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static IOpenApiResponse LoadResponse(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("response", context);
+            var jsonObject = node.CheckMapNode("response", context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
 
             var response = new OpenApiResponse();
-            ParseMap(JsonObject, response, _responseFixedFields, _responsePatternFields, hostDocument, context);
+            ParseMap(jsonObject, response, _responseFixedFields, _responsePatternFields, hostDocument, context);
 
             return response;
         }

@@ -109,10 +109,10 @@ namespace Microsoft.OpenApi.Reader.V2
             _flowValue = null;
             _flow = new();
 
-            var JsonObject = node.CheckMapNode("securityScheme", context);
+            var jsonObject = node.CheckMapNode("securityScheme", context);
 
             var securityScheme = new OpenApiSecurityScheme();
-            ParseMap(JsonObject, securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields, hostDocument, context);
+            ParseMap(jsonObject, securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields, hostDocument, context);
 
             // Put the Flow object in the right Flows property based on the string in "flow"
             if (_flowValue == OpenApiConstants.Implicit)

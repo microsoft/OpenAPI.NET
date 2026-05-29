@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
         };
 
-        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context, JsonNode JsonNode)
+        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context, JsonNode jsonNode)
         {
             var host = context.GetFromTempStorage<string>("host");
             var basePath = context.GetFromTempStorage<string>("basePath");
@@ -231,14 +231,14 @@ namespace Microsoft.OpenApi.Reader.V2
             return uriBuilder.ToString();
         }
 
-        public static OpenApiDocument LoadOpenApi(JsonNode JsonNode, Uri location, ParsingContext context)
+        public static OpenApiDocument LoadOpenApi(JsonNode jsonNode, Uri location, ParsingContext context)
         {
             var openApiDoc = new OpenApiDocument
             {
                 BaseUri = location
             };
 
-            var openApiNode = JsonNode.CheckMapNode("OpenAPI", context);
+            var openApiNode = jsonNode.CheckMapNode("OpenAPI", context);
 
             ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields, openApiDoc, context);
 
@@ -259,7 +259,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 openApiDoc.Servers = [];
             }
 
-            MakeServers(openApiDoc.Servers, context, JsonNode);
+            MakeServers(openApiDoc.Servers, context, jsonNode);
 
             FixRequestBodyReferences(openApiDoc);
 

@@ -48,11 +48,11 @@ namespace Microsoft.OpenApi.Reader.V32
 
         public static OpenApiServer LoadServer(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("server", context);
+            var jsonObject = node.CheckMapNode("server", context);
 
             var server = new OpenApiServer();
 
-            ParseMap(JsonObject, server, _serverFixedFields, _serverPatternFields, hostDocument, context);
+            ParseMap(jsonObject, server, _serverFixedFields, _serverPatternFields, hostDocument, context);
 
             return server;
         }

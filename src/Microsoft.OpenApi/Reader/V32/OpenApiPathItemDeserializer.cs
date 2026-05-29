@@ -54,9 +54,9 @@ namespace Microsoft.OpenApi.Reader.V32
                 return;
             }
 
-            var JsonObject = n.CheckMapNode(OpenApiConstants.AdditionalOperations, context);
+            var jsonObject = n.CheckMapNode(OpenApiConstants.AdditionalOperations, context);
 
-            foreach (var property in JsonObject.Where(p => !OpenApiPathItem._standardHttp32MethodsNames.Contains(p.Key)))
+            foreach (var property in jsonObject.Where(p => !OpenApiPathItem._standardHttp32MethodsNames.Contains(p.Key)))
             {
                 var operationType = property.Key;
 
@@ -73,21 +73,21 @@ namespace Microsoft.OpenApi.Reader.V32
 
         public static IOpenApiPathItem LoadPathItem(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("PathItem", context);
+            var jsonObject = node.CheckMapNode("PathItem", context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
 
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var pathItemReference = new OpenApiPathItemReference(reference.Item1, hostDocument, reference.Item2);
-                pathItemReference.Reference.SetMetadataFromJsonObject(JsonObject);
+                pathItemReference.Reference.SetMetadataFromJsonObject(jsonObject);
                 return pathItemReference;
             }
 
             var pathItem = new OpenApiPathItem();
 
-            ParseMap(JsonObject, pathItem, _pathItemFixedFields, _pathItemPatternFields, hostDocument, context);
+            ParseMap(jsonObject, pathItem, _pathItemFixedFields, _pathItemPatternFields, hostDocument, context);
 
             return pathItem;
         }

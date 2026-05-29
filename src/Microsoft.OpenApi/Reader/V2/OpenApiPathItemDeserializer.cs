@@ -43,11 +43,11 @@ namespace Microsoft.OpenApi.Reader.V2
 
         public static OpenApiPathItem LoadPathItem(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("PathItem", context);
+            var jsonObject = node.CheckMapNode("PathItem", context);
 
             var pathItem = new OpenApiPathItem();
 
-            ParseMap(JsonObject, pathItem, _pathItemFixedFields, _pathItemPatternFields, hostDocument, context);
+            ParseMap(jsonObject, pathItem, _pathItemFixedFields, _pathItemPatternFields, hostDocument, context);
 
             return pathItem;
         }

@@ -140,9 +140,9 @@ namespace Microsoft.OpenApi.Reader
         /// <summary>
         /// Gets the version of the Open API document.
         /// </summary>
-        private static string GetVersion(JsonNode JsonNode)
+        private static string GetVersion(JsonNode jsonNode)
         {
-            var versionNode = new JsonPointer("/openapi").Find(JsonNode);
+            var versionNode = new JsonPointer("/openapi").Find(jsonNode);
 
             if (versionNode is not null)
             {
@@ -150,7 +150,7 @@ namespace Microsoft.OpenApi.Reader
                     ?? throw new OpenApiException("Version node not found.");
             }
 
-            versionNode = new JsonPointer("/swagger").Find(JsonNode);
+            versionNode = new JsonPointer("/swagger").Find(jsonNode);
 
             return versionNode?.GetScalarValue()?.Replace("\"", string.Empty) ?? throw new OpenApiException("Version node not found.");
         }

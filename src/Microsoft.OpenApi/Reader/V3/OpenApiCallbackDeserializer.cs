@@ -24,9 +24,9 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static IOpenApiCallback LoadCallback(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("callback", context);
+            var jsonObject = node.CheckMapNode("callback", context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             
             if (pointer != null)
             {
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             var domainObject = new OpenApiCallback();
 
-            ParseMap(JsonObject, domainObject, _callbackFixedFields, _callbackPatternFields, hostDocument, context);
+            ParseMap(jsonObject, domainObject, _callbackFixedFields, _callbackPatternFields, hostDocument, context);
 
             return domainObject;
         }

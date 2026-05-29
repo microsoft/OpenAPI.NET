@@ -112,9 +112,9 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static IOpenApiHeader LoadHeader(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("header", context);
+            var jsonObject = node.CheckMapNode("header", context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
 
             var header = new OpenApiHeader();
-            ParseMap(JsonObject, header, _headerFixedFields, _headerPatternFields, hostDocument, context);
+            ParseMap(jsonObject, header, _headerFixedFields, _headerPatternFields, hostDocument, context);
 
             return header;
         }

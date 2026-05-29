@@ -65,11 +65,11 @@ namespace Microsoft.OpenApi.Reader.V32
 
         public static OpenApiTag LoadTag(JsonNode n, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = n.CheckMapNode("tag", context);
+            var jsonObject = n.CheckMapNode("tag", context);
 
             var domainObject = new OpenApiTag();
 
-            ParseMap(JsonObject, domainObject, _tagFixedFields, _tagPatternFields, hostDocument, context);
+            ParseMap(jsonObject, domainObject, _tagFixedFields, _tagPatternFields, hostDocument, context);
 
             return domainObject;
         }

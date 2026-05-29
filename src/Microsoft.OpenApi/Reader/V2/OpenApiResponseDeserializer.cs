@@ -110,10 +110,10 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private static Dictionary<string, IOpenApiExample> LoadExamplesExtension(JsonNode node, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode(OpenApiConstants.ExamplesExtension, context);
+            var jsonObject = node.CheckMapNode(OpenApiConstants.ExamplesExtension, context);
             var examples = new Dictionary<string, IOpenApiExample>();
 
-            foreach (var examplesNode in JsonObject)
+            foreach (var examplesNode in jsonObject)
             {
                 // Load the media type node as an OpenApiExample object
                 var example = new OpenApiExample();
@@ -145,9 +145,9 @@ namespace Microsoft.OpenApi.Reader.V2
 
         private static void LoadExamples(OpenApiResponse response, JsonNode node, OpenApiDocument? hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("examples", context);
+            var jsonObject = node.CheckMapNode("examples", context);
 
-            foreach (var mediaTypeNode in JsonObject)
+            foreach (var mediaTypeNode in jsonObject)
             {
                 LoadExample(response, mediaTypeNode.Key, mediaTypeNode.Value, context);
             }
@@ -178,9 +178,9 @@ namespace Microsoft.OpenApi.Reader.V2
 
         public static IOpenApiResponse LoadResponse(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("response", context);
+            var jsonObject = node.CheckMapNode("response", context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
@@ -189,7 +189,7 @@ namespace Microsoft.OpenApi.Reader.V2
 
             var response = new OpenApiResponse();
 
-            ParseMap(JsonObject, response, _responseFixedFields, _responsePatternFields, hostDocument, context);
+            ParseMap(jsonObject, response, _responseFixedFields, _responsePatternFields, hostDocument, context);
             if (response.Content?.Values is not null)
             {
                 foreach (var mediaType in response.Content.Values.OfType<OpenApiMediaType>())

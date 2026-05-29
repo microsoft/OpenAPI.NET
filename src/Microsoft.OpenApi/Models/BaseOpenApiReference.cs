@@ -302,7 +302,7 @@ namespace Microsoft.OpenApi
         /// <param name="key">The key of the property</param>
         /// <returns>The property value</returns>
         protected internal static string? GetPropertyValueFromNode(JsonObject jsonObject, string key) =>
-        jsonObject.TryGetPropertyValue(key, out var JsonNode) && JsonNode is JsonValue valueCast && valueCast.TryGetValue<string>(out var strValue) ? strValue : null;
+        jsonObject.TryGetPropertyValue(key, out var jsonNode) && jsonNode is JsonValue valueCast && valueCast.TryGetValue<string>(out var strValue) ? strValue : null;
         internal virtual void SetMetadataFromJsonObject(JsonObject jsonObject)
         {
             SetAdditional31MetadataFromMapNode(jsonObject);

@@ -41,11 +41,11 @@ namespace Microsoft.OpenApi.Reader.V32
 
         public static OpenApiExternalDocs LoadExternalDocs(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("externalDocs", context);
+            var jsonObject = node.CheckMapNode("externalDocs", context);
 
             var externalDocs = new OpenApiExternalDocs();
 
-            ParseMap(JsonObject, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields, hostDocument, context);
+            ParseMap(jsonObject, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields, hostDocument, context);
 
             return externalDocs;
         }

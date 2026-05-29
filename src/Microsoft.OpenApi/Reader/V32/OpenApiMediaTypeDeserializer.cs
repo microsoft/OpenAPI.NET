@@ -89,20 +89,20 @@ namespace Microsoft.OpenApi.Reader.V32
 
         public static IOpenApiMediaType LoadMediaType(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode(OpenApiConstants.Content, context);
+            var jsonObject = node.CheckMapNode(OpenApiConstants.Content, context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var mediaTypeReference = new OpenApiMediaTypeReference(reference.Item1, hostDocument, reference.Item2);
-                mediaTypeReference.Reference.SetMetadataFromJsonObject(JsonObject);
+                mediaTypeReference.Reference.SetMetadataFromJsonObject(jsonObject);
                 return mediaTypeReference;
             }
 
             var mediaType = new OpenApiMediaType();
 
-            ParseMap(JsonObject, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields, hostDocument, context);
+            ParseMap(jsonObject, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields, hostDocument, context);
 
             ProcessAnyFields(mediaType, _mediaTypeAnyFields, context);
             ProcessAnyMapFields(mediaType, _mediaTypeAnyMapOpenApiExampleFields, context);

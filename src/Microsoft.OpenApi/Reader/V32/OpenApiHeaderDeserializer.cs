@@ -115,19 +115,19 @@ namespace Microsoft.OpenApi.Reader.V32
 
         public static IOpenApiHeader LoadHeader(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("header", context);
+            var jsonObject = node.CheckMapNode("header", context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var headerReference = new OpenApiHeaderReference(reference.Item1, hostDocument, reference.Item2);
-                headerReference.Reference.SetMetadataFromJsonObject(JsonObject);
+                headerReference.Reference.SetMetadataFromJsonObject(jsonObject);
                 return headerReference;
             }
 
             var header = new OpenApiHeader();
-            ParseMap(JsonObject, header, _headerFixedFields, _headerPatternFields, hostDocument, context);
+            ParseMap(jsonObject, header, _headerFixedFields, _headerPatternFields, hostDocument, context);
 
             return header;
         }

@@ -291,9 +291,9 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static IOpenApiSchema LoadSchema(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode(OpenApiConstants.Schema, context);
+            var jsonObject = node.CheckMapNode(OpenApiConstants.Schema, context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
 
             if (pointer != null)
             {
@@ -303,7 +303,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             var schema = new OpenApiSchema();
 
-            ParseMap(JsonObject, schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context);
+            ParseMap(jsonObject, schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context);
 
             if (schema.Extensions is not null && schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
             {

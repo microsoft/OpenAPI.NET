@@ -43,9 +43,9 @@ namespace Microsoft.OpenApi.Reader.V3
 
         public static IOpenApiExample LoadExample(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("example", context);
+            var jsonObject = node.CheckMapNode("example", context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
 
             var example = new OpenApiExample();
-            ParseMap(JsonObject, example, _exampleFixedFields, _examplePatternFields, hostDocument, context);
+            ParseMap(jsonObject, example, _exampleFixedFields, _examplePatternFields, hostDocument, context);
 
             return example;
         }

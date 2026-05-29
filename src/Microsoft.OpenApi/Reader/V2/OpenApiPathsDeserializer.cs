@@ -23,11 +23,11 @@ namespace Microsoft.OpenApi.Reader.V2
 
         public static OpenApiPaths LoadPaths(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("Paths", context);
+            var jsonObject = node.CheckMapNode("Paths", context);
 
             var domainObject = new OpenApiPaths();
 
-            ParseMap(JsonObject, domainObject, _pathsFixedFields, _pathsPatternFields, hostDocument, context);
+            ParseMap(jsonObject, domainObject, _pathsFixedFields, _pathsPatternFields, hostDocument, context);
 
             return domainObject;
         }

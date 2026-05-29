@@ -48,19 +48,19 @@ namespace Microsoft.OpenApi.Reader.V31
 
         public static IOpenApiExample LoadExample(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("example", context);
+            var jsonObject = node.CheckMapNode("example", context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var exampleReference = new OpenApiExampleReference(reference.Item1, hostDocument, reference.Item2);
-                exampleReference.Reference.SetMetadataFromJsonObject(JsonObject);
+                exampleReference.Reference.SetMetadataFromJsonObject(jsonObject);
                 return exampleReference;
             }
 
             var example = new OpenApiExample();
-            ParseMap(JsonObject, example, _exampleFixedFields, _examplePatternFields, hostDocument, context);
+            ParseMap(jsonObject, example, _exampleFixedFields, _examplePatternFields, hostDocument, context);
 
             return example;
         }

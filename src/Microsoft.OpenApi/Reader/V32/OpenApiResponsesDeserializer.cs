@@ -23,11 +23,11 @@ namespace Microsoft.OpenApi.Reader.V32
 
         public static OpenApiResponses LoadResponses(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("Responses", context);
+            var jsonObject = node.CheckMapNode("Responses", context);
 
             var domainObject = new OpenApiResponses();
 
-            ParseMap(JsonObject, domainObject, ResponsesFixedFields, ResponsesPatternFields, hostDocument, context);
+            ParseMap(jsonObject, domainObject, ResponsesFixedFields, ResponsesPatternFields, hostDocument, context);
 
             return domainObject;
         }

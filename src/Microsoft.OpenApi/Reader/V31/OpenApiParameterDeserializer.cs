@@ -156,20 +156,20 @@ namespace Microsoft.OpenApi.Reader.V31
 
         public static IOpenApiParameter LoadParameter(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("parameter", context);
+            var jsonObject = node.CheckMapNode("parameter", context);
 
-            var pointer = JsonObject.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var parameterReference = new OpenApiParameterReference(reference.Item1, hostDocument, reference.Item2);
-                parameterReference.Reference.SetMetadataFromJsonObject(JsonObject);
+                parameterReference.Reference.SetMetadataFromJsonObject(jsonObject);
                 return parameterReference;
             }
 
             var parameter = new OpenApiParameter();
 
-            ParseMap(JsonObject, parameter, _parameterFixedFields, _parameterPatternFields, hostDocument, context);
+            ParseMap(jsonObject, parameter, _parameterFixedFields, _parameterPatternFields, hostDocument, context);
             ProcessAnyFields(parameter, _parameterAnyFields, context);
             ProcessAnyMapFields(parameter, _parameterAnyMapOpenApiExampleFields, context);
 

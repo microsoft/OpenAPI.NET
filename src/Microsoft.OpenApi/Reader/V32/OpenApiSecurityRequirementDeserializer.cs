@@ -15,11 +15,11 @@ namespace Microsoft.OpenApi.Reader.V32
     {
         public static OpenApiSecurityRequirement LoadSecurityRequirement(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var JsonObject = node.CheckMapNode("security", context);
+            var jsonObject = node.CheckMapNode("security", context);
 
             var securityRequirement = new OpenApiSecurityRequirement();
 
-            foreach (var property in JsonObject)
+            foreach (var property in jsonObject)
             {
                 var scheme = LoadSecuritySchemeByReference(property.Key, hostDocument);
 
