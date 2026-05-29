@@ -90,8 +90,8 @@ namespace Microsoft.OpenApi.Reader.V3
             var mediaType = new OpenApiMediaType();
             ParseMap(JsonObject, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields, hostDocument, context);
 
-            ProcessAnyFields(JsonObject, mediaType, _mediaTypeAnyFields, context);
-            ProcessAnyMapFields(JsonObject, mediaType, _mediaTypeAnyMapOpenApiExampleFields, context);
+            ProcessAnyFields(mediaType, _mediaTypeAnyFields, context);
+            ProcessAnyMapFields(mediaType, _mediaTypeAnyMapOpenApiExampleFields, context);
 
             return mediaType;
         }

@@ -25,7 +25,6 @@ namespace Microsoft.OpenApi.Reader.V32
         }
 
         private static void ProcessAnyFields<T>(
-            JsonObject jsonObject,
             T domainObject,
             AnyFieldMap<T> anyFieldMap,
             ParsingContext context)
@@ -60,7 +59,6 @@ namespace Microsoft.OpenApi.Reader.V32
         }
 
         private static void ProcessAnyMapFields<T, U>(
-            JsonObject jsonObject,
             T domainObject,
             AnyMapFieldMap<T, U> anyMapFieldMap,
             ParsingContext context)

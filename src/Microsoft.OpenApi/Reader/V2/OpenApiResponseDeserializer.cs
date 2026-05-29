@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 }
             };
 
-        private static void ProcessProduces(JsonObject JsonObject, OpenApiResponse response, ParsingContext context)
+        private static void ProcessProduces(OpenApiResponse response, ParsingContext context)
         {
             if (response.Content == null)
             {
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Reader.V2
                     if (schema != null)
                     {
                         openApiMediaType.Schema = schema;
-                        ProcessAnyFields(JsonObject, openApiMediaType, _mediaTypeAnyFields, context);
+                        ProcessAnyFields(openApiMediaType, _mediaTypeAnyFields, context);
                     }
                 }
                 else
@@ -196,7 +196,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 {
                     if (mediaType.Schema != null)
                     {
-                        ProcessAnyFields(JsonObject, mediaType, _mediaTypeAnyFields, context);
+                        ProcessAnyFields(mediaType, _mediaTypeAnyFields, context);
                     }
                 }
             }

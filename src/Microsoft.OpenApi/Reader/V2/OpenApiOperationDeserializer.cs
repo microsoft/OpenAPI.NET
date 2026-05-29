@@ -148,7 +148,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 foreach (var response in responses.Values.OfType<OpenApiResponse>())
                 {
-                    ProcessProduces(JsonObject, response, context);
+                    ProcessProduces(response, context);
                 }
             }            
 
