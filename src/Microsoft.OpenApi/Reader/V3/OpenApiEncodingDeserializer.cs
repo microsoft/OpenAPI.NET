@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "contentType",
-                (o, n, _, c) => o.ContentType = n.GetScalarValue()
+                (o, n, _, _) => o.ContentType = n.GetScalarValue()
             },
             {
                 "headers",
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "explode",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var explode = n.GetScalarValue();
                     if (explode != null)
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "allowReserved", 
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var allowReserved = n.GetScalarValue();
                     if (allowReserved != null)

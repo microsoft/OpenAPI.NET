@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
-                "openapi", (_, _, _, c) =>
+                "openapi", (_, _, _, _) =>
                 {
                 } /* Version is valid field but we already parsed it */
             },

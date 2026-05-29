@@ -17,11 +17,11 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 OpenApiConstants.Name,
-                (o, n, _, c) => o.Name = n.GetScalarValue()
+                (o, n, _, _) => o.Name = n.GetScalarValue()
             },
             {
                 OpenApiConstants.Description,
-                (o, n, _, c) => o.Description = n.GetScalarValue()
+                (o, n, _, _) => o.Description = n.GetScalarValue()
             },
             {
                 OpenApiConstants.ExternalDocs,

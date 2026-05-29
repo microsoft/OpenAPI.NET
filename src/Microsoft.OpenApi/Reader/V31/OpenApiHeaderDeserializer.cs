@@ -12,14 +12,14 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly FixedFieldMap<OpenApiHeader> _headerFixedFields = new()
         {
             {
-                "description", (o, n, _, c) =>
+                "description", (o, n, _, _) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
             },
             {
                 "required",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var required = n.GetScalarValue();
                     if (required != null)
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "deprecated",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var deprecated = n.GetScalarValue();
                     if (deprecated != null)
@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "allowEmptyValue",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var allowEmptyVal = n.GetScalarValue();
                     if (allowEmptyVal != null)
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "allowReserved",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var allowReserved = n.GetScalarValue();
                     if (allowReserved != null)
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Reader.V31
             },
             {
                 "explode",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var explode = n.GetScalarValue();
                     if (explode != null)
@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 }
             },
             {
-                "example", (o, n, _, c) =>
+                "example", (o, n, _, _) =>
                 {
                     o.Example = n;
                 }

@@ -34,13 +34,13 @@ namespace Microsoft.OpenApi.Reader.V31
                     }
                 },
                 {
-                    "summary", (o, n, _, c) =>
+                    "summary", (o, n, _, _) =>
                     {
                         o.Summary = n.GetScalarValue();
                     }
                 },
                 {
-                    "description", (o, n, _, c) =>
+                    "description", (o, n, _, _) =>
                     {
                         o.Description = n.GetScalarValue();
                     }
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Reader.V31
                     }
                 },
                 {
-                    "operationId", (o, n, _, c) =>
+                    "operationId", (o, n, _, _) =>
                     {
                         o.OperationId = n.GetScalarValue();
                     }
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 },
                 {
                     "deprecated",
-                    (o, n, _, c) =>
+                    (o, n, _, _) =>
                     {
                         var deprecated = n.GetScalarValue();
                         if (deprecated != null)

@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "description",
-                (o, n, _, c) => o.Description = n.GetScalarValue()
+                (o, n, _, _) => o.Description = n.GetScalarValue()
             },
             {
                 "headers",

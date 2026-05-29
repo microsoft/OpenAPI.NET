@@ -38,11 +38,11 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "summary",
-                    (o, n, _, c) => o.Summary = n.GetScalarValue()
+                    (o, n, _, _) => o.Summary = n.GetScalarValue()
                 },
                 {
                     "description",
-                    (o, n, _, c) => o.Description = n.GetScalarValue()
+                    (o, n, _, _) => o.Description = n.GetScalarValue()
                 },
                 {
                     "externalDocs",
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "operationId",
-                    (o, n, _, c) => o.OperationId = n.GetScalarValue()
+                    (o, n, _, _) => o.OperationId = n.GetScalarValue()
                 },
                 {
                     "parameters",
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "consumes", (_, n, doc, c) => {
-                        var consumes = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc, c);
+                        var consumes = n.CreateSimpleList((s, _) => s.GetScalarValue(), doc, c);
                         if (consumes.Count > 0) {
                             c.SetTempStorage(TempStorageKeys.OperationConsumes,consumes);
                         }
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "produces", (_, n, doc, c) => {
-                        var produces = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc, c);
+                        var produces = n.CreateSimpleList((s, _) => s.GetScalarValue(), doc, c);
                         if (produces.Count > 0) {
                             c.SetTempStorage(TempStorageKeys.OperationProduces, produces);
                         }
@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "deprecated",
-                    (o, n, _, c) =>
+                    (o, n, _, _) =>
                     {
                         var deprecated = n.GetScalarValue();
                         if (deprecated != null)

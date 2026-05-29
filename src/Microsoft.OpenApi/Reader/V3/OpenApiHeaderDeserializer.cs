@@ -17,11 +17,11 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "description",
-                (o, n, _, c) => o.Description = n.GetScalarValue()
+                (o, n, _, _) => o.Description = n.GetScalarValue()
             },
             {
                 "required",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var required = n.GetScalarValue();
                     if (required != null)
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "deprecated",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var deprecated = n.GetScalarValue();
                     if (deprecated != null)
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "allowEmptyValue",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var allowEmptyVal = n.GetScalarValue();
                     if (allowEmptyVal != null)
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "allowReserved",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var allowReserved = n.GetScalarValue();
                     if (allowReserved != null)
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "explode",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var explode = n.GetScalarValue();
                     if (explode != null)
@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "example",
-                (o, n, _, c) => o.Example = n
+                (o, n, _, _) => o.Example = n
             },
         };
 

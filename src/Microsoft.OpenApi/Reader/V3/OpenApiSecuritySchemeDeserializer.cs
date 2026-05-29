@@ -29,11 +29,11 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "description",
-                    (o, n, _, c) => o.Description = n.GetScalarValue()
+                    (o, n, _, _) => o.Description = n.GetScalarValue()
                 },
                 {
                     "name",
-                    (o, n, _, c) => o.Name = n.GetScalarValue()
+                    (o, n, _, _) => o.Name = n.GetScalarValue()
                 },
                 {
                     "in",
@@ -48,15 +48,15 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "scheme",
-                    (o, n, _, c) => o.Scheme = n.GetScalarValue()
+                    (o, n, _, _) => o.Scheme = n.GetScalarValue()
                 },
                 {
                     "bearerFormat",
-                    (o, n, _, c) => o.BearerFormat = n.GetScalarValue()
+                    (o, n, _, _) => o.BearerFormat = n.GetScalarValue()
                 },
                 {
                     "openIdConnectUrl",
-                    (o, n, _, c) =>
+                    (o, n, _, _) =>
                     {
                         var connectUrl = n.GetScalarValue();
                         if (connectUrl != null)

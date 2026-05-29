@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "propertyName",
-                    (o, n, _, c) => o.PropertyName = n.GetScalarValue()
+                    (o, n, _, _) => o.PropertyName = n.GetScalarValue()
                 },
                 {
                     "mapping",

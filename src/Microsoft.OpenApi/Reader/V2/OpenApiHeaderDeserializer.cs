@@ -18,11 +18,11 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             {
                 "description",
-                (o, n, _, c) => o.Description = n.GetScalarValue()
+                (o, n, _, _) => o.Description = n.GetScalarValue()
             },
             {
                 "type",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var type = n.GetScalarValue();
                     if (type != null)
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "format",
-                (o, n, _, c) => GetOrCreateSchema(o).Format = n.GetScalarValue()
+                (o, n, _, _) => GetOrCreateSchema(o).Format = n.GetScalarValue()
             },
             {
                 "items",
@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "collectionFormat",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var collectionFormat = n.GetScalarValue();
                     if (collectionFormat != null)
@@ -52,11 +52,11 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "default",
-                (o, n, _, c) => GetOrCreateSchema(o).Default = n
+                (o, n, _, _) => GetOrCreateSchema(o).Default = n
             },
             {
                 "maximum",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var max = n.GetScalarValue();
                     if (!string.IsNullOrEmpty(max))
@@ -67,11 +67,11 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "exclusiveMaximum",
-                (o, n, _, c) => GetOrCreateSchema(o).IsExclusiveMaximum = bool.Parse(n.GetScalarValue()!)
+                (o, n, _, _) => GetOrCreateSchema(o).IsExclusiveMaximum = bool.Parse(n.GetScalarValue()!)
             },
             {
                 "minimum",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var min = n.GetScalarValue();
                     if (!string.IsNullOrEmpty(min))
@@ -82,11 +82,11 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "exclusiveMinimum",
-                (o, n, _, c) => GetOrCreateSchema(o).IsExclusiveMinimum = bool.Parse(n.GetScalarValue()!)
+                (o, n, _, _) => GetOrCreateSchema(o).IsExclusiveMinimum = bool.Parse(n.GetScalarValue()!)
             },
             {
                 "maxLength",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var maxLength = n.GetScalarValue();
                     if (maxLength != null)
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "minLength",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var minLength = n.GetScalarValue();
                     if (minLength != null)
@@ -108,11 +108,11 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "pattern",
-                (o, n, _, c) => GetOrCreateSchema(o).Pattern = n.GetScalarValue()
+                (o, n, _, _) => GetOrCreateSchema(o).Pattern = n.GetScalarValue()
             },
             {
                 "maxItems",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var maxItems = n.GetScalarValue();
                     if (maxItems != null)
@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "minItems",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var minItems = n.GetScalarValue();
                     if (minItems != null)
@@ -134,7 +134,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "uniqueItems",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var uniqueItems = n.GetScalarValue();
                     if (uniqueItems != null)
@@ -145,7 +145,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "multipleOf",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var multipleOf = n.GetScalarValue();
                     if (multipleOf != null)

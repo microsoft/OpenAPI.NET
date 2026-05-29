@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 {
                     "name",
-                    (o, n, t, c) => o.Name = n.GetScalarValue()
+                    (o, n, _, _) => o.Name = n.GetScalarValue()
                 },
                 {
                     "in",
@@ -28,11 +28,11 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "description",
-                    (o, n, t, c) => o.Description = n.GetScalarValue()
+                    (o, n, _, _) => o.Description = n.GetScalarValue()
                 },
                 {
                     "required",
-                    (o, n, t, c) =>
+                    (o, n, _, _) =>
                     {
                         var required = n.GetScalarValue();
                         if (required != null)
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "deprecated",
-                    (o, n, t, c) =>
+                    (o, n, _, _) =>
                     {
                         var deprecated = n.GetScalarValue();
                         if (deprecated != null)
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "allowEmptyValue",
-                    (o, n, t, c) =>
+                    (o, n, _, _) =>
                     {
                         var allowEmptyValue = n.GetScalarValue();
                         if (allowEmptyValue != null)
@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "type",
-                    (o, n, t, c) =>
+                    (o, n, _, _) =>
                     {
                         var type = n.GetScalarValue();
                         if (type != null)
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "collectionFormat",
-                    (o, n, t, c) =>
+                    (o, n, _, _) =>
                     {
                         var collectionFormat = n.GetScalarValue();
                         if (collectionFormat != null)
@@ -96,11 +96,11 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "format",
-                    (o, n, t, c) => GetOrCreateSchema(o).Format = n.GetScalarValue()
+                    (o, n, _, _) => GetOrCreateSchema(o).Format = n.GetScalarValue()
                 },
                 {
                     "minimum",
-                    (o, n, t, c) =>
+                    (o, n, _, _) =>
                     {
                         var min = n.GetScalarValue();
                         if (!string.IsNullOrEmpty(min))
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "maximum",
-                    (o, n, t, c) =>
+                    (o, n, _, _) =>
                     {
                         var max = n.GetScalarValue();
                         if (!string.IsNullOrEmpty(max))
@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "maxLength",
-                    (o, n, t, c) =>
+                    (o, n, _, _) =>
                     {
                         var maxLength = n.GetScalarValue();
                         if (maxLength != null)
@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "minLength",
-                    (o, n, t, c) =>
+                    (o, n, _, _) =>
                     {
                         var minLength = n.GetScalarValue();
                         if (minLength != null)
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "readOnly",
-                    (o, n, t, c) =>
+                    (o, n, _, _) =>
                     {
                         var readOnly = n.GetScalarValue();
                         if (readOnly != null)
@@ -155,15 +155,15 @@ namespace Microsoft.OpenApi.Reader.V2
                 },
                 {
                     "default",
-                    (o, n, t, c) => GetOrCreateSchema(o).Default = n
+                    (o, n, _, _) => GetOrCreateSchema(o).Default = n
                 },
                 {
                     "pattern",
-                    (o, n, t, c) => GetOrCreateSchema(o).Pattern = n.GetScalarValue()
+                    (o, n, _, _) => GetOrCreateSchema(o).Pattern = n.GetScalarValue()
                 },
                 {
                     "enum",
-                    (o, n, t, c) => GetOrCreateSchema(o).Enum = n.CreateListOfAny(c)
+                    (o, n, _, c) => GetOrCreateSchema(o).Enum = n.CreateListOfAny(c)
                 },
                 {
                     "schema",

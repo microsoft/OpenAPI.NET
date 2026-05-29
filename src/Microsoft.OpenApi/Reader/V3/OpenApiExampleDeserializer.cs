@@ -17,19 +17,19 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "summary",
-                (o, n, _, c) => o.Summary = n.GetScalarValue()
+                (o, n, _, _) => o.Summary = n.GetScalarValue()
             },
             {
                 "description",
-                (o, n, _, c) => o.Description = n.GetScalarValue()
+                (o, n, _, _) => o.Description = n.GetScalarValue()
             },
             {
                 "value",
-                (o, n, _, c) => o.Value = n
+                (o, n, _, _) => o.Value = n
             },
             {
                 "externalValue",
-                (o, n, _, c) => o.ExternalValue = n.GetScalarValue()
+                (o, n, _, _) => o.ExternalValue = n.GetScalarValue()
             },
         };
 

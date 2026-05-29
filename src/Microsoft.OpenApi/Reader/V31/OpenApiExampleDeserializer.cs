@@ -12,25 +12,25 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly FixedFieldMap<OpenApiExample> _exampleFixedFields = new()
         {
             {
-                "summary", (o, n, _, c) =>
+                "summary", (o, n, _, _) =>
                 {
                     o.Summary = n.GetScalarValue();
                 }
             },
             {
-                "description", (o, n, _, c) =>
+                "description", (o, n, _, _) =>
                 {
                     o.Description = n.GetScalarValue();
                 }
             },
             {
-                "value", (o, n, _, c) =>
+                "value", (o, n, _, _) =>
                 {
                     o.Value = n;
                 }
             },
             {
-                "externalValue", (o, n, _, c) =>
+                "externalValue", (o, n, _, _) =>
                 {
                     o.ExternalValue = n.GetScalarValue();
                 }

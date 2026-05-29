@@ -18,11 +18,11 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "summary",
-                (o, n, _, c) => o.Summary = n.GetScalarValue()
+                (o, n, _, _) => o.Summary = n.GetScalarValue()
             },
             {
                 "description",
-                (o, n, _, c) => o.Description = n.GetScalarValue()
+                (o, n, _, _) => o.Description = n.GetScalarValue()
             },
             {"get", (o, n, t, c) => o.AddOperation(HttpMethod.Get, LoadOperation(n, t, c))},
             {"put", (o, n, t, c) => o.AddOperation(HttpMethod.Put, LoadOperation(n, t, c))},

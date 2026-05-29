@@ -20,11 +20,11 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "title",
-                (o, n, _, c) => o.Title = n.GetScalarValue()
+                (o, n, _, _) => o.Title = n.GetScalarValue()
             },
             {
                 "multipleOf",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var multipleOf = n.GetScalarValue();
                     if (multipleOf != null)
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "maximum",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var max = n.GetScalarValue();
                     if (!string.IsNullOrEmpty(max))
@@ -46,11 +46,11 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "exclusiveMaximum",
-                (o, n, _, c) => o.IsExclusiveMaximum = bool.Parse(n.GetScalarValue()!)
+                (o, n, _, _) => o.IsExclusiveMaximum = bool.Parse(n.GetScalarValue()!)
             },
             {
                "minimum",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var min = n.GetScalarValue();
                     if (!string.IsNullOrEmpty(min))
@@ -61,11 +61,11 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "exclusiveMinimum",
-                (o, n, _, c) => o.IsExclusiveMinimum = bool.Parse(n.GetScalarValue()!)
+                (o, n, _, _) => o.IsExclusiveMinimum = bool.Parse(n.GetScalarValue()!)
             },
             {
                 "maxLength",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var maxLength = n.GetScalarValue();
                     if (maxLength != null)
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "minLength",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var minLength = n.GetScalarValue();
                     if (minLength != null)
@@ -87,11 +87,11 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "pattern",
-                (o, n, _, c) => o.Pattern = n.GetScalarValue()
+                (o, n, _, _) => o.Pattern = n.GetScalarValue()
             },
             {
                 "maxItems",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var maxItems = n.GetScalarValue();
                     if (maxItems != null)
@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "minItems",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var minItems = n.GetScalarValue();
                     if (minItems != null)
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "uniqueItems",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var uniqueItems = n.GetScalarValue();
                     if (uniqueItems != null)
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "maxProperties",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var maxProps = n.GetScalarValue();
                     if (maxProps != null)
@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "minProperties",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var minProps = n.GetScalarValue();
                     if (minProps != null)
@@ -146,7 +146,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "required",
-                (o, n, doc, c) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc, c).OfType<string>())
+                (o, n, doc, c) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, _) => n2.GetScalarValue(), doc, c).OfType<string>())
             },
             {
                 "enum",
@@ -206,19 +206,19 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "description",
-                (o, n, _, c) => o.Description = n.GetScalarValue()
+                (o, n, _, _) => o.Description = n.GetScalarValue()
             },
             {
                 "format",
-                (o, n, _, c) => o.Format = n.GetScalarValue()
+                (o, n, _, _) => o.Format = n.GetScalarValue()
             },
             {
                 "default",
-                (o, n, _, c) => o.Default = n
+                (o, n, _, _) => o.Default = n
             },
             {
                 "nullable",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     if (bool.TryParse(n.GetScalarValue(), out var parsed) && parsed)
                     {
@@ -235,7 +235,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "readOnly",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var readOnly = n.GetScalarValue();
                     if (readOnly != null)
@@ -246,7 +246,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "writeOnly",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var writeOnly = n.GetScalarValue();
                     if (writeOnly != null)
@@ -265,11 +265,11 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "example",
-                (o, n, _, c) => o.Example = n
+                (o, n, _, _) => o.Example = n
             },
             {
                 "deprecated",
-                (o, n, t, c) =>
+                (o, n, _, _) =>
                 {
                     var deprecated = n.GetScalarValue();
                     if (deprecated != null)

@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Reader.V31
             {
                 {
                     "authorizationUrl",
-                    (o, n, _, c) =>
+                    (o, n, _, _) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 },
                 {
                     "tokenUrl",
-                    (o, n, _, c) =>
+                    (o, n, _, _) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 },
                 {
                     "refreshUrl",
-                    (o, n, _, c) =>
+                    (o, n, _, _) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)

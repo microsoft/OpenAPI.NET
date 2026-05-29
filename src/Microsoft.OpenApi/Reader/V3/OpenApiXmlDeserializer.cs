@@ -17,11 +17,11 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "name",
-                (o, n, _, c) => o.Name = n.GetScalarValue()
+                (o, n, _, _) => o.Name = n.GetScalarValue()
             },
             {
                 "namespace",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var value = n.GetScalarValue();
                     if (value != null)
@@ -32,11 +32,11 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "prefix",
-                (o, n, _, c) => o.Prefix = n.GetScalarValue()
+                (o, n, _, _) => o.Prefix = n.GetScalarValue()
             },
             {
                 "attribute",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var attribute = n.GetScalarValue();
                     if (attribute is not null)
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "wrapped",
-                (o, n, _, c) =>
+                (o, n, _, _) =>
                 {
                     var wrapped = n.GetScalarValue();
                     if (wrapped is not null)
