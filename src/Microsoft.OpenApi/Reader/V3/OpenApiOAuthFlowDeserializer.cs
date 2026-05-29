@@ -56,21 +56,7 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly PatternFieldMap<OpenApiOAuthFlow> _oAuthFlowPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) =>
-                {
-                    if (p.Equals("x-oai-deviceAuthorizationUrl", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var url = n.GetScalarValue();
-                        if (url != null)
-                        {
-                            o.DeviceAuthorizationUrl = new(url, UriKind.RelativeOrAbsolute);
-                        }
-                    }
-                    else
-                    {
-                        o.AddExtension(p, LoadExtension(p, n, c));
-                    }
-                }}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
         public static OpenApiOAuthFlow LoadOAuthFlow(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)

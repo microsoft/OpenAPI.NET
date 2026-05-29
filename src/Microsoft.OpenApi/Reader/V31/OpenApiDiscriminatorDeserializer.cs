@@ -29,18 +29,7 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiDiscriminator> _discriminatorPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, doc, c) => {
-                        // Handle x-oas-default-mapping as DefaultMapping property
-                        if (p.Equals("x-oas-default-mapping", StringComparison.OrdinalIgnoreCase))
-                        {
-                            o.DefaultMapping = LoadMapping(n, doc, c);
-                        }
-                        else
-                        {
-                            o.AddExtension(p, LoadExtension(p, n, c));
-                        }
-                    }
-                }
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
         public static OpenApiDiscriminator LoadDiscriminator(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)

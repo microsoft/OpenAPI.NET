@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             if (response.Content == null)
             {
-                response.Content = new Dictionary<string, IOpenApiMediaType>();
+                response.Content = new Dictionary<string, OpenApiMediaType>();
             }
             else if (context.GetFromTempStorage<bool>(TempStorageKeys.ResponseProducesSet, response))
             {
@@ -157,7 +157,7 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             var exampleNode = node ?? JsonNullSentinel.JsonNull;
 
-            response.Content ??= new Dictionary<string, IOpenApiMediaType>();
+            response.Content ??= new Dictionary<string, OpenApiMediaType>();
 
             OpenApiMediaType mediaTypeObject;
             if (response.Content.TryGetValue(mediaType, out var value) && value is OpenApiMediaType mediaTypeValue)

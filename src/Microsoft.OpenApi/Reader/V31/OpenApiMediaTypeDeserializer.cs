@@ -36,35 +36,12 @@ namespace Microsoft.OpenApi.Reader.V31
                         o.Encoding = n.CreateMap(LoadEncoding, t, c);
                     }
                 },
-                {
-                    OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.ItemEncoding, (o, n, t, c) =>
-                    {
-                        o.ItemEncoding = LoadEncoding(n, t, c);
-                    }
-                },
-                {
-                    OpenApiConstants.ExtensionFieldNamePrefix + "oai-" + OpenApiConstants.PrefixEncoding, (o, n, t, c) =>
-                    {
-                        o.PrefixEncoding = n.CreateList(LoadEncoding, t, c);
-                    }
-                },
             };
 
         private static readonly PatternFieldMap<OpenApiMediaType> _mediaTypePatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, t, c) => 
-                {
-                    // Handle x-oai-itemSchema as ItemSchema property for forward compatibility
-                    if (p.Equals("x-oai-itemSchema", StringComparison.OrdinalIgnoreCase))
-                    {
-                        o.ItemSchema = LoadSchema(n, t, c);
-                    }
-                    else
-                    {
-                        o.AddExtension(p, LoadExtension(p, n, c));
-                    }
-                }}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields = new AnyFieldMap<OpenApiMediaType>
@@ -92,7 +69,7 @@ namespace Microsoft.OpenApi.Reader.V31
             }
         };
 
-        public static IOpenApiMediaType LoadMediaType(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
+        public static OpenApiMediaType LoadMediaType(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
             var JsonObject = node.CheckMapNode(OpenApiConstants.Content, context);
 

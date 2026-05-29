@@ -32,31 +32,9 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly PatternFieldMap<OpenApiTag> _tagPatternFields = new()
         {
            {
-                s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase),
-                (o, p, n, doc, c) =>
-                {
-                    if (p.Equals("x-oas-summary", StringComparison.OrdinalIgnoreCase))
-                    {
-                        o.Summary = n.GetScalarValue();
-                    }
-                    else if (p.Equals("x-oas-parent", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var tagName = n.GetScalarValue();
-                        if (tagName != null)
-                        {
-                            o.Parent = LoadTagByReference(tagName, doc);
-                        }
-                    }
-                    else if (p.Equals("x-oas-kind", StringComparison.OrdinalIgnoreCase))
-                    {
-                        o.Kind = n.GetScalarValue();
-                    }
-                    else
-                    {
-                        o.AddExtension(p, LoadExtension(p, n, c));
-                    }
-                }
-            }
+               s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase),
+               (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))
+           }
         };
 
         public static OpenApiTag LoadTag(JsonNode n, OpenApiDocument hostDocument, ParsingContext context)

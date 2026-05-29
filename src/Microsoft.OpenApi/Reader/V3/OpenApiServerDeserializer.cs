@@ -31,17 +31,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
         private static readonly PatternFieldMap<OpenApiServer> _serverPatternFields = new()
         {
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => 
-            {
-                if (p.Equals("x-oai-name", StringComparison.OrdinalIgnoreCase))
-                {
-                    o.Name = n.GetScalarValue();
-                }
-                else
-                {
-                    o.AddExtension(p, LoadExtension(p, n, c));
-                }
-            }}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
         };
 
         public static OpenApiServer LoadServer(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
