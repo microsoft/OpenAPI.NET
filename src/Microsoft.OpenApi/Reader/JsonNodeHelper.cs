@@ -109,11 +109,11 @@ namespace Microsoft.OpenApi.Reader
                 try
                 {
                     context.StartObject(key);
-                    var JsonNode = n.Value is JsonValue value
+                    var jsonNode = n.Value is JsonValue value
                         ? value
                         : throw new OpenApiReaderException($"Expected scalar while parsing {typeof(T).Name}", context);
 
-                    return (key, value: map(JsonNode));
+                    return (key, value: map(jsonNode));
                 }
                 finally
                 {

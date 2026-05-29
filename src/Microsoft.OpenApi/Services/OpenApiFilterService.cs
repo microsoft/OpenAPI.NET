@@ -144,26 +144,26 @@ namespace Microsoft.OpenApi
         /// <returns>The created <see cref="OpenApiUrlTreeNode"/>.</returns>
         public static OpenApiUrlTreeNode CreateOpenApiUrlTreeNode(Dictionary<string, OpenApiDocument> sources)
         {
-            var JsonNode = OpenApiUrlTreeNode.Create();
+            var jsonNode = OpenApiUrlTreeNode.Create();
             foreach (var source in sources)
             {
-                JsonNode.Attach(source.Value, source.Key);
+                jsonNode.Attach(source.Value, source.Key);
             }
-            return JsonNode;
+            return jsonNode;
         }
 
-        private static Dictionary<HttpMethod, OpenApiOperation>? GetOpenApiOperations(OpenApiUrlTreeNode JsonNode, string relativeUrl, string label)
+        private static Dictionary<HttpMethod, OpenApiOperation>? GetOpenApiOperations(OpenApiUrlTreeNode jsonNode, string relativeUrl, string label)
         {
-            if (relativeUrl.Equals("/", StringComparison.Ordinal) && JsonNode.HasOperations(label))
+            if (relativeUrl.Equals("/", StringComparison.Ordinal) && jsonNode.HasOperations(label))
             {
-                return JsonNode.PathItems[label].Operations;
+                return jsonNode.PathItems[label].Operations;
             }
 
             var urlSegments = relativeUrl.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
             Dictionary<HttpMethod, OpenApiOperation>? operations = null;
 
-            var targetChild = JsonNode;
+            var targetChild = jsonNode;
 
             /* This will help keep track of whether we've skipped a segment
              * in the target url due to a possible parameter naming mismatch
@@ -412,14 +412,14 @@ namespace Microsoft.OpenApi
                 if (apiVersion is not null)
                 {
                     var sources = new Dictionary<string, OpenApiDocument> { { apiVersion, source } };
-                    var JsonNode = CreateOpenApiUrlTreeNode(sources);
+                    var jsonNode = CreateOpenApiUrlTreeNode(sources);
 
                     // Iterate through urls dictionary and fetch operations for each url
                     foreach (var url in requestUrls)
                     {
                         var serverList = source.Servers;
                         var path = ExtractPath(url.Key, serverList);
-                        var openApiOperations = GetOpenApiOperations(JsonNode, path, apiVersion);
+                        var openApiOperations = GetOpenApiOperations(jsonNode, path, apiVersion);
                         if (openApiOperations == null)
                         {
                             Debug.WriteLine($"The url {url.Key} could not be found in the OpenApi description");
