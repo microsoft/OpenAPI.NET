@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader;
 
@@ -16,27 +17,27 @@ internal abstract class BaseOpenApiVersionService : IOpenApiVersionService
         Diagnostic = diagnostic;
     }
 
-    internal abstract Dictionary<Type, Func<ParseNode, OpenApiDocument, object?>> Loaders { get; }
+    internal abstract Dictionary<Type, Func<JsonNode, OpenApiDocument, ParsingContext, object?>> Loaders { get; }
 
-    public abstract OpenApiDocument LoadDocument(RootNode rootNode, Uri location);
+    public abstract OpenApiDocument LoadDocument(JsonNode jsonNode, Uri location, ParsingContext context);
 
-    public T? LoadElement<T>(ParseNode node, OpenApiDocument doc) where T : IOpenApiElement
+    public T? LoadElement<T>(JsonNode node, OpenApiDocument doc, ParsingContext context) where T : IOpenApiElement
     {
-        if (Loaders.TryGetValue(typeof(T), out var loader) && loader(node, doc) is T result)
+        if (Loaders.TryGetValue(typeof(T), out var loader) && loader(node, doc, context) is T result)
         {
             return result;
         }
         return default;
     }
-    public virtual string? GetReferenceScalarValues(MapNode mapNode, string scalarValue)
+    public virtual string? GetReferenceScalarValues(JsonObject jsonObject, string scalarValue)
     {
-        if (mapNode.Any(static x => !"$ref".Equals(x.Name, StringComparison.OrdinalIgnoreCase)) &&
-            mapNode
-            .Where(x => x.Name.Equals(scalarValue))
+        if (jsonObject.Any(static x => !"$ref".Equals(x.Key, StringComparison.OrdinalIgnoreCase)) &&
+            jsonObject
+            .Where(x => x.Key.Equals(scalarValue))
             .Select(static x => x.Value)
-            .OfType<ValueNode>().FirstOrDefault() is {} valueNode)
+            .OfType<JsonValue>().FirstOrDefault() is {} jsonNode)
         {
-            return valueNode.GetScalarValue();
+            return jsonNode.GetScalarValue();
         }
 
         return null;

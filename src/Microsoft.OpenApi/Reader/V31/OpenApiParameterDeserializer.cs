@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V31
 {
@@ -12,15 +13,15 @@ namespace Microsoft.OpenApi.Reader.V31
             new()
             {
                 {
-                    "name", (o, n, _) =>
+                    "name", (o, n, _, _) =>
                     {
                         o.Name = n.GetScalarValue();
                     }
                 },
                 {
-                    "in", (o, n, _) =>
+                    "in", (o, n, _, c) =>
                     {
-                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(n.Context, out var _in))
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(c, out var _in))
                         {
                             return;
                         }
@@ -28,14 +29,14 @@ namespace Microsoft.OpenApi.Reader.V31
                     }
                 },
                 {
-                    "description", (o, n, _) =>
+                    "description", (o, n, _, _) =>
                     {
                         o.Description = n.GetScalarValue();
                     }
                 },
                 {
                     "required",
-                    (o, n, t) =>
+                    (o, n, _, _) =>
                     {
                         var required = n.GetScalarValue();
                         if (required != null)
@@ -46,7 +47,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 },
                 {
                     "deprecated",
-                    (o, n, t) =>
+                    (o, n, _, _) =>
                     {
                         var deprecated = n.GetScalarValue();
                         if (deprecated != null)
@@ -57,7 +58,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 },
                 {
                     "allowEmptyValue",
-                    (o, n, t) =>
+                    (o, n, _, _) =>
                     {
                         var allowEmptyValue = n.GetScalarValue();
                         if (allowEmptyValue != null)
@@ -68,7 +69,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 },
                 {
                     "allowReserved",
-                    (o, n, _) =>
+                    (o, n, _, _) =>
                     {
                         var allowReserved = n.GetScalarValue();
                         if (allowReserved != null)
@@ -78,9 +79,9 @@ namespace Microsoft.OpenApi.Reader.V31
                     }
                 },
                 {
-                    "style", (o, n, _) =>
+                    "style", (o, n, _, c) =>
                     {
-                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(n.Context, out var style))
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(c, out var style))
                         {
                             return;
                         }
@@ -88,7 +89,7 @@ namespace Microsoft.OpenApi.Reader.V31
                     }
                 },
                 {
-                    "explode", (o, n, _) =>
+                    "explode", (o, n, _, _) =>
                     {
                         var explode = n.GetScalarValue();
                         if (explode != null)
@@ -98,27 +99,27 @@ namespace Microsoft.OpenApi.Reader.V31
                     }
                 },
                 {
-                    "schema", (o, n, t) =>
+                    "schema", (o, n, t, c) =>
                     {
-                        o.Schema = LoadSchema(n, t);
+                        o.Schema = LoadSchema(n, t, c);
                     }
                 },
                 {
-                    "content", (o, n, t) =>
+                    "content", (o, n, t, c) =>
                     {
-                        o.Content = n.CreateMap(LoadMediaType, t);
+                        o.Content = n.CreateMap(LoadMediaType, t, c);
                     }
                 },
                 {
-                    "examples", (o, n, t) =>
+                    "examples", (o, n, t, c) =>
                     {
-                        o.Examples = n.CreateMap(LoadExample, t);
+                        o.Examples = n.CreateMap(LoadExample, t, c);
                     }
                 },
                 {
-                    "example", (o, n, _) =>
+                    "example", (o, n, _, _) =>
                     {
-                        o.Example = n.CreateAny();
+                        o.Example = n;
                     }
                 },
             };
@@ -126,7 +127,7 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
         private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields = new AnyFieldMap<OpenApiParameter>
@@ -153,24 +154,24 @@ namespace Microsoft.OpenApi.Reader.V31
             }
         };
 
-        public static IOpenApiParameter LoadParameter(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiParameter LoadParameter(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("parameter");
+            var jsonObject = node.CheckMapNode("parameter", context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var parameterReference = new OpenApiParameterReference(reference.Item1, hostDocument, reference.Item2);
-                parameterReference.Reference.SetMetadataFromMapNode(mapNode);
+                parameterReference.Reference.SetMetadataFromJsonObject(jsonObject);
                 return parameterReference;
             }
 
             var parameter = new OpenApiParameter();
 
-            ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields, hostDocument);
-            ProcessAnyFields(mapNode, parameter, _parameterAnyFields);
-            ProcessAnyMapFields(mapNode, parameter, _parameterAnyMapOpenApiExampleFields);
+            ParseMap(jsonObject, parameter, _parameterFixedFields, _parameterPatternFields, hostDocument, context);
+            ProcessAnyFields(parameter, _parameterAnyFields, context);
+            ProcessAnyMapFields(parameter, _parameterAnyMapOpenApiExampleFields, context);
 
             return parameter;
         }

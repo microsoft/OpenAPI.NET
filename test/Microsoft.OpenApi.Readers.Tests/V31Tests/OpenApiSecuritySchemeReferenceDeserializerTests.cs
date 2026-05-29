@@ -27,9 +27,9 @@ public class OpenApiSecuritySchemeReferenceDeserializerTests
             Description = "This is a security scheme description",
         });
         var jsonNode = JsonNode.Parse(json);
-        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+        var parseNode = jsonNode;
 
-        var result = OpenApiV31Deserializer.LoadSecurityScheme(parseNode, hostDocument);
+        var result = OpenApiV31Deserializer.LoadSecurityScheme(parseNode, hostDocument, new ParsingContext(new()));
 
         Assert.NotNull(result);
         var resultReference = Assert.IsType<OpenApiSecuritySchemeReference>(result);
@@ -38,4 +38,5 @@ public class OpenApiSecuritySchemeReferenceDeserializerTests
         Assert.Equal("This is a security scheme reference", resultReference.Description);
         Assert.NotNull(resultReference.Target);
     }
+
 }

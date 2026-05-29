@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -28,10 +28,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var context = new ParsingContext(diagnostic);
 
             var asJsonNode = document.RootNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
+            var node = asJsonNode;
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(
@@ -53,10 +53,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var asJsonNode = document.RootNode.ToJsonNode();
 
-            var node = new MapNode(context, asJsonNode);
+            var node = asJsonNode;
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(
@@ -78,10 +78,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
                 var asJsonNode = document.RootNode.ToJsonNode();
 
-                var node = new MapNode(context, asJsonNode);
+                var node = asJsonNode;
 
                 // Act
-                var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
+                var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(
@@ -113,10 +113,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var context = new ParsingContext(diagnostic);
 
             var asJsonNode = document.RootNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
+            var node = asJsonNode;
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(
@@ -148,10 +148,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var context = new ParsingContext(diagnostic);
 
             var asJsonNode = document.RootNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
+            var node = asJsonNode;
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(
@@ -184,10 +184,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var context = new ParsingContext(diagnostic);
 
             var asJsonNode = document.RootNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
+            var node = asJsonNode;
 
             // Act
-            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new());
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(

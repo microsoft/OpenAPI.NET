@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 using System.Collections.Generic;
@@ -18,11 +20,11 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "title",
-                (o, n, _) => o.Title = n.GetScalarValue()
+                (o, n, _, _) => o.Title = n.GetScalarValue()
             },
             {
                 "multipleOf",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var multipleOf = n.GetScalarValue();
                     if (multipleOf != null)
@@ -33,7 +35,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "maximum",
-                (o, n,_) =>
+                (o, n, _, _) =>
                 {
                     var max = n.GetScalarValue();
                     if (!string.IsNullOrEmpty(max))
@@ -44,11 +46,11 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "exclusiveMaximum",
-                (o, n, _) => o.IsExclusiveMaximum = bool.Parse(n.GetScalarValue())
+                (o, n, _, _) => o.IsExclusiveMaximum = bool.Parse(n.GetScalarValue()!)
             },
             {
                "minimum",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var min = n.GetScalarValue();
                     if (!string.IsNullOrEmpty(min))
@@ -59,11 +61,11 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "exclusiveMinimum",
-                (o, n, _) => o.IsExclusiveMinimum = bool.Parse(n.GetScalarValue())
+                (o, n, _, _) => o.IsExclusiveMinimum = bool.Parse(n.GetScalarValue()!)
             },
             {
                 "maxLength",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var maxLength = n.GetScalarValue();
                     if (maxLength != null)
@@ -74,7 +76,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "minLength",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var minLength = n.GetScalarValue();
                     if (minLength != null)
@@ -85,11 +87,11 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "pattern",
-                (o, n, _) => o.Pattern = n.GetScalarValue()
+                (o, n, _, _) => o.Pattern = n.GetScalarValue()
             },
             {
                 "maxItems",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var maxItems = n.GetScalarValue();
                     if (maxItems != null)
@@ -100,7 +102,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "minItems",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var minItems = n.GetScalarValue();
                     if (minItems != null)
@@ -111,7 +113,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "uniqueItems",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var uniqueItems = n.GetScalarValue();
                     if (uniqueItems != null)
@@ -122,7 +124,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "maxProperties",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var maxProps = n.GetScalarValue();
                     if (maxProps != null)
@@ -133,7 +135,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "minProperties",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var minProps = n.GetScalarValue();
                     if (minProps != null)
@@ -144,15 +146,15 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "required",
-                (o, n, doc) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, p) => n2.GetScalarValue(), doc).Where(s => s != null))
+                (o, n, doc, c) => o.Required = new HashSet<string>(n.CreateSimpleList((n2, _) => n2.GetScalarValue(), doc, c).OfType<string>())
             },
             {
                 "enum",
-                (o, n, _) => o.Enum = n.CreateListOfAny()
+                (o, n, _, c) => o.Enum = n.CreateListOfAny(c)
             },
             {
                 "type",
-                (o, n, _) => {
+                (o, n, _, c) => {
                     var type = n.GetScalarValue()?.ToJsonSchemaType();
                     // so we don't lose the value from nullable
                     if (o.Type.HasValue)
@@ -163,32 +165,32 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "allOf",
-                (o, n, t) => o.AllOf = n.CreateList(LoadSchema, t)
+                (o, n, t, c) => o.AllOf = n.CreateList(LoadSchema, t, c)
             },
             {
                 "oneOf",
-                (o, n, doc) => o.OneOf = n.CreateList(LoadSchema, doc)
+                (o, n, doc, c) => o.OneOf = n.CreateList(LoadSchema, doc, c)
             },
             {
                 "anyOf",
-                (o, n, t) => o.AnyOf = n.CreateList(LoadSchema, t)
+                (o, n, t, c) => o.AnyOf = n.CreateList(LoadSchema, t, c)
             },
             {
                 "not",
-                (o, n, doc) => o.Not = LoadSchema(n, doc)
+                (o, n, doc, c) => o.Not = LoadSchema(n, doc, c)
             },
             {
                 "items",
-                (o, n, doc) => o.Items = LoadSchema(n, doc)
+                (o, n, doc, c) => o.Items = LoadSchema(n, doc, c)
             },
             {
                 "properties",
-                (o, n, t) => o.Properties = n.CreateMap(LoadSchema, t)
+                (o, n, t, c) => o.Properties = n.CreateMap(LoadSchema, t, c)
             },
             {
-                "additionalProperties", (o, n, doc) =>
+                "additionalProperties", (o, n, doc, c) =>
                 {
-                    if (n is ValueNode)
+                    if (n is JsonValue)
                     {
                         var value = n.GetScalarValue();
                         if (value is not null)
@@ -198,25 +200,25 @@ namespace Microsoft.OpenApi.Reader.V3
                     }
                     else
                     {
-                        o.AdditionalProperties = LoadSchema(n, doc);
+                        o.AdditionalProperties = LoadSchema(n, doc, c);
                     }
                 }
             },
             {
                 "description",
-                (o, n, _) => o.Description = n.GetScalarValue()
+                (o, n, _, _) => o.Description = n.GetScalarValue()
             },
             {
                 "format",
-                (o, n, _) => o.Format = n.GetScalarValue()
+                (o, n, _, _) => o.Format = n.GetScalarValue()
             },
             {
                 "default",
-                (o, n, _) => o.Default = n.CreateAny()
+                (o, n, _, _) => o.Default = n
             },
             {
                 "nullable",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     if (bool.TryParse(n.GetScalarValue(), out var parsed) && parsed)
                     {
@@ -229,11 +231,11 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "discriminator",
-                (o, n, doc) => o.Discriminator = LoadDiscriminator(n, doc)
+                (o, n, doc, c) => o.Discriminator = LoadDiscriminator(n, doc, c)
             },
             {
                 "readOnly",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var readOnly = n.GetScalarValue();
                     if (readOnly != null)
@@ -244,7 +246,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "writeOnly",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var writeOnly = n.GetScalarValue();
                     if (writeOnly != null)
@@ -255,19 +257,19 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "xml",
-                (o, n, doc) => o.Xml = LoadXml(n, doc)
+                (o, n, doc, c) => o.Xml = LoadXml(n, doc, c)
             },
             {
                 "externalDocs",
-                (o, n, doc) => o.ExternalDocs = LoadExternalDocs(n, doc)
+                (o, n, doc, c) => o.ExternalDocs = LoadExternalDocs(n, doc, c)
             },
             {
                 "example",
-                (o, n, _) => o.Example = n.CreateAny()
+                (o, n, _, _) => o.Example = n
             },
             {
                 "deprecated",
-                (o, n, t) =>
+                (o, n, _, _) =>
                 {
                     var deprecated = n.GetScalarValue();
                     if (deprecated != null)
@@ -278,20 +280,20 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 OpenApiConstants.PatternPropertiesExtension,
-                (o, n, t) => o.PatternProperties = n.CreateMap(LoadSchema, t)
+                (o, n, t, c) => o.PatternProperties = n.CreateMap(LoadSchema, t, c)
             },
         };
 
         private static readonly PatternFieldMap<OpenApiSchema> _openApiSchemaPatternFields = new()
         {
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
         };
 
-        public static IOpenApiSchema LoadSchema(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiSchema LoadSchema(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
+            var jsonObject = node.CheckMapNode(OpenApiConstants.Schema, context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
 
             if (pointer != null)
             {
@@ -301,10 +303,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             var schema = new OpenApiSchema();
 
-            foreach (var propertyNode in mapNode)
-            {
-                propertyNode.ParseField(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument);
-            }
+            ParseMap(jsonObject, schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context);
 
             if (schema.Extensions is not null && schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
             {

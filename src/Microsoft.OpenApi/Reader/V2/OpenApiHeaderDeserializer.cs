@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 using System.Globalization;
@@ -16,11 +18,11 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             {
                 "description",
-                (o, n, _) => o.Description = n.GetScalarValue()
+                (o, n, _, _) => o.Description = n.GetScalarValue()
             },
             {
                 "type",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var type = n.GetScalarValue();
                     if (type != null)
@@ -31,15 +33,15 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "format",
-                (o, n, _) => GetOrCreateSchema(o).Format = n.GetScalarValue()
+                (o, n, _, _) => GetOrCreateSchema(o).Format = n.GetScalarValue()
             },
             {
                 "items",
-                (o, n, doc) => GetOrCreateSchema(o).Items = LoadSchema(n, doc)
+                (o, n, doc, c) => GetOrCreateSchema(o).Items = LoadSchema(n, doc, c)
             },
             {
                 "collectionFormat",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var collectionFormat = n.GetScalarValue();
                     if (collectionFormat != null)
@@ -50,11 +52,11 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "default",
-                (o, n, _) => GetOrCreateSchema(o).Default = n.CreateAny()
+                (o, n, _, _) => GetOrCreateSchema(o).Default = n
             },
             {
                 "maximum",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var max = n.GetScalarValue();
                     if (!string.IsNullOrEmpty(max))
@@ -65,11 +67,11 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "exclusiveMaximum",
-                (o, n, _) => GetOrCreateSchema(o).IsExclusiveMaximum = bool.Parse(n.GetScalarValue())
+                (o, n, _, _) => GetOrCreateSchema(o).IsExclusiveMaximum = bool.Parse(n.GetScalarValue()!)
             },
             {
                 "minimum",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var min = n.GetScalarValue();
                     if (!string.IsNullOrEmpty(min))
@@ -80,11 +82,11 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "exclusiveMinimum",
-                (o, n, _) => GetOrCreateSchema(o).IsExclusiveMinimum = bool.Parse(n.GetScalarValue())
+                (o, n, _, _) => GetOrCreateSchema(o).IsExclusiveMinimum = bool.Parse(n.GetScalarValue()!)
             },
             {
                 "maxLength",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var maxLength = n.GetScalarValue();
                     if (maxLength != null)
@@ -95,7 +97,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "minLength",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var minLength = n.GetScalarValue();
                     if (minLength != null)
@@ -106,11 +108,11 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "pattern",
-                (o, n, _) => GetOrCreateSchema(o).Pattern = n.GetScalarValue()
+                (o, n, _, _) => GetOrCreateSchema(o).Pattern = n.GetScalarValue()
             },
             {
                 "maxItems",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var maxItems = n.GetScalarValue();
                     if (maxItems != null)
@@ -121,7 +123,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "minItems",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var minItems = n.GetScalarValue();
                     if (minItems != null)
@@ -132,7 +134,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "uniqueItems",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var uniqueItems = n.GetScalarValue();
                     if (uniqueItems != null)
@@ -143,7 +145,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "multipleOf",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var multipleOf = n.GetScalarValue();
                     if (multipleOf != null)
@@ -154,13 +156,13 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "enum",
-                (o, n, _) => GetOrCreateSchema(o).Enum = n.CreateListOfAny()
+                (o, n, _, c) => GetOrCreateSchema(o).Enum = n.CreateListOfAny(c)
             }
         };
 
         private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new()
         {
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
         };
 
         private static OpenApiSchema GetOrCreateSchema(OpenApiHeader p)
@@ -171,21 +173,18 @@ namespace Microsoft.OpenApi.Reader.V2
             };
         }
 
-        public static IOpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiHeader LoadHeader(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("header");
+            var jsonObject = node.CheckMapNode("header", context);
             var header = new OpenApiHeader();
             
-            foreach (var property in mapNode)
-            {
-                property.ParseField(header, _headerFixedFields, _headerPatternFields, hostDocument);
-            }
+            ParseMap(jsonObject, header, _headerFixedFields, _headerPatternFields, hostDocument, context);
 
-            var schema = node.Context.GetFromTempStorage<IOpenApiSchema>("schema");
+            var schema = context.GetFromTempStorage<IOpenApiSchema>("schema");
             if (schema != null)
             {
                 header.Schema = schema;
-                node.Context.SetTempStorage("schema", null);
+                context.SetTempStorage("schema", null);
             }            
 
             return header;

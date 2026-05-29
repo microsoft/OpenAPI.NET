@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -16,15 +18,15 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly PatternFieldMap<OpenApiCallback> _callbackPatternFields =
             new()
             {
-                {s => !s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, t) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n, t))},
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
+                {s => !s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, t, c) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n, t, c))},
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))},
             };
 
-        public static IOpenApiCallback LoadCallback(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiCallback LoadCallback(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("callback");
+            var jsonObject = node.CheckMapNode("callback", context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             
             if (pointer != null)
             {
@@ -34,7 +36,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             var domainObject = new OpenApiCallback();
 
-            ParseMap(mapNode, domainObject, _callbackFixedFields, _callbackPatternFields, hostDocument);
+            ParseMap(jsonObject, domainObject, _callbackFixedFields, _callbackPatternFields, hostDocument, context);
 
             return domainObject;
         }

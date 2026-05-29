@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Text.Json.Nodes;
 using System.IO;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
@@ -19,14 +20,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseHeaderWithDefaultShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerWithDefault.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var header = OpenApiV2Deserializer.LoadHeader(node, new());
+            var header = OpenApiV2Deserializer.LoadHeader(node, new(), new ParsingContext(new()));
 
             // Assert
             header.Should().BeEquivalentTo(
@@ -48,14 +49,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseHeaderWithEnumShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerWithEnum.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var header = OpenApiV2Deserializer.LoadHeader(node, new());
+            var header = OpenApiV2Deserializer.LoadHeader(node, new(), new ParsingContext(new()));
 
             // Assert
             header.Should().BeEquivalentTo(
