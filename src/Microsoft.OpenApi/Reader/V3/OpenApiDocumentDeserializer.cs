@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 using System.Collections.Generic;
@@ -16,34 +18,34 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
-                "openapi", (_, _, _) =>
+                "openapi", (_, _, _, _) =>
                 {
                 } /* Version is valid field but we already parsed it */
             },
-            {"info", (o, n, _) => o.Info = LoadInfo(n, o)},
-            {"servers", (o, n, _) => o.Servers = n.CreateList(LoadServer, o)},
-            {"paths", (o, n, _) => o.Paths = LoadPaths(n, o)},
-            {"components", (o, n, _) => o.Components = LoadComponents(n, o)},
-            {"tags", (o, n, _) => { if (n.CreateList(LoadTag, o) is {Count:> 0} tags) {o.Tags = new HashSet<OpenApiTag>(tags, OpenApiTagComparer.Instance); } } },
-            {"externalDocs", (o, n, _) => o.ExternalDocs = LoadExternalDocs(n, o)},
-            {"security", (o, n, _) => o.Security = n.CreateList(LoadSecurityRequirement, o)}
+            {"info", (o, n, _, c) => o.Info = LoadInfo(n, o, c)},
+            {"servers", (o, n, _, c) => o.Servers = n.CreateList(LoadServer, o, c)},
+            {"paths", (o, n, _, c) => o.Paths = LoadPaths(n, o, c)},
+            {"components", (o, n, _, c) => o.Components = LoadComponents(n, o, c)},
+            {"tags", (o, n, _, c) => { if (n.CreateList(LoadTag, o, c) is {Count:> 0} tags) {o.Tags = new HashSet<OpenApiTag>(tags, OpenApiTagComparer.Instance); } } },
+            {"externalDocs", (o, n, _, c) => o.ExternalDocs = LoadExternalDocs(n, o, c)},
+            {"security", (o, n, _, c) => o.Security = n.CreateList(LoadSecurityRequirement, o, c)}
         };
 
         private static readonly PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
         };
 
-        public static OpenApiDocument LoadOpenApi(RootNode rootNode, Uri location)
+        public static OpenApiDocument LoadOpenApi(JsonNode jsonNode, Uri location, ParsingContext context)
         {
             var openApiDoc = new OpenApiDocument
             {
                 BaseUri = location
             };
-            var openApiNode = rootNode.GetMap();
+            var openApiNode = jsonNode.CheckMapNode("OpenAPI", context);
 
-            ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields, openApiDoc);
+            ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields, openApiDoc, context);
 
             // Register components
             openApiDoc.Workspace?.RegisterComponents(openApiDoc);

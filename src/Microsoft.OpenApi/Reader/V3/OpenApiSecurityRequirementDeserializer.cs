@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System.Linq;
 
@@ -11,17 +13,17 @@ namespace Microsoft.OpenApi.Reader.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiSecurityRequirement LoadSecurityRequirement(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("security");
+            var jsonObject = node.CheckMapNode("security", context);
 
             var securityRequirement = new OpenApiSecurityRequirement();
 
-            foreach (var property in mapNode)
+            foreach (var property in jsonObject)
             {
-                var scheme = LoadSecuritySchemeByReference(hostDocument, property.Name);
+                var scheme = LoadSecuritySchemeByReference(hostDocument, property.Key);
 
-                var scopes = property.Value.CreateSimpleList((n2, p) => n2.GetScalarValue(), hostDocument)
+                var scopes = property.Value.CreateSimpleList((n2, _) => n2.GetScalarValue(), hostDocument, context)
                     .OfType<string>()
                     .ToList();
 
@@ -31,8 +33,8 @@ namespace Microsoft.OpenApi.Reader.V3
                 }
                 else
                 {
-                    mapNode.Context.Diagnostic.Errors.Add(
-                        new(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
+                    context.Diagnostic.Errors.Add(
+                        new(context.GetLocation(), $"Scheme {property.Key} is not found"));
                 }
             }
 

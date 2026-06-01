@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -34,10 +34,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var context = new ParsingContext(diagnostic);
 
             var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
+            var node = asJsonNode;
 
             // Act
-            var schema = OpenApiV3Deserializer.LoadSchema(node, new());
+            var schema = OpenApiV3Deserializer.LoadSchema(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
@@ -158,10 +158,10 @@ get:
                 var context = new ParsingContext(diagnostic);
 
                 var asJsonNode = yamlNode.ToJsonNode();
-                var node = new MapNode(context, asJsonNode);
+                var node = asJsonNode;
 
                 // Act
-                var schema = OpenApiV3Deserializer.LoadSchema(node, new());
+                var schema = OpenApiV3Deserializer.LoadSchema(node, new(), new ParsingContext(new()));
 
                 // Assert
                 Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
@@ -190,10 +190,10 @@ get:
             var context = new ParsingContext(diagnostic);
 
             var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
+            var node = asJsonNode;
 
             // Act
-            var schema = OpenApiV3Deserializer.LoadSchema(node, new());
+            var schema = OpenApiV3Deserializer.LoadSchema(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);

@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V31
 {
@@ -12,17 +13,17 @@ namespace Microsoft.OpenApi.Reader.V31
 
         private static readonly PatternFieldMap<OpenApiPaths> _pathsPatternFields = new()
         {
-            {s => s.StartsWith("/", StringComparison.OrdinalIgnoreCase), (o, k, n, t) => o.Add(k, LoadPathItem(n, t))},
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith("/", StringComparison.OrdinalIgnoreCase), (o, k, n, t, c) => o.Add(k, LoadPathItem(n, t, c))},
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
         };
 
-        public static OpenApiPaths LoadPaths(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiPaths LoadPaths(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("Paths");
+            var jsonObject = node.CheckMapNode("Paths", context);
 
             var domainObject = new OpenApiPaths();
 
-            ParseMap(mapNode, domainObject, _pathsFixedFields, _pathsPatternFields, hostDocument);
+            ParseMap(jsonObject, domainObject, _pathsFixedFields, _pathsPatternFields, hostDocument, context);
 
             return domainObject;
         }

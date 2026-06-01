@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -15,11 +17,11 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "description",
-                (o, n, _) => o.Description = n.GetScalarValue()
+                (o, n, _, _) => o.Description = n.GetScalarValue()
             },
             {
                 "required",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var required = n.GetScalarValue();
                     if (required != null)
@@ -30,7 +32,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "deprecated",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var deprecated = n.GetScalarValue();
                     if (deprecated != null)
@@ -41,7 +43,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "allowEmptyValue",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var allowEmptyVal = n.GetScalarValue();
                     if (allowEmptyVal != null)
@@ -52,7 +54,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "allowReserved",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var allowReserved = n.GetScalarValue();
                     if (allowReserved != null)
@@ -63,9 +65,9 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "style",
-                (o, n, _) => 
+                (o, n, _, c) => 
                 {
-                    if(!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(n.Context, out var style))
+                    if(!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(c, out var style))
                     {
                         return;
                     }
@@ -74,7 +76,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "explode",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var explode = n.GetScalarValue();
                     if (explode != null)
@@ -85,34 +87,34 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "schema",
-                (o, n, t) => o.Schema = LoadSchema(n, t)
+                (o, n, t, c) => o.Schema = LoadSchema(n, t, c)
             },
             {
-                "content", (o, n, t) =>
+                "content", (o, n, t, c) =>
                 {
-                    o.Content = n.CreateMap(LoadMediaType, t);
+                    o.Content = n.CreateMap(LoadMediaType, t, c);
                 }
             },
             {
                 "examples",
-                (o, n, t) => o.Examples = n.CreateMap(LoadExample, t)
+                (o, n, t, c) => o.Examples = n.CreateMap(LoadExample, t, c)
             },
             {
                 "example",
-                (o, n, _) => o.Example = n.CreateAny()
+                (o, n, _, _) => o.Example = n
             },
         };
 
         private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new()
         {
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
         };
 
-        public static IOpenApiHeader LoadHeader(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiHeader LoadHeader(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("header");
+            var jsonObject = node.CheckMapNode("header", context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
@@ -120,10 +122,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
 
             var header = new OpenApiHeader();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(header, _headerFixedFields, _headerPatternFields, hostDocument);
-            }
+            ParseMap(jsonObject, header, _headerFixedFields, _headerPatternFields, hostDocument, context);
 
             return header;
         }

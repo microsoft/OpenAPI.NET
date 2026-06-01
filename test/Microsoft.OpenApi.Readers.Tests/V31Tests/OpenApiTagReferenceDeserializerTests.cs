@@ -29,9 +29,9 @@ public class OpenApiTagReferenceDeserializerTests
             Description = "This is a tag description",
         });
         var jsonNode = JsonNode.Parse(json);
-        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+        var parseNode = jsonNode;
 
-        var result = OpenApiV31Deserializer.LoadOperation(parseNode, hostDocument);
+        var result = OpenApiV31Deserializer.LoadOperation(parseNode, hostDocument, new ParsingContext(new()));
         // this diverges from the other unit tests because Tag References are implemented
         // through the reference infrastructure for convenience, but the behave quite differently
 

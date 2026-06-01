@@ -7,11 +7,11 @@ using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Reader;
-using Microsoft.OpenApi.Reader.V3;
+using Microsoft.OpenApi.Reader.V31;
 using Microsoft.OpenApi.Tests;
 using Xunit;
 
-namespace Microsoft.OpenApi.Readers.Tests.V3Tests
+namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
     [Collection("DefaultSettings")]
     public class OpenApiMediaTypeTests
@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseMediaTypeWithExampleShouldSucceed()
         {
             // Act
-            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExample.yaml"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
 
             // Assert
             mediaType.Should().BeEquivalentTo(
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseMediaTypeWithExamplesShouldSucceed()
         {
             // Act
-            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
 
             // Assert
             mediaType.Should().BeEquivalentTo(
@@ -109,11 +109,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             }
 
             // Act
-            var mediaType = OpenApiV3Deserializer.LoadMediaType(node, new(), new ParsingContext(new()));
-            var serialized = await mediaType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var mediaType = OpenApiV31Deserializer.LoadMediaType(node, new(), new ParsingContext(new()));
+            var serialized = await mediaType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), serialized.MakeLineBreaksEnvironmentNeutral());
         }
+
     }
 }

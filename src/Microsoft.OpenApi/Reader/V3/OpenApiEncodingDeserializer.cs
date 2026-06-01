@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -15,17 +17,17 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "contentType",
-                (o, n, _) => o.ContentType = n.GetScalarValue()
+                (o, n, _, _) => o.ContentType = n.GetScalarValue()
             },
             {
                 "headers",
-                (o, n, t) => o.Headers = n.CreateMap(LoadHeader, t)
+                (o, n, t, c) => o.Headers = n.CreateMap(LoadHeader, t, c)
             },
             {
                 "style",
-                (o, n, _) => 
+                (o, n, _, c) => 
                 {
-                    if(!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(n.Context, out var style))
+                    if(!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterStyle>(c, out var style))
                     {
                         return;
                     }
@@ -34,7 +36,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "explode",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var explode = n.GetScalarValue();
                     if (explode != null)
@@ -45,7 +47,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "allowReserved", 
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var allowReserved = n.GetScalarValue();
                     if (allowReserved != null)
@@ -59,18 +61,15 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly PatternFieldMap<OpenApiEncoding> _encodingPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static OpenApiEncoding LoadEncoding(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiEncoding LoadEncoding(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("encoding");
+            var jsonObject = node.CheckMapNode("encoding", context);
 
             var encoding = new OpenApiEncoding();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(encoding, _encodingFixedFields, _encodingPatternFields, hostDocument);
-            }
+            ParseMap(jsonObject, encoding, _encodingFixedFields, _encodingPatternFields, hostDocument, context);
 
             return encoding;
         }

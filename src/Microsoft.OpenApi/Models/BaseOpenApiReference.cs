@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -287,10 +287,9 @@ namespace Microsoft.OpenApi
         /// <param name="key">The key of the property</param>
         /// <returns>The property value</returns>
         protected internal static string? GetPropertyValueFromNode(JsonObject jsonObject, string key) =>
-        jsonObject.TryGetPropertyValue(key, out var valueNode) && valueNode is JsonValue valueCast && valueCast.TryGetValue<string>(out var strValue) ? strValue : null;
-        internal virtual void SetMetadataFromMapNode(MapNode mapNode)
+        jsonObject.TryGetPropertyValue(key, out var jsonNode) && jsonNode is JsonValue valueCast && valueCast.TryGetValue<string>(out var strValue) ? strValue : null;
+        internal virtual void SetMetadataFromJsonObject(JsonObject jsonObject)
         {
-            if (mapNode.JsonNode is not JsonObject jsonObject) return;
             SetAdditional31MetadataFromMapNode(jsonObject);
         }
 

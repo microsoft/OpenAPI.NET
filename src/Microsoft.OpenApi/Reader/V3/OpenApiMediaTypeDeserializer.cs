@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -16,26 +18,26 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     OpenApiConstants.Schema,
-                    (o, n, t) => o.Schema = LoadSchema(n, t)
+                    (o, n, t, c) => o.Schema = LoadSchema(n, t, c)
                 },
                 {
                     OpenApiConstants.Examples,
-                    (o, n, t) => o.Examples = n.CreateMap(LoadExample, t)
+                    (o, n, t, c) => o.Examples = n.CreateMap(LoadExample, t, c)
                 },
                 {
                     OpenApiConstants.Example,
-                    (o, n, _) => o.Example = n.CreateAny()
+                    (o, n, _, _) => o.Example = n
                 },
                 {
                     OpenApiConstants.Encoding,
-                    (o, n, t) => o.Encoding = n.CreateMap(LoadEncoding, t)
+                    (o, n, t, c) => o.Encoding = n.CreateMap(LoadEncoding, t, c)
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiMediaType> _mediaTypePatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields = new()
@@ -62,15 +64,15 @@ namespace Microsoft.OpenApi.Reader.V3
             }
         };
 
-        public static OpenApiMediaType LoadMediaType(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiMediaType LoadMediaType(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode(OpenApiConstants.Content);
+            var jsonObject = node.CheckMapNode(OpenApiConstants.Content, context);
 
             var mediaType = new OpenApiMediaType();
-            ParseMap(mapNode, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields, hostDocument);
+            ParseMap(jsonObject, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields, hostDocument, context);
 
-            ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
-            ProcessAnyMapFields(mapNode, mediaType, _mediaTypeAnyMapOpenApiExampleFields);
+            ProcessAnyFields(mediaType, _mediaTypeAnyFields, context);
+            ProcessAnyMapFields(mediaType, _mediaTypeAnyMapOpenApiExampleFields, context);
 
             return mediaType;
         }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -14,39 +14,26 @@ namespace Microsoft.OpenApi.Reader.V2
     internal static partial class OpenApiV2Deserializer
     {
         private static void ParseMap<T>(
-            MapNode? mapNode,
+            JsonObject? jsonObject,
             T domainObject,
             FixedFieldMap<T> fixedFieldMap,
             PatternFieldMap<T> patternFieldMap,
-            OpenApiDocument doc)
+            OpenApiDocument doc,
+            ParsingContext context)
         {
-            if (mapNode == null)
-            {
-                return;
-            }
-
-            var mapNodeFields = mapNode.ToDictionary(static x => x.Name, static x => x);
-            var allFields = fixedFieldMap.Keys.Union(mapNodeFields.Keys);
-            foreach (var propertyNodeName in allFields)
-            {
-                if (!mapNodeFields.TryGetValue(propertyNodeName, out var propertyNode))
-                {
-                    continue;
-                }
-                propertyNode.ParseField(domainObject, fixedFieldMap, patternFieldMap, doc);
-            }
+            jsonObject.ParseMap(domainObject, fixedFieldMap, patternFieldMap, doc, context);
         }
 
         private static void ProcessAnyFields<T>(
-            MapNode mapNode,
             T domainObject,
-            AnyFieldMap<T> anyFieldMap)
+            AnyFieldMap<T> anyFieldMap,
+            ParsingContext context)
         {
             foreach (var anyFieldName in anyFieldMap.Keys.ToList())
             {
                 try
                 {
-                    mapNode.Context.StartObject(anyFieldName);
+                    context.StartObject(anyFieldName);
                     var anyFieldValue = anyFieldMap[anyFieldName].PropertyGetter(domainObject);
 
                     if (anyFieldValue == null)
@@ -60,40 +47,40 @@ namespace Microsoft.OpenApi.Reader.V2
                 }
                 catch (OpenApiException exception)
                 {
-                    exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new(exception));
+                    exception.Pointer = context.GetLocation();
+                    context.Diagnostic.Errors.Add(new(exception));
                 }
                 finally
                 {
-                    mapNode.Context.EndObject();
+                    context.EndObject();
                 }
             }
         }
 
-        public static JsonNode LoadAny(ParseNode node, OpenApiDocument hostDocument)
+        public static JsonNode LoadAny(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            return node.CreateAny();
+            return node;
         }
 
-        private static IOpenApiExtension LoadExtension(string name, ParseNode node)
+        private static IOpenApiExtension LoadExtension(string name, JsonNode node, ParsingContext context)
         {
-            if (node.Context.ExtensionParsers is not null && node.Context.ExtensionParsers.TryGetValue(name, out var parser))
+            if (context.ExtensionParsers is not null && context.ExtensionParsers.TryGetValue(name, out var parser))
             {
                 try
                 {
-                    return parser(node.CreateAny(), OpenApiSpecVersion.OpenApi2_0);
+                    return parser(node, OpenApiSpecVersion.OpenApi2_0);
                 }
                 catch (OpenApiException ex)
                 {
-                    ex.Pointer = node.Context.GetLocation();
-                    node.Context.Diagnostic.Errors.Add(new(ex));
+                    ex.Pointer = context.GetLocation();
+                    context.Diagnostic.Errors.Add(new(ex));
                 }
             }
 
-            return new JsonNodeExtension(node.CreateAny());
+            return new JsonNodeExtension(node);
         }
 
-        private static string? LoadString(ParseNode node)
+        private static string? LoadString(JsonNode node)
         {
             return node.GetScalarValue();
         }

@@ -23,9 +23,9 @@ public class OpenApiCallbackReferenceDeserializerTests
             // Optionally add a PathItem or similar here if needed
         });
         var jsonNode = JsonNode.Parse(json);
-        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+        var parseNode = jsonNode;
 
-        var result = OpenApiV31Deserializer.LoadCallback(parseNode, hostDocument);
+        var result = OpenApiV31Deserializer.LoadCallback(parseNode, hostDocument, new ParsingContext(new()));
 
         Assert.NotNull(result);
         var resultReference = Assert.IsType<OpenApiCallbackReference>(result);

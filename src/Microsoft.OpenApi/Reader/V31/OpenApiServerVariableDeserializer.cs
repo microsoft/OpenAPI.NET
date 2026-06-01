@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
+
+using System.Text.Json.Nodes;
 
 using System;
 using System.Linq;
@@ -16,19 +18,19 @@ namespace Microsoft.OpenApi.Reader.V31
             new()
             {
                 {
-                    "enum", (o, n, doc) =>
+                    "enum", (o, n, doc, c) =>
                     {
-                        o.Enum = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc).OfType<string>().ToList();
+                        o.Enum = n.CreateSimpleList((s, _) => s.GetScalarValue(), doc, c).OfType<string>().ToList();
                     }
                 },
                 {
-                    "default", (o, n, _) =>
+                    "default", (o, n, _, _) =>
                     {
                         o.Default = n.GetScalarValue();
                     }
                 },
                 {
-                    "description", (o, n, _) =>
+                    "description", (o, n, _, _) =>
                     {
                         o.Description = n.GetScalarValue();
                     }
@@ -38,16 +40,16 @@ namespace Microsoft.OpenApi.Reader.V31
         private static readonly PatternFieldMap<OpenApiServerVariable> _serverVariablePatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static OpenApiServerVariable LoadServerVariable(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiServerVariable LoadServerVariable(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("serverVariable");
+            var jsonObject = node.CheckMapNode("serverVariable", context);
 
             var serverVariable = new OpenApiServerVariable();
 
-            ParseMap(mapNode, serverVariable, _serverVariableFixedFields, _serverVariablePatternFields, hostDocument);
+            ParseMap(jsonObject, serverVariable, _serverVariableFixedFields, _serverVariablePatternFields, hostDocument, context);
 
             return serverVariable;
         }
