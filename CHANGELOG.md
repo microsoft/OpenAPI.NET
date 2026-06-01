@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.5.5...v3.6.0) (2026-06-01)
+
+
+### Features
+
+* **reader:** remove ParseNode infrastructure ([9b4f45b](https://github.com/microsoft/OpenAPI.NET/commit/9b4f45bee83106e2e5309c9583220f690c66c716))
+
 ## [3.5.5](https://github.com/microsoft/OpenAPI.NET/compare/v3.5.4...v3.5.5) (2026-05-28)
 
 
