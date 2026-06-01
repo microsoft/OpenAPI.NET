@@ -222,6 +222,72 @@ namespace Microsoft.OpenApi.Hidi.Tests
         }
 
         [Fact]
+        public void ThrowsInvalidOperationExceptionWhenRequestUrlsAreCombinedWithOtherFilters()
+        {
+            var requestUrls = new Dictionary<string, List<string>>
+            {
+                ["/users"] = ["GET"]
+            };
+
+            var message = Assert.Throws<InvalidOperationException>(() =>
+                OpenApiFilterService.CreatePredicate("users.user.ListUser", null, requestUrls, _openApiDocumentMock)).Message;
+
+            Assert.Equal("Cannot filter by Postman collection and either operationIds and tags at the same time.", message);
+        }
+
+        [Fact]
+        public void ThrowsWhenPredicateDoesNotMatchAnyPath()
+        {
+            var source = new OpenApiDocument
+            {
+                Info = new() { Title = "Test", Version = "1.0" },
+                Paths = new()
+                {
+                    ["/test"] = new OpenApiPathItem
+                    {
+                        Operations = new()
+                        {
+                            [HttpMethod.Get] = new OpenApiOperation { OperationId = "getTest" }
+                        }
+                    }
+                }
+            };
+
+            var subset = OpenApiFilterService.CreateFilteredDocument(source, static (_, _, _) => false);
+
+            Assert.Empty(subset.Paths);
+        }
+
+        [Fact]
+        public void CreatePredicateMatchesAbsoluteUrlsWhenSourceHasNoServers()
+        {
+            var source = new OpenApiDocument
+            {
+                Info = new() { Title = "Test", Version = "v1" },
+                Paths = new()
+                {
+                    ["/users"] = new OpenApiPathItem
+                    {
+                        Operations = new()
+                        {
+                            [HttpMethod.Get] = new OpenApiOperation { OperationId = "listUsers" }
+                        }
+                    }
+                }
+            };
+            var requestUrls = new Dictionary<string, List<string>>
+            {
+                ["https://graph.contoso.com/users"] = ["GET"]
+            };
+
+            var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: source);
+            var subset = OpenApiFilterService.CreateFilteredDocument(source, predicate);
+
+            Assert.Single(subset.Paths);
+            Assert.True(subset.Paths.ContainsKey("/users"));
+        }
+
+        [Fact]
         public async Task CopiesOverAllReferencedComponentsToTheSubsetDocumentCorrectly()
         {
             // Arrange
