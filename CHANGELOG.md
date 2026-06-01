@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.8.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.7.6...v2.8.0) (2026-06-01)
+
+
+### Features
+
+* **reader:** remove ParseNode infrastructure ([d7c6a9d](https://github.com/microsoft/OpenAPI.NET/commit/d7c6a9dbe2da8cccac2a3dcbc5277bf0f20b0aa9))
+
+
+### Bug Fixes
+
+* **reader:** adapt no-parse-node backport for v2 ([ddd2539](https://github.com/microsoft/OpenAPI.NET/commit/ddd253990f9741bcc3b5e649c71c8908728694c2))
+
 ## [2.7.6](https://github.com/microsoft/OpenAPI.NET/compare/v2.7.5...v2.7.6) (2026-05-28)
 
 
