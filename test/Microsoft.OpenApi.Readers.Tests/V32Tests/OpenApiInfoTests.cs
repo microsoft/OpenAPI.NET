@@ -24,10 +24,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             var context = new ParsingContext(diagnostic);
 
             var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
+            var node = asJsonNode;
 
             // Act
-            var openApiInfo = OpenApiV32Deserializer.LoadInfo(node, new());
+            var openApiInfo = OpenApiV32Deserializer.LoadInfo(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(

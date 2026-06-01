@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V32
 {
@@ -13,14 +14,14 @@ namespace Microsoft.OpenApi.Reader.V32
             {
                 // $ref
                 {
-                    "description", (o, n, _) =>
+                    "description", (o, n, _, _) =>
                     {
                         o.Description = n.GetScalarValue();
                     }
                 },
                 {
                     "url",
-                    (o, n, t) =>
+                    (o, n, _, _) =>
                     {
                         var url = n.GetScalarValue();
                         if (url != null)
@@ -35,16 +36,16 @@ namespace Microsoft.OpenApi.Reader.V32
                 new()
                 {
 
-                    {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+                    {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
                     };
 
-        public static OpenApiExternalDocs LoadExternalDocs(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiExternalDocs LoadExternalDocs(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("externalDocs");
+            var jsonObject = node.CheckMapNode("externalDocs", context);
 
             var externalDocs = new OpenApiExternalDocs();
 
-            ParseMap(mapNode, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields, hostDocument);
+            ParseMap(jsonObject, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields, hostDocument, context);
 
             return externalDocs;
         }

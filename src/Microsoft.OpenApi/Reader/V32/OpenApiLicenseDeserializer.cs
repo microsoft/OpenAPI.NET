@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V32
 {
@@ -11,20 +12,20 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly FixedFieldMap<OpenApiLicense> _licenseFixedFields = new()
         {
             {
-                "name", (o, n, _) =>
+                "name", (o, n, _, _) =>
                 {
                     o.Name = n.GetScalarValue();
                 }
             },
             {
-                "identifier", (o, n, _) =>
+                "identifier", (o, n, _, _) =>
                 {
                     o.Identifier = n.GetScalarValue();
                 }
             },
             {
                 "url",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var url = n.GetScalarValue();
                     if (url != null)
@@ -37,16 +38,16 @@ namespace Microsoft.OpenApi.Reader.V32
 
         private static readonly PatternFieldMap<OpenApiLicense> _licensePatternFields = new()
         {
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
         };
 
-        internal static OpenApiLicense LoadLicense(ParseNode node, OpenApiDocument hostDocument)
+        internal static OpenApiLicense LoadLicense(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("License");
+            var jsonObject = node.CheckMapNode("License", context);
 
             var license = new OpenApiLicense();
 
-            ParseMap(mapNode, license, _licenseFixedFields, _licensePatternFields, hostDocument);
+            ParseMap(jsonObject, license, _licenseFixedFields, _licensePatternFields, hostDocument, context);
 
             return license;
         }

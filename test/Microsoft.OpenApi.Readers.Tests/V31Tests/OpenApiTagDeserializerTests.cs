@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V31;
@@ -36,9 +36,9 @@ public class OpenApiTagDeserializerTests
         });
 
         var jsonNode = JsonNode.Parse(json);
-        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+        var parseNode = jsonNode;
 
-        var result = OpenApiV31Deserializer.LoadTag(parseNode, hostDocument);
+        var result = OpenApiV31Deserializer.LoadTag(parseNode, hostDocument, new ParsingContext(new()));
 
         Assert.NotNull(result);
         Assert.Equal("store", result.Name);
@@ -69,9 +69,9 @@ public class OpenApiTagDeserializerTests
 
         var hostDocument = new OpenApiDocument();
         var jsonNode = JsonNode.Parse(json);
-        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+        var parseNode = jsonNode;
 
-        var result = OpenApiV31Deserializer.LoadTag(parseNode, hostDocument);
+        var result = OpenApiV31Deserializer.LoadTag(parseNode, hostDocument, new ParsingContext(new()));
 
         Assert.NotNull(result);
         Assert.Equal("pets", result.Name);

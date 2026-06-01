@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -16,9 +18,9 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 {
                     "type",
-                    (o, n, _) => 
+                    (o, n, _, c) => 
                     {
-                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<SecuritySchemeType>(n.Context, out var type))
+                        if (!n.GetScalarValue().TryGetEnumFromDisplayName<SecuritySchemeType>(c, out var type))
                         {
                             return;
                         }
@@ -27,17 +29,17 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "description",
-                    (o, n, _) => o.Description = n.GetScalarValue()
+                    (o, n, _, _) => o.Description = n.GetScalarValue()
                 },
                 {
                     "name",
-                    (o, n, _) => o.Name = n.GetScalarValue()
+                    (o, n, _, _) => o.Name = n.GetScalarValue()
                 },
                 {
                     "in",
-                    (o, n, _) => 
+                    (o, n, _, c) => 
                     {
-                        if(!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(n.Context, out var _in))
+                        if(!n.GetScalarValue().TryGetEnumFromDisplayName<ParameterLocation>(c, out var _in))
                         {
                             return;
                         }
@@ -46,15 +48,15 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "scheme",
-                    (o, n, _) => o.Scheme = n.GetScalarValue()
+                    (o, n, _, _) => o.Scheme = n.GetScalarValue()
                 },
                 {
                     "bearerFormat",
-                    (o, n, _) => o.BearerFormat = n.GetScalarValue()
+                    (o, n, _, _) => o.BearerFormat = n.GetScalarValue()
                 },
                 {
                     "openIdConnectUrl",
-                    (o, n, _) =>
+                    (o, n, _, _) =>
                     {
                         var connectUrl = n.GetScalarValue();
                         if (connectUrl != null)
@@ -65,14 +67,14 @@ namespace Microsoft.OpenApi.Reader.V3
                 },
                 {
                     "flows",
-                    (o, n, t) => o.Flows = LoadOAuthFlows(n, t)
+                    (o, n, t, c) => o.Flows = LoadOAuthFlows(n, t, c)
                 }
             };
 
         private static readonly PatternFieldMap<OpenApiSecurityScheme> _securitySchemePatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => 
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => 
                 {
                     if (p.Equals("x-oai-deprecated", StringComparison.OrdinalIgnoreCase))
                     {
@@ -84,15 +86,15 @@ namespace Microsoft.OpenApi.Reader.V3
                     }
                     else
                     {
-                        o.AddExtension(p, LoadExtension(p,n));
+                        o.AddExtension(p, LoadExtension(p, n, c));
                     }
                 }}
             };
 
-        public static IOpenApiSecurityScheme LoadSecurityScheme(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiSecurityScheme LoadSecurityScheme(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("securityScheme");
-            var pointer = mapNode.GetReferencePointer();
+            var jsonObject = node.CheckMapNode("securityScheme", context);
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
@@ -100,10 +102,7 @@ namespace Microsoft.OpenApi.Reader.V3
             }
 
             var securityScheme = new OpenApiSecurityScheme();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields, hostDocument);
-            }
+            ParseMap(jsonObject, securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields, hostDocument, context);
 
             return securityScheme;
         }

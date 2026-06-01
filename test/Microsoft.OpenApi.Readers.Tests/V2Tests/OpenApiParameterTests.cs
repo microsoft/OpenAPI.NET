@@ -1,4 +1,5 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+using System.Text.Json.Nodes;
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
@@ -20,14 +21,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseBodyParameterShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "bodyParameter.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new(), new ParsingContext(new()));
 
             // Assert
             // Body parameter is currently not translated via LoadParameter.
@@ -39,14 +40,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParsePathParameterShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathParameter.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(
@@ -68,14 +69,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseQueryParameterShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameter.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(
@@ -103,14 +104,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseParameterWithNullLocationShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNullLocation.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(
@@ -132,14 +133,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseParameterWithNoLocationShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNoLocation.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(
@@ -161,14 +162,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseParameterWithNoSchemaShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNoSchema.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(
@@ -186,14 +187,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseParameterWithUnknownLocationShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithUnknownLocation.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(
@@ -215,14 +216,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseParameterWithDefaultShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithDefault.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new(), new ParsingContext(new()));
 
             // Assert
             parameter.Should().BeEquivalentTo(
@@ -245,14 +246,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseParameterWithEnumShouldSucceed()
         {
             // Arrange
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithEnum.yaml")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node, new());
+            var parameter = OpenApiV2Deserializer.LoadParameter(node, new(), new ParsingContext(new()));
             var expected = new OpenApiParameter
             {
                 In = ParameterLocation.Path,
@@ -288,14 +289,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
   ""description"": ""file to upload"",
   ""format"": ""binary""
 }";
-            MapNode node;
+            JsonNode node;
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "formDataParameter.json")))
             {
-                node = TestHelper.CreateYamlMapNode(stream);
+                node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node, new());
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
             var schema = operation.RequestBody?.Content["multipart/form-data"].Schema.Properties["file"];
             var writer = new StringWriter();
             schema.SerializeAsV2(new OpenApiJsonWriter(writer));

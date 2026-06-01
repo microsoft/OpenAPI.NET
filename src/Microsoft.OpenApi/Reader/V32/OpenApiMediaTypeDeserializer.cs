@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V32
 {
@@ -12,45 +13,45 @@ namespace Microsoft.OpenApi.Reader.V32
             new()
             {
                 {
-                    OpenApiConstants.Schema, (o, n, t) =>
+                    OpenApiConstants.Schema, (o, n, t, c) =>
                     {
-                        o.Schema = LoadSchema(n, t);
+                        o.Schema = LoadSchema(n, t, c);
                     }
                 },
                 {
-                    OpenApiConstants.ItemSchema, (o, n, t) =>
+                    OpenApiConstants.ItemSchema, (o, n, t, c) =>
                     {
-                        o.ItemSchema = LoadSchema(n, t);
+                        o.ItemSchema = LoadSchema(n, t, c);
                     }
                 },
                 {
-                    OpenApiConstants.Examples, (o, n, t) =>
+                    OpenApiConstants.Examples, (o, n, t, c) =>
                     {
-                        o.Examples = n.CreateMap(LoadExample, t);
+                        o.Examples = n.CreateMap(LoadExample, t, c);
                     }
                 },
                 {
-                    OpenApiConstants.Example, (o, n, _) =>
+                    OpenApiConstants.Example, (o, n, _, _) =>
                     {
-                        o.Example = n.CreateAny();
+                        o.Example = n;
                     }
                 },
                 {
-                    OpenApiConstants.Encoding, (o, n, t) =>
+                    OpenApiConstants.Encoding, (o, n, t, c) =>
                     {
-                        o.Encoding = n.CreateMap(LoadEncoding, t);
+                        o.Encoding = n.CreateMap(LoadEncoding, t, c);
                     }
                 },
                 {
-                    OpenApiConstants.ItemEncoding, (o, n, t) =>
+                    OpenApiConstants.ItemEncoding, (o, n, t, c) =>
                     {
-                        o.ItemEncoding = LoadEncoding(n, t);
+                        o.ItemEncoding = LoadEncoding(n, t, c);
                     }
                 },
                 {
-                    OpenApiConstants.PrefixEncoding, (o, n, t) =>
+                    OpenApiConstants.PrefixEncoding, (o, n, t, c) =>
                     {
-                        o.PrefixEncoding = n.CreateList(LoadEncoding, t);
+                        o.PrefixEncoding = n.CreateList(LoadEncoding, t, c);
                     }
                 },
             };
@@ -58,7 +59,7 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly PatternFieldMap<OpenApiMediaType> _mediaTypePatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields = new AnyFieldMap<OpenApiMediaType>
@@ -86,28 +87,27 @@ namespace Microsoft.OpenApi.Reader.V32
             }
         };
 
-        public static IOpenApiMediaType LoadMediaType(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiMediaType LoadMediaType(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode(OpenApiConstants.Content);
+            var jsonObject = node.CheckMapNode(OpenApiConstants.Content, context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var mediaTypeReference = new OpenApiMediaTypeReference(reference.Item1, hostDocument, reference.Item2);
-                mediaTypeReference.Reference.SetMetadataFromMapNode(mapNode);
+                mediaTypeReference.Reference.SetMetadataFromJsonObject(jsonObject);
                 return mediaTypeReference;
             }
 
             var mediaType = new OpenApiMediaType();
 
-            ParseMap(mapNode, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields, hostDocument);
+            ParseMap(jsonObject, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields, hostDocument, context);
 
-            ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
-            ProcessAnyMapFields(mapNode, mediaType, _mediaTypeAnyMapOpenApiExampleFields);
+            ProcessAnyFields(mediaType, _mediaTypeAnyFields, context);
+            ProcessAnyMapFields(mediaType, _mediaTypeAnyMapOpenApiExampleFields, context);
 
             return mediaType;
         }
     }
 }
-

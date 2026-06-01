@@ -24,9 +24,9 @@ public class OpenApiResponseReferenceDeserializerTests
             Description = "This is a response description",
         });
         var jsonNode = JsonNode.Parse(json);
-        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+        var parseNode = jsonNode;
 
-        var result = OpenApiV32Deserializer.LoadResponse(parseNode, hostDocument);
+        var result = OpenApiV32Deserializer.LoadResponse(parseNode, hostDocument, new ParsingContext(new()));
 
         Assert.NotNull(result);
         var resultReference = Assert.IsType<OpenApiResponseReference>(result);

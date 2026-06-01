@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 using System.Collections.Generic;
@@ -17,106 +19,107 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
-                "swagger", (_, _, _) => {}
+                "swagger", (_, _, _, _) => {}
                 /* Version is valid field but we already parsed it */
             },
-            {"info", (o, n, _) => o.Info = LoadInfo(n, o)},
-            {"host", (_, n, _) => n.Context.SetTempStorage("host", n.GetScalarValue())},
-            {"basePath", (_, n, _) => n.Context.SetTempStorage("basePath", n.GetScalarValue())},
+            {"info", (o, n, _, c) => o.Info = LoadInfo(n, o, c)},
+            {"host", (_, n, _, c) => c.SetTempStorage("host", n.GetScalarValue())},
+            {"basePath", (_, n, _, c) => c.SetTempStorage("basePath", n.GetScalarValue())},
             {
-                "schemes", (_, n, doc) => n.Context.SetTempStorage(
+                "schemes", (_, n, doc, c) => c.SetTempStorage(
                     "schemes",
                     n.CreateSimpleList(
-                        (s, p) => s.GetScalarValue(), doc))
+                        (s, _) => s.GetScalarValue(), doc, c))
             },
             {
                 "consumes",
-                (_, n, doc) =>
+                (_, n, doc, c) =>
                 {
-                    var consumes = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc);
+                    var consumes = n.CreateSimpleList((s, _) => s.GetScalarValue(), doc, c);
                     if (consumes.Count > 0)
                     {
-                        n.Context.SetTempStorage(TempStorageKeys.GlobalConsumes, consumes);
+                        c.SetTempStorage(TempStorageKeys.GlobalConsumes, consumes);
                     }
                 }
             },
             {
-                "produces", (_, n, doc) => {
-                    var produces = n.CreateSimpleList((s, p) => s.GetScalarValue(), doc);
+                "produces", (_, n, doc, c) => {
+                    var produces = n.CreateSimpleList((s, _) => s.GetScalarValue(), doc, c);
                     if (produces.Count > 0)
                     {
-                        n.Context.SetTempStorage(TempStorageKeys.GlobalProduces, produces);
+                        c.SetTempStorage(TempStorageKeys.GlobalProduces, produces);
                     }
                 }
             },
-            {"paths", (o, n, _) => o.Paths = LoadPaths(n, o)},
+            {"paths", (o, n, _, c) => o.Paths = LoadPaths(n, o, c)},
             {
                 "definitions",
-                (o, n, _) =>
+                (o, n, _, c) =>
                 {
                     o.Components ??= new();
-                    o.Components.Schemas = n.CreateMap(LoadSchema, o);
+                    o.Components.Schemas = n.CreateMap(LoadSchema, o, c);
                 }
             },
             {
                 "parameters",
-                (o, n, doc) =>
+                (o, n, doc, c) =>
                 {
                     o.Components ??= new();
 
-                    o.Components.Parameters = n.CreateMap(LoadParameter, o)
+                    o.Components.Parameters = n.CreateMap(LoadParameter, o, c)
                         .Where(kvp => kvp.Value != null)
                         .ToDictionary(kvp => kvp.Key, kvp => kvp.Value!);
 
-                o.Components.RequestBodies = n.CreateMap((p, d) =>
+                o.Components.RequestBodies = n.CreateMap((p, d, c) =>
                         {
-                            var parameter = LoadParameter(node: p, loadRequestBody: true, hostDocument: d);
-                            return parameter != null ? CreateRequestBody(p.Context, parameter) : null;
+                            var parameter = LoadParameter(node: p, loadRequestBody: true, d, c);
+                            return parameter != null ? CreateRequestBody(c, parameter) : null;
                         },
-                        doc
+                        doc,
+                        c
                   ).Where(kvp => kvp.Value != null)
                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value!);
                 }
             },
             {
-                "responses", (o, n, _) =>
+                "responses", (o, n, _, c) =>
                 {
                     if (o.Components == null)
                     {
                         o.Components = new();
                     }
 
-                    o.Components.Responses = n.CreateMap(LoadResponse, o);
+                    o.Components.Responses = n.CreateMap(LoadResponse, o, c);
                 }
             },
             {
-                "securityDefinitions", (o, n, _) =>
+                "securityDefinitions", (o, n, _, c) =>
                 {
                     if (o.Components == null)
                     {
                         o.Components = new();
                     }
 
-                    o.Components.SecuritySchemes = n.CreateMap(LoadSecurityScheme, o);
+                    o.Components.SecuritySchemes = n.CreateMap(LoadSecurityScheme, o, c);
                 }
             },
-            {"security", (o, n, _) => o.Security = n.CreateList(LoadSecurityRequirement, o)},
-            {"tags", (o, n, _) => { if (n.CreateList(LoadTag, o) is {Count:> 0} tags) {o.Tags = new HashSet<OpenApiTag>(tags, OpenApiTagComparer.Instance); } } },
-            {"externalDocs", (o, n, _) => o.ExternalDocs = LoadExternalDocs(n, o)}
+            {"security", (o, n, _, c) => o.Security = n.CreateList(LoadSecurityRequirement, o, c)},
+            {"tags", (o, n, _, c) => { if (n.CreateList(LoadTag, o, c) is {Count:> 0} tags) {o.Tags = new HashSet<OpenApiTag>(tags, OpenApiTagComparer.Instance); } } },
+            {"externalDocs", (o, n, _, c) => o.ExternalDocs = LoadExternalDocs(n, o, c)}
         };
 
         private static readonly PatternFieldMap<OpenApiDocument> _openApiPatternFields = new()
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
         };
 
-        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context, RootNode rootNode)
+        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context, JsonNode jsonNode)
         {
             var host = context.GetFromTempStorage<string>("host");
             var basePath = context.GetFromTempStorage<string>("basePath");
             var schemes = context.GetFromTempStorage<List<string>>("schemes");
-            var defaultUrl = rootNode.Context.BaseUrl;
+            var defaultUrl = context.BaseUrl;
 
             // so we don't default to the document path when a host is provided
             if (string.IsNullOrEmpty(basePath) && !string.IsNullOrEmpty(host))
@@ -133,7 +136,7 @@ namespace Microsoft.OpenApi.Reader.V2
             //Validate host
             if (!string.IsNullOrEmpty(host) && !IsHostValid(host!))
             {
-                rootNode.Context.Diagnostic.Errors.Add(new(rootNode.Context.GetLocation(), "Invalid host"));
+                context.Diagnostic.Errors.Add(new(context.GetLocation(), "Invalid host"));
                 return;
             }
 
@@ -228,28 +231,27 @@ namespace Microsoft.OpenApi.Reader.V2
             return uriBuilder.ToString();
         }
 
-        public static OpenApiDocument LoadOpenApi(RootNode rootNode, Uri location)
+        public static OpenApiDocument LoadOpenApi(JsonNode jsonNode, Uri location, ParsingContext context)
         {
             var openApiDoc = new OpenApiDocument
             {
                 BaseUri = location
             };
 
-            var openApiNode = rootNode.GetMap();
+            var openApiNode = jsonNode.CheckMapNode("OpenAPI", context);
 
-            ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields, doc: openApiDoc);
+            ParseMap(openApiNode, openApiDoc, _openApiFixedFields, _openApiPatternFields, openApiDoc, context);
 
             if (openApiDoc.Paths != null)
             {
                 ProcessResponsesMediaTypes(
-                    rootNode.GetMap(),
                     openApiDoc.Paths.Values
                         .SelectMany(path => path.Operations?.Values ?? Enumerable.Empty<OpenApiOperation>())
                         .SelectMany(operation => operation.Responses?.Values ?? Enumerable.Empty<IOpenApiResponse>()),
-                    openApiNode.Context);
+                    context);
             }
 
-            ProcessResponsesMediaTypes(rootNode.GetMap(), openApiDoc.Components?.Responses?.Values, openApiNode.Context);
+            ProcessResponsesMediaTypes(openApiDoc.Components?.Responses?.Values, context);
 
             // Post Process OpenApi Object
             if (openApiDoc.Servers == null)
@@ -257,7 +259,7 @@ namespace Microsoft.OpenApi.Reader.V2
                 openApiDoc.Servers = [];
             }
 
-            MakeServers(openApiDoc.Servers, openApiNode.Context, rootNode);
+            MakeServers(openApiDoc.Servers, context, jsonNode);
 
             FixRequestBodyReferences(openApiDoc);
 
@@ -267,19 +269,19 @@ namespace Microsoft.OpenApi.Reader.V2
             return openApiDoc;
         }
 
-        private static void ProcessResponsesMediaTypes(MapNode mapNode, IEnumerable<IOpenApiResponse>? responses, ParsingContext context)
+        private static void ProcessResponsesMediaTypes(IEnumerable<IOpenApiResponse>? responses, ParsingContext context)
         {
             if (responses != null)
             {
                 foreach (var response in responses.OfType<OpenApiResponse>())
                 {
-                    ProcessProduces(mapNode, response, context);
+                    ProcessProduces(response, context);
 
                     if (response.Content != null)
                     {
                         foreach (var mediaType in response.Content.Values.OfType<OpenApiMediaType>())
                         {
-                            ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
+                            ProcessAnyFields(mediaType, _mediaTypeAnyFields, context);
                         }
                     }
                 }

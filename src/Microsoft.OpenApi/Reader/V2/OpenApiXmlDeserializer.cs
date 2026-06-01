@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -15,10 +17,10 @@ namespace Microsoft.OpenApi.Reader.V2
         {
             {
                 "name",
-                (o, n, _) => o.Name = n.GetScalarValue()
+                (o, n, _, _) => o.Name = n.GetScalarValue()
             },
             {
-                "namespace", (o, n, _) =>
+                "namespace", (o, n, _, _) =>
                 {
                     var scalarValue = n.GetScalarValue();
                     if (Uri.IsWellFormedUriString(scalarValue, UriKind.Absolute) && scalarValue is not null)
@@ -33,11 +35,11 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "prefix",
-                (o, n, _) => o.Prefix = n.GetScalarValue()
+                (o, n, _, _) => o.Prefix = n.GetScalarValue()
             },
             {
                 "attribute",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var attribute = n.GetScalarValue();
                     if (attribute is not null)
@@ -50,7 +52,7 @@ namespace Microsoft.OpenApi.Reader.V2
             },
             {
                 "wrapped",
-                (o, n, _) =>
+                (o, n, _, _) =>
                 {
                     var wrapped = n.GetScalarValue();
                     if (wrapped is not null)
@@ -66,18 +68,15 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiXml> _xmlPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static OpenApiXml LoadXml(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiXml LoadXml(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("xml");
+            var jsonObject = node.CheckMapNode("xml", context);
 
             var xml = new OpenApiXml();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(xml, _xmlFixedFields, _xmlPatternFields, hostDocument);
-            }
+            ParseMap(jsonObject, xml, _xmlFixedFields, _xmlPatternFields, hostDocument, context);
 
             return xml;
         }

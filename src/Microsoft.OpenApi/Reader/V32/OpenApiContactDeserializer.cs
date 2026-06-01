@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V32
 {
@@ -11,20 +12,20 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly FixedFieldMap<OpenApiContact> _contactFixedFields = new()
         {
             {
-                "name", (o, n, _) =>
+                "name", (o, n, _, _) =>
                 {
                     o.Name = n.GetScalarValue();
                 }
             },
             {
-                "email", (o, n, _) =>
+                "email", (o, n, _, _) =>
                 {
                     o.Email = n.GetScalarValue();
                 }
             },
             {
                 "url",
-                (o, n, t) =>
+                (o, n, _, _) =>
                 {
                     var url = n.GetScalarValue();
                     if (url != null)
@@ -37,15 +38,15 @@ namespace Microsoft.OpenApi.Reader.V32
 
         private static readonly PatternFieldMap<OpenApiContact> _contactPatternFields = new()
         {
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
         };
 
-        public static OpenApiContact LoadContact(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiContact LoadContact(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node as MapNode;
+            var jsonObject = node as JsonObject;
             var contact = new OpenApiContact();
 
-            ParseMap(mapNode, contact, _contactFixedFields, _contactPatternFields, hostDocument);
+            ParseMap(jsonObject, contact, _contactFixedFields, _contactPatternFields, hostDocument, context);
 
             return contact;
         }

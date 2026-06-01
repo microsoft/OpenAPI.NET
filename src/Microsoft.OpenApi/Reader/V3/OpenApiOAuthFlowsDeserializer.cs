@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -14,28 +16,25 @@ namespace Microsoft.OpenApi.Reader.V3
         private static readonly FixedFieldMap<OpenApiOAuthFlows> _oAuthFlowsFixedFields =
             new()
             {
-                {"implicit", (o, n, t) => o.Implicit = LoadOAuthFlow(n, t)},
-                {"password", (o, n, t) => o.Password = LoadOAuthFlow(n, t)},
-                {"clientCredentials", (o, n, t) => o.ClientCredentials = LoadOAuthFlow(n, t)},
-                {"authorizationCode", (o, n, t) => o.AuthorizationCode = LoadOAuthFlow(n, t)}
+                {"implicit", (o, n, t, c) => o.Implicit = LoadOAuthFlow(n, t, c)},
+                {"password", (o, n, t, c) => o.Password = LoadOAuthFlow(n, t, c)},
+                {"clientCredentials", (o, n, t, c) => o.ClientCredentials = LoadOAuthFlow(n, t, c)},
+                {"authorizationCode", (o, n, t, c) => o.AuthorizationCode = LoadOAuthFlow(n, t, c)}
             };
 
         private static readonly PatternFieldMap<OpenApiOAuthFlows> _oAuthFlowsPatternFields =
             new()
             {
-                {s => s.Equals("x-oai-deviceAuthorization", StringComparison.OrdinalIgnoreCase), (o, p, n, t) => o.DeviceAuthorization = LoadOAuthFlow(n, t)},
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.Equals("x-oai-deviceAuthorization", StringComparison.OrdinalIgnoreCase), (o, _, n, t, c) => o.DeviceAuthorization = LoadOAuthFlow(n, t, c)},
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static OpenApiOAuthFlows LoadOAuthFlows(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiOAuthFlows LoadOAuthFlows(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("OAuthFlows");
+            var jsonObject = node.CheckMapNode("OAuthFlows", context);
 
             var oAuthFlows = new OpenApiOAuthFlows();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(oAuthFlows, _oAuthFlowsFixedFields, _oAuthFlowsPatternFields, hostDocument);
-            }
+            ParseMap(jsonObject, oAuthFlows, _oAuthFlowsFixedFields, _oAuthFlowsPatternFields, hostDocument, context);
 
             return oAuthFlows;
         }

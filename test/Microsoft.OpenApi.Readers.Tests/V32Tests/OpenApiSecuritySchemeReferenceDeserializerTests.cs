@@ -27,9 +27,9 @@ public class OpenApiSecuritySchemeReferenceDeserializerTests
             Description = "This is a security scheme description",
         });
         var jsonNode = JsonNode.Parse(json);
-        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+        var parseNode = jsonNode;
 
-        var result = OpenApiV32Deserializer.LoadSecurityScheme(parseNode, hostDocument);
+        var result = OpenApiV32Deserializer.LoadSecurityScheme(parseNode, hostDocument, new ParsingContext(new()));
 
         Assert.NotNull(result);
         var resultReference = Assert.IsType<OpenApiSecuritySchemeReference>(result);
@@ -55,9 +55,9 @@ public class OpenApiSecuritySchemeReferenceDeserializerTests
 
         var hostDocument = new OpenApiDocument();
         var jsonNode = JsonNode.Parse(json);
-        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+        var parseNode = jsonNode;
 
-        var result = OpenApiV32Deserializer.LoadSecurityScheme(parseNode, hostDocument);
+        var result = OpenApiV32Deserializer.LoadSecurityScheme(parseNode, hostDocument, new ParsingContext(new()));
 
         Assert.NotNull(result);
         var resultScheme = Assert.IsType<OpenApiSecurityScheme>(result);

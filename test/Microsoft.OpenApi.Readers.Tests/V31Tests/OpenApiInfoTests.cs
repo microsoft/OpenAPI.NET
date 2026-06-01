@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V31;
@@ -24,10 +24,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var context = new ParsingContext(diagnostic);
 
             var asJsonNode = yamlNode.ToJsonNode();
-            var node = new MapNode(context, asJsonNode);
+            var node = asJsonNode;
 
             // Act
-            var openApiInfo = OpenApiV31Deserializer.LoadInfo(node, new());
+            var openApiInfo = OpenApiV31Deserializer.LoadInfo(node, new(), new ParsingContext(new()));
 
             // Assert
             Assert.Equivalent(

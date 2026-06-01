@@ -24,9 +24,9 @@ public class OpenApiLinkReferenceDeserializerTests
             Description = "This is a link description",
         });
         var jsonNode = JsonNode.Parse(json);
-        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+        var parseNode = jsonNode;
 
-        var result = OpenApiV32Deserializer.LoadLink(parseNode, hostDocument);
+        var result = OpenApiV32Deserializer.LoadLink(parseNode, hostDocument, new ParsingContext(new()));
 
         Assert.NotNull(result);
         var resultReference = Assert.IsType<OpenApiLinkReference>(result);

@@ -38,9 +38,9 @@ public class OpenApiSchemaReferenceDeserializerTests
             Examples = new List<JsonNode> { "example value" },
         });
         var jsonNode = JsonNode.Parse(json);
-        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+        var parseNode = jsonNode;
 
-        var result = OpenApiV32Deserializer.LoadSchema(parseNode, hostDocument);
+        var result = OpenApiV32Deserializer.LoadSchema(parseNode, hostDocument, new ParsingContext(new()));
 
         Assert.NotNull(result);
         var resultReference = Assert.IsType<OpenApiSchemaReference>(result);

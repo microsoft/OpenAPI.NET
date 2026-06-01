@@ -26,9 +26,9 @@ public class OpenApiPathItemReferenceDeserializerTests
             Description = "This is a path item description",
         });
         var jsonNode = JsonNode.Parse(json);
-        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+        var parseNode = jsonNode;
 
-        var result = OpenApiV31Deserializer.LoadPathItem(parseNode, hostDocument);
+        var result = OpenApiV31Deserializer.LoadPathItem(parseNode, hostDocument, new ParsingContext(new()));
 
         Assert.NotNull(result);
         var resultReference = Assert.IsType<OpenApiPathItemReference>(result);

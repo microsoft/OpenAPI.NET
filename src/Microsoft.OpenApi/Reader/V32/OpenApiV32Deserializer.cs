@@ -14,34 +14,26 @@ namespace Microsoft.OpenApi.Reader.V32
     internal static partial class OpenApiV32Deserializer
     {
         private static void ParseMap<T>(
-            MapNode? mapNode,
+            JsonObject? jsonObject,
             T domainObject,
             FixedFieldMap<T> fixedFieldMap,            
             PatternFieldMap<T> patternFieldMap, 
-            OpenApiDocument doc)
+            OpenApiDocument doc,
+            ParsingContext context)
         {
-            if (mapNode == null)
-            {
-                return;
-            }
-
-            foreach (var propertyNode in mapNode)
-            {
-                propertyNode.ParseField(domainObject, fixedFieldMap, patternFieldMap, doc);
-            }
-
+            jsonObject.ParseMap(domainObject, fixedFieldMap, patternFieldMap, doc, context);
         }
 
         private static void ProcessAnyFields<T>(
-            MapNode mapNode,
             T domainObject,
-            AnyFieldMap<T> anyFieldMap)
+            AnyFieldMap<T> anyFieldMap,
+            ParsingContext context)
         {
             foreach (var anyFieldName in anyFieldMap.Keys.ToList())
             {
                 try
                 {
-                    mapNode.Context.StartObject(anyFieldName);
+                    context.StartObject(anyFieldName);
 
                     var any = anyFieldMap[anyFieldName].PropertyGetter(domainObject);
 
@@ -56,32 +48,32 @@ namespace Microsoft.OpenApi.Reader.V32
                 }
                 catch (OpenApiException exception)
                 {
-                    exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new OpenApiError(exception));
+                    exception.Pointer = context.GetLocation();
+                    context.Diagnostic.Errors.Add(new OpenApiError(exception));
                 }
                 finally
                 {
-                    mapNode.Context.EndObject();
+                    context.EndObject();
                 }
             }
         }
 
         private static void ProcessAnyMapFields<T, U>(
-            MapNode mapNode,
             T domainObject,
-            AnyMapFieldMap<T, U> anyMapFieldMap)
+            AnyMapFieldMap<T, U> anyMapFieldMap,
+            ParsingContext context)
         {
             foreach (var anyMapFieldName in anyMapFieldMap.Keys.ToList())
             {
                 try
                 {
-                    mapNode.Context.StartObject(anyMapFieldName);
+                    context.StartObject(anyMapFieldName);
                     var propertyMapGetter = anyMapFieldMap[anyMapFieldName].PropertyMapGetter(domainObject);
                     if (propertyMapGetter != null)
                     {
                         foreach (var propertyMapElement in propertyMapGetter)
                         {
-                            mapNode.Context.StartObject(propertyMapElement.Key);
+                            context.StartObject(propertyMapElement.Key);
 
                             if (propertyMapElement.Value != null)
                             {
@@ -96,17 +88,17 @@ namespace Microsoft.OpenApi.Reader.V32
                 }
                 catch (OpenApiException exception)
                 {
-                    exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new OpenApiError(exception));
+                    exception.Pointer = context.GetLocation();
+                    context.Diagnostic.Errors.Add(new OpenApiError(exception));
                 }
                 finally
                 {
-                    mapNode.Context.EndObject();
+                    context.EndObject();
                 }
             }
         }
 
-        private static RuntimeExpressionAnyWrapper LoadRuntimeExpressionAnyWrapper(ParseNode node)
+        private static RuntimeExpressionAnyWrapper LoadRuntimeExpressionAnyWrapper(JsonNode node)
         {
             var value = node.GetScalarValue();
 
@@ -120,39 +112,39 @@ namespace Microsoft.OpenApi.Reader.V32
 
             return new RuntimeExpressionAnyWrapper
             {
-                Any = node.CreateAny()
+                Any = node
             };
         }
 
-        public static JsonNode LoadAny(ParseNode node, OpenApiDocument hostDocument)
+        public static JsonNode LoadAny(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            return node.CreateAny();
+            return node;
         }
 
-        private static IOpenApiExtension LoadExtension(string name, ParseNode node)
+        private static IOpenApiExtension LoadExtension(string name, JsonNode node, ParsingContext context)
         {
-            if (node.Context.ExtensionParsers is not null && node.Context.ExtensionParsers.TryGetValue(name, out var parser))
+            if (context.ExtensionParsers is not null && context.ExtensionParsers.TryGetValue(name, out var parser))
             {
                 try
                 {
-                    return parser(node.CreateAny(), OpenApiSpecVersion.OpenApi3_2);
+                    return parser(node, OpenApiSpecVersion.OpenApi3_2);
                 }
                 catch (OpenApiException ex)
                 {
-                    ex.Pointer = node.Context.GetLocation();
-                    node.Context.Diagnostic.Errors.Add(new(ex));
+                    ex.Pointer = context.GetLocation();
+                    context.Diagnostic.Errors.Add(new(ex));
                 }
             }
 
-            return new JsonNodeExtension(node.CreateAny());
+            return new JsonNodeExtension(node);
         }
 
-        private static string? LoadString(ParseNode node)
+        private static string? LoadString(JsonNode node)
         {
             return node.GetScalarValue();
         }
 
-        private static bool? LoadBool(ParseNode node)
+        private static bool? LoadBool(JsonNode node)
         {
             var value = node.GetScalarValue();
             return value is not null ? bool.Parse(value) : null;
@@ -180,4 +172,3 @@ namespace Microsoft.OpenApi.Reader.V32
         }
     }
 }
-

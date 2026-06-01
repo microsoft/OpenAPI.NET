@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V32
 {
@@ -12,19 +13,19 @@ namespace Microsoft.OpenApi.Reader.V32
             new()
             {
                 {
-                    "description", (o, n, _) =>
+                    "description", (o, n, _, _) =>
                     {
                         o.Description = n.GetScalarValue();
                     }
                 },
                 {
-                    "content", (o, n, t) =>
+                    "content", (o, n, t, c) =>
                     {
-                        o.Content = n.CreateMap(LoadMediaType, t);
+                        o.Content = n.CreateMap(LoadMediaType, t, c);
                     }
                 },
                 {
-                    "required", (o, n, _) =>
+                    "required", (o, n, _, _) =>
                     {
                         var required = n.GetScalarValue();
                         if (required != null)
@@ -38,27 +39,24 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly PatternFieldMap<OpenApiRequestBody> _requestBodyPatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
             };
 
-        public static IOpenApiRequestBody LoadRequestBody(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiRequestBody LoadRequestBody(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("requestBody");
+            var jsonObject = node.CheckMapNode("requestBody", context);
 
-            var pointer = mapNode.GetReferencePointer();
+            var pointer = jsonObject.GetReferencePointer();
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var requestBodyReference = new OpenApiRequestBodyReference(reference.Item1, hostDocument, reference.Item2);
-                requestBodyReference.Reference.SetMetadataFromMapNode(mapNode);
+                requestBodyReference.Reference.SetMetadataFromJsonObject(jsonObject);
                 return requestBodyReference;
             }
 
             var requestBody = new OpenApiRequestBody();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(requestBody, _requestBodyFixedFields, _requestBodyPatternFields, hostDocument);
-            }
+            ParseMap(jsonObject, requestBody, _requestBodyFixedFields, _requestBodyPatternFields, hostDocument, context);
 
             return requestBody;
         }

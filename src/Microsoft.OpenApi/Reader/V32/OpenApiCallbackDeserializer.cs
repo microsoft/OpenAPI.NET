@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V32
 {
@@ -14,25 +15,25 @@ namespace Microsoft.OpenApi.Reader.V32
         private static readonly PatternFieldMap<OpenApiCallback> _callbackPatternFields =
             new()
             {
-            {s => !s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, t) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n, t))},
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => o.AddExtension(p, LoadExtension(p,n))},
+            {s => !s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, t, c) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n, t, c))},
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))},
             };
 
-        public static IOpenApiCallback LoadCallback(ParseNode node, OpenApiDocument hostDocument)
+        public static IOpenApiCallback LoadCallback(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("callback");
+            var jsonObject = node.CheckMapNode("callback", context);
 
-            if (mapNode.GetReferencePointer() is { } pointer)
+            if (jsonObject.GetReferencePointer() is { } pointer)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var callbackReference = new OpenApiCallbackReference(reference.Item1, hostDocument, reference.Item2);
-                callbackReference.Reference.SetMetadataFromMapNode(mapNode);
+                callbackReference.Reference.SetMetadataFromJsonObject(jsonObject);
                 return callbackReference;
             }
 
             var domainObject = new OpenApiCallback();
 
-            ParseMap(mapNode, domainObject, _callbackFixedFields, _callbackPatternFields, hostDocument);
+            ParseMap(jsonObject, domainObject, _callbackFixedFields, _callbackPatternFields, hostDocument, context);
 
             return domainObject;
         }

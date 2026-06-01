@@ -26,9 +26,9 @@ public class OpenApiParameterReferenceDeserializerTests
             Description = "This is a parameter description",
         });
         var jsonNode = JsonNode.Parse(json);
-        var parseNode = ParseNode.Create(new ParsingContext(new()), jsonNode);
+        var parseNode = jsonNode;
 
-        var result = OpenApiV32Deserializer.LoadParameter(parseNode, hostDocument);
+        var result = OpenApiV32Deserializer.LoadParameter(parseNode, hostDocument, new ParsingContext(new()));
 
         Assert.NotNull(result);
         var resultReference = Assert.IsType<OpenApiParameterReference>(result);

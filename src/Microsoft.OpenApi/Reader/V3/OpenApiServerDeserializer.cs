@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Text.Json.Nodes;
 
 using System;
 
@@ -15,21 +17,21 @@ namespace Microsoft.OpenApi.Reader.V3
         {
             {
                 "url",
-                (o, n, _) => o.Url = n.GetScalarValue()
+                (o, n, _, _) => o.Url = n.GetScalarValue()
             },
             {
                 "description",
-                (o, n, _) => o.Description = n.GetScalarValue()
+                (o, n, _, _) => o.Description = n.GetScalarValue()
             },
             {
                 "variables",
-                (o, n, t) => o.Variables = n.CreateMap(LoadServerVariable, t)
+                (o, n, t, c) => o.Variables = n.CreateMap(LoadServerVariable, t, c)
             }
         };
 
         private static readonly PatternFieldMap<OpenApiServer> _serverPatternFields = new()
         {
-            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _) => 
+            {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => 
             {
                 if (p.Equals("x-oai-name", StringComparison.OrdinalIgnoreCase))
                 {
@@ -37,18 +39,18 @@ namespace Microsoft.OpenApi.Reader.V3
                 }
                 else
                 {
-                    o.AddExtension(p, LoadExtension(p,n));
+                    o.AddExtension(p, LoadExtension(p, n, c));
                 }
             }}
         };
 
-        public static OpenApiServer LoadServer(ParseNode node, OpenApiDocument hostDocument)
+        public static OpenApiServer LoadServer(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
-            var mapNode = node.CheckMapNode("server");
+            var jsonObject = node.CheckMapNode("server", context);
 
             var server = new OpenApiServer();
 
-            ParseMap(mapNode, server, _serverFixedFields, _serverPatternFields, hostDocument);
+            ParseMap(jsonObject, server, _serverFixedFields, _serverPatternFields, hostDocument, context);
 
             return server;
         }
