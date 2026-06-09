@@ -1275,9 +1275,8 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public async Task SerializeContainsKeywordsAsV3DoesNotEmit()
+        public async Task SerializeContainsKeywordsAsV3EmitsCompatibilityExtensions()
         {
-            // Arrange - contains/minContains/maxContains are JSON Schema 2020-12 keywords and have no equivalent in OpenAPI 3.0
             var schema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Array,
@@ -1298,7 +1297,12 @@ namespace Microsoft.OpenApi.Tests.Models
             var expectedV3Schema =
                 """
                 {
-                  "type": "array"
+                  "type": "array",
+                  "x-jsonschema-contains": {
+                    "type": "string"
+                  },
+                  "x-jsonschema-maxContains": 5,
+                  "x-jsonschema-minContains": 1
                 }
                 """;
 
@@ -1516,6 +1520,11 @@ namespace Microsoft.OpenApi.Tests.Models
                   "x-jsonschema-contentSchema": {
                     "type": "array"
                   },
+                  "x-jsonschema-contains": {
+                    "type": "string"
+                  },
+                  "x-jsonschema-maxContains": 3,
+                  "x-jsonschema-minContains": 1,
                   "x-jsonschema-propertyNames": {
                     "pattern": "^[a-z]+$"
                   },
@@ -1544,6 +1553,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 ContentEncoding = "base64",
                 ContentMediaType = "application/jwt",
                 ContentSchema = new OpenApiSchema { Type = JsonSchemaType.Array },
+                Contains = new OpenApiSchema { Type = JsonSchemaType.String },
+                MaxContains = 3,
+                MinContains = 1,
                 PropertyNames = new OpenApiSchema { Pattern = "^[a-z]+$" },
                 DependentSchemas = new Dictionary<string, IOpenApiSchema>
                 {
