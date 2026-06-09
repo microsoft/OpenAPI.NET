@@ -604,22 +604,18 @@ namespace Microsoft.OpenApi
                 // Skip when type is explicitly set to a non-object type (array, string, number, integer, boolean, null).
                 if (!Type.HasValue || (Type.Value & JsonSchemaType.Object) != 0)
                 {
-                    var unevaluatedPropertiesExtensionName = version == OpenApiSpecVersion.OpenApi3_0
-                        ? OpenApiConstants.UnevaluatedPropertiesExtension
-                        : OpenApiConstants.LegacyUnevaluatedPropertiesExtension;
-
                     // Write UnevaluatedPropertiesSchema as extension if present
                     if (UnevaluatedPropertiesSchema is not null)
                     {
                         writer.WriteOptionalObject(
-                            unevaluatedPropertiesExtensionName,
+                            OpenApiConstants.UnevaluatedPropertiesExtension,
                             UnevaluatedPropertiesSchema,
                             callback);
                     }
                     // Write boolean false as extension if explicitly set to false
                     else if (!UnevaluatedProperties)
                     {
-                        writer.WritePropertyName(unevaluatedPropertiesExtensionName);
+                        writer.WritePropertyName(OpenApiConstants.UnevaluatedPropertiesExtension);
                         writer.WriteValue(false);
                     }
                 }

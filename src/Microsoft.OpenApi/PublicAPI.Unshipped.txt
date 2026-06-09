@@ -13,7 +13,6 @@ const Microsoft.OpenApi.OpenApiConstants.Else = "else" -> string!
 const Microsoft.OpenApi.OpenApiConstants.ElseExtension = "x-jsonschema-else" -> string!
 const Microsoft.OpenApi.OpenApiConstants.If = "if" -> string!
 const Microsoft.OpenApi.OpenApiConstants.IfExtension = "x-jsonschema-if" -> string!
-const Microsoft.OpenApi.OpenApiConstants.LegacyUnevaluatedPropertiesExtension = "x-oai-unevaluatedProperties" -> string!
 const Microsoft.OpenApi.OpenApiConstants.PropertyNames = "propertyNames" -> string!
 const Microsoft.OpenApi.OpenApiConstants.PropertyNamesExtension = "x-jsonschema-propertyNames" -> string!
 const Microsoft.OpenApi.OpenApiConstants.Then = "then" -> string!
