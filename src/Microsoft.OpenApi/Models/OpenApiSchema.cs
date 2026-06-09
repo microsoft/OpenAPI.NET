@@ -9,6 +9,7 @@ using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi
 {
+#pragma warning disable CS0618
     /// <summary>
     /// The Schema Object allows the definition of input and output data types.
     /// 
@@ -18,7 +19,7 @@ namespace Microsoft.OpenApi
     /// - Serialization: To produce something functionally equivalent to boolean schemas, create an empty <see cref="OpenApiSchema"/>
     ///   for "true" behavior, or create a schema with only <see cref="Not"/> set to an empty schema for "false" behavior.
     /// </summary>
-    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema, IOpenApiSchemaWithUnevaluatedProperties, IOpenApiSchemaWithContainsProperties, IMetadataContainer
+    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema, IOpenApiSchemaMissingProperties, IOpenApiSchemaWithUnevaluatedProperties, IMetadataContainer
     {
         /// <inheritdoc />
         public string? Title { get; set; }
@@ -43,6 +44,9 @@ namespace Microsoft.OpenApi
 
         /// <inheritdoc />
         public IDictionary<string, IOpenApiSchema>? Definitions { get; set; }
+
+        /// <inheritdoc />
+        public string? Anchor { get; set; }
 
         private string? _exclusiveMaximum;
         /// <inheritdoc />
@@ -253,6 +257,30 @@ namespace Microsoft.OpenApi
         public IOpenApiSchema? UnevaluatedPropertiesSchema { get; set; }
 
         /// <inheritdoc />
+        public string? ContentEncoding { get; set; }
+
+        /// <inheritdoc />
+        public string? ContentMediaType { get; set; }
+
+        /// <inheritdoc />
+        public IOpenApiSchema? ContentSchema { get; set; }
+
+        /// <inheritdoc />
+        public IOpenApiSchema? PropertyNames { get; set; }
+
+        /// <inheritdoc />
+        public IDictionary<string, IOpenApiSchema>? DependentSchemas { get; set; }
+
+        /// <inheritdoc />
+        public IOpenApiSchema? If { get; set; }
+
+        /// <inheritdoc />
+        public IOpenApiSchema? Then { get; set; }
+
+        /// <inheritdoc />
+        public IOpenApiSchema? Else { get; set; }
+
+        /// <inheritdoc />
         public OpenApiExternalDocs? ExternalDocs { get; set; }
 
         /// <inheritdoc />
@@ -291,13 +319,31 @@ namespace Microsoft.OpenApi
             Schema = schema.Schema ?? Schema;
             Comment = schema.Comment ?? Comment;
             Vocabulary = schema.Vocabulary != null ? new Dictionary<string, bool>(schema.Vocabulary) : null;
+            if (schema is IOpenApiSchemaMissingProperties { Anchor: not null } missingPropertiesWithAnchor)
+            {
+                Anchor = missingPropertiesWithAnchor.Anchor;
+            }
             DynamicAnchor = schema.DynamicAnchor ?? DynamicAnchor;
             DynamicRef = schema.DynamicRef ?? DynamicRef;
             Definitions = schema.Definitions != null ? new Dictionary<string, IOpenApiSchema>(schema.Definitions) : null;
             UnevaluatedProperties = schema.UnevaluatedProperties;
-            if (schema is IOpenApiSchemaWithUnevaluatedProperties { UnevaluatedPropertiesSchema: { } unevaluatedSchema })
+            if (schema is IOpenApiSchemaMissingProperties missingProperties)
             {
-                UnevaluatedPropertiesSchema = unevaluatedSchema.CreateShallowCopy();
+                Contains = missingProperties.Contains?.CreateShallowCopy();
+                MaxContains = missingProperties.MaxContains ?? MaxContains;
+                MinContains = missingProperties.MinContains ?? MinContains;
+                if (missingProperties.UnevaluatedPropertiesSchema is { } unevaluatedSchema)
+                {
+                    UnevaluatedPropertiesSchema = unevaluatedSchema.CreateShallowCopy();
+                }
+                ContentEncoding = missingProperties.ContentEncoding ?? ContentEncoding;
+                ContentMediaType = missingProperties.ContentMediaType ?? ContentMediaType;
+                ContentSchema = missingProperties.ContentSchema?.CreateShallowCopy();
+                PropertyNames = missingProperties.PropertyNames?.CreateShallowCopy();
+                DependentSchemas = missingProperties.DependentSchemas != null ? new Dictionary<string, IOpenApiSchema>(missingProperties.DependentSchemas) : null;
+                If = missingProperties.If?.CreateShallowCopy();
+                Then = missingProperties.Then?.CreateShallowCopy();
+                Else = missingProperties.Else?.CreateShallowCopy();
             }
             ExclusiveMaximum = schema.ExclusiveMaximum ?? ExclusiveMaximum;
             ExclusiveMinimum = schema.ExclusiveMinimum ?? ExclusiveMinimum;
@@ -327,12 +373,6 @@ namespace Microsoft.OpenApi
             MaxItems = schema.MaxItems ?? MaxItems;
             MinItems = schema.MinItems ?? MinItems;
             UniqueItems = schema.UniqueItems ?? UniqueItems;
-            if (schema is IOpenApiSchemaWithContainsProperties containsSchema)
-            {
-                Contains = containsSchema.Contains?.CreateShallowCopy();
-                MaxContains = containsSchema.MaxContains ?? MaxContains;
-                MinContains = containsSchema.MinContains ?? MinContains;
-            }
             Properties = schema.Properties != null ? new Dictionary<string, IOpenApiSchema>(schema.Properties) : null;
             PatternProperties = schema.PatternProperties != null ? new Dictionary<string, IOpenApiSchema>(schema.PatternProperties) : null;
             MaxProperties = schema.MaxProperties ?? MaxProperties;
@@ -419,7 +459,7 @@ namespace Microsoft.OpenApi
 
             if (version >= OpenApiSpecVersion.OpenApi3_1)
             {
-                WriteJsonSchemaKeywords(writer);
+                WriteJsonSchemaKeywords(writer, callback);
             }
 
             // title
@@ -593,6 +633,8 @@ namespace Microsoft.OpenApi
                 {
                     writer.WriteOptionalMap(OpenApiConstants.PatternPropertiesExtension, PatternProperties, callback);
                 }
+
+                WriteV3CompatibilityKeywords(writer, callback);
             }
 
             // extensions
@@ -614,14 +656,15 @@ namespace Microsoft.OpenApi
             SerializeAsV2(writer: writer, parentRequiredProperties: new HashSet<string>(), propertyName: null);
         }
 
-        internal void WriteJsonSchemaKeywords(IOpenApiWriter writer)
+        internal void WriteJsonSchemaKeywords(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteProperty(OpenApiConstants.Id, Id);
             writer.WriteProperty(OpenApiConstants.DollarSchema, Schema?.ToString());
             writer.WriteProperty(OpenApiConstants.Comment, Comment);
             writer.WriteProperty(OpenApiConstants.Const, Const);
             writer.WriteOptionalMap(OpenApiConstants.Vocabulary, Vocabulary, (w, s) => w.WriteValue(s));
-            writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, s) => s.SerializeAsV31(w));
+            writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, callback);
+            writer.WriteProperty(OpenApiConstants.Anchor, Anchor);
             writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);
             writer.WriteProperty(OpenApiConstants.DynamicAnchor, DynamicAnchor);
             
@@ -635,7 +678,7 @@ namespace Microsoft.OpenApi
                     writer.WriteOptionalObject(
                         OpenApiConstants.UnevaluatedProperties,
                         UnevaluatedPropertiesSchema,
-                        (w, s) => s.SerializeAsV31(w));
+                        callback);
                 }
                 else if (!UnevaluatedProperties)
                 {
@@ -643,17 +686,38 @@ namespace Microsoft.OpenApi
                 }
             }
             writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (nodeWriter, s) => nodeWriter.WriteAny(s));
-            writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, (w, s) => s.SerializeAsV31(w));
+            writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, callback);
             writer.WriteOptionalMap(OpenApiConstants.DependentRequired, DependentRequired, (w, s) => w.WriteValue(s));
 
             // contains
-            writer.WriteOptionalObject(OpenApiConstants.Contains, Contains, (w, s) => s.SerializeAsV31(w));
+            writer.WriteOptionalObject(OpenApiConstants.Contains, Contains, callback);
 
             // maxContains
             writer.WriteProperty(OpenApiConstants.MaxContains, MaxContains);
 
             // minContains
             writer.WriteProperty(OpenApiConstants.MinContains, MinContains);
+            writer.WriteProperty(OpenApiConstants.ContentEncoding, ContentEncoding);
+            writer.WriteProperty(OpenApiConstants.ContentMediaType, ContentMediaType);
+            writer.WriteOptionalObject(OpenApiConstants.ContentSchema, ContentSchema, callback);
+            writer.WriteOptionalObject(OpenApiConstants.PropertyNames, PropertyNames, callback);
+            writer.WriteOptionalMap(OpenApiConstants.DependentSchemas, DependentSchemas, callback);
+            writer.WriteOptionalObject(OpenApiConstants.If, If, callback);
+            writer.WriteOptionalObject(OpenApiConstants.Then, Then, callback);
+            writer.WriteOptionalObject(OpenApiConstants.Else, Else, callback);
+        }
+
+        private void WriteV3CompatibilityKeywords(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
+        {
+            writer.WriteProperty(OpenApiConstants.AnchorExtension, Anchor);
+            writer.WriteProperty(OpenApiConstants.ContentEncodingExtension, ContentEncoding);
+            writer.WriteProperty(OpenApiConstants.ContentMediaTypeExtension, ContentMediaType);
+            writer.WriteOptionalObject(OpenApiConstants.ContentSchemaExtension, ContentSchema, callback);
+            writer.WriteOptionalObject(OpenApiConstants.PropertyNamesExtension, PropertyNames, callback);
+            writer.WriteOptionalMap(OpenApiConstants.DependentSchemasExtension, DependentSchemas, callback);
+            writer.WriteOptionalObject(OpenApiConstants.IfExtension, If, callback);
+            writer.WriteOptionalObject(OpenApiConstants.ThenExtension, Then, callback);
+            writer.WriteOptionalObject(OpenApiConstants.ElseExtension, Else, callback);
         }
 
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
@@ -823,6 +887,7 @@ namespace Microsoft.OpenApi
                     // oneOf (Not Supported in V2) - Write the first schema only as an allOf.
                     writer.WriteOptionalCollection(OpenApiConstants.AllOf, OneOf?.Take(1), (w, s) => s.SerializeAsV2(w));
                 }
+            #pragma warning restore CS0618
             }
 
             // properties

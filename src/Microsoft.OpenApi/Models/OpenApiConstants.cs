@@ -91,6 +91,11 @@ namespace Microsoft.OpenApi
         public const string Vocabulary = "$vocabulary";
 
         /// <summary>
+        /// Field: Anchor
+        /// </summary>
+        public const string Anchor = "$anchor";
+
+        /// <summary>
         /// Field: DynamicRef
         /// </summary>
         public const string DynamicRef = "$dynamicRef";
@@ -551,9 +556,49 @@ namespace Microsoft.OpenApi
         public const string PatternProperties = "patternProperties";
 
         /// <summary>
+        /// Field: PropertyNames
+        /// </summary>
+        public const string PropertyNames = "propertyNames";
+
+        /// <summary>
         /// Extension: x-jsonschema-patternProperties
         /// </summary>
         public const string PatternPropertiesExtension = "x-jsonschema-patternProperties";
+
+        /// <summary>
+        /// Field: DependentSchemas
+        /// </summary>
+        public const string DependentSchemas = "dependentSchemas";
+
+        /// <summary>
+        /// Field: If
+        /// </summary>
+        public const string If = "if";
+
+        /// <summary>
+        /// Field: Then
+        /// </summary>
+        public const string Then = "then";
+
+        /// <summary>
+        /// Field: Else
+        /// </summary>
+        public const string Else = "else";
+
+        /// <summary>
+        /// Field: ContentEncoding
+        /// </summary>
+        public const string ContentEncoding = "contentEncoding";
+
+        /// <summary>
+        /// Field: ContentMediaType
+        /// </summary>
+        public const string ContentMediaType = "contentMediaType";
+
+        /// <summary>
+        /// Field: ContentSchema
+        /// </summary>
+        public const string ContentSchema = "contentSchema";
 
         /// <summary>
         /// Field: AdditionalProperties
@@ -804,6 +849,51 @@ namespace Microsoft.OpenApi
         /// Field: DependentRequired
         /// </summary>
         public const string DependentRequired = "dependentRequired";
+
+        /// <summary>
+        /// Extension: x-jsonschema-$anchor
+        /// </summary>
+        public const string AnchorExtension = "x-jsonschema-$anchor";
+
+        /// <summary>
+        /// Extension: x-jsonschema-propertyNames
+        /// </summary>
+        public const string PropertyNamesExtension = "x-jsonschema-propertyNames";
+
+        /// <summary>
+        /// Extension: x-jsonschema-dependentSchemas
+        /// </summary>
+        public const string DependentSchemasExtension = "x-jsonschema-dependentSchemas";
+
+        /// <summary>
+        /// Extension: x-jsonschema-if
+        /// </summary>
+        public const string IfExtension = "x-jsonschema-if";
+
+        /// <summary>
+        /// Extension: x-jsonschema-then
+        /// </summary>
+        public const string ThenExtension = "x-jsonschema-then";
+
+        /// <summary>
+        /// Extension: x-jsonschema-else
+        /// </summary>
+        public const string ElseExtension = "x-jsonschema-else";
+
+        /// <summary>
+        /// Extension: x-jsonschema-contentEncoding
+        /// </summary>
+        public const string ContentEncodingExtension = "x-jsonschema-contentEncoding";
+
+        /// <summary>
+        /// Extension: x-jsonschema-contentMediaType
+        /// </summary>
+        public const string ContentMediaTypeExtension = "x-jsonschema-contentMediaType";
+
+        /// <summary>
+        /// Extension: x-jsonschema-contentSchema
+        /// </summary>
+        public const string ContentSchemaExtension = "x-jsonschema-contentSchema";
 
         #region V2.0
 
