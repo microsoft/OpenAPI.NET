@@ -7,10 +7,11 @@ using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi
 {
+#pragma warning disable CS0618
     /// <summary>
     /// Schema reference object
     /// </summary>
-    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema, IOpenApiSchemaWithUnevaluatedProperties, IOpenApiExtensible
+    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema, IOpenApiSchemaMissingProperties, IOpenApiSchemaWithUnevaluatedProperties, IOpenApiExtensible
     {
 
         /// <summary>
@@ -61,6 +62,8 @@ namespace Microsoft.OpenApi
         public string? DynamicAnchor { get => Target?.DynamicAnchor; }
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiSchema>? Definitions { get => Target?.Definitions; }
+        /// <inheritdoc/>
+        public string? Anchor { get => (Target as IOpenApiSchemaMissingProperties)?.Anchor; }
         /// <inheritdoc/>
         public string? ExclusiveMaximum { get => Target?.ExclusiveMaximum; }
         /// <inheritdoc/>
@@ -146,7 +149,23 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public bool UnevaluatedProperties { get => Target?.UnevaluatedProperties ?? true; }
         /// <inheritdoc/>
-        public IOpenApiSchema? UnevaluatedPropertiesSchema { get => (Target as IOpenApiSchemaWithUnevaluatedProperties)?.UnevaluatedPropertiesSchema; }
+        public IOpenApiSchema? UnevaluatedPropertiesSchema { get => (Target as IOpenApiSchemaMissingProperties)?.UnevaluatedPropertiesSchema; }
+        /// <inheritdoc/>
+        public string? ContentEncoding { get => (Target as IOpenApiSchemaMissingProperties)?.ContentEncoding; }
+        /// <inheritdoc/>
+        public string? ContentMediaType { get => (Target as IOpenApiSchemaMissingProperties)?.ContentMediaType; }
+        /// <inheritdoc/>
+        public IOpenApiSchema? ContentSchema { get => (Target as IOpenApiSchemaMissingProperties)?.ContentSchema; }
+        /// <inheritdoc/>
+        public IOpenApiSchema? PropertyNames { get => (Target as IOpenApiSchemaMissingProperties)?.PropertyNames; }
+        /// <inheritdoc/>
+        public IDictionary<string, IOpenApiSchema>? DependentSchemas { get => (Target as IOpenApiSchemaMissingProperties)?.DependentSchemas; }
+        /// <inheritdoc/>
+        public IOpenApiSchema? If { get => (Target as IOpenApiSchemaMissingProperties)?.If; }
+        /// <inheritdoc/>
+        public IOpenApiSchema? Then { get => (Target as IOpenApiSchemaMissingProperties)?.Then; }
+        /// <inheritdoc/>
+        public IOpenApiSchema? Else { get => (Target as IOpenApiSchemaMissingProperties)?.Else; }
         /// <inheritdoc/>
         public OpenApiExternalDocs? ExternalDocs { get => Target?.ExternalDocs; }
         /// <inheritdoc/>
@@ -220,5 +239,6 @@ namespace Microsoft.OpenApi
         {
             return new JsonSchemaReference(sourceReference);
         }
+    #pragma warning restore CS0618
     }
 }

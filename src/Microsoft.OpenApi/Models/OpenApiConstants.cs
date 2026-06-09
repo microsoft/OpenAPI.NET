@@ -86,6 +86,11 @@ namespace Microsoft.OpenApi
         public const string Vocabulary = "$vocabulary";
 
         /// <summary>
+        /// Field: Anchor
+        /// </summary>
+        public const string Anchor = "$anchor";
+
+        /// <summary>
         /// Field: DynamicRef
         /// </summary>
         public const string DynamicRef = "$dynamicRef";
@@ -126,9 +131,14 @@ namespace Microsoft.OpenApi
         public const string UnevaluatedProperties = "unevaluatedProperties";
 
         /// <summary>
-        /// Extension: x-jsonschema-unevaluatedProperties
+        /// Extension: x-oai-unevaluatedProperties
         /// </summary>
-        public const string UnevaluatedPropertiesExtension = "x-jsonschema-unevaluatedProperties";
+        public const string UnevaluatedPropertiesExtension = "x-oai-unevaluatedProperties";
+
+        /// <summary>
+        /// Legacy extension: x-jsonschema-unevaluatedProperties
+        /// </summary>
+        public const string LegacyUnevaluatedPropertiesExtension = "x-jsonschema-unevaluatedProperties";
 
         /// <summary>
         /// Field: Version
@@ -496,9 +506,49 @@ namespace Microsoft.OpenApi
         public const string PatternProperties = "patternProperties";
 
         /// <summary>
+        /// Field: PropertyNames
+        /// </summary>
+        public const string PropertyNames = "propertyNames";
+
+        /// <summary>
         /// Extension: x-jsonschema-patternProperties
         /// </summary>
         public const string PatternPropertiesExtension = "x-jsonschema-patternProperties";
+
+        /// <summary>
+        /// Field: DependentSchemas
+        /// </summary>
+        public const string DependentSchemas = "dependentSchemas";
+
+        /// <summary>
+        /// Field: If
+        /// </summary>
+        public const string If = "if";
+
+        /// <summary>
+        /// Field: Then
+        /// </summary>
+        public const string Then = "then";
+
+        /// <summary>
+        /// Field: Else
+        /// </summary>
+        public const string Else = "else";
+
+        /// <summary>
+        /// Field: ContentEncoding
+        /// </summary>
+        public const string ContentEncoding = "contentEncoding";
+
+        /// <summary>
+        /// Field: ContentMediaType
+        /// </summary>
+        public const string ContentMediaType = "contentMediaType";
+
+        /// <summary>
+        /// Field: ContentSchema
+        /// </summary>
+        public const string ContentSchema = "contentSchema";
 
         /// <summary>
         /// Field: AdditionalProperties
@@ -734,6 +784,51 @@ namespace Microsoft.OpenApi
         /// Field: DependentRequired
         /// </summary>
         public const string DependentRequired = "dependentRequired";
+
+        /// <summary>
+        /// Extension: x-oai-$anchor
+        /// </summary>
+        public const string AnchorExtension = "x-oai-$anchor";
+
+        /// <summary>
+        /// Extension: x-oai-propertyNames
+        /// </summary>
+        public const string PropertyNamesExtension = "x-oai-propertyNames";
+
+        /// <summary>
+        /// Extension: x-oai-dependentSchemas
+        /// </summary>
+        public const string DependentSchemasExtension = "x-oai-dependentSchemas";
+
+        /// <summary>
+        /// Extension: x-oai-if
+        /// </summary>
+        public const string IfExtension = "x-oai-if";
+
+        /// <summary>
+        /// Extension: x-oai-then
+        /// </summary>
+        public const string ThenExtension = "x-oai-then";
+
+        /// <summary>
+        /// Extension: x-oai-else
+        /// </summary>
+        public const string ElseExtension = "x-oai-else";
+
+        /// <summary>
+        /// Extension: x-oai-contentEncoding
+        /// </summary>
+        public const string ContentEncodingExtension = "x-oai-contentEncoding";
+
+        /// <summary>
+        /// Extension: x-oai-contentMediaType
+        /// </summary>
+        public const string ContentMediaTypeExtension = "x-oai-contentMediaType";
+
+        /// <summary>
+        /// Extension: x-oai-contentSchema
+        /// </summary>
+        public const string ContentSchemaExtension = "x-oai-contentSchema";
 
         #region V2.0
 

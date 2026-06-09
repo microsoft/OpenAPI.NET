@@ -260,7 +260,7 @@ public interface IOpenApiSchema : IOpenApiDescribedElement, IOpenApiReadOnlyExte
     /// <summary>
     /// Indicates whether unevaluated properties are allowed. When false, no unevaluated properties are permitted.
     /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-core#name-unevaluatedproperties
-    /// Only serialized when false and UnevaluatedPropertiesSchema (from IOpenApiSchemaWithUnevaluatedProperties) is null.
+    /// Only serialized when false and UnevaluatedPropertiesSchema (from IOpenApiSchemaMissingProperties) is null.
     /// </summary>
     /// <remarks>
     /// NOTE: This property differs from the naming pattern of AdditionalPropertiesAllowed for binary compatibility reasons.

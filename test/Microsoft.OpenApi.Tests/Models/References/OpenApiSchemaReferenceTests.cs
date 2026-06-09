@@ -119,6 +119,51 @@ namespace Microsoft.OpenApi.Tests.Models.References
             Assert.Equal("target example", schemaReference.Examples.First()?.GetValue<string>());
         }
 
+        [Fact]
+        public void SchemaReferenceExposesMissingPropertiesFromTarget()
+        {
+            var workingDocument = new OpenApiDocument
+            {
+                Components = new OpenApiComponents(),
+            };
+            const string referenceId = "targetSchema";
+            workingDocument.Components.Schemas = new Dictionary<string, IOpenApiSchema>
+            {
+                [referenceId] = new OpenApiSchema
+                {
+                    Anchor = "root",
+                    UnevaluatedProperties = false,
+                    ContentEncoding = "base64",
+                    ContentMediaType = "application/jwt",
+                    ContentSchema = new OpenApiSchema { Type = JsonSchemaType.Array },
+                    PropertyNames = new OpenApiSchema { Pattern = "^[a-z]+$" },
+                    DependentSchemas = new Dictionary<string, IOpenApiSchema>
+                    {
+                        ["token"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                    },
+                    If = new OpenApiSchema { Required = new HashSet<string> { "token" } },
+                    Then = new OpenApiSchema { MinProperties = 1 },
+                    Else = new OpenApiSchema { MaxProperties = 0 }
+                }
+            };
+            workingDocument.Workspace.RegisterComponents(workingDocument);
+
+            var schemaReference = new OpenApiSchemaReference(referenceId, workingDocument);
+            var missingProperties = Assert.IsAssignableFrom<IOpenApiSchemaMissingProperties>(schemaReference);
+
+            Assert.Equal("root", missingProperties.Anchor);
+            Assert.False(missingProperties.UnevaluatedProperties);
+            Assert.Equal("base64", missingProperties.ContentEncoding);
+            Assert.Equal("application/jwt", missingProperties.ContentMediaType);
+            Assert.Equal(JsonSchemaType.Array, missingProperties.ContentSchema?.Type);
+            Assert.Equal("^[a-z]+$", missingProperties.PropertyNames?.Pattern);
+            Assert.Equal(JsonSchemaType.String, missingProperties.DependentSchemas?["token"].Type);
+            Assert.NotNull(missingProperties.If?.Required);
+            Assert.Contains("token", missingProperties.If.Required);
+            Assert.Equal(1, missingProperties.Then?.MinProperties);
+            Assert.Equal(0, missingProperties.Else?.MaxProperties);
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
