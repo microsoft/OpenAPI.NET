@@ -45,5 +45,37 @@ namespace Microsoft.OpenApi.Tests.Mocks
             _xmlMock.Verify(c => c.SerializeAsV2(It.IsAny<IOpenApiWriter>()), Times.Never, "V2 method should not be called");
             _xmlMock.Verify(c => c.SerializeAsV31(It.IsAny<IOpenApiWriter>()), Times.Never, "V31 method should not be called");
         }
+
+        [Fact]
+        public void SerializeAsV31_UsesV31CallbackForJsonSchemaKeywords()
+        {
+            using var stringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(stringWriter);
+            var childSchemaMock = new Mock<OpenApiSchema> { CallBase = true };
+            childSchemaMock.Object.Type = JsonSchemaType.String;
+            _schema.ContentSchema = childSchemaMock.Object;
+
+            _schema.SerializeAsV31(writer);
+
+            childSchemaMock.Verify(c => c.SerializeAsV31(It.IsAny<IOpenApiWriter>()), Times.AtLeastOnce);
+            childSchemaMock.Verify(c => c.SerializeAsV32(It.IsAny<IOpenApiWriter>()), Times.Never);
+            childSchemaMock.Verify(c => c.SerializeAsV3(It.IsAny<IOpenApiWriter>()), Times.Never);
+        }
+
+        [Fact]
+        public void SerializeAsV32_UsesV32CallbackForJsonSchemaKeywords()
+        {
+            using var stringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(stringWriter);
+            var childSchemaMock = new Mock<OpenApiSchema> { CallBase = true };
+            childSchemaMock.Object.Type = JsonSchemaType.String;
+            _schema.ContentSchema = childSchemaMock.Object;
+
+            _schema.SerializeAsV32(writer);
+
+            childSchemaMock.Verify(c => c.SerializeAsV32(It.IsAny<IOpenApiWriter>()), Times.AtLeastOnce);
+            childSchemaMock.Verify(c => c.SerializeAsV31(It.IsAny<IOpenApiWriter>()), Times.Never);
+            childSchemaMock.Verify(c => c.SerializeAsV3(It.IsAny<IOpenApiWriter>()), Times.Never);
+        }
     }
 }
