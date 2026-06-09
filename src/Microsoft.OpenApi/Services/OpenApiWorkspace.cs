@@ -94,8 +94,13 @@ namespace Microsoft.OpenApi
                 foreach (var item in document.Components.Schemas)
                 {
                     if (item.Value == null) continue;
-                    location = item.Value.Id ?? baseUri + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + item.Key;
+                    location = baseUri + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                     RegisterComponent(location, item.Value);
+
+                    if (item.Value is not OpenApiSchemaReference && item.Value.Id is string schemaId && schemaId.Length > 0)
+                    {
+                        RegisterComponent(schemaId, item.Value);
+                    }
                 }
             }
 
