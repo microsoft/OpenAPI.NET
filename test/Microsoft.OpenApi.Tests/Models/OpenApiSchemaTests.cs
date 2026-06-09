@@ -1293,8 +1293,10 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
-        [Fact]
-        public async Task SerializeUnevaluatedPropertiesAsExtensionInV2()
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializeUnevaluatedPropertiesAsExtensionInEarlierVersions(OpenApiSpecVersion version)
         {
             var expected = @"{ ""x-jsonschema-unevaluatedProperties"": false }";
             var schema = new OpenApiSchema
@@ -1302,27 +1304,15 @@ namespace Microsoft.OpenApi.Tests.Models
                 UnevaluatedProperties = false
             };
 
-            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await schema.SerializeAsJsonAsync(version);
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
-        [Fact]
-        public async Task SerializeUnevaluatedPropertiesAsExtensionInV3()
-        {
-            var expected = @"{ ""x-jsonschema-unevaluatedProperties"": false }";
-            var schema = new OpenApiSchema
-            {
-                UnevaluatedProperties = false
-            };
-
-            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
-
-            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
-        }
-
-        [Fact]
-        public async Task SerializeUnevaluatedPropertiesSchemaAsExtensionInV2()
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializeUnevaluatedPropertiesSchemaAsExtensionInEarlierVersions(OpenApiSpecVersion version)
         {
             var expected = @"{ ""x-jsonschema-unevaluatedProperties"": { ""type"": ""string"" } }";
             var schema = new OpenApiSchema
@@ -1333,24 +1323,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             };
 
-            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
-
-            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
-        }
-
-        [Fact]
-        public async Task SerializeUnevaluatedPropertiesSchemaAsExtensionInV3()
-        {
-            var expected = @"{ ""x-jsonschema-unevaluatedProperties"": { ""type"": ""string"" } }";
-            var schema = new OpenApiSchema
-            {
-                UnevaluatedPropertiesSchema = new OpenApiSchema
-                {
-                    Type = JsonSchemaType.String
-                }
-            };
-
-            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await schema.SerializeAsJsonAsync(version);
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
