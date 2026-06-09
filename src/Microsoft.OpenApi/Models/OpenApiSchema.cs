@@ -926,14 +926,14 @@ namespace Microsoft.OpenApi
                 if (UnevaluatedPropertiesSchema is not null)
                 {
                     writer.WriteOptionalObject(
-                        OpenApiConstants.LegacyUnevaluatedPropertiesExtension,
+                        OpenApiConstants.UnevaluatedPropertiesExtension,
                         UnevaluatedPropertiesSchema,
                         (w, s) => s.SerializeAsV2(w));
                 }
                 // Write boolean false as extension if explicitly set to false
                 else if (!UnevaluatedProperties)
                 {
-                    writer.WritePropertyName(OpenApiConstants.LegacyUnevaluatedPropertiesExtension);
+                    writer.WritePropertyName(OpenApiConstants.UnevaluatedPropertiesExtension);
                     writer.WriteValue(false);
                 }
             }

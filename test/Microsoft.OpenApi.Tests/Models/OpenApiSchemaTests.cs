@@ -1310,7 +1310,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Fact]
         public async Task SerializeUnevaluatedPropertiesAsExtensionInV3()
         {
-            var expected = @"{ ""x-oai-unevaluatedProperties"": false }";
+            var expected = @"{ ""x-jsonschema-unevaluatedProperties"": false }";
             var schema = new OpenApiSchema
             {
                 UnevaluatedProperties = false
@@ -1341,7 +1341,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Fact]
         public async Task SerializeUnevaluatedPropertiesSchemaAsExtensionInV3()
         {
-            var expected = @"{ ""x-oai-unevaluatedProperties"": { ""type"": ""string"" } }";
+            var expected = @"{ ""x-jsonschema-unevaluatedProperties"": { ""type"": ""string"" } }";
             var schema = new OpenApiSchema
             {
                 UnevaluatedPropertiesSchema = new OpenApiSchema
@@ -1433,29 +1433,29 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             var expected = JsonNode.Parse("""
                 {
-                  "x-oai-$anchor": "root",
-                  "x-oai-contentEncoding": "base64",
-                  "x-oai-contentMediaType": "application/jwt",
-                  "x-oai-contentSchema": {
+                  "x-jsonschema-$anchor": "root",
+                  "x-jsonschema-contentEncoding": "base64",
+                  "x-jsonschema-contentMediaType": "application/jwt",
+                  "x-jsonschema-contentSchema": {
                     "type": "array"
                   },
-                  "x-oai-propertyNames": {
+                  "x-jsonschema-propertyNames": {
                     "pattern": "^[a-z]+$"
                   },
-                  "x-oai-dependentSchemas": {
+                  "x-jsonschema-dependentSchemas": {
                     "token": {
                       "type": "string"
                     }
                   },
-                  "x-oai-if": {
+                  "x-jsonschema-if": {
                     "required": [
                       "token"
                     ]
                   },
-                  "x-oai-then": {
+                  "x-jsonschema-then": {
                     "minProperties": 1
                   },
-                  "x-oai-else": {
+                  "x-jsonschema-else": {
                     "maxProperties": 0
                   }
                 }

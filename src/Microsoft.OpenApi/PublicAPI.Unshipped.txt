@@ -1,23 +1,23 @@
 #nullable enable
 const Microsoft.OpenApi.OpenApiConstants.Anchor = "$anchor" -> string!
-const Microsoft.OpenApi.OpenApiConstants.AnchorExtension = "x-oai-$anchor" -> string!
+const Microsoft.OpenApi.OpenApiConstants.AnchorExtension = "x-jsonschema-$anchor" -> string!
 const Microsoft.OpenApi.OpenApiConstants.ContentEncoding = "contentEncoding" -> string!
-const Microsoft.OpenApi.OpenApiConstants.ContentEncodingExtension = "x-oai-contentEncoding" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ContentEncodingExtension = "x-jsonschema-contentEncoding" -> string!
 const Microsoft.OpenApi.OpenApiConstants.ContentMediaType = "contentMediaType" -> string!
-const Microsoft.OpenApi.OpenApiConstants.ContentMediaTypeExtension = "x-oai-contentMediaType" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ContentMediaTypeExtension = "x-jsonschema-contentMediaType" -> string!
 const Microsoft.OpenApi.OpenApiConstants.ContentSchema = "contentSchema" -> string!
-const Microsoft.OpenApi.OpenApiConstants.ContentSchemaExtension = "x-oai-contentSchema" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ContentSchemaExtension = "x-jsonschema-contentSchema" -> string!
 const Microsoft.OpenApi.OpenApiConstants.DependentSchemas = "dependentSchemas" -> string!
-const Microsoft.OpenApi.OpenApiConstants.DependentSchemasExtension = "x-oai-dependentSchemas" -> string!
+const Microsoft.OpenApi.OpenApiConstants.DependentSchemasExtension = "x-jsonschema-dependentSchemas" -> string!
 const Microsoft.OpenApi.OpenApiConstants.Else = "else" -> string!
-const Microsoft.OpenApi.OpenApiConstants.ElseExtension = "x-oai-else" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ElseExtension = "x-jsonschema-else" -> string!
 const Microsoft.OpenApi.OpenApiConstants.If = "if" -> string!
-const Microsoft.OpenApi.OpenApiConstants.IfExtension = "x-oai-if" -> string!
-const Microsoft.OpenApi.OpenApiConstants.LegacyUnevaluatedPropertiesExtension = "x-jsonschema-unevaluatedProperties" -> string!
+const Microsoft.OpenApi.OpenApiConstants.IfExtension = "x-jsonschema-if" -> string!
+const Microsoft.OpenApi.OpenApiConstants.LegacyUnevaluatedPropertiesExtension = "x-oai-unevaluatedProperties" -> string!
 const Microsoft.OpenApi.OpenApiConstants.PropertyNames = "propertyNames" -> string!
-const Microsoft.OpenApi.OpenApiConstants.PropertyNamesExtension = "x-oai-propertyNames" -> string!
+const Microsoft.OpenApi.OpenApiConstants.PropertyNamesExtension = "x-jsonschema-propertyNames" -> string!
 const Microsoft.OpenApi.OpenApiConstants.Then = "then" -> string!
-const Microsoft.OpenApi.OpenApiConstants.ThenExtension = "x-oai-then" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ThenExtension = "x-jsonschema-then" -> string!
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.Anchor.get -> string?
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.ContentEncoding.get -> string?
