@@ -204,6 +204,75 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         }
 
         [Fact]
+        public async Task ParseExternalSchemaReferencedDirectlyAndReExportedAtRootWorks()
+        {
+            var tempDirectory = Path.Join(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempDirectory);
+
+            var rootPath = Path.Join(tempDirectory, "root.yaml");
+            var sharedPath = Path.Join(tempDirectory, "shared.yaml");
+
+            await File.WriteAllTextAsync(rootPath,
+            @"openapi: 3.1.0
+info:
+  title: T
+  version: 1.0.0
+paths:
+  /a:
+    get:
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: './shared.yaml#/Leaf'
+components:
+  schemas:
+    Leaf:
+      $ref: './shared.yaml#/Leaf'
+");
+
+            await File.WriteAllTextAsync(sharedPath,
+            @"Leaf:
+  type: object
+  properties:
+    x:
+      type: string
+    y:
+      type: integer
+");
+
+            try
+            {
+                var settings = new OpenApiReaderSettings
+                {
+                    LoadExternalRefs = true,
+                    BaseUrl = new Uri(rootPath),
+                };
+                settings.AddYamlReader();
+
+                var result = await OpenApiDocument.LoadAsync(rootPath, settings);
+                var responseSchema = result.Document.Paths["/a"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
+                var metaSchema = responseSchema.Properties["meta"];
+                var leafSchema = result.Document.Components.Schemas["Leaf"];
+
+                Assert.NotNull(result.Document);
+                Assert.DoesNotContain(result.Diagnostic.Errors, error => error.Message.Contains("Circular reference detected while resolving schema", StringComparison.Ordinal));
+                Assert.DoesNotContain(result.Diagnostic.Warnings, warning => warning.Message.Contains("Circular reference detected while resolving schema", StringComparison.Ordinal));
+                Assert.IsType<OpenApiSchemaReference>(metaSchema);
+                Assert.IsType<OpenApiSchemaReference>(leafSchema);
+            }
+            finally
+            {
+                Directory.Delete(tempDirectory, true);
+            }
+        }
+
+        [Fact]
         public void ResolveSubSchema_ShouldTraverseKnownKeywords()
         {
             var schema = new OpenApiSchema
