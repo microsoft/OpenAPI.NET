@@ -45,7 +45,7 @@ internal static partial class OpenApiV31Deserializer
             (o, n, t, c) => o.Definitions = n.CreateMap(LoadSchema, t, c)
         },
         {
-            "$anchor",
+            OpenApiConstants.Anchor,
             (o, n, _, _) => o.Anchor = n.GetScalarValue()
         },
             {
@@ -169,15 +169,15 @@ internal static partial class OpenApiV31Deserializer
             }
         },
         {
-            "contentEncoding",
+            OpenApiConstants.ContentEncoding,
             (o, n, _, _) => o.ContentEncoding = n.GetScalarValue()
         },
         {
-            "contentMediaType",
+            OpenApiConstants.ContentMediaType,
             (o, n, _, _) => o.ContentMediaType = n.GetScalarValue()
         },
         {
-            "contentSchema",
+            OpenApiConstants.ContentSchema,
             (o, n, doc, c) => o.ContentSchema = LoadSchema(n, doc, c)
         },
         {
@@ -266,7 +266,7 @@ internal static partial class OpenApiV31Deserializer
             (o, n, t, c) => o.PatternProperties = n.CreateMap(LoadSchema, t, c)
         },
         {
-            "propertyNames",
+            OpenApiConstants.PropertyNames,
             (o, n, doc, c) => o.PropertyNames = LoadSchema(n, doc, c)
         },
         {
@@ -377,19 +377,19 @@ internal static partial class OpenApiV31Deserializer
             }
         },
         {
-            "dependentSchemas",
+            OpenApiConstants.DependentSchemas,
             (o, n, t, c) => o.DependentSchemas = n.CreateMap(LoadSchema, t, c)
         },
         {
-            "if",
+            OpenApiConstants.If,
             (o, n, doc, c) => o.If = LoadSchema(n, doc, c)
         },
         {
-            "then",
+            OpenApiConstants.Then,
             (o, n, doc, c) => o.Then = LoadSchema(n, doc, c)
         },
         {
-            "else",
+            OpenApiConstants.Else,
             (o, n, doc, c) => o.Else = LoadSchema(n, doc, c)
         },
     };
