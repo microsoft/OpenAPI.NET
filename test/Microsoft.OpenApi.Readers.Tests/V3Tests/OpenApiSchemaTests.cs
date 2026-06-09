@@ -182,28 +182,28 @@ get:
         public void ParseSchemaWithOaiCompatibilityKeywordsShouldSucceed()
         {
             var schemaJson = @"{
-  ""x-oai-$anchor"": ""root"",
-  ""x-oai-unevaluatedProperties"": false,
-  ""x-oai-contentEncoding"": ""base64"",
-  ""x-oai-contentMediaType"": ""application/jwt"",
-  ""x-oai-contentSchema"": {
+  ""x-jsonschema-$anchor"": ""root"",
+  ""x-jsonschema-unevaluatedProperties"": false,
+  ""x-jsonschema-contentEncoding"": ""base64"",
+  ""x-jsonschema-contentMediaType"": ""application/jwt"",
+  ""x-jsonschema-contentSchema"": {
     ""type"": ""array""
   },
-  ""x-oai-propertyNames"": {
+  ""x-jsonschema-propertyNames"": {
     ""pattern"": ""^[a-z]+$""
   },
-  ""x-oai-dependentSchemas"": {
+  ""x-jsonschema-dependentSchemas"": {
     ""token"": {
       ""type"": ""string""
     }
   },
-  ""x-oai-if"": {
+  ""x-jsonschema-if"": {
     ""required"": [""token""]
   },
-  ""x-oai-then"": {
+  ""x-jsonschema-then"": {
     ""minProperties"": 1
   },
-  ""x-oai-else"": {
+  ""x-jsonschema-else"": {
     ""maxProperties"": 0
   }
 }";

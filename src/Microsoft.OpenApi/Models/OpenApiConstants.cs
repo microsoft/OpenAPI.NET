@@ -136,14 +136,14 @@ namespace Microsoft.OpenApi
         public const string UnevaluatedProperties = "unevaluatedProperties";
 
         /// <summary>
-        /// Extension: x-oai-unevaluatedProperties
+        /// Extension: x-jsonschema-unevaluatedProperties
         /// </summary>
-        public const string UnevaluatedPropertiesExtension = "x-oai-unevaluatedProperties";
+        public const string UnevaluatedPropertiesExtension = "x-jsonschema-unevaluatedProperties";
 
         /// <summary>
-        /// Legacy extension: x-jsonschema-unevaluatedProperties
+        /// Legacy extension: x-oai-unevaluatedProperties
         /// </summary>
-        public const string LegacyUnevaluatedPropertiesExtension = "x-jsonschema-unevaluatedProperties";
+        public const string LegacyUnevaluatedPropertiesExtension = "x-oai-unevaluatedProperties";
 
         /// <summary>
         /// Field: Version
@@ -841,49 +841,49 @@ namespace Microsoft.OpenApi
         public const string DependentRequired = "dependentRequired";
 
         /// <summary>
-        /// Extension: x-oai-$anchor
+        /// Extension: x-jsonschema-$anchor
         /// </summary>
-        public const string AnchorExtension = "x-oai-$anchor";
+        public const string AnchorExtension = "x-jsonschema-$anchor";
 
         /// <summary>
-        /// Extension: x-oai-propertyNames
+        /// Extension: x-jsonschema-propertyNames
         /// </summary>
-        public const string PropertyNamesExtension = "x-oai-propertyNames";
+        public const string PropertyNamesExtension = "x-jsonschema-propertyNames";
 
         /// <summary>
-        /// Extension: x-oai-dependentSchemas
+        /// Extension: x-jsonschema-dependentSchemas
         /// </summary>
-        public const string DependentSchemasExtension = "x-oai-dependentSchemas";
+        public const string DependentSchemasExtension = "x-jsonschema-dependentSchemas";
 
         /// <summary>
-        /// Extension: x-oai-if
+        /// Extension: x-jsonschema-if
         /// </summary>
-        public const string IfExtension = "x-oai-if";
+        public const string IfExtension = "x-jsonschema-if";
 
         /// <summary>
-        /// Extension: x-oai-then
+        /// Extension: x-jsonschema-then
         /// </summary>
-        public const string ThenExtension = "x-oai-then";
+        public const string ThenExtension = "x-jsonschema-then";
 
         /// <summary>
-        /// Extension: x-oai-else
+        /// Extension: x-jsonschema-else
         /// </summary>
-        public const string ElseExtension = "x-oai-else";
+        public const string ElseExtension = "x-jsonschema-else";
 
         /// <summary>
-        /// Extension: x-oai-contentEncoding
+        /// Extension: x-jsonschema-contentEncoding
         /// </summary>
-        public const string ContentEncodingExtension = "x-oai-contentEncoding";
+        public const string ContentEncodingExtension = "x-jsonschema-contentEncoding";
 
         /// <summary>
-        /// Extension: x-oai-contentMediaType
+        /// Extension: x-jsonschema-contentMediaType
         /// </summary>
-        public const string ContentMediaTypeExtension = "x-oai-contentMediaType";
+        public const string ContentMediaTypeExtension = "x-jsonschema-contentMediaType";
 
         /// <summary>
-        /// Extension: x-oai-contentSchema
+        /// Extension: x-jsonschema-contentSchema
         /// </summary>
-        public const string ContentSchemaExtension = "x-oai-contentSchema";
+        public const string ContentSchemaExtension = "x-jsonschema-contentSchema";
 
         #region V2.0
 

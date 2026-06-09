@@ -2022,7 +2022,7 @@ virtual Microsoft.OpenApi.OpenApiXml.SerializeAsV3(Microsoft.OpenApi.IOpenApiWri
 virtual Microsoft.OpenApi.OpenApiXml.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
 virtual Microsoft.OpenApi.OpenApiXml.SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
 const Microsoft.OpenApi.OpenApiConstants.OAuth2MetadataUrl = "oauth2MetadataUrl" -> string!
-const Microsoft.OpenApi.OpenApiConstants.UnevaluatedPropertiesExtension = "x-oai-unevaluatedProperties" -> string!
+const Microsoft.OpenApi.OpenApiConstants.UnevaluatedPropertiesExtension = "x-jsonschema-unevaluatedProperties" -> string!
 Microsoft.OpenApi.IOAuth2MetadataProvider
 Microsoft.OpenApi.IOAuth2MetadataProvider.OAuth2MetadataUrl.get -> System.Uri?
 Microsoft.OpenApi.IOpenApiSchemaWithUnevaluatedProperties
