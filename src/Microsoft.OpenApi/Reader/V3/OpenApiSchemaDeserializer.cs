@@ -301,24 +301,6 @@ namespace Microsoft.OpenApi.Reader.V3
                 }
             },
             {
-                OpenApiConstants.LegacyUnevaluatedPropertiesExtension,
-                (o, n, t, c) =>
-                {
-                    if (n is JsonValue)
-                    {
-                        var value = n.GetScalarValue();
-                        if (value is not null)
-                        {
-                            o.UnevaluatedProperties = bool.Parse(value);
-                        }
-                    }
-                    else
-                    {
-                        o.UnevaluatedPropertiesSchema = LoadSchema(n, t, c);
-                    }
-                }
-            },
-            {
                 OpenApiConstants.AnchorExtension,
                 (o, n, _, _) => o.Anchor = n.GetScalarValue()
             },

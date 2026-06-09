@@ -136,11 +136,6 @@ namespace Microsoft.OpenApi
         public const string UnevaluatedPropertiesExtension = "x-jsonschema-unevaluatedProperties";
 
         /// <summary>
-        /// Legacy extension: x-oai-unevaluatedProperties
-        /// </summary>
-        public const string LegacyUnevaluatedPropertiesExtension = "x-oai-unevaluatedProperties";
-
-        /// <summary>
         /// Field: Version
         /// </summary>
         public const string Version = "version";
