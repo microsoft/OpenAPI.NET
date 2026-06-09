@@ -149,11 +149,11 @@ internal static partial class OpenApiV32Deserializer
             }
         },
         {
-            "contains",
+            OpenApiConstants.Contains,
             (o, n, doc, c) => o.Contains = LoadSchema(n, doc, c)
         },
         {
-            "maxContains",
+            OpenApiConstants.MaxContains,
             (o, n, _, _) =>
             {
                 var maxContains = n.GetScalarValue();
@@ -164,7 +164,7 @@ internal static partial class OpenApiV32Deserializer
             }
         },
         {
-            "minContains",
+            OpenApiConstants.MinContains,
             (o, n, _, _) =>
             {
                 var minContains = n.GetScalarValue();
