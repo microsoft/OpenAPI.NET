@@ -317,9 +317,9 @@ namespace Microsoft.OpenApi
             DynamicAnchor = schema.DynamicAnchor ?? DynamicAnchor;
             DynamicRef = schema.DynamicRef ?? DynamicRef;
             Definitions = schema.Definitions != null ? new Dictionary<string, IOpenApiSchema>(schema.Definitions) : null;
+            UnevaluatedProperties = schema.UnevaluatedProperties;
             if (schema is IOpenApiSchemaMissingProperties missingProperties)
             {
-                UnevaluatedProperties = missingProperties.UnevaluatedProperties;
                 if (missingProperties.UnevaluatedPropertiesSchema is { } unevaluatedSchema)
                 {
                     UnevaluatedPropertiesSchema = unevaluatedSchema.CreateShallowCopy();
@@ -332,10 +332,6 @@ namespace Microsoft.OpenApi
                 If = missingProperties.If?.CreateShallowCopy();
                 Then = missingProperties.Then?.CreateShallowCopy();
                 Else = missingProperties.Else?.CreateShallowCopy();
-            }
-            else
-            {
-                UnevaluatedProperties = schema.UnevaluatedProperties;
             }
             ExclusiveMaximum = schema.ExclusiveMaximum ?? ExclusiveMaximum;
             ExclusiveMinimum = schema.ExclusiveMinimum ?? ExclusiveMinimum;
