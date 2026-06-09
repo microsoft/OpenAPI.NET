@@ -523,6 +523,48 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.Equal(100, baseSchema.UnevaluatedPropertiesSchema.MaxLength);
         }
 
+        [Fact]
+        public void OpenApiSchemaCopyConstructorWithMissingPropertiesSucceeds()
+        {
+            var baseSchema = new OpenApiSchema
+            {
+                Anchor = "root",
+                UnevaluatedProperties = false,
+                UnevaluatedPropertiesSchema = new OpenApiSchema { Type = JsonSchemaType.String },
+                ContentEncoding = "base64",
+                ContentMediaType = "application/jwt",
+                ContentSchema = new OpenApiSchema { Type = JsonSchemaType.Array },
+                PropertyNames = new OpenApiSchema { Pattern = "^[a-z]+$" },
+                DependentSchemas = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["token"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                },
+                If = new OpenApiSchema { Required = new HashSet<string> { "token" } },
+                Then = new OpenApiSchema { MinProperties = 1 },
+                Else = new OpenApiSchema { MaxProperties = 0 }
+            };
+
+            var actualSchema = Assert.IsType<OpenApiSchema>(baseSchema.CreateShallowCopy());
+            var actualMissingProperties = Assert.IsAssignableFrom<IOpenApiSchemaMissingProperties>(actualSchema);
+
+            Assert.Equal("root", actualMissingProperties.Anchor);
+            Assert.False(actualMissingProperties.UnevaluatedProperties);
+            Assert.NotNull(actualMissingProperties.UnevaluatedPropertiesSchema);
+            Assert.Equal("base64", actualMissingProperties.ContentEncoding);
+            Assert.Equal("application/jwt", actualMissingProperties.ContentMediaType);
+            Assert.NotNull(actualMissingProperties.ContentSchema);
+            Assert.NotNull(actualMissingProperties.PropertyNames);
+            Assert.NotNull(actualMissingProperties.DependentSchemas);
+            Assert.NotNull(actualMissingProperties.If);
+            Assert.NotNull(actualMissingProperties.Then);
+            Assert.NotNull(actualMissingProperties.Else);
+            Assert.NotSame(baseSchema.ContentSchema, actualMissingProperties.ContentSchema);
+            Assert.NotSame(baseSchema.PropertyNames, actualMissingProperties.PropertyNames);
+            Assert.NotSame(baseSchema.If, actualMissingProperties.If);
+            Assert.NotSame(baseSchema.Then, actualMissingProperties.Then);
+            Assert.NotSame(baseSchema.Else, actualMissingProperties.Else);
+        }
+
         public static TheoryData<JsonNode> SchemaExamples()
         {
             return new()
@@ -1256,32 +1298,38 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
-        [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
-        public async Task SerializeUnevaluatedPropertiesAsExtensionInEarlierVersions(OpenApiSpecVersion version)
+        [Fact]
+        public async Task SerializeUnevaluatedPropertiesAsExtensionInV2()
         {
             var expected = @"{ ""x-jsonschema-unevaluatedProperties"": false }";
-            // Given - UnevaluatedProperties should be emitted as extension in versions < 3.1
             var schema = new OpenApiSchema
             {
                 UnevaluatedProperties = false
             };
 
-            // When
-            var actual = await schema.SerializeAsJsonAsync(version);
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
-            // Then
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
-        [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
-        public async Task SerializeUnevaluatedPropertiesSchemaAsExtensionInEarlierVersions(OpenApiSpecVersion version)
+        [Fact]
+        public async Task SerializeUnevaluatedPropertiesAsExtensionInV3()
+        {
+            var expected = @"{ ""x-oai-unevaluatedProperties"": false }";
+            var schema = new OpenApiSchema
+            {
+                UnevaluatedProperties = false
+            };
+
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeUnevaluatedPropertiesSchemaAsExtensionInV2()
         {
             var expected = @"{ ""x-jsonschema-unevaluatedProperties"": { ""type"": ""string"" } }";
-            // Given - UnevaluatedPropertiesSchema should be emitted as extension in versions < 3.1
             var schema = new OpenApiSchema
             {
                 UnevaluatedPropertiesSchema = new OpenApiSchema
@@ -1290,10 +1338,25 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             };
 
-            // When
-            var actual = await schema.SerializeAsJsonAsync(version);
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
-            // Then
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeUnevaluatedPropertiesSchemaAsExtensionInV3()
+        {
+            var expected = @"{ ""x-oai-unevaluatedProperties"": { ""type"": ""string"" } }";
+            var schema = new OpenApiSchema
+            {
+                UnevaluatedPropertiesSchema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String
+                }
+            };
+
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
@@ -1314,6 +1377,114 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Then
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeMissingPropertiesEmitsJsonSchemaKeywordsInV31()
+        {
+            var expected = JsonNode.Parse("""
+                {
+                  "$anchor": "root",
+                  "contentEncoding": "base64",
+                  "contentMediaType": "application/jwt",
+                  "contentSchema": {
+                    "type": "array"
+                  },
+                  "propertyNames": {
+                    "pattern": "^[a-z]+$"
+                  },
+                  "dependentSchemas": {
+                    "token": {
+                      "type": "string"
+                    }
+                  },
+                  "if": {
+                    "required": [
+                      "token"
+                    ]
+                  },
+                  "then": {
+                    "minProperties": 1
+                  },
+                  "else": {
+                    "maxProperties": 0
+                  }
+                }
+                """);
+
+            var schema = new OpenApiSchema
+            {
+                Anchor = "root",
+                ContentEncoding = "base64",
+                ContentMediaType = "application/jwt",
+                ContentSchema = new OpenApiSchema { Type = JsonSchemaType.Array },
+                PropertyNames = new OpenApiSchema { Pattern = "^[a-z]+$" },
+                DependentSchemas = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["token"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                },
+                If = new OpenApiSchema { Required = new HashSet<string> { "token" } },
+                Then = new OpenApiSchema { MinProperties = 1 },
+                Else = new OpenApiSchema { MaxProperties = 0 }
+            };
+
+            var actual = JsonNode.Parse(await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1));
+
+            Assert.True(JsonNode.DeepEquals(expected, actual));
+        }
+
+        [Fact]
+        public async Task SerializeMissingPropertiesEmitsOaiExtensionsInV3()
+        {
+            var expected = JsonNode.Parse("""
+                {
+                  "x-oai-$anchor": "root",
+                  "x-oai-contentEncoding": "base64",
+                  "x-oai-contentMediaType": "application/jwt",
+                  "x-oai-contentSchema": {
+                    "type": "array"
+                  },
+                  "x-oai-propertyNames": {
+                    "pattern": "^[a-z]+$"
+                  },
+                  "x-oai-dependentSchemas": {
+                    "token": {
+                      "type": "string"
+                    }
+                  },
+                  "x-oai-if": {
+                    "required": [
+                      "token"
+                    ]
+                  },
+                  "x-oai-then": {
+                    "minProperties": 1
+                  },
+                  "x-oai-else": {
+                    "maxProperties": 0
+                  }
+                }
+                """);
+
+            var schema = new OpenApiSchema
+            {
+                Anchor = "root",
+                ContentEncoding = "base64",
+                ContentMediaType = "application/jwt",
+                ContentSchema = new OpenApiSchema { Type = JsonSchemaType.Array },
+                PropertyNames = new OpenApiSchema { Pattern = "^[a-z]+$" },
+                DependentSchemas = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["token"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                },
+                If = new OpenApiSchema { Required = new HashSet<string> { "token" } },
+                Then = new OpenApiSchema { MinProperties = 1 },
+                Else = new OpenApiSchema { MaxProperties = 0 }
+            };
+
+            var actual = JsonNode.Parse(await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0));
+
+            Assert.True(JsonNode.DeepEquals(expected, actual));
         }
 
         [Theory]

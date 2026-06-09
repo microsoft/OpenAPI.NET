@@ -708,6 +708,50 @@ description: Schema for a person object
             Assert.Equivalent(expected, actual);
         }
 
+        [Fact]
+        public void ParseSchemaWithMissingJsonSchemaProperties()
+        {
+            var schema = @"{
+  ""$anchor"": ""root"",
+  ""contentEncoding"": ""base64"",
+  ""contentMediaType"": ""application/jwt"",
+  ""contentSchema"": {
+    ""type"": ""array""
+  },
+  ""propertyNames"": {
+    ""pattern"": ""^[a-z]+$""
+  },
+  ""dependentSchemas"": {
+    ""token"": {
+      ""type"": ""string""
+    }
+  },
+  ""if"": {
+    ""required"": [""token""]
+  },
+  ""then"": {
+    ""minProperties"": 1
+  },
+  ""else"": {
+    ""maxProperties"": 0
+  }
+}";
+
+            var actual = OpenApiModelFactory.Parse<OpenApiSchema>(schema, OpenApiSpecVersion.OpenApi3_2, new(), out _);
+            var missingProperties = Assert.IsAssignableFrom<IOpenApiSchemaMissingProperties>(actual);
+
+            Assert.Equal("root", missingProperties.Anchor);
+            Assert.Equal("base64", missingProperties.ContentEncoding);
+            Assert.Equal("application/jwt", missingProperties.ContentMediaType);
+            Assert.Equal(JsonSchemaType.Array, missingProperties.ContentSchema?.Type);
+            Assert.Equal("^[a-z]+$", missingProperties.PropertyNames?.Pattern);
+            Assert.Equal(JsonSchemaType.String, missingProperties.DependentSchemas?["token"].Type);
+            Assert.NotNull(missingProperties.If?.Required);
+            Assert.Contains("token", missingProperties.If.Required);
+            Assert.Equal(1, missingProperties.Then?.MinProperties);
+            Assert.Equal(0, missingProperties.Else?.MaxProperties);
+        }
+
         [Theory]
         [InlineData("{}")]
         [InlineData("true")]
@@ -738,4 +782,3 @@ description: Schema for a person object
         }
     }
 }
-
