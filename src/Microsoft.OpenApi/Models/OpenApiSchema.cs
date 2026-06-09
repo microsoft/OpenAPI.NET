@@ -451,7 +451,7 @@ namespace Microsoft.OpenApi
 
             if (version >= OpenApiSpecVersion.OpenApi3_1)
             {
-                WriteJsonSchemaKeywords(writer);
+                WriteJsonSchemaKeywords(writer, callback);
             }
 
             // title
@@ -652,14 +652,14 @@ namespace Microsoft.OpenApi
             SerializeAsV2(writer: writer, parentRequiredProperties: new HashSet<string>(), propertyName: null);
         }
 
-        internal void WriteJsonSchemaKeywords(IOpenApiWriter writer)
+        internal void WriteJsonSchemaKeywords(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteProperty(OpenApiConstants.Id, Id);
             writer.WriteProperty(OpenApiConstants.DollarSchema, Schema?.ToString());
             writer.WriteProperty(OpenApiConstants.Comment, Comment);
             writer.WriteProperty(OpenApiConstants.Const, Const);
             writer.WriteOptionalMap(OpenApiConstants.Vocabulary, Vocabulary, (w, s) => w.WriteValue(s));
-            writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, s) => s.SerializeAsV31(w));
+            writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, callback);
             writer.WriteProperty(OpenApiConstants.Anchor, Anchor);
             writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);
             writer.WriteProperty(OpenApiConstants.DynamicAnchor, DynamicAnchor);
@@ -674,7 +674,7 @@ namespace Microsoft.OpenApi
                     writer.WriteOptionalObject(
                         OpenApiConstants.UnevaluatedProperties,
                         UnevaluatedPropertiesSchema,
-                        (w, s) => s.SerializeAsV31(w));
+                        callback);
                 }
                 else if (!UnevaluatedProperties)
                 {
@@ -682,16 +682,16 @@ namespace Microsoft.OpenApi
                 }
             }
             writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (nodeWriter, s) => nodeWriter.WriteAny(s));
-            writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, (w, s) => s.SerializeAsV31(w));
+            writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, callback);
             writer.WriteOptionalMap(OpenApiConstants.DependentRequired, DependentRequired, (w, s) => w.WriteValue(s));
             writer.WriteProperty(OpenApiConstants.ContentEncoding, ContentEncoding);
             writer.WriteProperty(OpenApiConstants.ContentMediaType, ContentMediaType);
-            writer.WriteOptionalObject(OpenApiConstants.ContentSchema, ContentSchema, (w, s) => s.SerializeAsV31(w));
-            writer.WriteOptionalObject(OpenApiConstants.PropertyNames, PropertyNames, (w, s) => s.SerializeAsV31(w));
-            writer.WriteOptionalMap(OpenApiConstants.DependentSchemas, DependentSchemas, (w, s) => s.SerializeAsV31(w));
-            writer.WriteOptionalObject(OpenApiConstants.If, If, (w, s) => s.SerializeAsV31(w));
-            writer.WriteOptionalObject(OpenApiConstants.Then, Then, (w, s) => s.SerializeAsV31(w));
-            writer.WriteOptionalObject(OpenApiConstants.Else, Else, (w, s) => s.SerializeAsV31(w));
+            writer.WriteOptionalObject(OpenApiConstants.ContentSchema, ContentSchema, callback);
+            writer.WriteOptionalObject(OpenApiConstants.PropertyNames, PropertyNames, callback);
+            writer.WriteOptionalMap(OpenApiConstants.DependentSchemas, DependentSchemas, callback);
+            writer.WriteOptionalObject(OpenApiConstants.If, If, callback);
+            writer.WriteOptionalObject(OpenApiConstants.Then, Then, callback);
+            writer.WriteOptionalObject(OpenApiConstants.Else, Else, callback);
         }
 
         private void WriteV3CompatibilityKeywords(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
