@@ -22,12 +22,15 @@ const Microsoft.OpenApi.OpenApiConstants.Then = "then" -> string!
 const Microsoft.OpenApi.OpenApiConstants.ThenExtension = "x-jsonschema-then" -> string!
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.Anchor.get -> string?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.Contains.get -> Microsoft.OpenApi.IOpenApiSchema?
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.ContentEncoding.get -> string?
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.ContentMediaType.get -> string?
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.ContentSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.DependentSchemas.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.Else.get -> Microsoft.OpenApi.IOpenApiSchema?
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.If.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.MaxContains.get -> uint?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.MinContains.get -> uint?
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.PropertyNames.get -> Microsoft.OpenApi.IOpenApiSchema?
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.Then.get -> Microsoft.OpenApi.IOpenApiSchema?
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.UnevaluatedProperties.get -> bool
@@ -62,10 +65,6 @@ Microsoft.OpenApi.OpenApiSchemaReference.Then.get -> Microsoft.OpenApi.IOpenApiS
 const Microsoft.OpenApi.OpenApiConstants.Contains = "contains" -> string!
 const Microsoft.OpenApi.OpenApiConstants.MaxContains = "maxContains" -> string!
 const Microsoft.OpenApi.OpenApiConstants.MinContains = "minContains" -> string!
-Microsoft.OpenApi.IOpenApiSchemaWithContainsProperties
-Microsoft.OpenApi.IOpenApiSchemaWithContainsProperties.Contains.get -> Microsoft.OpenApi.IOpenApiSchema?
-Microsoft.OpenApi.IOpenApiSchemaWithContainsProperties.MaxContains.get -> uint?
-Microsoft.OpenApi.IOpenApiSchemaWithContainsProperties.MinContains.get -> uint?
 Microsoft.OpenApi.OpenApiSchema.Contains.get -> Microsoft.OpenApi.IOpenApiSchema?
 Microsoft.OpenApi.OpenApiSchema.Contains.set -> void
 Microsoft.OpenApi.OpenApiSchema.MaxContains.get -> uint?

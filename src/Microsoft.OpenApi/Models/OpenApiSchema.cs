@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi
     /// - Serialization: To produce something functionally equivalent to boolean schemas, create an empty <see cref="OpenApiSchema"/>
     ///   for "true" behavior, or create a schema with only <see cref="Not"/> set to an empty schema for "false" behavior.
     /// </summary>
-    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema, IOpenApiSchemaMissingProperties, IOpenApiSchemaWithUnevaluatedProperties, IOpenApiSchemaWithContainsProperties, IMetadataContainer
+    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema, IOpenApiSchemaMissingProperties, IOpenApiSchemaWithUnevaluatedProperties, IMetadataContainer
     {
         /// <inheritdoc />
         public string? Title { get; set; }
@@ -333,6 +333,9 @@ namespace Microsoft.OpenApi
                 {
                     UnevaluatedPropertiesSchema = unevaluatedSchema.CreateShallowCopy();
                 }
+                Contains = missingProperties.Contains?.CreateShallowCopy();
+                MaxContains = missingProperties.MaxContains ?? MaxContains;
+                MinContains = missingProperties.MinContains ?? MinContains;
                 ContentEncoding = missingProperties.ContentEncoding ?? ContentEncoding;
                 ContentMediaType = missingProperties.ContentMediaType ?? ContentMediaType;
                 ContentSchema = missingProperties.ContentSchema?.CreateShallowCopy();
@@ -370,12 +373,6 @@ namespace Microsoft.OpenApi
             MaxItems = schema.MaxItems ?? MaxItems;
             MinItems = schema.MinItems ?? MinItems;
             UniqueItems = schema.UniqueItems ?? UniqueItems;
-            if (schema is IOpenApiSchemaWithContainsProperties containsSchema)
-            {
-                Contains = containsSchema.Contains?.CreateShallowCopy();
-                MaxContains = containsSchema.MaxContains ?? MaxContains;
-                MinContains = containsSchema.MinContains ?? MinContains;
-            }
             Properties = schema.Properties != null ? new Dictionary<string, IOpenApiSchema>(schema.Properties) : null;
             PatternProperties = schema.PatternProperties != null ? new Dictionary<string, IOpenApiSchema>(schema.PatternProperties) : null;
             MaxProperties = schema.MaxProperties ?? MaxProperties;

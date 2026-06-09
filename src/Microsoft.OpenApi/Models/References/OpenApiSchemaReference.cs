@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Schema reference object
     /// </summary>
-    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema, IOpenApiSchemaMissingProperties, IOpenApiSchemaWithUnevaluatedProperties, IOpenApiSchemaWithContainsProperties, IOpenApiExtensible
+    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema, IOpenApiSchemaMissingProperties, IOpenApiSchemaWithUnevaluatedProperties, IOpenApiExtensible
     {
 
         /// <summary>
@@ -123,11 +123,11 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public bool? UniqueItems { get => Target?.UniqueItems; }
         /// <inheritdoc/>
-        public IOpenApiSchema? Contains { get => (Target as IOpenApiSchemaWithContainsProperties)?.Contains; }
+        public IOpenApiSchema? Contains { get => (Target as IOpenApiSchemaMissingProperties)?.Contains; }
         /// <inheritdoc/>
-        public uint? MaxContains { get => (Target as IOpenApiSchemaWithContainsProperties)?.MaxContains; }
+        public uint? MaxContains { get => (Target as IOpenApiSchemaMissingProperties)?.MaxContains; }
         /// <inheritdoc/>
-        public uint? MinContains { get => (Target as IOpenApiSchemaWithContainsProperties)?.MinContains; }
+        public uint? MinContains { get => (Target as IOpenApiSchemaMissingProperties)?.MinContains; }
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiSchema>? Properties { get => Target?.Properties; }
         /// <inheritdoc/>

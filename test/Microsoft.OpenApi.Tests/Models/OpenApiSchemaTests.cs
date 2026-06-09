@@ -1838,10 +1838,10 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Assert.Empty(readResult.Diagnostic.Errors);
             var schema = readResult.Document.Components.Schemas["TestSchema"];
-            var containsProperties = Assert.IsAssignableFrom<IOpenApiSchemaWithContainsProperties>(schema);
-            Assert.Equal(JsonSchemaType.String, containsProperties.Contains?.Type);
-            Assert.Equal((uint?)5, containsProperties.MaxContains);
-            Assert.Equal((uint?)1, containsProperties.MinContains);
+            var missingProperties = Assert.IsAssignableFrom<IOpenApiSchemaMissingProperties>(schema);
+            Assert.Equal(JsonSchemaType.String, missingProperties.Contains?.Type);
+            Assert.Equal((uint?)5, missingProperties.MaxContains);
+            Assert.Equal((uint?)1, missingProperties.MinContains);
             Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey(OpenApiConstants.ContainsExtension));
             Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey(OpenApiConstants.MaxContainsExtension));
             Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey(OpenApiConstants.MinContainsExtension));

@@ -215,16 +215,15 @@ get:
 
             var schema = OpenApiModelFactory.Parse<OpenApiSchema>(schemaJson, OpenApiSpecVersion.OpenApi3_0, new(), out _, "json", SettingsFixture.ReaderSettings);
             var missingProperties = Assert.IsAssignableFrom<IOpenApiSchemaMissingProperties>(schema);
-            var containsProperties = Assert.IsAssignableFrom<IOpenApiSchemaWithContainsProperties>(schema);
 
             Assert.Equal("root", missingProperties.Anchor);
             Assert.False(missingProperties.UnevaluatedProperties);
             Assert.Equal("base64", missingProperties.ContentEncoding);
             Assert.Equal("application/jwt", missingProperties.ContentMediaType);
             Assert.Equal(JsonSchemaType.Array, missingProperties.ContentSchema?.Type);
-            Assert.Equal(JsonSchemaType.String, containsProperties.Contains?.Type);
-            Assert.Equal((uint?)5, containsProperties.MaxContains);
-            Assert.Equal((uint?)1, containsProperties.MinContains);
+            Assert.Equal(JsonSchemaType.String, missingProperties.Contains?.Type);
+            Assert.Equal((uint?)5, missingProperties.MaxContains);
+            Assert.Equal((uint?)1, missingProperties.MinContains);
             Assert.Equal("^[a-z]+$", missingProperties.PropertyNames?.Pattern);
             Assert.Equal(JsonSchemaType.String, missingProperties.DependentSchemas?["token"].Type);
             Assert.NotNull(missingProperties.If?.Required);
