@@ -179,6 +179,52 @@ get:
         }
 
         [Fact]
+        public void ParseSchemaWithOaiCompatibilityKeywordsShouldSucceed()
+        {
+            var schemaJson = @"{
+  ""x-jsonschema-$anchor"": ""root"",
+  ""x-jsonschema-unevaluatedProperties"": false,
+  ""x-jsonschema-contentEncoding"": ""base64"",
+  ""x-jsonschema-contentMediaType"": ""application/jwt"",
+  ""x-jsonschema-contentSchema"": {
+    ""type"": ""array""
+  },
+  ""x-jsonschema-propertyNames"": {
+    ""pattern"": ""^[a-z]+$""
+  },
+  ""x-jsonschema-dependentSchemas"": {
+    ""token"": {
+      ""type"": ""string""
+    }
+  },
+  ""x-jsonschema-if"": {
+    ""required"": [""token""]
+  },
+  ""x-jsonschema-then"": {
+    ""minProperties"": 1
+  },
+  ""x-jsonschema-else"": {
+    ""maxProperties"": 0
+  }
+}";
+
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(schemaJson, OpenApiSpecVersion.OpenApi3_0, new(), out _, "json", SettingsFixture.ReaderSettings);
+            var missingProperties = Assert.IsAssignableFrom<IOpenApiSchemaMissingProperties>(schema);
+
+            Assert.Equal("root", missingProperties.Anchor);
+            Assert.False(missingProperties.UnevaluatedProperties);
+            Assert.Equal("base64", missingProperties.ContentEncoding);
+            Assert.Equal("application/jwt", missingProperties.ContentMediaType);
+            Assert.Equal(JsonSchemaType.Array, missingProperties.ContentSchema?.Type);
+            Assert.Equal("^[a-z]+$", missingProperties.PropertyNames?.Pattern);
+            Assert.Equal(JsonSchemaType.String, missingProperties.DependentSchemas?["token"].Type);
+            Assert.NotNull(missingProperties.If?.Required);
+            Assert.Contains("token", missingProperties.If.Required);
+            Assert.Equal(1, missingProperties.Then?.MinProperties);
+            Assert.Equal(0, missingProperties.Else?.MaxProperties);
+        }
+
+        [Fact]
         public void ParseBasicSchemaWithExampleShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSchemaWithExample.yaml"));

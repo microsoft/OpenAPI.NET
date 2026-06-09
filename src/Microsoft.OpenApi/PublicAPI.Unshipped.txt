@@ -1,1 +1,58 @@
 #nullable enable
+const Microsoft.OpenApi.OpenApiConstants.Anchor = "$anchor" -> string!
+const Microsoft.OpenApi.OpenApiConstants.AnchorExtension = "x-jsonschema-$anchor" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ContentEncoding = "contentEncoding" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ContentEncodingExtension = "x-jsonschema-contentEncoding" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ContentMediaType = "contentMediaType" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ContentMediaTypeExtension = "x-jsonschema-contentMediaType" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ContentSchema = "contentSchema" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ContentSchemaExtension = "x-jsonschema-contentSchema" -> string!
+const Microsoft.OpenApi.OpenApiConstants.DependentSchemas = "dependentSchemas" -> string!
+const Microsoft.OpenApi.OpenApiConstants.DependentSchemasExtension = "x-jsonschema-dependentSchemas" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Else = "else" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ElseExtension = "x-jsonschema-else" -> string!
+const Microsoft.OpenApi.OpenApiConstants.If = "if" -> string!
+const Microsoft.OpenApi.OpenApiConstants.IfExtension = "x-jsonschema-if" -> string!
+const Microsoft.OpenApi.OpenApiConstants.PropertyNames = "propertyNames" -> string!
+const Microsoft.OpenApi.OpenApiConstants.PropertyNamesExtension = "x-jsonschema-propertyNames" -> string!
+const Microsoft.OpenApi.OpenApiConstants.Then = "then" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ThenExtension = "x-jsonschema-then" -> string!
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.Anchor.get -> string?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.ContentEncoding.get -> string?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.ContentMediaType.get -> string?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.ContentSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.DependentSchemas.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.Else.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.If.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.PropertyNames.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.Then.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.UnevaluatedProperties.get -> bool
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.UnevaluatedPropertiesSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.Anchor.get -> string?
+Microsoft.OpenApi.OpenApiSchema.Anchor.set -> void
+Microsoft.OpenApi.OpenApiSchema.ContentEncoding.get -> string?
+Microsoft.OpenApi.OpenApiSchema.ContentEncoding.set -> void
+Microsoft.OpenApi.OpenApiSchema.ContentMediaType.get -> string?
+Microsoft.OpenApi.OpenApiSchema.ContentMediaType.set -> void
+Microsoft.OpenApi.OpenApiSchema.ContentSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.ContentSchema.set -> void
+Microsoft.OpenApi.OpenApiSchema.DependentSchemas.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiSchema.DependentSchemas.set -> void
+Microsoft.OpenApi.OpenApiSchema.Else.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.Else.set -> void
+Microsoft.OpenApi.OpenApiSchema.If.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.If.set -> void
+Microsoft.OpenApi.OpenApiSchema.PropertyNames.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.PropertyNames.set -> void
+Microsoft.OpenApi.OpenApiSchema.Then.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.Then.set -> void
+Microsoft.OpenApi.OpenApiSchemaReference.Anchor.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.ContentEncoding.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.ContentMediaType.get -> string?
+Microsoft.OpenApi.OpenApiSchemaReference.ContentSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchemaReference.DependentSchemas.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.OpenApiSchemaReference.Else.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchemaReference.If.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchemaReference.PropertyNames.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchemaReference.Then.get -> Microsoft.OpenApi.IOpenApiSchema?
