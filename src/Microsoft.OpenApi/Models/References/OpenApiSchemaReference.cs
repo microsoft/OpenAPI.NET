@@ -123,6 +123,12 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public bool? UniqueItems { get => Target?.UniqueItems; }
         /// <inheritdoc/>
+        public IOpenApiSchema? Contains { get => (Target as IOpenApiSchemaMissingProperties)?.Contains; }
+        /// <inheritdoc/>
+        public uint? MaxContains { get => (Target as IOpenApiSchemaMissingProperties)?.MaxContains; }
+        /// <inheritdoc/>
+        public uint? MinContains { get => (Target as IOpenApiSchemaMissingProperties)?.MinContains; }
+        /// <inheritdoc/>
         public IDictionary<string, IOpenApiSchema>? Properties { get => Target?.Properties; }
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiSchema>? PatternProperties { get => Target?.PatternProperties; }

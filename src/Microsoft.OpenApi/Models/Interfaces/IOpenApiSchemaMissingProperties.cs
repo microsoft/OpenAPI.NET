@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Microsoft.OpenApi;
 
@@ -92,4 +92,23 @@ public interface IOpenApiSchemaMissingProperties
     /// else - applies when <see cref="If"/> does not evaluate successfully.
     /// </summary>
     public IOpenApiSchema? Else { get; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-core#name-contains
+    /// An array instance is valid against "contains" if at least one of its elements is valid against this schema.
+    /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
+    /// </summary>
+    IOpenApiSchema? Contains { get; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// The number of elements matching the "contains" schema MUST be less than or equal to this value.
+    /// </summary>
+    uint? MaxContains { get; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// The number of elements matching the "contains" schema MUST be greater than or equal to this value.
+    /// </summary>
+    uint? MinContains { get; }
 }

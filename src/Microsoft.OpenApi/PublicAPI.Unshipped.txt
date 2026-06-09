@@ -1,4 +1,7 @@
 #nullable enable
+const Microsoft.OpenApi.OpenApiConstants.Contains = "contains" -> string!
+const Microsoft.OpenApi.OpenApiConstants.MaxContains = "maxContains" -> string!
+const Microsoft.OpenApi.OpenApiConstants.MinContains = "minContains" -> string!
 const Microsoft.OpenApi.OpenApiConstants.Anchor = "$anchor" -> string!
 const Microsoft.OpenApi.OpenApiConstants.AnchorExtension = "x-jsonschema-$anchor" -> string!
 const Microsoft.OpenApi.OpenApiConstants.ContentEncoding = "contentEncoding" -> string!
@@ -7,12 +10,15 @@ const Microsoft.OpenApi.OpenApiConstants.ContentMediaType = "contentMediaType" -
 const Microsoft.OpenApi.OpenApiConstants.ContentMediaTypeExtension = "x-jsonschema-contentMediaType" -> string!
 const Microsoft.OpenApi.OpenApiConstants.ContentSchema = "contentSchema" -> string!
 const Microsoft.OpenApi.OpenApiConstants.ContentSchemaExtension = "x-jsonschema-contentSchema" -> string!
+const Microsoft.OpenApi.OpenApiConstants.ContainsExtension = "x-jsonschema-contains" -> string!
 const Microsoft.OpenApi.OpenApiConstants.DependentSchemas = "dependentSchemas" -> string!
 const Microsoft.OpenApi.OpenApiConstants.DependentSchemasExtension = "x-jsonschema-dependentSchemas" -> string!
 const Microsoft.OpenApi.OpenApiConstants.Else = "else" -> string!
 const Microsoft.OpenApi.OpenApiConstants.ElseExtension = "x-jsonschema-else" -> string!
 const Microsoft.OpenApi.OpenApiConstants.If = "if" -> string!
 const Microsoft.OpenApi.OpenApiConstants.IfExtension = "x-jsonschema-if" -> string!
+const Microsoft.OpenApi.OpenApiConstants.MaxContainsExtension = "x-jsonschema-maxContains" -> string!
+const Microsoft.OpenApi.OpenApiConstants.MinContainsExtension = "x-jsonschema-minContains" -> string!
 const Microsoft.OpenApi.OpenApiConstants.PropertyNames = "propertyNames" -> string!
 const Microsoft.OpenApi.OpenApiConstants.PropertyNamesExtension = "x-jsonschema-propertyNames" -> string!
 const Microsoft.OpenApi.OpenApiConstants.Then = "then" -> string!
@@ -29,6 +35,18 @@ Microsoft.OpenApi.IOpenApiSchemaMissingProperties.PropertyNames.get -> Microsoft
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.Then.get -> Microsoft.OpenApi.IOpenApiSchema?
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.UnevaluatedProperties.get -> bool
 Microsoft.OpenApi.IOpenApiSchemaMissingProperties.UnevaluatedPropertiesSchema.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.Contains.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.MaxContains.get -> uint?
+Microsoft.OpenApi.IOpenApiSchemaMissingProperties.MinContains.get -> uint?
+Microsoft.OpenApi.OpenApiSchema.Contains.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.Contains.set -> void
+Microsoft.OpenApi.OpenApiSchema.MaxContains.get -> uint?
+Microsoft.OpenApi.OpenApiSchema.MaxContains.set -> void
+Microsoft.OpenApi.OpenApiSchema.MinContains.get -> uint?
+Microsoft.OpenApi.OpenApiSchema.MinContains.set -> void
+Microsoft.OpenApi.OpenApiSchemaReference.Contains.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchemaReference.MaxContains.get -> uint?
+Microsoft.OpenApi.OpenApiSchemaReference.MinContains.get -> uint?
 Microsoft.OpenApi.OpenApiSchema.Anchor.get -> string?
 Microsoft.OpenApi.OpenApiSchema.Anchor.set -> void
 Microsoft.OpenApi.OpenApiSchema.ContentEncoding.get -> string?

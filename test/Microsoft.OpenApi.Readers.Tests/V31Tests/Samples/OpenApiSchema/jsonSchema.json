@@ -8,7 +8,12 @@
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "contains": {
+        "type": "string"
+      },
+      "minContains": 1,
+      "maxContains": 5
     },
     "vegetables": {
       "type": "array"

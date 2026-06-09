@@ -44,7 +44,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
                         Items = new OpenApiSchema
                         {
                             Type = JsonSchemaType.String
-                        }
+                        },
+                        Contains = new OpenApiSchema
+                        {
+                            Type = JsonSchemaType.String
+                        },
+                        MinContains = 1,
+                        MaxContains = 5
                     },
                     ["vegetables"] = new OpenApiSchema
                     {

@@ -491,6 +491,21 @@ namespace Microsoft.OpenApi
         public const string UniqueItems = "uniqueItems";
 
         /// <summary>
+        /// Field: Contains
+        /// </summary>
+        public const string Contains = "contains";
+
+        /// <summary>
+        /// Field: MaxContains
+        /// </summary>
+        public const string MaxContains = "maxContains";
+
+        /// <summary>
+        /// Field: MinContains
+        /// </summary>
+        public const string MinContains = "minContains";
+
+        /// <summary>
         /// Field: MaxProperties
         /// </summary>
         public const string MaxProperties = "maxProperties";
@@ -879,6 +894,21 @@ namespace Microsoft.OpenApi
         /// Extension: x-jsonschema-contentSchema
         /// </summary>
         public const string ContentSchemaExtension = "x-jsonschema-contentSchema";
+
+        /// <summary>
+        /// Extension: x-jsonschema-contains
+        /// </summary>
+        public const string ContainsExtension = "x-jsonschema-contains";
+
+        /// <summary>
+        /// Extension: x-jsonschema-maxContains
+        /// </summary>
+        public const string MaxContainsExtension = "x-jsonschema-maxContains";
+
+        /// <summary>
+        /// Extension: x-jsonschema-minContains
+        /// </summary>
+        public const string MinContainsExtension = "x-jsonschema-minContains";
 
         #region V2.0
 

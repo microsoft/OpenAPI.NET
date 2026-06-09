@@ -212,6 +212,15 @@ namespace Microsoft.OpenApi
         public bool? UniqueItems { get; set; }
 
         /// <inheritdoc />
+        public IOpenApiSchema? Contains { get; set; }
+
+        /// <inheritdoc />
+        public uint? MaxContains { get; set; }
+
+        /// <inheritdoc />
+        public uint? MinContains { get; set; }
+
+        /// <inheritdoc />
         public IDictionary<string, IOpenApiSchema>? Properties { get; set; }
 
         /// <inheritdoc />
@@ -320,6 +329,9 @@ namespace Microsoft.OpenApi
             UnevaluatedProperties = schema.UnevaluatedProperties;
             if (schema is IOpenApiSchemaMissingProperties missingProperties)
             {
+                Contains = missingProperties.Contains?.CreateShallowCopy();
+                MaxContains = missingProperties.MaxContains ?? MaxContains;
+                MinContains = missingProperties.MinContains ?? MinContains;
                 if (missingProperties.UnevaluatedPropertiesSchema is { } unevaluatedSchema)
                 {
                     UnevaluatedPropertiesSchema = unevaluatedSchema.CreateShallowCopy();
@@ -676,6 +688,15 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (nodeWriter, s) => nodeWriter.WriteAny(s));
             writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, callback);
             writer.WriteOptionalMap(OpenApiConstants.DependentRequired, DependentRequired, (w, s) => w.WriteValue(s));
+
+            // contains
+            writer.WriteOptionalObject(OpenApiConstants.Contains, Contains, callback);
+
+            // maxContains
+            writer.WriteProperty(OpenApiConstants.MaxContains, MaxContains);
+
+            // minContains
+            writer.WriteProperty(OpenApiConstants.MinContains, MinContains);
             writer.WriteProperty(OpenApiConstants.ContentEncoding, ContentEncoding);
             writer.WriteProperty(OpenApiConstants.ContentMediaType, ContentMediaType);
             writer.WriteOptionalObject(OpenApiConstants.ContentSchema, ContentSchema, callback);
@@ -692,6 +713,9 @@ namespace Microsoft.OpenApi
             writer.WriteProperty(OpenApiConstants.ContentEncodingExtension, ContentEncoding);
             writer.WriteProperty(OpenApiConstants.ContentMediaTypeExtension, ContentMediaType);
             writer.WriteOptionalObject(OpenApiConstants.ContentSchemaExtension, ContentSchema, callback);
+            writer.WriteOptionalObject(OpenApiConstants.ContainsExtension, Contains, callback);
+            writer.WriteProperty(OpenApiConstants.MaxContainsExtension, MaxContains);
+            writer.WriteProperty(OpenApiConstants.MinContainsExtension, MinContains);
             writer.WriteOptionalObject(OpenApiConstants.PropertyNamesExtension, PropertyNames, callback);
             writer.WriteOptionalMap(OpenApiConstants.DependentSchemasExtension, DependentSchemas, callback);
             writer.WriteOptionalObject(OpenApiConstants.IfExtension, If, callback);
