@@ -713,6 +713,9 @@ namespace Microsoft.OpenApi
             writer.WriteProperty(OpenApiConstants.ContentEncodingExtension, ContentEncoding);
             writer.WriteProperty(OpenApiConstants.ContentMediaTypeExtension, ContentMediaType);
             writer.WriteOptionalObject(OpenApiConstants.ContentSchemaExtension, ContentSchema, callback);
+            writer.WriteOptionalObject(OpenApiConstants.ContainsExtension, Contains, callback);
+            writer.WriteProperty(OpenApiConstants.MaxContainsExtension, MaxContains);
+            writer.WriteProperty(OpenApiConstants.MinContainsExtension, MinContains);
             writer.WriteOptionalObject(OpenApiConstants.PropertyNamesExtension, PropertyNames, callback);
             writer.WriteOptionalMap(OpenApiConstants.DependentSchemasExtension, DependentSchemas, callback);
             writer.WriteOptionalObject(OpenApiConstants.IfExtension, If, callback);

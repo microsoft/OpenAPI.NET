@@ -895,6 +895,21 @@ namespace Microsoft.OpenApi
         /// </summary>
         public const string ContentSchemaExtension = "x-jsonschema-contentSchema";
 
+        /// <summary>
+        /// Extension: x-jsonschema-contains
+        /// </summary>
+        public const string ContainsExtension = "x-jsonschema-contains";
+
+        /// <summary>
+        /// Extension: x-jsonschema-maxContains
+        /// </summary>
+        public const string MaxContainsExtension = "x-jsonschema-maxContains";
+
+        /// <summary>
+        /// Extension: x-jsonschema-minContains
+        /// </summary>
+        public const string MinContainsExtension = "x-jsonschema-minContains";
+
         #region V2.0
 
         /// <summary>
