@@ -1811,6 +1811,42 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey("x-jsonschema-patternProperties"));
         }
 
+        [Fact]
+        public void DeserializeContainsExtensionsInV3AssignsContainsProperties()
+        {
+            var jsonContent = """
+            {
+              "openapi": "3.0.0",
+              "info": { "title": "Test", "version": "1.0" },
+              "paths": {},
+              "components": {
+                "schemas": {
+                  "TestSchema": {
+                    "type": "array",
+                    "x-jsonschema-contains": {
+                      "type": "string"
+                    },
+                    "x-jsonschema-maxContains": 5,
+                    "x-jsonschema-minContains": 1
+                  }
+                }
+              }
+            }
+            """;
+
+            var readResult = OpenApiDocument.Parse(jsonContent, "json");
+
+            Assert.Empty(readResult.Diagnostic.Errors);
+            var schema = readResult.Document.Components.Schemas["TestSchema"];
+            var missingProperties = Assert.IsAssignableFrom<IOpenApiSchemaMissingProperties>(schema);
+            Assert.Equal(JsonSchemaType.String, missingProperties.Contains?.Type);
+            Assert.Equal((uint?)5, missingProperties.MaxContains);
+            Assert.Equal((uint?)1, missingProperties.MinContains);
+            Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey(OpenApiConstants.ContainsExtension));
+            Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey(OpenApiConstants.MaxContainsExtension));
+            Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey(OpenApiConstants.MinContainsExtension));
+        }
+
         internal class SchemaVisitor : OpenApiVisitorBase
         {
             public List<string> Titles = new();

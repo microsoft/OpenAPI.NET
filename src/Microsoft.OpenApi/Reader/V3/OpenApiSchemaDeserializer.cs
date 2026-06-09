@@ -317,6 +317,32 @@ namespace Microsoft.OpenApi.Reader.V3
                 (o, n, doc, c) => o.ContentSchema = LoadSchema(n, doc, c)
             },
             {
+                OpenApiConstants.ContainsExtension,
+                (o, n, doc, c) => o.Contains = LoadSchema(n, doc, c)
+            },
+            {
+                OpenApiConstants.MaxContainsExtension,
+                (o, n, _, _) =>
+                {
+                    var maxContains = n.GetScalarValue();
+                    if (maxContains != null)
+                    {
+                        o.MaxContains = uint.Parse(maxContains, CultureInfo.InvariantCulture);
+                    }
+                }
+            },
+            {
+                OpenApiConstants.MinContainsExtension,
+                (o, n, _, _) =>
+                {
+                    var minContains = n.GetScalarValue();
+                    if (minContains != null)
+                    {
+                        o.MinContains = uint.Parse(minContains, CultureInfo.InvariantCulture);
+                    }
+                }
+            },
+            {
                 OpenApiConstants.PropertyNamesExtension,
                 (o, n, doc, c) => o.PropertyNames = LoadSchema(n, doc, c)
             },

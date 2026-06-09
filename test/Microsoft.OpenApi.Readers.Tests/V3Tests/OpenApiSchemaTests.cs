@@ -189,6 +189,11 @@ get:
   ""x-jsonschema-contentSchema"": {
     ""type"": ""array""
   },
+  ""x-jsonschema-contains"": {
+    ""type"": ""string""
+  },
+  ""x-jsonschema-maxContains"": 5,
+  ""x-jsonschema-minContains"": 1,
   ""x-jsonschema-propertyNames"": {
     ""pattern"": ""^[a-z]+$""
   },
@@ -216,6 +221,9 @@ get:
             Assert.Equal("base64", missingProperties.ContentEncoding);
             Assert.Equal("application/jwt", missingProperties.ContentMediaType);
             Assert.Equal(JsonSchemaType.Array, missingProperties.ContentSchema?.Type);
+            Assert.Equal(JsonSchemaType.String, missingProperties.Contains?.Type);
+            Assert.Equal((uint?)5, missingProperties.MaxContains);
+            Assert.Equal((uint?)1, missingProperties.MinContains);
             Assert.Equal("^[a-z]+$", missingProperties.PropertyNames?.Pattern);
             Assert.Equal(JsonSchemaType.String, missingProperties.DependentSchemas?["token"].Type);
             Assert.NotNull(missingProperties.If?.Required);
