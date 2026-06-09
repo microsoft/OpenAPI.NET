@@ -149,6 +149,32 @@ internal static partial class OpenApiV31Deserializer
             }
         },
         {
+            "contains",
+            (o, n, doc, c) => o.Contains = LoadSchema(n, doc, c)
+        },
+        {
+            "maxContains",
+            (o, n, _, _) =>
+            {
+                var maxContains = n.GetScalarValue();
+                if (maxContains != null)
+                {
+                    o.MaxContains = uint.Parse(maxContains, CultureInfo.InvariantCulture);
+                }
+            }
+        },
+        {
+            "minContains",
+            (o, n, _, _) =>
+            {
+                var minContains = n.GetScalarValue();
+                if (minContains != null)
+                {
+                    o.MinContains = uint.Parse(minContains, CultureInfo.InvariantCulture);
+                }
+            }
+        },
+        {
             "unevaluatedProperties",
             (o, n, t, c) =>
             {

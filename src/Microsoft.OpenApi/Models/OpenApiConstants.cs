@@ -451,6 +451,21 @@ namespace Microsoft.OpenApi
         public const string UniqueItems = "uniqueItems";
 
         /// <summary>
+        /// Field: Contains
+        /// </summary>
+        public const string Contains = "contains";
+
+        /// <summary>
+        /// Field: MaxContains
+        /// </summary>
+        public const string MaxContains = "maxContains";
+
+        /// <summary>
+        /// Field: MinContains
+        /// </summary>
+        public const string MinContains = "minContains";
+
+        /// <summary>
         /// Field: MaxProperties
         /// </summary>
         public const string MaxProperties = "maxProperties";
