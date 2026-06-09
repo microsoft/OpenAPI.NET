@@ -1,1 +1,17 @@
 #nullable enable
+const Microsoft.OpenApi.OpenApiConstants.Contains = "contains" -> string!
+const Microsoft.OpenApi.OpenApiConstants.MaxContains = "maxContains" -> string!
+const Microsoft.OpenApi.OpenApiConstants.MinContains = "minContains" -> string!
+Microsoft.OpenApi.IOpenApiSchemaWithContainsProperties
+Microsoft.OpenApi.IOpenApiSchemaWithContainsProperties.Contains.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.IOpenApiSchemaWithContainsProperties.MaxContains.get -> uint?
+Microsoft.OpenApi.IOpenApiSchemaWithContainsProperties.MinContains.get -> uint?
+Microsoft.OpenApi.OpenApiSchema.Contains.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchema.Contains.set -> void
+Microsoft.OpenApi.OpenApiSchema.MaxContains.get -> uint?
+Microsoft.OpenApi.OpenApiSchema.MaxContains.set -> void
+Microsoft.OpenApi.OpenApiSchema.MinContains.get -> uint?
+Microsoft.OpenApi.OpenApiSchema.MinContains.set -> void
+Microsoft.OpenApi.OpenApiSchemaReference.Contains.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiSchemaReference.MaxContains.get -> uint?
+Microsoft.OpenApi.OpenApiSchemaReference.MinContains.get -> uint?

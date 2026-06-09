@@ -523,6 +523,41 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.Equal(100, baseSchema.UnevaluatedPropertiesSchema.MaxLength);
         }
 
+        [Fact]
+        public void OpenApiSchemaCopyConstructorWithContainsSucceeds()
+        {
+            var baseSchema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Array,
+                Contains = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String,
+                    MaxLength = 100
+                },
+                MinContains = 1,
+                MaxContains = 5
+            };
+
+            var actualSchema = Assert.IsType<OpenApiSchema>(baseSchema.CreateShallowCopy());
+
+            // Verify scalar properties are copied
+            Assert.Equal(baseSchema.MinContains, actualSchema.MinContains);
+            Assert.Equal(baseSchema.MaxContains, actualSchema.MaxContains);
+
+            // Verify schema property is copied
+            Assert.NotNull(actualSchema.Contains);
+            Assert.Equal(JsonSchemaType.String, actualSchema.Contains.Type);
+            Assert.Equal(100, actualSchema.Contains.MaxLength);
+
+            // Verify it's a shallow copy (different object reference)
+            Assert.NotSame(baseSchema.Contains, actualSchema.Contains);
+
+            // Verify that changing the copy doesn't affect the original
+            var actualContainsTyped = Assert.IsType<OpenApiSchema>(actualSchema.Contains);
+            actualContainsTyped.MaxLength = 200;
+            Assert.Equal(100, baseSchema.Contains.MaxLength);
+        }
+
         public static TheoryData<JsonNode> SchemaExamples()
         {
             return new()
@@ -1157,6 +1192,75 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                   ],
                   "nullable": true
+                }
+                """;
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
+        }
+
+        [Fact]
+        public async Task SerializeContainsKeywordsAsV31Works()
+        {
+            // Arrange
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Array,
+                Contains = new OpenApiSchema { Type = JsonSchemaType.String },
+                MinContains = 1,
+                MaxContains = 5
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+
+            // Act
+            schema.SerializeAsV31(writer);
+            await writer.FlushAsync();
+
+            var v31Schema = outputStringWriter.GetStringBuilder().ToString();
+
+            var expectedV31Schema =
+                """
+                {
+                  "type": "array",
+                  "contains": {
+                    "type": "string"
+                  },
+                  "maxContains": 5,
+                  "minContains": 1
+                }
+                """;
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV31Schema), JsonNode.Parse(v31Schema)));
+        }
+
+        [Fact]
+        public async Task SerializeContainsKeywordsAsV3DoesNotEmit()
+        {
+            // Arrange - contains/minContains/maxContains are JSON Schema 2020-12 keywords and have no equivalent in OpenAPI 3.0
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Array,
+                Contains = new OpenApiSchema { Type = JsonSchemaType.String },
+                MinContains = 1,
+                MaxContains = 5
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+
+            // Act
+            schema.SerializeAsV3(writer);
+            await writer.FlushAsync();
+
+            var v3Schema = outputStringWriter.GetStringBuilder().ToString();
+
+            var expectedV3Schema =
+                """
+                {
+                  "type": "array"
                 }
                 """;
 

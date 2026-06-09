@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Schema reference object
     /// </summary>
-    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema, IOpenApiSchemaWithUnevaluatedProperties, IOpenApiExtensible
+    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema, IOpenApiSchemaWithUnevaluatedProperties, IOpenApiSchemaWithContainsProperties, IOpenApiExtensible
     {
 
         /// <summary>
@@ -119,6 +119,12 @@ namespace Microsoft.OpenApi
         public int? MinItems { get => Target?.MinItems; }
         /// <inheritdoc/>
         public bool? UniqueItems { get => Target?.UniqueItems; }
+        /// <inheritdoc/>
+        public IOpenApiSchema? Contains { get => (Target as IOpenApiSchemaWithContainsProperties)?.Contains; }
+        /// <inheritdoc/>
+        public uint? MaxContains { get => (Target as IOpenApiSchemaWithContainsProperties)?.MaxContains; }
+        /// <inheritdoc/>
+        public uint? MinContains { get => (Target as IOpenApiSchemaWithContainsProperties)?.MinContains; }
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiSchema>? Properties { get => Target?.Properties; }
         /// <inheritdoc/>

@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi
     /// - Serialization: To produce something functionally equivalent to boolean schemas, create an empty <see cref="OpenApiSchema"/>
     ///   for "true" behavior, or create a schema with only <see cref="Not"/> set to an empty schema for "false" behavior.
     /// </summary>
-    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema, IOpenApiSchemaWithUnevaluatedProperties, IMetadataContainer
+    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema, IOpenApiSchemaWithUnevaluatedProperties, IOpenApiSchemaWithContainsProperties, IMetadataContainer
     {
         /// <inheritdoc />
         public string? Title { get; set; }
@@ -208,6 +208,15 @@ namespace Microsoft.OpenApi
         public bool? UniqueItems { get; set; }
 
         /// <inheritdoc />
+        public IOpenApiSchema? Contains { get; set; }
+
+        /// <inheritdoc />
+        public uint? MaxContains { get; set; }
+
+        /// <inheritdoc />
+        public uint? MinContains { get; set; }
+
+        /// <inheritdoc />
         public IDictionary<string, IOpenApiSchema>? Properties { get; set; }
 
         /// <inheritdoc />
@@ -318,6 +327,12 @@ namespace Microsoft.OpenApi
             MaxItems = schema.MaxItems ?? MaxItems;
             MinItems = schema.MinItems ?? MinItems;
             UniqueItems = schema.UniqueItems ?? UniqueItems;
+            if (schema is IOpenApiSchemaWithContainsProperties containsSchema)
+            {
+                Contains = containsSchema.Contains?.CreateShallowCopy();
+                MaxContains = containsSchema.MaxContains ?? MaxContains;
+                MinContains = containsSchema.MinContains ?? MinContains;
+            }
             Properties = schema.Properties != null ? new Dictionary<string, IOpenApiSchema>(schema.Properties) : null;
             PatternProperties = schema.PatternProperties != null ? new Dictionary<string, IOpenApiSchema>(schema.PatternProperties) : null;
             MaxProperties = schema.MaxProperties ?? MaxProperties;
@@ -630,6 +645,15 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (nodeWriter, s) => nodeWriter.WriteAny(s));
             writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, (w, s) => s.SerializeAsV31(w));
             writer.WriteOptionalMap(OpenApiConstants.DependentRequired, DependentRequired, (w, s) => w.WriteValue(s));
+
+            // contains
+            writer.WriteOptionalObject(OpenApiConstants.Contains, Contains, (w, s) => s.SerializeAsV31(w));
+
+            // maxContains
+            writer.WriteProperty(OpenApiConstants.MaxContains, MaxContains);
+
+            // minContains
+            writer.WriteProperty(OpenApiConstants.MinContains, MinContains);
         }
 
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
