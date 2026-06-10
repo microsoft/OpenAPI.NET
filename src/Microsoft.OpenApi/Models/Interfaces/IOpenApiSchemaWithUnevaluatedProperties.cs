@@ -1,3 +1,5 @@
+using System;
+
 namespace Microsoft.OpenApi;
 
 /// <summary>
@@ -13,6 +15,7 @@ namespace Microsoft.OpenApi;
 /// <remarks>
 /// TODO: Remove this interface in the next major version and merge its content into IOpenApiSchema.
 /// </remarks>
+[Obsolete("Use IOpenApiSchemaMissingProperties instead.")]
 public interface IOpenApiSchemaWithUnevaluatedProperties
 {
     /// <summary>

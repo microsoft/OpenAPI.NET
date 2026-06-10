@@ -282,6 +282,86 @@ namespace Microsoft.OpenApi.Reader.V3
                 OpenApiConstants.PatternPropertiesExtension,
                 (o, n, t, c) => o.PatternProperties = n.CreateMap(LoadSchema, t, c)
             },
+            {
+                OpenApiConstants.UnevaluatedPropertiesExtension,
+                (o, n, t, c) =>
+                {
+                    if (n is JsonValue)
+                    {
+                        var value = n.GetScalarValue();
+                        if (value is not null)
+                        {
+                            o.UnevaluatedProperties = bool.Parse(value);
+                        }
+                    }
+                    else
+                    {
+                        o.UnevaluatedPropertiesSchema = LoadSchema(n, t, c);
+                    }
+                }
+            },
+            {
+                OpenApiConstants.AnchorExtension,
+                (o, n, _, _) => o.Anchor = n.GetScalarValue()
+            },
+            {
+                OpenApiConstants.ContentEncodingExtension,
+                (o, n, _, _) => o.ContentEncoding = n.GetScalarValue()
+            },
+            {
+                OpenApiConstants.ContentMediaTypeExtension,
+                (o, n, _, _) => o.ContentMediaType = n.GetScalarValue()
+            },
+            {
+                OpenApiConstants.ContentSchemaExtension,
+                (o, n, doc, c) => o.ContentSchema = LoadSchema(n, doc, c)
+            },
+            {
+                OpenApiConstants.ContainsExtension,
+                (o, n, doc, c) => o.Contains = LoadSchema(n, doc, c)
+            },
+            {
+                OpenApiConstants.MaxContainsExtension,
+                (o, n, _, _) =>
+                {
+                    var maxContains = n.GetScalarValue();
+                    if (maxContains != null)
+                    {
+                        o.MaxContains = uint.Parse(maxContains, CultureInfo.InvariantCulture);
+                    }
+                }
+            },
+            {
+                OpenApiConstants.MinContainsExtension,
+                (o, n, _, _) =>
+                {
+                    var minContains = n.GetScalarValue();
+                    if (minContains != null)
+                    {
+                        o.MinContains = uint.Parse(minContains, CultureInfo.InvariantCulture);
+                    }
+                }
+            },
+            {
+                OpenApiConstants.PropertyNamesExtension,
+                (o, n, doc, c) => o.PropertyNames = LoadSchema(n, doc, c)
+            },
+            {
+                OpenApiConstants.DependentSchemasExtension,
+                (o, n, t, c) => o.DependentSchemas = n.CreateMap(LoadSchema, t, c)
+            },
+            {
+                OpenApiConstants.IfExtension,
+                (o, n, doc, c) => o.If = LoadSchema(n, doc, c)
+            },
+            {
+                OpenApiConstants.ThenExtension,
+                (o, n, doc, c) => o.Then = LoadSchema(n, doc, c)
+            },
+            {
+                OpenApiConstants.ElseExtension,
+                (o, n, doc, c) => o.Else = LoadSchema(n, doc, c)
+            },
         };
 
         private static readonly PatternFieldMap<OpenApiSchema> _openApiSchemaPatternFields = new()

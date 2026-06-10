@@ -44,6 +44,10 @@ internal static partial class OpenApiV31Deserializer
             "$defs",
             (o, n, t, c) => o.Definitions = n.CreateMap(LoadSchema, t, c)
         },
+        {
+            OpenApiConstants.Anchor,
+            (o, n, _, _) => o.Anchor = n.GetScalarValue()
+        },
             {
             "multipleOf",
             (o, n, _, _) =>
@@ -145,6 +149,32 @@ internal static partial class OpenApiV31Deserializer
             }
         },
         {
+            OpenApiConstants.Contains,
+            (o, n, doc, c) => o.Contains = LoadSchema(n, doc, c)
+        },
+        {
+            OpenApiConstants.MaxContains,
+            (o, n, _, _) =>
+            {
+                var maxContains = n.GetScalarValue();
+                if (maxContains != null)
+                {
+                    o.MaxContains = uint.Parse(maxContains, CultureInfo.InvariantCulture);
+                }
+            }
+        },
+        {
+            OpenApiConstants.MinContains,
+            (o, n, _, _) =>
+            {
+                var minContains = n.GetScalarValue();
+                if (minContains != null)
+                {
+                    o.MinContains = uint.Parse(minContains, CultureInfo.InvariantCulture);
+                }
+            }
+        },
+        {
             "unevaluatedProperties",
             (o, n, t, c) =>
             {
@@ -163,6 +193,18 @@ internal static partial class OpenApiV31Deserializer
                     o.UnevaluatedPropertiesSchema = LoadSchema(n, t, c);
                 }
             }
+        },
+        {
+            OpenApiConstants.ContentEncoding,
+            (o, n, _, _) => o.ContentEncoding = n.GetScalarValue()
+        },
+        {
+            OpenApiConstants.ContentMediaType,
+            (o, n, _, _) => o.ContentMediaType = n.GetScalarValue()
+        },
+        {
+            OpenApiConstants.ContentSchema,
+            (o, n, doc, c) => o.ContentSchema = LoadSchema(n, doc, c)
         },
         {
             "maxProperties",
@@ -248,6 +290,10 @@ internal static partial class OpenApiV31Deserializer
         {
             "patternProperties",
             (o, n, t, c) => o.PatternProperties = n.CreateMap(LoadSchema, t, c)
+        },
+        {
+            OpenApiConstants.PropertyNames,
+            (o, n, doc, c) => o.PropertyNames = LoadSchema(n, doc, c)
         },
         {
             "additionalProperties", (o, n, doc, c) =>
@@ -355,6 +401,22 @@ internal static partial class OpenApiV31Deserializer
             {
                 o.DependentRequired = n.CreateArrayMap((n2, _) => n2.GetScalarValue()!, doc, c);
             }
+        },
+        {
+            OpenApiConstants.DependentSchemas,
+            (o, n, t, c) => o.DependentSchemas = n.CreateMap(LoadSchema, t, c)
+        },
+        {
+            OpenApiConstants.If,
+            (o, n, doc, c) => o.If = LoadSchema(n, doc, c)
+        },
+        {
+            OpenApiConstants.Then,
+            (o, n, doc, c) => o.Then = LoadSchema(n, doc, c)
+        },
+        {
+            OpenApiConstants.Else,
+            (o, n, doc, c) => o.Else = LoadSchema(n, doc, c)
         },
     };
 
