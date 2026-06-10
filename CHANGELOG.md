@@ -1,5 +1,25 @@
 # Changelog
 
+## [3.7.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.6.0...v3.7.0) (2026-06-10)
+
+
+### Features
+
+* add contains/minContains/maxContains members ([78475e3](https://github.com/microsoft/OpenAPI.NET/commit/78475e38f7c61e349f2d2ad477b5a96a9c3df848))
+* add contains/minContains/maxContains members ([1a974f8](https://github.com/microsoft/OpenAPI.NET/commit/1a974f8dfcd7850c70d80133ceecee08f6671cd7))
+* **library:** add missing json schema properties ([9b1aed6](https://github.com/microsoft/OpenAPI.NET/commit/9b1aed61041551b06926fc2ee4e12705190e16b3))
+* **library:** add missing json schema properties ([82f84e0](https://github.com/microsoft/OpenAPI.NET/commit/82f84e072d9f6b4b5907e9435212fbfc8f82d9c7))
+
+
+### Bug Fixes
+
+* **library:** always copy unevaluated properties ([4907d1c](https://github.com/microsoft/OpenAPI.NET/commit/4907d1c1c4d5b8450d32459752e64e5beb592f46))
+* **library:** avoid false circular refs for external schema re-exports ([b635242](https://github.com/microsoft/OpenAPI.NET/commit/b635242a402c3c468eb86dcf2b6d94a05717d92e))
+* **library:** avoid false circular refs for external schema re-exports ([7a443c2](https://github.com/microsoft/OpenAPI.NET/commit/7a443c298fb87346338095b5df86f6608fb4d582))
+* **library:** remove unshipped schema extension fallback ([cf54bb3](https://github.com/microsoft/OpenAPI.NET/commit/cf54bb3e2746c0f6c7a60fde5bcc7fa1139dd8b6))
+* **library:** use version-specific schema keyword callbacks ([6e22ec6](https://github.com/microsoft/OpenAPI.NET/commit/6e22ec6948509d2e256932ee55f1781a544cb53f))
+* **library:** use x-jsonschema schema extensions ([eb1891a](https://github.com/microsoft/OpenAPI.NET/commit/eb1891a8d77915add1cdd88949b40aa43cd525b8))
+
 ## [3.6.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.5.5...v3.6.0) (2026-06-01)
 
 
