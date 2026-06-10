@@ -22,7 +22,16 @@ permissions:
   contents: read
 
 jobs:
+  check-secret:
+    runs-on: ubuntu-latest
+    outputs:
+      has-token: ${{ steps.check.outputs.has-token }}
+    steps:
+      - id: check
+        run: echo "has-token=${{ secrets.RELEASE_PLEASE_TOKEN_PROVIDER_PEM != '' }}" >> $GITHUB_OUTPUT
   release:
+    needs: check-secret
+    if: needs.check-secret.outputs.has-token == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -53,13 +62,13 @@ jobs:
 
       - name: Generate GitHub App token
         id: app-token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ vars.RELEASE_PLEASE_TOKEN_PROVIDER_APP_ID }}
+          client-id: ${{ vars.RELEASE_PLEASE_TOKEN_PROVIDER_APP_ID }}
           private-key: ${{ secrets.RELEASE_PLEASE_TOKEN_PROVIDER_PEM }}
 
       - name: Release Please
-        uses: googleapis/release-please-action@v4
+        uses: googleapis/release-please-action@v5
         with:
           token: ${{ steps.app-token.outputs.token }}
           config-file: release-please-config.json
