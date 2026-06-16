@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi
         public IOpenApiRequestBody? RequestBody { get; set; }
 
         /// <summary>
-        /// REQUIRED. The list of possible responses as they are returned from executing this operation.
+        /// The list of possible responses as they are returned from executing this operation.
         /// </summary>
         public OpenApiResponses? Responses { get; set; } = [];
 
