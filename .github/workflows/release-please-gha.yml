@@ -34,7 +34,7 @@ jobs:
     if: needs.check-secret.outputs.has-token == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Validate PublicAPI.Unshipped.txt files are empty
         shell: pwsh
