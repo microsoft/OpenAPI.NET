@@ -65,6 +65,11 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
     public string? SchemaId { get; set; }
 
     /// <summary>
+    /// The $schema dialect URI which by default SHOULD override that of the referenced component.
+    /// </summary>
+    public Uri? Schema { get; set; }
+
+    /// <summary>
     /// A $comment which by default SHOULD override that of the referenced component.
     /// </summary>
     public string? Comment { get; set; }
@@ -113,6 +118,7 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         Examples = reference.Examples;
         Extensions = reference.Extensions != null ? new Dictionary<string, IOpenApiExtension>(reference.Extensions) : null;
         SchemaId = reference.SchemaId;
+        Schema = reference.Schema;
         Comment = reference.Comment;
         Vocabulary = reference.Vocabulary != null ? new Dictionary<string, bool>(reference.Vocabulary) : null;
         DynamicRef = reference.DynamicRef;
@@ -140,6 +146,7 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
 
         // JSON Schema 2020-12 keyword siblings (preserved per OAS 3.1+ / JSON Schema 2020-12 semantics)
         writer.WriteProperty(OpenApiConstants.Id, SchemaId);
+        writer.WriteProperty(OpenApiConstants.DollarSchema, Schema?.ToString());
         writer.WriteProperty(OpenApiConstants.Comment, Comment);
         writer.WriteOptionalMap(OpenApiConstants.Vocabulary, Vocabulary, (w, s) => w.WriteValue(s));
         if (version == OpenApiSpecVersion.OpenApi3_1)
@@ -231,6 +238,12 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         if (!string.IsNullOrEmpty(id))
         {
             SchemaId = id;
+        }
+
+        var schemaValue = GetPropertyValueFromNode(jsonObject, OpenApiConstants.DollarSchema);
+        if (!string.IsNullOrEmpty(schemaValue) && Uri.TryCreate(schemaValue, UriKind.Absolute, out var schemaUri))
+        {
+            Schema = schemaUri;
         }
 
         var comment = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Comment);

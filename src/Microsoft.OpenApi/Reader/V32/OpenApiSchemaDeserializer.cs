@@ -460,9 +460,15 @@ internal static partial class OpenApiV32Deserializer
                 var defs = new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal);
                 foreach (var kvp in defsObj)
                 {
-                    if (kvp.Value is not null)
+                    if (kvp.Value is null) continue;
+                    context.StartObject(kvp.Key);
+                    try
                     {
                         defs[kvp.Key] = LoadSchema(kvp.Value, hostDocument, context);
+                    }
+                    finally
+                    {
+                        context.EndObject();
                     }
                 }
                 result.Reference.Definitions = defs;

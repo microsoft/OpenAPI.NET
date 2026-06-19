@@ -1039,6 +1039,7 @@ description: Schema for a person object
                     Referencing:
                       $ref: '#/components/schemas/Target'
                       $id: 'https://example.com/referencing.json'
+                      $schema: 'https://json-schema.org/draft/2020-12/schema'
                       $comment: A comment sibling
                       $anchor: myAnchor
                       $dynamicRef: '#myAnchor'
@@ -1052,6 +1053,50 @@ description: Schema for a person object
             // Assert
             referencing.Should().BeOfType<OpenApiSchemaReference>();
             referencing.Id.Should().Be("https://example.com/referencing.json");
+            referencing.Schema.Should().Be(new Uri("https://json-schema.org/draft/2020-12/schema"));
+            referencing.Comment.Should().Be("A comment sibling");
+            ((IOpenApiSchemaMissingProperties)referencing).Anchor.Should().Be("myAnchor");
+            referencing.DynamicRef.Should().Be("#myAnchor");
+        }
+
+        [Fact]
+        public async Task SerializeSchemaReferencePreservesScalarKeywordSiblings()
+        {
+            // Arrange
+            var yaml = """
+                openapi: 3.1.0
+                info:
+                  title: Scalar round-trip
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Target:
+                      type: object
+                    Referencing:
+                      $ref: '#/components/schemas/Target'
+                      $id: 'https://example.com/referencing.json'
+                      $schema: 'https://json-schema.org/draft/2020-12/schema'
+                      $comment: A comment sibling
+                      $anchor: myAnchor
+                      $dynamicRef: '#myAnchor'
+                """;
+
+            // Act — parse then serialize back
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var writer = new StringWriter();
+            result.Document.SerializeAsV31(new OpenApiYamlWriter(writer));
+            var output = writer.ToString();
+
+            // Assert — round-trip preserves scalar siblings alongside $ref
+            using var roundTripStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(output));
+            var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings);
+            var referencing = roundTripResult.Document.Components!.Schemas["Referencing"];
+
+            referencing.Should().BeOfType<OpenApiSchemaReference>();
+            referencing.Id.Should().Be("https://example.com/referencing.json");
+            referencing.Schema.Should().Be(new Uri("https://json-schema.org/draft/2020-12/schema"));
             referencing.Comment.Should().Be("A comment sibling");
             ((IOpenApiSchemaMissingProperties)referencing).Anchor.Should().Be("myAnchor");
             referencing.DynamicRef.Should().Be("#myAnchor");

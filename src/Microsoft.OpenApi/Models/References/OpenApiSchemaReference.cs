@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi
             set => Reference.Title = value;
         }
         /// <inheritdoc/>
-        public Uri? Schema { get => Target?.Schema; }
+        public Uri? Schema { get => Reference.Schema ?? Target?.Schema; }
         /// <inheritdoc/>
         public string? Id { get => string.IsNullOrEmpty(Reference.SchemaId) ? Target?.Id : Reference.SchemaId; }
         /// <inheritdoc/>
