@@ -452,6 +452,22 @@ internal static partial class OpenApiV31Deserializer
             var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
             result.Reference.SetMetadataFromJsonObject(jsonObject);
             result.Reference.SetJsonPointerPath(pointer, nodeLocation);
+
+            // Parse $defs sibling — requires LoadSchema for nested schema materialization,
+            // so it cannot be done inside SetAdditional31MetadataFromMapNode.
+            if (jsonObject.TryGetPropertyValue(OpenApiConstants.Defs, out var defsNode) && defsNode is JsonObject defsObj)
+            {
+                var defs = new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal);
+                foreach (var kvp in defsObj)
+                {
+                    if (kvp.Value is not null)
+                    {
+                        defs[kvp.Key] = LoadSchema(kvp.Value, hostDocument, context);
+                    }
+                }
+                result.Reference.Definitions = defs;
+            }
+
             return result;
         }
 

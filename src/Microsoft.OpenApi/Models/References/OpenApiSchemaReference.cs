@@ -51,19 +51,19 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public Uri? Schema { get => Target?.Schema; }
         /// <inheritdoc/>
-        public string? Id { get => Target?.Id; }
+        public string? Id { get => string.IsNullOrEmpty(Reference.SchemaId) ? Target?.Id : Reference.SchemaId; }
         /// <inheritdoc/>
-        public string? Comment { get => Target?.Comment; }
+        public string? Comment { get => string.IsNullOrEmpty(Reference.Comment) ? Target?.Comment : Reference.Comment; }
         /// <inheritdoc/>
-        public IDictionary<string, bool>? Vocabulary { get => Target?.Vocabulary; }
+        public IDictionary<string, bool>? Vocabulary { get => Reference.Vocabulary ?? Target?.Vocabulary; }
         /// <inheritdoc/>
-        public string? DynamicRef { get => Target?.DynamicRef; }
+        public string? DynamicRef { get => string.IsNullOrEmpty(Reference.DynamicRef) ? Target?.DynamicRef : Reference.DynamicRef; }
         /// <inheritdoc/>
-        public string? DynamicAnchor { get => Target?.DynamicAnchor; }
+        public string? DynamicAnchor { get => string.IsNullOrEmpty(Reference.DynamicAnchor) ? Target?.DynamicAnchor : Reference.DynamicAnchor; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiSchema>? Definitions { get => Target?.Definitions; }
+        public IDictionary<string, IOpenApiSchema>? Definitions { get => Reference.Definitions ?? Target?.Definitions; }
         /// <inheritdoc/>
-        public string? Anchor { get => (Target as IOpenApiSchemaMissingProperties)?.Anchor; }
+        public string? Anchor { get => string.IsNullOrEmpty(Reference.Anchor) ? (Target as IOpenApiSchemaMissingProperties)?.Anchor : Reference.Anchor; }
         /// <inheritdoc/>
         public string? ExclusiveMaximum { get => Target?.ExclusiveMaximum; }
         /// <inheritdoc/>

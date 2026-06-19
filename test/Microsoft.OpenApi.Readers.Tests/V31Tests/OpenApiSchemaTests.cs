@@ -935,5 +935,160 @@ description: Schema for a person object
             Assert.Empty(schema.Not.AllOf ?? []);
             Assert.Empty(schema.Not.OneOf ?? []);
         }
+
+        [Fact]
+        public async Task ParseSchemaReferencePreservesJsonSchema2020KeywordSiblings()
+        {
+            // Arrange
+            var yaml = """
+                openapi: 3.1.0
+                info:
+                  title: Sibling preservation repro
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Target:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                    Referencing:
+                      $ref: '#/components/schemas/Target'
+                      description: Sibling description
+                      $dynamicAnchor: anchor
+                      $defs:
+                        sibling:
+                          $dynamicAnchor: inner
+                          $ref: '#/components/schemas/Target'
+                """;
+
+            // Act
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var referencing = result.Document.Components!.Schemas["Referencing"];
+
+            // Assert — siblings are preserved on the OpenApiSchemaReference
+            referencing.Should().BeOfType<OpenApiSchemaReference>();
+            referencing.Description.Should().Be("Sibling description");
+            referencing.DynamicAnchor.Should().Be("anchor");
+            referencing.Definitions.Should().NotBeNull();
+            referencing.Definitions!.Should().ContainKey("sibling");
+            referencing.Definitions["sibling"].DynamicAnchor.Should().Be("inner");
+        }
+
+        [Fact]
+        public async Task SerializeSchemaReferencePreservesJsonSchema2020KeywordSiblings()
+        {
+            // Arrange
+            var yaml = """
+                openapi: 3.1.0
+                info:
+                  title: Sibling preservation repro
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Target:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                    Referencing:
+                      $ref: '#/components/schemas/Target'
+                      $dynamicAnchor: anchor
+                      $defs:
+                        itemType:
+                          $dynamicAnchor: itemType
+                          $ref: '#/components/schemas/Target'
+                """;
+
+            // Act — parse then serialize back
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var writer = new StringWriter();
+            result.Document.SerializeAsV31(new OpenApiYamlWriter(writer));
+            var output = writer.ToString();
+
+            // Assert — round-trip preserves $dynamicAnchor and $defs alongside $ref
+            using var roundTripStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(output));
+            var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings);
+            var referencing = roundTripResult.Document.Components!.Schemas["Referencing"];
+
+            referencing.Should().BeOfType<OpenApiSchemaReference>();
+            referencing.DynamicAnchor.Should().Be("anchor");
+            referencing.Definitions.Should().NotBeNull();
+            referencing.Definitions!.Should().ContainKey("itemType");
+            referencing.Definitions["itemType"].DynamicAnchor.Should().Be("itemType");
+        }
+
+        [Fact]
+        public async Task ParseSchemaReferencePreservesScalarKeywordSiblings()
+        {
+            // Arrange
+            var yaml = """
+                openapi: 3.1.0
+                info:
+                  title: Scalar sibling repro
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Target:
+                      type: object
+                    Referencing:
+                      $ref: '#/components/schemas/Target'
+                      $id: 'https://example.com/referencing.json'
+                      $comment: A comment sibling
+                      $anchor: myAnchor
+                      $dynamicRef: '#myAnchor'
+                """;
+
+            // Act
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var referencing = result.Document.Components!.Schemas["Referencing"];
+
+            // Assert
+            referencing.Should().BeOfType<OpenApiSchemaReference>();
+            referencing.Id.Should().Be("https://example.com/referencing.json");
+            referencing.Comment.Should().Be("A comment sibling");
+            ((IOpenApiSchemaMissingProperties)referencing).Anchor.Should().Be("myAnchor");
+            referencing.DynamicRef.Should().Be("#myAnchor");
+        }
+
+        [Fact]
+        public async Task ParseSchemaReferencePreservesVocabularySibling()
+        {
+            // Arrange
+            var yaml = """
+                openapi: 3.1.0
+                info:
+                  title: Vocabulary sibling repro
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Target:
+                      type: object
+                    Referencing:
+                      $ref: '#/components/schemas/Target'
+                      $vocabulary:
+                        'https://json-schema.org/draft/2020-12/vocab/core': true
+                        'https://json-schema.org/draft/2020-12/vocab/applicator': false
+                """;
+
+            // Act
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var referencing = result.Document.Components!.Schemas["Referencing"];
+
+            // Assert
+            referencing.Should().BeOfType<OpenApiSchemaReference>();
+            referencing.Vocabulary.Should().NotBeNull();
+            referencing.Vocabulary!.Should().HaveCount(2);
+            referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/core"].Should().BeTrue();
+            referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/applicator"].Should().BeFalse();
+        }
     }
 }
