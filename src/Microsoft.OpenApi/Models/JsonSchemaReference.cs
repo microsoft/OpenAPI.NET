@@ -227,11 +227,35 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
 
         // JSON Schema 2020-12 keyword siblings ($defs is parsed separately in the deserializer
         // because it requires LoadSchema for nested schema materialization)
-        SchemaId = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Id) ?? SchemaId;
-        Comment = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Comment) ?? Comment;
-        DynamicRef = GetPropertyValueFromNode(jsonObject, OpenApiConstants.DynamicRef) ?? DynamicRef;
-        DynamicAnchor = GetPropertyValueFromNode(jsonObject, OpenApiConstants.DynamicAnchor) ?? DynamicAnchor;
-        Anchor = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Anchor) ?? Anchor;
+        var id = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Id);
+        if (!string.IsNullOrEmpty(id))
+        {
+            SchemaId = id;
+        }
+
+        var comment = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Comment);
+        if (!string.IsNullOrEmpty(comment))
+        {
+            Comment = comment;
+        }
+
+        var dynamicRef = GetPropertyValueFromNode(jsonObject, OpenApiConstants.DynamicRef);
+        if (!string.IsNullOrEmpty(dynamicRef))
+        {
+            DynamicRef = dynamicRef;
+        }
+
+        var dynamicAnchor = GetPropertyValueFromNode(jsonObject, OpenApiConstants.DynamicAnchor);
+        if (!string.IsNullOrEmpty(dynamicAnchor))
+        {
+            DynamicAnchor = dynamicAnchor;
+        }
+
+        var anchor = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Anchor);
+        if (!string.IsNullOrEmpty(anchor))
+        {
+            Anchor = anchor;
+        }
 
         if (jsonObject.TryGetPropertyValue(OpenApiConstants.Vocabulary, out var vocabNode) && vocabNode is JsonObject vocabObj)
         {

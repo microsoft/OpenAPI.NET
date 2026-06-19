@@ -1090,5 +1090,58 @@ description: Schema for a person object
             referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/core"].Should().BeTrue();
             referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/applicator"].Should().BeFalse();
         }
+
+        [Fact]
+        public async Task ParseSchemaReferencePreservesDynamicAnchorInsideDefsInAllOf()
+        {
+            // Arrange — the allOf-based binding variant: $defs sits inside allOf[0],
+            // and the nested schema has $ref + $dynamicAnchor (the binding entry).
+            // This was called out as a real-world pattern that hits the same root cause
+            // because the inner schema is an OpenApiSchemaReference whose sibling was dropped.
+            var yaml = """
+                openapi: 3.1.0
+                info:
+                  title: allOf binding variant
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Asset:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                    Paged:
+                      type: object
+                      properties:
+                        items:
+                          type: array
+                    AssetPaged:
+                      allOf:
+                        - $defs:
+                            contentType:
+                              $dynamicAnchor: contentType
+                              $ref: '#/components/schemas/Asset'
+                        - $ref: '#/components/schemas/Paged'
+                """;
+
+            // Act
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var assetPaged = result.Document.Components!.Schemas["AssetPaged"];
+
+            // Assert — the binding entry inside $defs/allOf[0] is reachable
+            // allOf[0] is a regular OpenApiSchema (no $ref at top level), so $defs is parsed normally.
+            // The nested contentType schema is an OpenApiSchemaReference ($ref: Asset),
+            // and its $dynamicAnchor sibling must be preserved.
+            assetPaged.AllOf.Should().NotBeNull();
+            assetPaged.AllOf!.Count.Should().Be(2);
+            var defsHolder = assetPaged.AllOf[0];
+            defsHolder.Definitions.Should().NotBeNull();
+            defsHolder.Definitions!.Should().ContainKey("contentType");
+            var contentType = defsHolder.Definitions["contentType"];
+            contentType.Should().BeOfType<OpenApiSchemaReference>();
+            contentType.DynamicAnchor.Should().Be("contentType");
+        }
     }
 }
