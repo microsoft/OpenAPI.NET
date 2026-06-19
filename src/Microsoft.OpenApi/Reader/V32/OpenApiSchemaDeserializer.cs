@@ -471,7 +471,10 @@ internal static partial class OpenApiV32Deserializer
                         context.EndObject();
                     }
                 }
-                result.Reference.Definitions = defs;
+                if (defs.Count > 0)
+                {
+                    result.Reference.Definitions = defs;
+                }
             }
 
             return result;

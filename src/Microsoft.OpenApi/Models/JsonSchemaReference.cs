@@ -272,13 +272,17 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
 
         if (jsonObject.TryGetPropertyValue(OpenApiConstants.Vocabulary, out var vocabNode) && vocabNode is JsonObject vocabObj)
         {
-            Vocabulary = new Dictionary<string, bool>();
+            var vocab = new Dictionary<string, bool>();
             foreach (var kvp in vocabObj)
             {
                 if (kvp.Value is JsonValue v && v.TryGetValue<bool>(out var b))
                 {
-                    Vocabulary[kvp.Key] = b;
+                    vocab[kvp.Key] = b;
                 }
+            }
+            if (vocab.Count > 0)
+            {
+                Vocabulary = vocab;
             }
         }
     }
