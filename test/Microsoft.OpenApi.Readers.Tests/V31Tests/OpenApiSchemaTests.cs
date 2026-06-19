@@ -1188,5 +1188,122 @@ description: Schema for a person object
             contentType.Should().BeOfType<OpenApiSchemaReference>();
             contentType.DynamicAnchor.Should().Be("contentType");
         }
+
+        [Fact]
+        public async Task EmptySiblingCollectionsFallThroughToTarget()
+        {
+            // Arrange — Target has $defs and $vocabulary; Referencing has empty siblings.
+            // Empty collections must NOT suppress the target's values via the ?? getter.
+            var yaml = """
+                openapi: 3.1.0
+                info:
+                  title: Empty sibling fallthrough
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Target:
+                      type: object
+                      $defs:
+                        targetDef:
+                          type: string
+                      $vocabulary:
+                        'https://json-schema.org/draft/2020-12/vocab/core': true
+                    Referencing:
+                      $ref: '#/components/schemas/Target'
+                      $defs: {}
+                      $vocabulary: {}
+                """;
+
+            // Act
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var referencing = result.Document.Components!.Schemas["Referencing"];
+
+            // Assert — empty siblings fall through to Target's values
+            referencing.Should().BeOfType<OpenApiSchemaReference>();
+            referencing.Definitions.Should().NotBeNull();
+            referencing.Definitions!.Should().ContainKey("targetDef");
+            referencing.Vocabulary.Should().NotBeNull();
+            referencing.Vocabulary!.Should().ContainKey("https://json-schema.org/draft/2020-12/vocab/core");
+        }
+
+        [Fact]
+        public async Task SiblingsOnRefAreDroppedForOpenApi30()
+        {
+            // Arrange — 3.0 spec requires $ref siblings to be ignored.
+            // The fix must not change 3.0 behavior.
+            var yaml = """
+                openapi: 3.0.3
+                info:
+                  title: 3.0 version safety
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Target:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                    Referencing:
+                      $ref: '#/components/schemas/Target'
+                      $dynamicAnchor: anchor
+                      $defs:
+                        sibling:
+                          $dynamicAnchor: inner
+                          $ref: '#/components/schemas/Target'
+                """;
+
+            // Act
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var referencing = result.Document.Components!.Schemas["Referencing"];
+
+            // Assert — siblings are dropped for 3.0 (per spec: $ref siblings MUST be ignored)
+            referencing.Should().BeOfType<OpenApiSchemaReference>();
+            referencing.DynamicAnchor.Should().BeNull();
+            referencing.Definitions?.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task SerializeSchemaReferencePreservesVocabularySibling()
+        {
+            // Arrange
+            var yaml = """
+                openapi: 3.1.0
+                info:
+                  title: Vocabulary round-trip
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Target:
+                      type: object
+                    Referencing:
+                      $ref: '#/components/schemas/Target'
+                      $vocabulary:
+                        'https://json-schema.org/draft/2020-12/vocab/core': true
+                        'https://json-schema.org/draft/2020-12/vocab/applicator': false
+                """;
+
+            // Act — parse then serialize back
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var writer = new StringWriter();
+            result.Document.SerializeAsV31(new OpenApiYamlWriter(writer));
+            var output = writer.ToString();
+
+            // Assert — round-trip preserves $vocabulary alongside $ref
+            using var roundTripStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(output));
+            var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings);
+            var referencing = roundTripResult.Document.Components!.Schemas["Referencing"];
+
+            referencing.Should().BeOfType<OpenApiSchemaReference>();
+            referencing.Vocabulary.Should().NotBeNull();
+            referencing.Vocabulary!.Should().HaveCount(2);
+            referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/core"].Should().BeTrue();
+            referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/applicator"].Should().BeFalse();
+        }
     }
 }
