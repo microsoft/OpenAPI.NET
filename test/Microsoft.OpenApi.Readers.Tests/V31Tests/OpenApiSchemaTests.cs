@@ -1305,5 +1305,42 @@ description: Schema for a person object
             referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/core"].Should().BeTrue();
             referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/applicator"].Should().BeFalse();
         }
+
+        [Fact]
+        public async Task CreateShallowCopyPreservesKeywordSiblings()
+        {
+            // Arrange
+            var yaml = """
+                openapi: 3.1.0
+                info:
+                  title: Shallow copy repro
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Target:
+                      type: object
+                    Referencing:
+                      $ref: '#/components/schemas/Target'
+                      $dynamicAnchor: anchor
+                      $defs:
+                        sibling:
+                          $dynamicAnchor: inner
+                          $ref: '#/components/schemas/Target'
+                """;
+
+            // Act
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var referencing = result.Document.Components!.Schemas["Referencing"];
+            var copy = referencing.CreateShallowCopy();
+
+            // Assert — CreateShallowCopy preserves sibling values via the JsonSchemaReference copy constructor
+            copy.Should().BeOfType<OpenApiSchemaReference>();
+            copy.DynamicAnchor.Should().Be("anchor");
+            copy.Definitions.Should().NotBeNull();
+            copy.Definitions!.Should().ContainKey("sibling");
+            copy.Definitions["sibling"].DynamicAnchor.Should().Be("inner");
+        }
     }
 }
