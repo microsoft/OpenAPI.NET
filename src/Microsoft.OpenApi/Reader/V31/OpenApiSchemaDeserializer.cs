@@ -458,18 +458,35 @@ internal static partial class OpenApiV31Deserializer
             if (jsonObject.TryGetPropertyValue(OpenApiConstants.Defs, out var defsNode) && defsNode is JsonObject defsObj)
             {
                 var defs = new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal);
-                foreach (var kvp in defsObj)
+                context.StartObject(OpenApiConstants.Defs);
+                try
                 {
-                    if (kvp.Value is null) continue;
-                    context.StartObject(kvp.Key);
-                    try
+                    foreach (var kvp in defsObj)
                     {
-                        defs[kvp.Key] = LoadSchema(kvp.Value, hostDocument, context);
+                        if (kvp.Value is null) continue;
+                        try
+                        {
+                            context.StartObject(kvp.Key);
+                            defs[kvp.Key] = LoadSchema(kvp.Value, hostDocument, context);
+                        }
+                        catch (OpenApiReaderException ex)
+                        {
+                            context.Diagnostic.Errors.Add(new(ex));
+                        }
+                        catch (OpenApiException ex)
+                        {
+                            ex.Pointer = context.GetLocation();
+                            context.Diagnostic.Errors.Add(new(ex));
+                        }
+                        finally
+                        {
+                            context.EndObject();
+                        }
                     }
-                    finally
-                    {
-                        context.EndObject();
-                    }
+                }
+                finally
+                {
+                    context.EndObject();
                 }
                 if (defs.Count > 0)
                 {

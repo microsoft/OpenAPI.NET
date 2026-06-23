@@ -820,12 +820,12 @@ description: Schema for a person object
             var referencing = result.Document.Components!.Schemas["Referencing"];
 
             // Assert — siblings are preserved on the OpenApiSchemaReference
-            referencing.Should().BeOfType<OpenApiSchemaReference>();
-            referencing.Description.Should().Be("Sibling description");
-            referencing.DynamicAnchor.Should().Be("anchor");
-            referencing.Definitions.Should().NotBeNull();
-            referencing.Definitions!.Should().ContainKey("sibling");
-            referencing.Definitions["sibling"].DynamicAnchor.Should().Be("inner");
+            Assert.IsType<OpenApiSchemaReference>(referencing);
+            Assert.Equal("Sibling description", referencing.Description);
+            Assert.Equal("anchor", referencing.DynamicAnchor);
+            Assert.NotNull(referencing.Definitions);
+            Assert.True(referencing.Definitions!.ContainsKey("sibling"));
+            Assert.Equal("inner", referencing.Definitions["sibling"].DynamicAnchor);
         }
 
         [Fact]
@@ -866,11 +866,11 @@ description: Schema for a person object
             var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings);
             var referencing = roundTripResult.Document.Components!.Schemas["Referencing"];
 
-            referencing.Should().BeOfType<OpenApiSchemaReference>();
-            referencing.DynamicAnchor.Should().Be("anchor");
-            referencing.Definitions.Should().NotBeNull();
-            referencing.Definitions!.Should().ContainKey("itemType");
-            referencing.Definitions["itemType"].DynamicAnchor.Should().Be("itemType");
+            Assert.IsType<OpenApiSchemaReference>(referencing);
+            Assert.Equal("anchor", referencing.DynamicAnchor);
+            Assert.NotNull(referencing.Definitions);
+            Assert.True(referencing.Definitions!.ContainsKey("itemType"));
+            Assert.Equal("itemType", referencing.Definitions["itemType"].DynamicAnchor);
         }
 
         [Fact]
@@ -902,12 +902,12 @@ description: Schema for a person object
             var referencing = result.Document.Components!.Schemas["Referencing"];
 
             // Assert
-            referencing.Should().BeOfType<OpenApiSchemaReference>();
-            referencing.Id.Should().Be("https://example.com/referencing.json");
-            referencing.Schema.Should().Be(new Uri("https://json-schema.org/draft/2020-12/schema"));
-            referencing.Comment.Should().Be("A comment sibling");
-            ((IOpenApiSchemaMissingProperties)referencing).Anchor.Should().Be("myAnchor");
-            referencing.DynamicRef.Should().Be("#myAnchor");
+            Assert.IsType<OpenApiSchemaReference>(referencing);
+            Assert.Equal("https://example.com/referencing.json", referencing.Id);
+            Assert.Equal(new Uri("https://json-schema.org/draft/2020-12/schema"), referencing.Schema);
+            Assert.Equal("A comment sibling", referencing.Comment);
+            Assert.Equal("myAnchor", ((IOpenApiSchemaMissingProperties)referencing).Anchor);
+            Assert.Equal("#myAnchor", referencing.DynamicRef);
         }
 
         [Fact]
@@ -945,12 +945,12 @@ description: Schema for a person object
             var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings);
             var referencing = roundTripResult.Document.Components!.Schemas["Referencing"];
 
-            referencing.Should().BeOfType<OpenApiSchemaReference>();
-            referencing.Id.Should().Be("https://example.com/referencing.json");
-            referencing.Schema.Should().Be(new Uri("https://json-schema.org/draft/2020-12/schema"));
-            referencing.Comment.Should().Be("A comment sibling");
-            ((IOpenApiSchemaMissingProperties)referencing).Anchor.Should().Be("myAnchor");
-            referencing.DynamicRef.Should().Be("#myAnchor");
+            Assert.IsType<OpenApiSchemaReference>(referencing);
+            Assert.Equal("https://example.com/referencing.json", referencing.Id);
+            Assert.Equal(new Uri("https://json-schema.org/draft/2020-12/schema"), referencing.Schema);
+            Assert.Equal("A comment sibling", referencing.Comment);
+            Assert.Equal("myAnchor", ((IOpenApiSchemaMissingProperties)referencing).Anchor);
+            Assert.Equal("#myAnchor", referencing.DynamicRef);
         }
 
         [Fact]
@@ -980,11 +980,11 @@ description: Schema for a person object
             var referencing = result.Document.Components!.Schemas["Referencing"];
 
             // Assert
-            referencing.Should().BeOfType<OpenApiSchemaReference>();
-            referencing.Vocabulary.Should().NotBeNull();
-            referencing.Vocabulary!.Should().HaveCount(2);
-            referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/core"].Should().BeTrue();
-            referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/applicator"].Should().BeFalse();
+            Assert.IsType<OpenApiSchemaReference>(referencing);
+            Assert.NotNull(referencing.Vocabulary);
+            Assert.Equal(2, referencing.Vocabulary!.Count);
+            Assert.True(referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/core"]);
+            Assert.False(referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/applicator"]);
         }
 
         [Fact]
@@ -1025,14 +1025,14 @@ description: Schema for a person object
             var assetPaged = result.Document.Components!.Schemas["AssetPaged"];
 
             // Assert
-            assetPaged.AllOf.Should().NotBeNull();
-            assetPaged.AllOf!.Count.Should().Be(2);
+            Assert.NotNull(assetPaged.AllOf);
+            Assert.Equal(2, assetPaged.AllOf!.Count);
             var defsHolder = assetPaged.AllOf[0];
-            defsHolder.Definitions.Should().NotBeNull();
-            defsHolder.Definitions!.Should().ContainKey("contentType");
+            Assert.NotNull(defsHolder.Definitions);
+            Assert.True(defsHolder.Definitions!.ContainsKey("contentType"));
             var contentType = defsHolder.Definitions["contentType"];
-            contentType.Should().BeOfType<OpenApiSchemaReference>();
-            contentType.DynamicAnchor.Should().Be("contentType");
+            Assert.IsType<OpenApiSchemaReference>(contentType);
+            Assert.Equal("contentType", contentType.DynamicAnchor);
         }
     }
 }

@@ -130,14 +130,14 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
     /// <inheritdoc/>
     protected override void SerializeAdditionalV31Properties(IOpenApiWriter writer)
     {
-        SerializeAdditionalV3XProperties(writer, OpenApiSpecVersion.OpenApi3_1, base.SerializeAdditionalV31Properties);
+        SerializeAdditionalV3XProperties(writer, (w, e) => e.SerializeAsV31(w), base.SerializeAdditionalV31Properties);
     }
     /// <inheritdoc/>
     protected override void SerializeAdditionalV32Properties(IOpenApiWriter writer)
     {
-        SerializeAdditionalV3XProperties(writer, OpenApiSpecVersion.OpenApi3_2, base.SerializeAdditionalV32Properties);
+        SerializeAdditionalV3XProperties(writer, (w, e) => e.SerializeAsV32(w), base.SerializeAdditionalV32Properties);
     }
-    private void SerializeAdditionalV3XProperties(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter> baseSerializer)
+    private void SerializeAdditionalV3XProperties(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> serializeCallback, Action<IOpenApiWriter> baseSerializer)
     {
         if (Type != ReferenceType.Schema) throw new InvalidOperationException(
             $"JsonSchemaReference can only be serialized for ReferenceType.Schema, but was {Type}.");
@@ -149,14 +149,7 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         writer.WriteProperty(OpenApiConstants.DollarSchema, Schema?.ToString());
         writer.WriteProperty(OpenApiConstants.Comment, Comment);
         writer.WriteOptionalMap(OpenApiConstants.Vocabulary, Vocabulary, (w, s) => w.WriteValue(s));
-        if (version == OpenApiSpecVersion.OpenApi3_1)
-        {
-            writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, s) => s.SerializeAsV31(w));
-        }
-        else
-        {
-            writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, s) => s.SerializeAsV32(w));
-        }
+        writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, serializeCallback);
         writer.WriteProperty(OpenApiConstants.Anchor, Anchor);
         writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);
         writer.WriteProperty(OpenApiConstants.DynamicAnchor, DynamicAnchor);
