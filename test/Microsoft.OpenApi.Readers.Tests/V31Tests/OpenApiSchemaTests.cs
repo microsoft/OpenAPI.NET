@@ -1218,12 +1218,14 @@ description: Schema for a person object
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
             var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
-            var referencing = result.Document.Components!.Schemas["Referencing"];
+            Assert.NotNull(result.Document.Components);
+            Assert.NotNull(result.Document.Components.Schemas);
+            var referencing = result.Document.Components.Schemas["Referencing"];
 
             // Assert — empty siblings fall through to Target's values
             Assert.IsType<OpenApiSchemaReference>(referencing);
             Assert.NotNull(referencing.Definitions);
-            Assert.True(referencing.Definitions!.ContainsKey("targetDef"));
+            Assert.True(referencing.Definitions.ContainsKey("targetDef"));
             Assert.NotNull(referencing.Vocabulary);
             Assert.True(referencing.Vocabulary!.ContainsKey("https://json-schema.org/draft/2020-12/vocab/core"));
         }

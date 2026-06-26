@@ -817,7 +817,9 @@ description: Schema for a person object
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
             var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
-            var referencing = result.Document.Components!.Schemas["Referencing"];
+            Assert.NotNull(result.Document.Components);
+            Assert.NotNull(result.Document.Components.Schemas);
+            var referencing = result.Document.Components.Schemas["Referencing"];
 
             // Assert — siblings are preserved on the OpenApiSchemaReference
             Assert.IsType<OpenApiSchemaReference>(referencing);
