@@ -561,107 +561,13 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
     }
 
     /// <inheritdoc/>
+    [Obsolete("Use ApplySchemaMetadata instead.")]
+#pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
     protected override void SetAdditional31MetadataFromMapNode(JsonObject jsonObject)
+#pragma warning restore CS0809 // Obsolete member overrides non-obsolete member
     {
-        base.SetAdditional31MetadataFromMapNode(jsonObject);
-
-        var title = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Title);
-        if (!string.IsNullOrEmpty(title))
-        {
-            Title = title;
-        }
-
-        // Boolean properties
-        if (jsonObject.TryGetPropertyValue(OpenApiConstants.Deprecated, out var deprecatedNode) && deprecatedNode is JsonValue deprecatedValue && deprecatedValue.TryGetValue<bool>(out var deprecated))
-        {
-            Deprecated = deprecated;
-        }
-
-        if (jsonObject.TryGetPropertyValue(OpenApiConstants.ReadOnly, out var readOnlyNode) && readOnlyNode is JsonValue readOnlyValue && readOnlyValue.TryGetValue<bool>(out var readOnly))
-        {
-            ReadOnly = readOnly;
-        }
-
-        if (jsonObject.TryGetPropertyValue(OpenApiConstants.WriteOnly, out var writeOnlyNode) && writeOnlyNode is JsonValue writeOnlyValue && writeOnlyValue.TryGetValue<bool>(out var writeOnly))
-        {
-            WriteOnly = writeOnly;
-        }
-
-        // Default value
-        if (jsonObject.TryGetPropertyValue(OpenApiConstants.Default, out var defaultNode))
-        {
-            Default = defaultNode;
-        }
-
-        // Examples
-        if (jsonObject.TryGetPropertyValue(OpenApiConstants.Examples, out var examplesNode) && examplesNode is JsonArray examplesArray)
-        {
-            Examples = examplesArray.OfType<JsonNode>().ToList();
-        }
-
-        // Extensions (properties starting with "x-")
-        foreach (var property in jsonObject
-                    .Where(static p => p.Key.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase)
-                            && p.Value is not null))
-        {
-            var extensionValue = property.Value!;
-            Extensions ??= new Dictionary<string, IOpenApiExtension>(StringComparer.OrdinalIgnoreCase);
-            Extensions[property.Key] = new JsonNodeExtension(extensionValue.DeepClone());
-        }
-
-        // JSON Schema 2020-12 keyword siblings ($defs is parsed separately in the deserializer
-        // because it requires LoadSchema for nested schema materialization)
-        var id = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Id);
-        if (!string.IsNullOrEmpty(id))
-        {
-            SchemaId = id;
-        }
-
-        var schemaValue = GetPropertyValueFromNode(jsonObject, OpenApiConstants.DollarSchema);
-        if (!string.IsNullOrEmpty(schemaValue) && Uri.TryCreate(schemaValue, UriKind.Absolute, out var schemaUri))
-        {
-            Schema = schemaUri;
-        }
-
-        var comment = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Comment);
-        if (!string.IsNullOrEmpty(comment))
-        {
-            Comment = comment;
-        }
-
-        var dynamicRef = GetPropertyValueFromNode(jsonObject, OpenApiConstants.DynamicRef);
-        if (!string.IsNullOrEmpty(dynamicRef))
-        {
-            DynamicRef = dynamicRef;
-        }
-
-        var dynamicAnchor = GetPropertyValueFromNode(jsonObject, OpenApiConstants.DynamicAnchor);
-        if (!string.IsNullOrEmpty(dynamicAnchor))
-        {
-            DynamicAnchor = dynamicAnchor;
-        }
-
-        var anchor = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Anchor);
-        if (!string.IsNullOrEmpty(anchor))
-        {
-            Anchor = anchor;
-        }
-
-        if (jsonObject.TryGetPropertyValue(OpenApiConstants.Vocabulary, out var vocabNode) && vocabNode is JsonObject vocabObj)
-        {
-            var vocab = new Dictionary<string, bool>();
-            foreach (var kvp in vocabObj)
-            {
-                if (kvp.Value is JsonValue v && v.TryGetValue<bool>(out var b))
-                {
-                    vocab[kvp.Key] = b;
-                }
-            }
-            if (vocab.Count > 0)
-            {
-                Vocabulary = vocab;
-            }
-        }
+        //TODO remove this method in next major release
+        // no-op: we're using ApplySchemaMetadata
     }
 
     internal void ApplySchemaMetadata(OpenApiSchema schema, JsonObject jsonObject)
