@@ -455,7 +455,7 @@ internal static partial class OpenApiV31Deserializer
 
             // Parse $defs sibling — requires LoadSchema for nested schema materialization,
             // so it cannot be done inside SetAdditional31MetadataFromMapNode.
-            if (jsonObject.TryGetPropertyValue(OpenApiConstants.Defs, out var defsNode) && defsNode is JsonObject defsObj)
+            if (jsonObject.TryGetPropertyValue(OpenApiConstants.Defs, out var defsNode) && defsNode is JsonObject)
             {
                 context.StartObject(OpenApiConstants.Defs);
                 if (defsNode.CreateMap(LoadSchema, hostDocument, context) is { Count: > 0 } definitions)
