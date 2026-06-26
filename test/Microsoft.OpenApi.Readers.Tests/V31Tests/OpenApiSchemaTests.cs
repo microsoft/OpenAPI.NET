@@ -966,14 +966,16 @@ description: Schema for a person object
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
             var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
-            var referencing = result.Document.Components!.Schemas["Referencing"];
+            Assert.NotNull(result.Document.Components);
+            Assert.NotNull(result.Document.Components.Schemas);
+            var referencing = result.Document.Components.Schemas["Referencing"];
 
             // Assert — siblings are preserved on the OpenApiSchemaReference
             Assert.IsType<OpenApiSchemaReference>(referencing);
             Assert.Equal("Sibling description", referencing.Description);
             Assert.Equal("anchor", referencing.DynamicAnchor);
             Assert.NotNull(referencing.Definitions);
-            Assert.True(referencing.Definitions!.ContainsKey("sibling"));
+            Assert.True(referencing.Definitions.ContainsKey("sibling"));
             Assert.Equal("inner", referencing.Definitions["sibling"].DynamicAnchor);
         }
 
@@ -1013,12 +1015,14 @@ description: Schema for a person object
             // Assert — round-trip preserves $dynamicAnchor and $defs alongside $ref
             using var roundTripStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(output));
             var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings);
-            var referencing = roundTripResult.Document.Components!.Schemas["Referencing"];
+            Assert.NotNull(roundTripResult.Document.Components);
+            Assert.NotNull(roundTripResult.Document.Components.Schemas);
+            var referencing = roundTripResult.Document.Components.Schemas["Referencing"];
 
             Assert.IsType<OpenApiSchemaReference>(referencing);
             Assert.Equal("anchor", referencing.DynamicAnchor);
             Assert.NotNull(referencing.Definitions);
-            Assert.True(referencing.Definitions!.ContainsKey("itemType"));
+            Assert.True(referencing.Definitions.ContainsKey("itemType"));
             Assert.Equal("itemType", referencing.Definitions["itemType"].DynamicAnchor);
         }
 
@@ -1048,7 +1052,9 @@ description: Schema for a person object
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
             var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
-            var referencing = result.Document.Components!.Schemas["Referencing"];
+            Assert.NotNull(result.Document.Components);
+            Assert.NotNull(result.Document.Components.Schemas);
+            var referencing = result.Document.Components.Schemas["Referencing"];
 
             // Assert
             Assert.IsType<OpenApiSchemaReference>(referencing);
@@ -1092,7 +1098,9 @@ description: Schema for a person object
             // Assert — round-trip preserves scalar siblings alongside $ref
             using var roundTripStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(output));
             var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings);
-            var referencing = roundTripResult.Document.Components!.Schemas["Referencing"];
+            Assert.NotNull(roundTripResult.Document.Components);
+            Assert.NotNull(roundTripResult.Document.Components.Schemas);
+            var referencing = roundTripResult.Document.Components.Schemas["Referencing"];
 
             Assert.IsType<OpenApiSchemaReference>(referencing);
             Assert.Equal("https://example.com/referencing.json", referencing.Id);
@@ -1126,12 +1134,14 @@ description: Schema for a person object
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
             var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
-            var referencing = result.Document.Components!.Schemas["Referencing"];
+            Assert.NotNull(result.Document.Components);
+            Assert.NotNull(result.Document.Components.Schemas);
+            var referencing = result.Document.Components.Schemas["Referencing"];
 
             // Assert
             Assert.IsType<OpenApiSchemaReference>(referencing);
             Assert.NotNull(referencing.Vocabulary);
-            Assert.Equal(2, referencing.Vocabulary!.Count);
+            Assert.Equal(2, referencing.Vocabulary.Count);
             Assert.True(referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/core"]);
             Assert.False(referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/applicator"]);
         }
@@ -1173,17 +1183,19 @@ description: Schema for a person object
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
             var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
-            var assetPaged = result.Document.Components!.Schemas["AssetPaged"];
+            Assert.NotNull(result.Document.Components);
+            Assert.NotNull(result.Document.Components.Schemas);
+            var assetPaged = result.Document.Components.Schemas["AssetPaged"];
 
             // Assert — the binding entry inside $defs/allOf[0] is reachable
             // allOf[0] is a regular OpenApiSchema (no $ref at top level), so $defs is parsed normally.
             // The nested contentType schema is an OpenApiSchemaReference ($ref: Asset),
             // and its $dynamicAnchor sibling must be preserved.
             Assert.NotNull(assetPaged.AllOf);
-            Assert.Equal(2, assetPaged.AllOf!.Count);
+            Assert.Equal(2, assetPaged.AllOf.Count);
             var defsHolder = assetPaged.AllOf[0];
             Assert.NotNull(defsHolder.Definitions);
-            Assert.True(defsHolder.Definitions!.ContainsKey("contentType"));
+            Assert.True(defsHolder.Definitions.ContainsKey("contentType"));
             var contentType = defsHolder.Definitions["contentType"];
             Assert.IsType<OpenApiSchemaReference>(contentType);
             Assert.Equal("contentType", contentType.DynamicAnchor);
@@ -1227,7 +1239,7 @@ description: Schema for a person object
             Assert.NotNull(referencing.Definitions);
             Assert.True(referencing.Definitions.ContainsKey("targetDef"));
             Assert.NotNull(referencing.Vocabulary);
-            Assert.True(referencing.Vocabulary!.ContainsKey("https://json-schema.org/draft/2020-12/vocab/core"));
+            Assert.True(referencing.Vocabulary.ContainsKey("https://json-schema.org/draft/2020-12/vocab/core"));
         }
 
         [Fact]
@@ -1260,7 +1272,9 @@ description: Schema for a person object
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
             var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
-            var referencing = result.Document.Components!.Schemas["Referencing"];
+            Assert.NotNull(result.Document.Components);
+            Assert.NotNull(result.Document.Components.Schemas);
+            var referencing = result.Document.Components.Schemas["Referencing"];
 
             // Assert — siblings are dropped for 3.0 (per spec: $ref siblings MUST be ignored)
             Assert.IsType<OpenApiSchemaReference>(referencing);
@@ -1299,11 +1313,13 @@ description: Schema for a person object
             // Assert — round-trip preserves $vocabulary alongside $ref
             using var roundTripStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(output));
             var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings);
-            var referencing = roundTripResult.Document.Components!.Schemas["Referencing"];
+            Assert.NotNull(roundTripResult.Document.Components);
+            Assert.NotNull(roundTripResult.Document.Components.Schemas);
+            var referencing = roundTripResult.Document.Components.Schemas["Referencing"];
 
             Assert.IsType<OpenApiSchemaReference>(referencing);
             Assert.NotNull(referencing.Vocabulary);
-            Assert.Equal(2, referencing.Vocabulary!.Count);
+            Assert.Equal(2, referencing.Vocabulary.Count);
             Assert.True(referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/core"]);
             Assert.False(referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/applicator"]);
         }
@@ -1334,14 +1350,16 @@ description: Schema for a person object
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
             var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
-            var referencing = result.Document.Components!.Schemas["Referencing"];
+            Assert.NotNull(result.Document.Components);
+            Assert.NotNull(result.Document.Components.Schemas);
+            var referencing = result.Document.Components.Schemas["Referencing"];
             var copy = referencing.CreateShallowCopy();
 
             // Assert — CreateShallowCopy preserves sibling values via the JsonSchemaReference copy constructor
             Assert.IsType<OpenApiSchemaReference>(copy);
             Assert.Equal("anchor", copy.DynamicAnchor);
             Assert.NotNull(copy.Definitions);
-            Assert.True(copy.Definitions!.ContainsKey("sibling"));
+            Assert.True(copy.Definitions.ContainsKey("sibling"));
             Assert.Equal("inner", copy.Definitions["sibling"].DynamicAnchor);
         }
     }
