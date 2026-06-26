@@ -581,8 +581,11 @@ namespace Microsoft.OpenApi
             using var streamWriter = new StreamWriter(cryptoStream);
 
             await WriteDocumentAsync(streamWriter, cancellationToken).ConfigureAwait(false);
-
+#if NET5_0_OR_GREATER
+            await cryptoStream.FlushFinalBlockAsync(cancellationToken).ConfigureAwait(false);
+#else
             cryptoStream.FlushFinalBlock();
+#endif
 
             var hash = sha.Hash;
 #endif
