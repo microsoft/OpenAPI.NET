@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -59,6 +59,47 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
     public IDictionary<string, IOpenApiExtension>? Extensions { get; set; }
 
     /// <summary>
+    /// A $id which by default SHOULD override that of the referenced component.
+    /// Named SchemaId to avoid collision with the inherited reference identifier (BaseOpenApiReference.Id).
+    /// </summary>
+    public string? SchemaId { get; set; }
+
+    /// <summary>
+    /// The $schema dialect URI which by default SHOULD override that of the referenced component.
+    /// </summary>
+    public Uri? Schema { get; set; }
+
+    /// <summary>
+    /// A $comment which by default SHOULD override that of the referenced component.
+    /// </summary>
+    public string? Comment { get; set; }
+
+    /// <summary>
+    /// The $vocabulary which by default SHOULD override that of the referenced component.
+    /// </summary>
+    public IDictionary<string, bool>? Vocabulary { get; set; }
+
+    /// <summary>
+    /// The $dynamicRef which by default SHOULD override that of the referenced component.
+    /// </summary>
+    public string? DynamicRef { get; set; }
+
+    /// <summary>
+    /// The $dynamicAnchor which by default SHOULD override that of the referenced component.
+    /// </summary>
+    public string? DynamicAnchor { get; set; }
+
+    /// <summary>
+    /// The $defs which by default SHOULD override that of the referenced component.
+    /// </summary>
+    public IDictionary<string, IOpenApiSchema>? Definitions { get; set; }
+
+    /// <summary>
+    /// The $anchor which by default SHOULD override that of the referenced component.
+    /// </summary>
+    public string? Anchor { get; set; }
+
+    /// <summary>
     /// Parameterless constructor
     /// </summary>
     public JsonSchemaReference() { }
@@ -76,6 +117,14 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         WriteOnly = reference.WriteOnly;
         Examples = reference.Examples;
         Extensions = reference.Extensions != null ? new Dictionary<string, IOpenApiExtension>(reference.Extensions) : null;
+        SchemaId = reference.SchemaId;
+        Schema = reference.Schema;
+        Comment = reference.Comment;
+        Vocabulary = reference.Vocabulary != null ? new Dictionary<string, bool>(reference.Vocabulary) : null;
+        DynamicRef = reference.DynamicRef;
+        DynamicAnchor = reference.DynamicAnchor;
+        Definitions = reference.Definitions != null ? new Dictionary<string, IOpenApiSchema>(reference.Definitions) : null;
+        Anchor = reference.Anchor;
     }
 
     /// <inheritdoc/>
@@ -85,6 +134,17 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
             $"JsonSchemaReference can only be serialized for ReferenceType.Schema, but was {Type}.");
 
         base.SerializeAdditionalV31Properties(writer);        
+
+        // JSON Schema 2020-12 keyword siblings (preserved per OAS 3.1+ / JSON Schema 2020-12 semantics)
+        writer.WriteProperty(OpenApiConstants.Id, SchemaId);
+        writer.WriteProperty(OpenApiConstants.DollarSchema, Schema?.ToString());
+        writer.WriteProperty(OpenApiConstants.Comment, Comment);
+        writer.WriteOptionalMap(OpenApiConstants.Vocabulary, Vocabulary, (w, s) => w.WriteValue(s));
+        writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, (w, e) => e.SerializeAsV31(w));
+        writer.WriteProperty(OpenApiConstants.Anchor, Anchor);
+        writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);
+        writer.WriteProperty(OpenApiConstants.DynamicAnchor, DynamicAnchor);
+
         // Additional schema metadata annotations in 3.1
         writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
         writer.WriteProperty(OpenApiConstants.Title, Title);
@@ -154,6 +214,60 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
             var extensionValue = property.Value!;
             Extensions ??= new Dictionary<string, IOpenApiExtension>(StringComparer.OrdinalIgnoreCase);
             Extensions[property.Key] = new JsonNodeExtension(extensionValue.DeepClone());
+        }
+
+        // JSON Schema 2020-12 keyword siblings ($defs is parsed separately in the deserializer
+        // because it requires LoadSchema for nested schema materialization)
+        var id = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Id);
+        if (!string.IsNullOrEmpty(id))
+        {
+            SchemaId = id;
+        }
+
+        var schemaValue = GetPropertyValueFromNode(jsonObject, OpenApiConstants.DollarSchema);
+        if (!string.IsNullOrEmpty(schemaValue) && Uri.TryCreate(schemaValue, UriKind.Absolute, out var schemaUri))
+        {
+            Schema = schemaUri;
+        }
+
+        var comment = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Comment);
+        if (!string.IsNullOrEmpty(comment))
+        {
+            Comment = comment;
+        }
+
+        var dynamicRef = GetPropertyValueFromNode(jsonObject, OpenApiConstants.DynamicRef);
+        if (!string.IsNullOrEmpty(dynamicRef))
+        {
+            DynamicRef = dynamicRef;
+        }
+
+        var dynamicAnchor = GetPropertyValueFromNode(jsonObject, OpenApiConstants.DynamicAnchor);
+        if (!string.IsNullOrEmpty(dynamicAnchor))
+        {
+            DynamicAnchor = dynamicAnchor;
+        }
+
+        var anchor = GetPropertyValueFromNode(jsonObject, OpenApiConstants.Anchor);
+        if (!string.IsNullOrEmpty(anchor))
+        {
+            Anchor = anchor;
+        }
+
+        if (jsonObject.TryGetPropertyValue(OpenApiConstants.Vocabulary, out var vocabNode) && vocabNode is JsonObject vocabObj)
+        {
+            var vocab = new Dictionary<string, bool>();
+            foreach (var kvp in vocabObj)
+            {
+                if (kvp.Value is JsonValue v && v.TryGetValue<bool>(out var b))
+                {
+                    vocab[kvp.Key] = b;
+                }
+            }
+            if (vocab.Count > 0)
+            {
+                Vocabulary = vocab;
+            }
         }
     }
 }
