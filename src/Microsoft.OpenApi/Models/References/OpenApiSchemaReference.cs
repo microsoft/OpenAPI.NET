@@ -49,43 +49,43 @@ namespace Microsoft.OpenApi
             set => Reference.Title = value;
         }
         /// <inheritdoc/>
-        public Uri? Schema { get => Reference.Schema ?? Target?.Schema; }
+        public Uri? Schema { get => Reference.Schema ?? Target?.Schema; set => Reference.Schema = value; }
         /// <inheritdoc/>
-        public string? Id { get => string.IsNullOrEmpty(Reference.SchemaId) ? Target?.Id : Reference.SchemaId; }
+        public string? Id { get => string.IsNullOrEmpty(Reference.SchemaId) ? Target?.Id : Reference.SchemaId; set => Reference.SchemaId = value; }
         /// <inheritdoc/>
-        public string? Comment { get => string.IsNullOrEmpty(Reference.Comment) ? Target?.Comment : Reference.Comment; }
+        public string? Comment { get => string.IsNullOrEmpty(Reference.Comment) ? Target?.Comment : Reference.Comment; set => Reference.Comment = value; }
         /// <inheritdoc/>
-        public IDictionary<string, bool>? Vocabulary { get => Reference.Vocabulary ?? Target?.Vocabulary; }
+        public IDictionary<string, bool>? Vocabulary { get => Reference.Vocabulary ?? Target?.Vocabulary; set => Reference.Vocabulary = value; }
         /// <inheritdoc/>
-        public string? DynamicRef { get => string.IsNullOrEmpty(Reference.DynamicRef) ? Target?.DynamicRef : Reference.DynamicRef; }
+        public string? DynamicRef { get => string.IsNullOrEmpty(Reference.DynamicRef) ? Target?.DynamicRef : Reference.DynamicRef; set => Reference.DynamicRef = value; }
         /// <inheritdoc/>
-        public string? DynamicAnchor { get => string.IsNullOrEmpty(Reference.DynamicAnchor) ? Target?.DynamicAnchor : Reference.DynamicAnchor; }
+        public string? DynamicAnchor { get => string.IsNullOrEmpty(Reference.DynamicAnchor) ? Target?.DynamicAnchor : Reference.DynamicAnchor; set => Reference.DynamicAnchor = value; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiSchema>? Definitions { get => Reference.Definitions ?? Target?.Definitions; }
+        public IDictionary<string, IOpenApiSchema>? Definitions { get => Reference.Definitions ?? Target?.Definitions; set => Reference.Definitions = value; }
         /// <inheritdoc/>
-        public string? Anchor { get => string.IsNullOrEmpty(Reference.Anchor) ? (Target as IOpenApiSchemaMissingProperties)?.Anchor : Reference.Anchor; }
+        public string? Anchor { get => string.IsNullOrEmpty(Reference.Anchor) ? (Target as IOpenApiSchemaMissingProperties)?.Anchor : Reference.Anchor; set => Reference.Anchor = value; }
         /// <inheritdoc/>
-        public string? ExclusiveMaximum { get => Target?.ExclusiveMaximum; }
+        public string? ExclusiveMaximum { get => string.IsNullOrEmpty(Reference.ExclusiveMaximum) ? Target?.ExclusiveMaximum : Reference.ExclusiveMaximum; set => Reference.ExclusiveMaximum = value; }
         /// <inheritdoc/>
-        public string? ExclusiveMinimum { get => Target?.ExclusiveMinimum; }
+        public string? ExclusiveMinimum { get => string.IsNullOrEmpty(Reference.ExclusiveMinimum) ? Target?.ExclusiveMinimum : Reference.ExclusiveMinimum; set => Reference.ExclusiveMinimum = value; }
         /// <inheritdoc/>
-        public JsonSchemaType? Type { get => Target?.Type; }
+        public JsonSchemaType? Type { get => Reference.SchemaType ?? Target?.Type; set => Reference.SchemaType = value; }
         /// <inheritdoc/>
-        public string? Const { get => Target?.Const; }
+        public string? Const { get => string.IsNullOrEmpty(Reference.Const) ? Target?.Const : Reference.Const; set => Reference.Const = value; }
         /// <inheritdoc/>
-        public string? Format { get => Target?.Format; }
+        public string? Format { get => string.IsNullOrEmpty(Reference.Format) ? Target?.Format : Reference.Format; set => Reference.Format = value; }
         /// <inheritdoc/>
-        public string? Maximum { get => Target?.Maximum; }
+        public string? Maximum { get => string.IsNullOrEmpty(Reference.Maximum) ? Target?.Maximum : Reference.Maximum; set => Reference.Maximum = value; }
         /// <inheritdoc/>
-        public string? Minimum { get => Target?.Minimum; }
+        public string? Minimum { get => string.IsNullOrEmpty(Reference.Minimum) ? Target?.Minimum : Reference.Minimum; set => Reference.Minimum = value; }
         /// <inheritdoc/>
-        public int? MaxLength { get => Target?.MaxLength; }
+        public int? MaxLength { get => Reference.MaxLength ?? Target?.MaxLength; set => Reference.MaxLength = value; }
         /// <inheritdoc/>
-        public int? MinLength { get => Target?.MinLength; }
+        public int? MinLength { get => Reference.MinLength ?? Target?.MinLength; set => Reference.MinLength = value; }
         /// <inheritdoc/>
-        public string? Pattern { get => Target?.Pattern; }
+        public string? Pattern { get => string.IsNullOrEmpty(Reference.Pattern) ? Target?.Pattern : Reference.Pattern; set => Reference.Pattern = value; }
         /// <inheritdoc/>
-        public decimal? MultipleOf { get => Target?.MultipleOf; }
+        public decimal? MultipleOf { get => Reference.MultipleOf ?? Target?.MultipleOf; set => Reference.MultipleOf = value; }
         /// <inheritdoc/>
         public JsonNode? Default
         {
@@ -105,45 +105,45 @@ namespace Microsoft.OpenApi
             set => Reference.WriteOnly = value;
         }
         /// <inheritdoc/>
-        public IList<IOpenApiSchema>? AllOf { get => Target?.AllOf; }
+        public IList<IOpenApiSchema>? AllOf { get => Reference.AllOf ?? Target?.AllOf; set => Reference.AllOf = value; }
         /// <inheritdoc/>
-        public IList<IOpenApiSchema>? OneOf { get => Target?.OneOf; }
+        public IList<IOpenApiSchema>? OneOf { get => Reference.OneOf ?? Target?.OneOf; set => Reference.OneOf = value; }
         /// <inheritdoc/>
-        public IList<IOpenApiSchema>? AnyOf { get => Target?.AnyOf; }
+        public IList<IOpenApiSchema>? AnyOf { get => Reference.AnyOf ?? Target?.AnyOf; set => Reference.AnyOf = value; }
         /// <inheritdoc/>
-        public IOpenApiSchema? Not { get => Target?.Not; }
+        public IOpenApiSchema? Not { get => Reference.Not ?? Target?.Not; set => Reference.Not = value; }
         /// <inheritdoc/>
-        public ISet<string>? Required { get => Target?.Required; }
+        public ISet<string>? Required { get => Reference.Required ?? Target?.Required; set => Reference.Required = value; }
         /// <inheritdoc/>
-        public IOpenApiSchema? Items { get => Target?.Items; }
+        public IOpenApiSchema? Items { get => Reference.Items ?? Target?.Items; set => Reference.Items = value; }
         /// <inheritdoc/>
-        public int? MaxItems { get => Target?.MaxItems; }
+        public int? MaxItems { get => Reference.MaxItems ?? Target?.MaxItems; set => Reference.MaxItems = value; }
         /// <inheritdoc/>
-        public int? MinItems { get => Target?.MinItems; }
+        public int? MinItems { get => Reference.MinItems ?? Target?.MinItems; set => Reference.MinItems = value; }
         /// <inheritdoc/>
-        public bool? UniqueItems { get => Target?.UniqueItems; }
+        public bool? UniqueItems { get => Reference.UniqueItems ?? Target?.UniqueItems; set => Reference.UniqueItems = value; }
         /// <inheritdoc/>
-        public IOpenApiSchema? Contains { get => (Target as IOpenApiSchemaMissingProperties)?.Contains; }
+        public IOpenApiSchema? Contains { get => Reference.Contains ?? (Target as IOpenApiSchemaMissingProperties)?.Contains; set => Reference.Contains = value; }
         /// <inheritdoc/>
-        public uint? MaxContains { get => (Target as IOpenApiSchemaMissingProperties)?.MaxContains; }
+        public uint? MaxContains { get => Reference.MaxContains ?? (Target as IOpenApiSchemaMissingProperties)?.MaxContains; set => Reference.MaxContains = value; }
         /// <inheritdoc/>
-        public uint? MinContains { get => (Target as IOpenApiSchemaMissingProperties)?.MinContains; }
+        public uint? MinContains { get => Reference.MinContains ?? (Target as IOpenApiSchemaMissingProperties)?.MinContains; set => Reference.MinContains = value; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiSchema>? Properties { get => Target?.Properties; }
+        public IDictionary<string, IOpenApiSchema>? Properties { get => Reference.Properties ?? Target?.Properties; set => Reference.Properties = value; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiSchema>? PatternProperties { get => Target?.PatternProperties; }
+        public IDictionary<string, IOpenApiSchema>? PatternProperties { get => Reference.PatternProperties ?? Target?.PatternProperties; set => Reference.PatternProperties = value; }
         /// <inheritdoc/>
-        public int? MaxProperties { get => Target?.MaxProperties; }
+        public int? MaxProperties { get => Reference.MaxProperties ?? Target?.MaxProperties; set => Reference.MaxProperties = value; }
         /// <inheritdoc/>
-        public int? MinProperties { get => Target?.MinProperties; }
+        public int? MinProperties { get => Reference.MinProperties ?? Target?.MinProperties; set => Reference.MinProperties = value; }
         /// <inheritdoc/>
-        public bool AdditionalPropertiesAllowed { get => Target?.AdditionalPropertiesAllowed ?? true; }
+        public bool AdditionalPropertiesAllowed { get => Reference.AdditionalPropertiesAllowed ?? Target?.AdditionalPropertiesAllowed ?? true; set => Reference.AdditionalPropertiesAllowed = value; }
         /// <inheritdoc/>
-        public IOpenApiSchema? AdditionalProperties { get => Target?.AdditionalProperties; }
+        public IOpenApiSchema? AdditionalProperties { get => Reference.AdditionalProperties ?? Target?.AdditionalProperties; set => Reference.AdditionalProperties = value; }
         /// <inheritdoc/>
-        public OpenApiDiscriminator? Discriminator { get => Target?.Discriminator; }
+        public OpenApiDiscriminator? Discriminator { get => Reference.Discriminator ?? Target?.Discriminator; set => Reference.Discriminator = value; }
         /// <inheritdoc/>
-        public JsonNode? Example { get => Target?.Example; }
+        public JsonNode? Example { get => Reference.Example ?? Target?.Example; set => Reference.Example = value; }
         /// <inheritdoc/>
         public IList<JsonNode>? Examples
         {
@@ -151,29 +151,29 @@ namespace Microsoft.OpenApi
             set => Reference.Examples = value;
         }
         /// <inheritdoc/>
-        public IList<JsonNode>? Enum { get => Target?.Enum; }
+        public IList<JsonNode>? Enum { get => Reference.Enum ?? Target?.Enum; set => Reference.Enum = value; }
         /// <inheritdoc/>
-        public bool UnevaluatedProperties { get => Target?.UnevaluatedProperties ?? true; }
+        public bool UnevaluatedProperties { get => Reference.UnevaluatedProperties ?? Target?.UnevaluatedProperties ?? true; set => Reference.UnevaluatedProperties = value; }
         /// <inheritdoc/>
-        public IOpenApiSchema? UnevaluatedPropertiesSchema { get => (Target as IOpenApiSchemaMissingProperties)?.UnevaluatedPropertiesSchema; }
+        public IOpenApiSchema? UnevaluatedPropertiesSchema { get => Reference.UnevaluatedPropertiesSchema ?? (Target as IOpenApiSchemaMissingProperties)?.UnevaluatedPropertiesSchema; set => Reference.UnevaluatedPropertiesSchema = value; }
         /// <inheritdoc/>
-        public string? ContentEncoding { get => (Target as IOpenApiSchemaMissingProperties)?.ContentEncoding; }
+        public string? ContentEncoding { get => string.IsNullOrEmpty(Reference.ContentEncoding) ? (Target as IOpenApiSchemaMissingProperties)?.ContentEncoding : Reference.ContentEncoding; set => Reference.ContentEncoding = value; }
         /// <inheritdoc/>
-        public string? ContentMediaType { get => (Target as IOpenApiSchemaMissingProperties)?.ContentMediaType; }
+        public string? ContentMediaType { get => string.IsNullOrEmpty(Reference.ContentMediaType) ? (Target as IOpenApiSchemaMissingProperties)?.ContentMediaType : Reference.ContentMediaType; set => Reference.ContentMediaType = value; }
         /// <inheritdoc/>
-        public IOpenApiSchema? ContentSchema { get => (Target as IOpenApiSchemaMissingProperties)?.ContentSchema; }
+        public IOpenApiSchema? ContentSchema { get => Reference.ContentSchema ?? (Target as IOpenApiSchemaMissingProperties)?.ContentSchema; set => Reference.ContentSchema = value; }
         /// <inheritdoc/>
-        public IOpenApiSchema? PropertyNames { get => (Target as IOpenApiSchemaMissingProperties)?.PropertyNames; }
+        public IOpenApiSchema? PropertyNames { get => Reference.PropertyNames ?? (Target as IOpenApiSchemaMissingProperties)?.PropertyNames; set => Reference.PropertyNames = value; }
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiSchema>? DependentSchemas { get => (Target as IOpenApiSchemaMissingProperties)?.DependentSchemas; }
+        public IDictionary<string, IOpenApiSchema>? DependentSchemas { get => Reference.DependentSchemas ?? (Target as IOpenApiSchemaMissingProperties)?.DependentSchemas; set => Reference.DependentSchemas = value; }
         /// <inheritdoc/>
-        public IOpenApiSchema? If { get => (Target as IOpenApiSchemaMissingProperties)?.If; }
+        public IOpenApiSchema? If { get => Reference.If ?? (Target as IOpenApiSchemaMissingProperties)?.If; set => Reference.If = value; }
         /// <inheritdoc/>
-        public IOpenApiSchema? Then { get => (Target as IOpenApiSchemaMissingProperties)?.Then; }
+        public IOpenApiSchema? Then { get => Reference.Then ?? (Target as IOpenApiSchemaMissingProperties)?.Then; set => Reference.Then = value; }
         /// <inheritdoc/>
-        public IOpenApiSchema? Else { get => (Target as IOpenApiSchemaMissingProperties)?.Else; }
+        public IOpenApiSchema? Else { get => Reference.Else ?? (Target as IOpenApiSchemaMissingProperties)?.Else; set => Reference.Else = value; }
         /// <inheritdoc/>
-        public OpenApiExternalDocs? ExternalDocs { get => Target?.ExternalDocs; }
+        public OpenApiExternalDocs? ExternalDocs { get => Reference.ExternalDocs ?? Target?.ExternalDocs; set => Reference.ExternalDocs = value; }
         /// <inheritdoc/>
         public bool Deprecated
         {
@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi
             set => Reference.Deprecated = value;
         }
         /// <inheritdoc/>
-        public OpenApiXml? Xml { get => Target?.Xml; }
+        public OpenApiXml? Xml { get => Reference.Xml ?? Target?.Xml; set => Reference.Xml = value; }
         /// <inheritdoc/>
         public IDictionary<string, IOpenApiExtension>? Extensions
         {
@@ -190,10 +190,10 @@ namespace Microsoft.OpenApi
         }
 
         /// <inheritdoc/>
-        public IDictionary<string, JsonNode>? UnrecognizedKeywords { get => Target?.UnrecognizedKeywords; }
+        public IDictionary<string, JsonNode>? UnrecognizedKeywords { get => Reference.UnrecognizedKeywords ?? Target?.UnrecognizedKeywords; set => Reference.UnrecognizedKeywords = value; }
 
         /// <inheritdoc/>
-        public IDictionary<string, HashSet<string>>? DependentRequired { get => Target?.DependentRequired; }
+        public IDictionary<string, HashSet<string>>? DependentRequired { get => Reference.DependentRequired ?? Target?.DependentRequired; set => Reference.DependentRequired = value; }
 
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
@@ -251,6 +251,6 @@ namespace Microsoft.OpenApi
         {
             return new JsonSchemaReference(sourceReference);
         }
-    #pragma warning restore CS0618
+#pragma warning restore CS0618
     }
 }

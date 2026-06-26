@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -14,6 +14,8 @@ namespace Microsoft.OpenApi;
 /// </summary>
 public class JsonSchemaReference : OpenApiReferenceWithDescription
 {
+    private const string JsonSchemaExtensionPrefix = "x-jsonschema-";
+
     /// <summary>
     /// A default value which by default SHOULD override that of the referenced component.
     /// If the referenced object-type does not allow a default field, then this field has no effect.
@@ -100,6 +102,236 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
     public string? Anchor { get; set; }
 
     /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public string? ExclusiveMaximum { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public string? ExclusiveMinimum { get; set; }
+
+    /// <summary>
+    /// Schema type override. Named SchemaType to avoid collision with <see cref="BaseOpenApiReference.Type"/>.
+    /// </summary>
+    public JsonSchemaType? SchemaType { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public string? Const { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public string? Format { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public string? Maximum { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public string? Minimum { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public int? MaxLength { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public int? MinLength { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public string? Pattern { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public decimal? MultipleOf { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public IList<IOpenApiSchema>? AllOf { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public IList<IOpenApiSchema>? OneOf { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public IList<IOpenApiSchema>? AnyOf { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public IOpenApiSchema? Not { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public ISet<string>? Required { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public IOpenApiSchema? Items { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public int? MaxItems { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public int? MinItems { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public bool? UniqueItems { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public IOpenApiSchema? Contains { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public uint? MaxContains { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public uint? MinContains { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public IDictionary<string, IOpenApiSchema>? Properties { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public IDictionary<string, IOpenApiSchema>? PatternProperties { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public int? MaxProperties { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public int? MinProperties { get; set; }
+
+    /// <summary>
+    /// Indicates if the schema can contain properties other than those defined by the properties map.
+    /// </summary>
+    public bool? AdditionalPropertiesAllowed { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public IOpenApiSchema? AdditionalProperties { get; set; }
+
+    /// <summary>
+    /// Adds support for polymorphism.
+    /// </summary>
+    public OpenApiDiscriminator? Discriminator { get; set; }
+
+    /// <summary>
+    /// A free-form property to include an example of an instance for this schema.
+    /// </summary>
+    public JsonNode? Example { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation
+    /// </summary>
+    public IList<JsonNode>? Enum { get; set; }
+
+    /// <summary>
+    /// Indicates whether unevaluated properties are allowed.
+    /// </summary>
+    public bool? UnevaluatedProperties { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-core#name-unevaluatedproperties
+    /// </summary>
+    public IOpenApiSchema? UnevaluatedPropertiesSchema { get; set; }
+
+    /// <summary>
+    /// Additional external documentation for this schema.
+    /// </summary>
+    public OpenApiExternalDocs? ExternalDocs { get; set; }
+
+    /// <summary>
+    /// This MAY be used only on properties schemas.
+    /// </summary>
+    public OpenApiXml? Xml { get; set; }
+
+    /// <summary>
+    /// This object stores any unrecognized keywords found in the schema.
+    /// </summary>
+    public IDictionary<string, JsonNode>? UnrecognizedKeywords { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition:https://json-schema.org/draft/2020-12/json-schema-validation#section-6.5.4
+    /// </summary>
+    public IDictionary<string, HashSet<string>>? DependentRequired { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation#name-contentencoding
+    /// </summary>
+    public string? ContentEncoding { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation#name-contentmediatype
+    /// </summary>
+    public string? ContentMediaType { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-validation#name-contentschema
+    /// </summary>
+    public IOpenApiSchema? ContentSchema { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-core#name-propertynames
+    /// </summary>
+    public IOpenApiSchema? PropertyNames { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-core#name-dependentschemas
+    /// </summary>
+    public IDictionary<string, IOpenApiSchema>? DependentSchemas { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-core#name-if
+    /// </summary>
+    public IOpenApiSchema? If { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-core#name-then
+    /// </summary>
+    public IOpenApiSchema? Then { get; set; }
+
+    /// <summary>
+    /// Follow JSON Schema definition: https://json-schema.org/draft/2020-12/json-schema-core#name-else
+    /// </summary>
+    public IOpenApiSchema? Else { get; set; }
+
+    /// <summary>
     /// Parameterless constructor
     /// </summary>
     public JsonSchemaReference() { }
@@ -125,6 +357,52 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         DynamicAnchor = reference.DynamicAnchor;
         Definitions = reference.Definitions != null ? new Dictionary<string, IOpenApiSchema>(reference.Definitions) : null;
         Anchor = reference.Anchor;
+        ExclusiveMaximum = reference.ExclusiveMaximum;
+        ExclusiveMinimum = reference.ExclusiveMinimum;
+        SchemaType = reference.SchemaType;
+        Const = reference.Const;
+        Format = reference.Format;
+        Maximum = reference.Maximum;
+        Minimum = reference.Minimum;
+        MaxLength = reference.MaxLength;
+        MinLength = reference.MinLength;
+        Pattern = reference.Pattern;
+        MultipleOf = reference.MultipleOf;
+        AllOf = reference.AllOf != null ? [.. reference.AllOf] : null;
+        OneOf = reference.OneOf != null ? [.. reference.OneOf] : null;
+        AnyOf = reference.AnyOf != null ? [.. reference.AnyOf] : null;
+        Not = reference.Not;
+        Required = reference.Required != null ? new HashSet<string>(reference.Required) : null;
+        Items = reference.Items;
+        MaxItems = reference.MaxItems;
+        MinItems = reference.MinItems;
+        UniqueItems = reference.UniqueItems;
+        Contains = reference.Contains;
+        MaxContains = reference.MaxContains;
+        MinContains = reference.MinContains;
+        Properties = reference.Properties != null ? new Dictionary<string, IOpenApiSchema>(reference.Properties) : null;
+        PatternProperties = reference.PatternProperties != null ? new Dictionary<string, IOpenApiSchema>(reference.PatternProperties) : null;
+        MaxProperties = reference.MaxProperties;
+        MinProperties = reference.MinProperties;
+        AdditionalPropertiesAllowed = reference.AdditionalPropertiesAllowed;
+        AdditionalProperties = reference.AdditionalProperties;
+        Discriminator = reference.Discriminator;
+        Example = reference.Example;
+        Enum = reference.Enum != null ? [.. reference.Enum] : null;
+        UnevaluatedProperties = reference.UnevaluatedProperties;
+        UnevaluatedPropertiesSchema = reference.UnevaluatedPropertiesSchema;
+        ExternalDocs = reference.ExternalDocs;
+        Xml = reference.Xml;
+        UnrecognizedKeywords = reference.UnrecognizedKeywords != null ? new Dictionary<string, JsonNode>(reference.UnrecognizedKeywords) : null;
+        DependentRequired = reference.DependentRequired != null ? new Dictionary<string, HashSet<string>>(reference.DependentRequired) : null;
+        ContentEncoding = reference.ContentEncoding;
+        ContentMediaType = reference.ContentMediaType;
+        ContentSchema = reference.ContentSchema;
+        PropertyNames = reference.PropertyNames;
+        DependentSchemas = reference.DependentSchemas != null ? new Dictionary<string, IOpenApiSchema>(reference.DependentSchemas) : null;
+        If = reference.If;
+        Then = reference.Then;
+        Else = reference.Else;
     }
 
     /// <inheritdoc/>
@@ -154,6 +432,70 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);
         writer.WriteProperty(OpenApiConstants.DynamicAnchor, DynamicAnchor);
 
+        writer.WriteProperty(OpenApiConstants.Const, Const);
+        WriteSchemaType(writer, OpenApiConstants.Type, SchemaType, allowMultipleTypes: true);
+        writer.WriteProperty(OpenApiConstants.Format, Format);
+        writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
+        WriteRawProperty(writer, OpenApiConstants.Maximum, Maximum);
+        WriteRawProperty(writer, OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
+        WriteRawProperty(writer, OpenApiConstants.Minimum, Minimum);
+        WriteRawProperty(writer, OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
+        writer.WriteProperty(OpenApiConstants.MaxLength, MaxLength);
+        writer.WriteProperty(OpenApiConstants.MinLength, MinLength);
+        writer.WriteProperty(OpenApiConstants.Pattern, Pattern);
+        writer.WriteProperty(OpenApiConstants.MaxItems, MaxItems);
+        writer.WriteProperty(OpenApiConstants.MinItems, MinItems);
+        writer.WriteProperty(OpenApiConstants.UniqueItems, UniqueItems);
+        writer.WriteProperty(OpenApiConstants.MaxProperties, MaxProperties);
+        writer.WriteProperty(OpenApiConstants.MinProperties, MinProperties);
+        writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) =>
+        {
+            if (!string.IsNullOrEmpty(s))
+            {
+                w.WriteValue(s!);
+            }
+        });
+        writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, e) => w.WriteAny(e));
+        writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, serializeCallback);
+        writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, serializeCallback);
+        writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, serializeCallback);
+        writer.WriteOptionalObject(OpenApiConstants.Not, Not, serializeCallback);
+        writer.WriteOptionalObject(OpenApiConstants.Items, Items, serializeCallback);
+        writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, serializeCallback);
+        writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, serializeCallback);
+        if (AdditionalProperties is not null)
+        {
+            writer.WriteOptionalObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, serializeCallback);
+        }
+        else if (AdditionalPropertiesAllowed.HasValue)
+        {
+            writer.WriteProperty(OpenApiConstants.AdditionalProperties, AdditionalPropertiesAllowed.Value);
+        }
+        writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, serializeCallback);
+        writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
+        if (UnevaluatedPropertiesSchema is not null)
+        {
+            writer.WriteOptionalObject(OpenApiConstants.UnevaluatedProperties, UnevaluatedPropertiesSchema, serializeCallback);
+        }
+        else if (UnevaluatedProperties.HasValue)
+        {
+            writer.WriteProperty(OpenApiConstants.UnevaluatedProperties, UnevaluatedProperties.Value);
+        }
+        writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, serializeCallback);
+        writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, serializeCallback);
+        writer.WriteOptionalMap(OpenApiConstants.DependentRequired, DependentRequired, (w, s) => w.WriteValue(s));
+        writer.WriteOptionalObject(OpenApiConstants.Contains, Contains, serializeCallback);
+        writer.WriteProperty(OpenApiConstants.MaxContains, MaxContains);
+        writer.WriteProperty(OpenApiConstants.MinContains, MinContains);
+        writer.WriteProperty(OpenApiConstants.ContentEncoding, ContentEncoding);
+        writer.WriteProperty(OpenApiConstants.ContentMediaType, ContentMediaType);
+        writer.WriteOptionalObject(OpenApiConstants.ContentSchema, ContentSchema, serializeCallback);
+        writer.WriteOptionalObject(OpenApiConstants.PropertyNames, PropertyNames, serializeCallback);
+        writer.WriteOptionalMap(OpenApiConstants.DependentSchemas, DependentSchemas, serializeCallback);
+        writer.WriteOptionalObject(OpenApiConstants.If, If, serializeCallback);
+        writer.WriteOptionalObject(OpenApiConstants.Then, Then, serializeCallback);
+        writer.WriteOptionalObject(OpenApiConstants.Else, Else, serializeCallback);
+
         // Additional schema metadata annotations in 3.1
         writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
         writer.WriteProperty(OpenApiConstants.Title, Title);
@@ -174,6 +516,146 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
             writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (w, e) => w.WriteAny(e));
         }
         writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_1);
+    }
+
+    /// <inheritdoc/>
+    public override void SerializeAsV3(IOpenApiWriter writer)
+    {
+        if (Type != ReferenceType.Schema) throw new InvalidOperationException(
+            $"JsonSchemaReference can only be serialized for ReferenceType.Schema, but was {Type}.");
+
+        writer.WriteStartObject();
+        writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV3);
+        SerializeV3CompatibilityProperties(writer);
+        writer.WriteEndObject();
+    }
+
+    private void SerializeV3CompatibilityProperties(IOpenApiWriter writer)
+    {
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.Id), SchemaId);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.DollarSchema), Schema?.ToString());
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.Comment), Comment);
+        writer.WriteOptionalMap(GetJsonSchemaExtensionName(OpenApiConstants.Vocabulary), Vocabulary, static (w, s) => w.WriteValue(s));
+        writer.WriteOptionalMap(GetJsonSchemaExtensionName(OpenApiConstants.Defs), Definitions, static (w, s) => s.SerializeAsV3(w));
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.Anchor), Anchor);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.DynamicRef), DynamicRef);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.DynamicAnchor), DynamicAnchor);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.Const), Const);
+        WriteSchemaType(writer, GetJsonSchemaExtensionName(OpenApiConstants.Type), SchemaType, allowMultipleTypes: true);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.Format), Format);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.MultipleOf), MultipleOf);
+        WriteRawProperty(writer, GetJsonSchemaExtensionName(OpenApiConstants.Maximum), Maximum);
+        WriteRawProperty(writer, GetJsonSchemaExtensionName(OpenApiConstants.ExclusiveMaximum), ExclusiveMaximum);
+        WriteRawProperty(writer, GetJsonSchemaExtensionName(OpenApiConstants.Minimum), Minimum);
+        WriteRawProperty(writer, GetJsonSchemaExtensionName(OpenApiConstants.ExclusiveMinimum), ExclusiveMinimum);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.MaxLength), MaxLength);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.MinLength), MinLength);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.Pattern), Pattern);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.MaxItems), MaxItems);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.MinItems), MinItems);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.UniqueItems), UniqueItems);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.MaxProperties), MaxProperties);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.MinProperties), MinProperties);
+        writer.WriteOptionalCollection(GetJsonSchemaExtensionName(OpenApiConstants.Required), Required, static (w, s) =>
+        {
+            if (!string.IsNullOrEmpty(s))
+            {
+                w.WriteValue(s!);
+            }
+        });
+        writer.WriteOptionalCollection(GetJsonSchemaExtensionName(OpenApiConstants.Enum), Enum, static (w, e) => w.WriteAny(e));
+        writer.WriteOptionalCollection(GetJsonSchemaExtensionName(OpenApiConstants.AllOf), AllOf, static (w, s) => s.SerializeAsV3(w));
+        writer.WriteOptionalCollection(GetJsonSchemaExtensionName(OpenApiConstants.AnyOf), AnyOf, static (w, s) => s.SerializeAsV3(w));
+        writer.WriteOptionalCollection(GetJsonSchemaExtensionName(OpenApiConstants.OneOf), OneOf, static (w, s) => s.SerializeAsV3(w));
+        writer.WriteOptionalObject(GetJsonSchemaExtensionName(OpenApiConstants.Not), Not, static (w, s) => s.SerializeAsV3(w));
+        writer.WriteOptionalObject(GetJsonSchemaExtensionName(OpenApiConstants.Items), Items, static (w, s) => s.SerializeAsV3(w));
+        writer.WriteOptionalMap(GetJsonSchemaExtensionName(OpenApiConstants.Properties), Properties, static (w, s) => s.SerializeAsV3(w));
+        writer.WriteOptionalMap(GetJsonSchemaExtensionName(OpenApiConstants.PatternProperties), PatternProperties, static (w, s) => s.SerializeAsV3(w));
+        if (AdditionalProperties is not null)
+        {
+            writer.WriteOptionalObject(GetJsonSchemaExtensionName(OpenApiConstants.AdditionalProperties), AdditionalProperties, static (w, s) => s.SerializeAsV3(w));
+        }
+        else if (AdditionalPropertiesAllowed.HasValue)
+        {
+            writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.AdditionalProperties), AdditionalPropertiesAllowed.Value);
+        }
+        writer.WriteOptionalObject(GetJsonSchemaExtensionName(OpenApiConstants.Example), Example, static (w, e) => w.WriteAny(e));
+        writer.WriteOptionalCollection(GetJsonSchemaExtensionName(OpenApiConstants.Examples), Examples, static (w, e) => w.WriteAny(e));
+        if (UnevaluatedPropertiesSchema is not null)
+        {
+            writer.WriteOptionalObject(GetJsonSchemaExtensionName(OpenApiConstants.UnevaluatedProperties), UnevaluatedPropertiesSchema, static (w, s) => s.SerializeAsV3(w));
+        }
+        else if (UnevaluatedProperties.HasValue)
+        {
+            writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.UnevaluatedProperties), UnevaluatedProperties.Value);
+        }
+        writer.WriteOptionalMap(GetJsonSchemaExtensionName(OpenApiConstants.DependentRequired), DependentRequired, static (w, s) => w.WriteValue(s));
+        writer.WriteOptionalObject(GetJsonSchemaExtensionName(OpenApiConstants.Contains), Contains, static (w, s) => s.SerializeAsV3(w));
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.MaxContains), MaxContains);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.MinContains), MinContains);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.ContentEncoding), ContentEncoding);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.ContentMediaType), ContentMediaType);
+        writer.WriteOptionalObject(GetJsonSchemaExtensionName(OpenApiConstants.ContentSchema), ContentSchema, static (w, s) => s.SerializeAsV3(w));
+        writer.WriteOptionalObject(GetJsonSchemaExtensionName(OpenApiConstants.PropertyNames), PropertyNames, static (w, s) => s.SerializeAsV3(w));
+        writer.WriteOptionalMap(GetJsonSchemaExtensionName(OpenApiConstants.DependentSchemas), DependentSchemas, static (w, s) => s.SerializeAsV3(w));
+        writer.WriteOptionalObject(GetJsonSchemaExtensionName(OpenApiConstants.If), If, static (w, s) => s.SerializeAsV3(w));
+        writer.WriteOptionalObject(GetJsonSchemaExtensionName(OpenApiConstants.Then), Then, static (w, s) => s.SerializeAsV3(w));
+        writer.WriteOptionalObject(GetJsonSchemaExtensionName(OpenApiConstants.Else), Else, static (w, s) => s.SerializeAsV3(w));
+        writer.WriteOptionalObject(GetJsonSchemaExtensionName(OpenApiConstants.Default), Default, static (w, d) => w.WriteAny(d));
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.Title), Title);
+        writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.Description), Description);
+        if (Deprecated.HasValue)
+        {
+            writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.Deprecated), Deprecated.Value, false);
+        }
+        if (ReadOnly.HasValue)
+        {
+            writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.ReadOnly), ReadOnly.Value, false);
+        }
+        if (WriteOnly.HasValue)
+        {
+            writer.WriteProperty(GetJsonSchemaExtensionName(OpenApiConstants.WriteOnly), WriteOnly.Value, false);
+        }
+    }
+
+    internal static string GetJsonSchemaExtensionName(string keyword) => JsonSchemaExtensionPrefix + keyword;
+
+    private static void WriteRawProperty(IOpenApiWriter writer, string name, string? value)
+    {
+        if (!string.IsNullOrEmpty(value))
+        {
+            writer.WritePropertyName(name);
+            writer.WriteRaw(value!);
+        }
+    }
+
+    private static void WriteSchemaType(IOpenApiWriter writer, string name, JsonSchemaType? schemaType, bool allowMultipleTypes)
+    {
+        if (!schemaType.HasValue)
+        {
+            return;
+        }
+
+        var values = schemaType.Value.ToIdentifiers();
+        if (values is null || values.Length == 0)
+        {
+            return;
+        }
+
+        if (allowMultipleTypes && values.Length > 1)
+        {
+            writer.WriteOptionalCollection(name, values, (w, s) =>
+            {
+                if (!string.IsNullOrEmpty(s))
+                {
+                    w.WriteValue(s!);
+                }
+            });
+        }
+        else
+        {
+            writer.WriteProperty(name, values[0]);
+        }
     }
 
     /// <inheritdoc/>
@@ -278,5 +760,94 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
                 Vocabulary = vocab;
             }
         }
+    }
+
+    internal void ApplySchemaMetadata(OpenApiSchema schema, JsonObject jsonObject)
+    {
+        Title = schema.Title;
+        Description = schema.Description;
+        Default = schema.Default;
+        if (jsonObject.ContainsKey(OpenApiConstants.Deprecated))
+        {
+            Deprecated = schema.Deprecated;
+        }
+        if (jsonObject.ContainsKey(OpenApiConstants.ReadOnly))
+        {
+            ReadOnly = schema.ReadOnly;
+        }
+        if (jsonObject.ContainsKey(OpenApiConstants.WriteOnly))
+        {
+            WriteOnly = schema.WriteOnly;
+        }
+        Examples = schema.Examples;
+        Extensions = schema.Extensions;
+        SchemaId = schema.Id;
+        Schema = schema.Schema;
+        Comment = schema.Comment;
+        if (schema.Vocabulary is { Count: > 0 })
+        {
+            Vocabulary = schema.Vocabulary;
+        }
+        DynamicRef = schema.DynamicRef;
+        DynamicAnchor = schema.DynamicAnchor;
+        if (schema.Definitions is { Count: > 0 })
+        {
+            Definitions = schema.Definitions;
+        }
+        Anchor = schema.Anchor;
+        ExclusiveMaximum = schema.ExclusiveMaximum;
+        ExclusiveMinimum = schema.ExclusiveMinimum;
+        SchemaType = schema.Type;
+        Const = schema.Const;
+        Format = schema.Format;
+        Maximum = schema.Maximum;
+        Minimum = schema.Minimum;
+        MaxLength = schema.MaxLength;
+        MinLength = schema.MinLength;
+        Pattern = schema.Pattern;
+        MultipleOf = schema.MultipleOf;
+        AllOf = schema.AllOf;
+        OneOf = schema.OneOf;
+        AnyOf = schema.AnyOf;
+        Not = schema.Not;
+        Required = schema.Required;
+        Items = schema.Items;
+        MaxItems = schema.MaxItems;
+        MinItems = schema.MinItems;
+        UniqueItems = schema.UniqueItems;
+        Contains = schema.Contains;
+        MaxContains = schema.MaxContains;
+        MinContains = schema.MinContains;
+        Properties = schema.Properties;
+        PatternProperties = schema.PatternProperties;
+        MaxProperties = schema.MaxProperties;
+        MinProperties = schema.MinProperties;
+        if (jsonObject.TryGetPropertyValue(OpenApiConstants.AdditionalProperties, out var additionalPropertiesNode) &&
+            additionalPropertiesNode is JsonValue)
+        {
+            AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
+        }
+        AdditionalProperties = schema.AdditionalProperties;
+        Discriminator = schema.Discriminator;
+        Example = schema.Example;
+        Enum = schema.Enum;
+        if (jsonObject.TryGetPropertyValue(OpenApiConstants.UnevaluatedProperties, out var unevaluatedPropertiesNode) &&
+            unevaluatedPropertiesNode is JsonValue)
+        {
+            UnevaluatedProperties = schema.UnevaluatedProperties;
+        }
+        UnevaluatedPropertiesSchema = schema.UnevaluatedPropertiesSchema;
+        ExternalDocs = schema.ExternalDocs;
+        Xml = schema.Xml;
+        UnrecognizedKeywords = schema.UnrecognizedKeywords;
+        DependentRequired = schema.DependentRequired;
+        ContentEncoding = schema.ContentEncoding;
+        ContentMediaType = schema.ContentMediaType;
+        ContentSchema = schema.ContentSchema;
+        PropertyNames = schema.PropertyNames;
+        DependentSchemas = schema.DependentSchemas;
+        If = schema.If;
+        Then = schema.Then;
+        Else = schema.Else;
     }
 }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V31;
+
 internal static partial class OpenApiV31Deserializer
 {
     private static readonly FixedFieldMap<OpenApiSchema> _openApiSchemaFixedFields = new()
@@ -450,20 +451,18 @@ internal static partial class OpenApiV31Deserializer
             var nodeLocation = context.GetLocation();
             var reference = GetReferenceIdAndExternalResource(pointer);
             var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
-            result.Reference.SetMetadataFromJsonObject(jsonObject);
-            result.Reference.SetJsonPointerPath(pointer, nodeLocation);
-
-            // Parse $defs sibling — requires LoadSchema for nested schema materialization,
-            // so it cannot be done inside SetAdditional31MetadataFromMapNode.
-            if (jsonObject.TryGetPropertyValue(OpenApiConstants.Defs, out var defsNode) && defsNode is JsonObject)
-            {
-                context.StartObject(OpenApiConstants.Defs);
-                if (defsNode.CreateMap(LoadSchema, hostDocument, context) is { Count: > 0 } definitions)
+            var referenceMetadata = new OpenApiSchema();
+            jsonObject.ParseMap(referenceMetadata, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context,
+                static (schema, name, value) =>
                 {
-                    result.Reference.Definitions = definitions;
-                }
-                context.EndObject();
-            }
+                    if (!string.Equals(name, OpenApiConstants.DollarRef, StringComparison.Ordinal))
+                    {
+                        schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
+                        schema.UnrecognizedKeywords[name] = value;
+                    }
+                });
+            result.Reference.ApplySchemaMetadata(referenceMetadata, jsonObject);
+            result.Reference.SetJsonPointerPath(pointer, nodeLocation);
 
             return result;
         }

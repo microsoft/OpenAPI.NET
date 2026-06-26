@@ -1,1 +1,1 @@
-﻿{"$ref":"#/components/schemas/Pet"}
+{"$ref":"#/components/schemas/Pet","x-jsonschema-examples":["reference example"],"x-jsonschema-default":"reference default","x-jsonschema-title":"Reference Title","x-jsonschema-description":"Reference Description","x-jsonschema-deprecated":true,"x-jsonschema-readOnly":true}
