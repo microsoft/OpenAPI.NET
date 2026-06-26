@@ -145,4 +145,3 @@ Microsoft.OpenApi.OpenApiSchemaReference.UniqueItems.set -> void
 Microsoft.OpenApi.OpenApiSchemaReference.UnrecognizedKeywords.set -> void
 Microsoft.OpenApi.OpenApiSchemaReference.Vocabulary.set -> void
 Microsoft.OpenApi.OpenApiSchemaReference.Xml.set -> void
-override Microsoft.OpenApi.JsonSchemaReference.SerializeAsV3(Microsoft.OpenApi.IOpenApiWriter! writer) -> void

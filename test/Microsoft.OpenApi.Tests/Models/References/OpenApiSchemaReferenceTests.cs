@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -289,126 +288,6 @@ namespace Microsoft.OpenApi.Tests.Models.References
             Assert.Contains("id", schemaReference.If.Required);
         }
 
-        [Fact]
-        public void ParseV30SchemaReferenceWithJsonSchemaExtensionSiblingsWorks()
-        {
-            var jsonContent = @"{
-  ""openapi"": ""3.0.4"",
-  ""info"": {
-    ""title"": ""Test API"",
-    ""version"": ""1.0.0""
-  },
-  ""paths"": {
-    ""/test"": {
-      ""get"": {
-        ""responses"": {
-          ""200"": {
-            ""description"": ""OK"",
-            ""content"": {
-              ""application/json"": {
-                ""schema"": {
-                  ""$ref"": ""#/components/schemas/Pet"",
-                  ""x-jsonschema-type"": ""string"",
-                  ""x-jsonschema-format"": ""uuid"",
-                  ""x-jsonschema-maxLength"": 36,
-                  ""x-jsonschema-contentEncoding"": ""base64""
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  ""components"": {
-    ""schemas"": {
-      ""Pet"": {
-        ""type"": ""object"",
-        ""format"": ""target-format"",
-        ""maxLength"": 10
-      }
-    }
-  }
-}";
-
-            var readResult = OpenApiDocument.Parse(jsonContent, "json");
-
-            Assert.Empty(readResult.Diagnostic.Errors);
-            var schemaReference = Assert.IsType<OpenApiSchemaReference>(readResult.Document?.Paths["/test"].Operations[HttpMethod.Get]
-                .Responses["200"].Content["application/json"].Schema);
-            Assert.Equal(JsonSchemaType.String, schemaReference.Type);
-            Assert.Equal("uuid", schemaReference.Format);
-            Assert.Equal(36, schemaReference.MaxLength);
-            Assert.Equal("base64", schemaReference.ContentEncoding);
-        }
-
-        [Fact]
-        public void ParseV30SchemaReferenceWithJsonSchemaExtensionKeywordSiblingsFromJsonSchema202012Works()
-        {
-            var jsonContent = @"{
-  ""openapi"": ""3.0.4"",
-  ""info"": {
-    ""title"": ""Test API"",
-    ""version"": ""1.0.0""
-  },
-  ""paths"": {
-    ""/test"": {
-      ""get"": {
-        ""responses"": {
-          ""200"": {
-            ""description"": ""OK"",
-            ""content"": {
-              ""application/json"": {
-                ""schema"": {
-                  ""$ref"": ""#/components/schemas/Pet"",
-                  ""x-jsonschema-$id"": ""https://example.com/schemas/pet-response"",
-                  ""x-jsonschema-$schema"": ""https://json-schema.org/draft/2020-12/schema"",
-                  ""x-jsonschema-$comment"": ""reference comment"",
-                  ""x-jsonschema-$vocabulary"": {
-                    ""https://json-schema.org/draft/2020-12/vocab/core"": true
-                  },
-                  ""x-jsonschema-$defs"": {
-                    ""LocalPet"": {
-                      ""type"": ""object""
-                    }
-                  },
-                  ""x-jsonschema-$anchor"": ""petResponse"",
-                  ""x-jsonschema-$dynamicRef"": ""#pet"",
-                  ""x-jsonschema-$dynamicAnchor"": ""pet""
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  ""components"": {
-    ""schemas"": {
-      ""Pet"": {
-        ""type"": ""object""
-      }
-    }
-  }
-}";
-
-            var readResult = OpenApiDocument.Parse(jsonContent, "json");
-
-            Assert.Empty(readResult.Diagnostic.Errors);
-            var schemaReference = Assert.IsType<OpenApiSchemaReference>(readResult.Document?.Paths["/test"].Operations[HttpMethod.Get]
-                .Responses["200"].Content["application/json"].Schema);
-            Assert.Equal("https://example.com/schemas/pet-response", schemaReference.Id);
-            Assert.Equal(new Uri("https://json-schema.org/draft/2020-12/schema"), schemaReference.Schema);
-            Assert.Equal("reference comment", schemaReference.Comment);
-            Assert.NotNull(schemaReference.Vocabulary);
-            Assert.True(schemaReference.Vocabulary["https://json-schema.org/draft/2020-12/vocab/core"]);
-            Assert.NotNull(schemaReference.Definitions);
-            Assert.Equal(JsonSchemaType.Object, schemaReference.Definitions["LocalPet"].Type);
-            Assert.Equal("petResponse", schemaReference.Anchor);
-            Assert.Equal("#pet", schemaReference.DynamicRef);
-            Assert.Equal("pet", schemaReference.DynamicAnchor);
-        }
-
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -685,7 +564,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
         }
 
         [Fact]
-        public async Task SchemaReferenceCustomExtensionsNotWrittenInV30()
+        public async Task SchemaReferenceExtensionsNotWrittenInV30()
         {
             // Arrange
             var reference = new OpenApiSchemaReference("Pet", null)
@@ -705,37 +584,8 @@ namespace Microsoft.OpenApi.Tests.Models.References
             await writer.FlushAsync();
             var output = outputStringWriter.ToString();
 
-            Assert.Equal(@"{""$ref"":""#/components/schemas/Pet"",""x-jsonschema-description"":""Local description""}", output);
-        }
-
-        [Fact]
-        public async Task SchemaReferenceJsonSchema202012KeywordSiblingsWrittenAsExtensionsInV30()
-        {
-            var reference = new OpenApiSchemaReference("Pet", null)
-            {
-                Id = "https://example.com/schemas/pet-response",
-                Schema = new Uri("https://json-schema.org/draft/2020-12/schema"),
-                Comment = "reference comment",
-                Vocabulary = new Dictionary<string, bool>
-                {
-                    ["https://json-schema.org/draft/2020-12/vocab/core"] = true
-                },
-                Definitions = new Dictionary<string, IOpenApiSchema>
-                {
-                    ["LocalPet"] = new OpenApiSchema { Type = JsonSchemaType.Object }
-                },
-                Anchor = "petResponse",
-                DynamicRef = "#pet",
-                DynamicAnchor = "pet"
-            };
-
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = true });
-
-            reference.SerializeAsV3(writer);
-            await writer.FlushAsync();
-
-            Assert.Equal(@"{""$ref"":""#/components/schemas/Pet"",""x-jsonschema-$id"":""https://example.com/schemas/pet-response"",""x-jsonschema-$schema"":""https://json-schema.org/draft/2020-12/schema"",""x-jsonschema-$comment"":""reference comment"",""x-jsonschema-$vocabulary"":{""https://json-schema.org/draft/2020-12/vocab/core"":true},""x-jsonschema-$defs"":{""LocalPet"":{""type"":""object""}},""x-jsonschema-$anchor"":""petResponse"",""x-jsonschema-$dynamicRef"":""#pet"",""x-jsonschema-$dynamicAnchor"":""pet""}", outputStringWriter.ToString());
+            // Assert: In v3.0, ONLY $ref should appear - no description, no extensions
+            Assert.Equal(@"{""$ref"":""#/components/schemas/Pet""}", output);
         }
 
         [Fact]
