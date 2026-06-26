@@ -1,1 +1,1 @@
-﻿{"$ref":"#/components/schemas/Pet"}
+{"$ref":"#/components/schemas/Pet"}
