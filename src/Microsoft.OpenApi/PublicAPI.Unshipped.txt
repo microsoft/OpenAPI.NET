@@ -1,1 +1,17 @@
 #nullable enable
+Microsoft.OpenApi.JsonSchemaReference.Anchor.get -> string?
+Microsoft.OpenApi.JsonSchemaReference.Anchor.set -> void
+Microsoft.OpenApi.JsonSchemaReference.Comment.get -> string?
+Microsoft.OpenApi.JsonSchemaReference.Comment.set -> void
+Microsoft.OpenApi.JsonSchemaReference.Definitions.get -> System.Collections.Generic.IDictionary<string!, Microsoft.OpenApi.IOpenApiSchema!>?
+Microsoft.OpenApi.JsonSchemaReference.Definitions.set -> void
+Microsoft.OpenApi.JsonSchemaReference.DynamicAnchor.get -> string?
+Microsoft.OpenApi.JsonSchemaReference.DynamicAnchor.set -> void
+Microsoft.OpenApi.JsonSchemaReference.DynamicRef.get -> string?
+Microsoft.OpenApi.JsonSchemaReference.DynamicRef.set -> void
+Microsoft.OpenApi.JsonSchemaReference.Schema.get -> System.Uri?
+Microsoft.OpenApi.JsonSchemaReference.Schema.set -> void
+Microsoft.OpenApi.JsonSchemaReference.SchemaId.get -> string?
+Microsoft.OpenApi.JsonSchemaReference.SchemaId.set -> void
+Microsoft.OpenApi.JsonSchemaReference.Vocabulary.get -> System.Collections.Generic.IDictionary<string!, bool>?
+Microsoft.OpenApi.JsonSchemaReference.Vocabulary.set -> void

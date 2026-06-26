@@ -786,5 +786,265 @@ description: Schema for a person object
             Assert.Empty(schema.Not.AllOf ?? []);
             Assert.Empty(schema.Not.OneOf ?? []);
         }
+
+        [Fact]
+        public async Task ParseSchemaReferencePreservesJsonSchema2020KeywordSiblings()
+        {
+            // Arrange
+            var yaml = """
+                openapi: 3.2.0
+                info:
+                  title: Sibling preservation repro
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Target:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                    Referencing:
+                      $ref: '#/components/schemas/Target'
+                      description: Sibling description
+                      $dynamicAnchor: anchor
+                      $defs:
+                        sibling:
+                          $dynamicAnchor: inner
+                          $ref: '#/components/schemas/Target'
+                """;
+
+            // Act
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            Assert.NotNull(result.Document.Components);
+            Assert.NotNull(result.Document.Components.Schemas);
+            var referencing = result.Document.Components.Schemas["Referencing"];
+
+            // Assert — siblings are preserved on the OpenApiSchemaReference
+            Assert.IsType<OpenApiSchemaReference>(referencing);
+            Assert.Equal("Sibling description", referencing.Description);
+            Assert.Equal("anchor", referencing.DynamicAnchor);
+            Assert.NotNull(referencing.Definitions);
+            Assert.True(referencing.Definitions.ContainsKey("sibling"));
+            Assert.Equal("inner", referencing.Definitions["sibling"].DynamicAnchor);
+        }
+
+        [Fact]
+        public async Task SerializeSchemaReferencePreservesJsonSchema2020KeywordSiblings()
+        {
+            // Arrange
+            var yaml = """
+                openapi: 3.2.0
+                info:
+                  title: Sibling preservation repro
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Target:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                    Referencing:
+                      $ref: '#/components/schemas/Target'
+                      $dynamicAnchor: anchor
+                      $defs:
+                        itemType:
+                          $dynamicAnchor: itemType
+                          $ref: '#/components/schemas/Target'
+                """;
+
+            // Act — parse then serialize back
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var writer = new StringWriter();
+            result.Document.SerializeAsV32(new OpenApiYamlWriter(writer));
+            var output = writer.ToString();
+
+            // Assert — round-trip preserves $dynamicAnchor and $defs alongside $ref
+            using var roundTripStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(output));
+            var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings);
+            Assert.NotNull(roundTripResult.Document.Components);
+            Assert.NotNull(roundTripResult.Document.Components.Schemas);
+            var referencing = roundTripResult.Document.Components.Schemas["Referencing"];
+
+            Assert.IsType<OpenApiSchemaReference>(referencing);
+            Assert.Equal("anchor", referencing.DynamicAnchor);
+            Assert.NotNull(referencing.Definitions);
+            Assert.True(referencing.Definitions.ContainsKey("itemType"));
+            Assert.Equal("itemType", referencing.Definitions["itemType"].DynamicAnchor);
+        }
+
+        [Fact]
+        public async Task ParseSchemaReferencePreservesScalarKeywordSiblings()
+        {
+            // Arrange
+            var yaml = """
+                openapi: 3.2.0
+                info:
+                  title: Scalar sibling repro
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Target:
+                      type: object
+                    Referencing:
+                      $ref: '#/components/schemas/Target'
+                      $id: 'https://example.com/referencing.json'
+                      $schema: 'https://json-schema.org/draft/2020-12/schema'
+                      $comment: A comment sibling
+                      $anchor: myAnchor
+                      $dynamicRef: '#myAnchor'
+                """;
+
+            // Act
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            Assert.NotNull(result.Document.Components);
+            Assert.NotNull(result.Document.Components.Schemas);
+            var referencing = result.Document.Components.Schemas["Referencing"];
+
+            // Assert
+            Assert.IsType<OpenApiSchemaReference>(referencing);
+            Assert.Equal("https://example.com/referencing.json", referencing.Id);
+            Assert.Equal(new Uri("https://json-schema.org/draft/2020-12/schema"), referencing.Schema);
+            Assert.Equal("A comment sibling", referencing.Comment);
+            Assert.Equal("myAnchor", ((IOpenApiSchemaMissingProperties)referencing).Anchor);
+            Assert.Equal("#myAnchor", referencing.DynamicRef);
+        }
+
+        [Fact]
+        public async Task SerializeSchemaReferencePreservesScalarKeywordSiblings()
+        {
+            // Arrange
+            var yaml = """
+                openapi: 3.2.0
+                info:
+                  title: Scalar round-trip
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Target:
+                      type: object
+                    Referencing:
+                      $ref: '#/components/schemas/Target'
+                      $id: 'https://example.com/referencing.json'
+                      $schema: 'https://json-schema.org/draft/2020-12/schema'
+                      $comment: A comment sibling
+                      $anchor: myAnchor
+                      $dynamicRef: '#myAnchor'
+                """;
+
+            // Act — parse then serialize back
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var writer = new StringWriter();
+            result.Document.SerializeAsV32(new OpenApiYamlWriter(writer));
+            var output = writer.ToString();
+
+            // Assert — round-trip preserves scalar siblings alongside $ref
+            using var roundTripStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(output));
+            var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings);
+            Assert.NotNull(roundTripResult.Document.Components);
+            Assert.NotNull(roundTripResult.Document.Components.Schemas);
+            var referencing = roundTripResult.Document.Components.Schemas["Referencing"];
+
+            Assert.IsType<OpenApiSchemaReference>(referencing);
+            Assert.Equal("https://example.com/referencing.json", referencing.Id);
+            Assert.Equal(new Uri("https://json-schema.org/draft/2020-12/schema"), referencing.Schema);
+            Assert.Equal("A comment sibling", referencing.Comment);
+            Assert.Equal("myAnchor", ((IOpenApiSchemaMissingProperties)referencing).Anchor);
+            Assert.Equal("#myAnchor", referencing.DynamicRef);
+        }
+
+        [Fact]
+        public async Task ParseSchemaReferencePreservesVocabularySibling()
+        {
+            // Arrange
+            var yaml = """
+                openapi: 3.2.0
+                info:
+                  title: Vocabulary sibling repro
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Target:
+                      type: object
+                    Referencing:
+                      $ref: '#/components/schemas/Target'
+                      $vocabulary:
+                        'https://json-schema.org/draft/2020-12/vocab/core': true
+                        'https://json-schema.org/draft/2020-12/vocab/applicator': false
+                """;
+
+            // Act
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            Assert.NotNull(result.Document.Components);
+            Assert.NotNull(result.Document.Components.Schemas);
+            var referencing = result.Document.Components.Schemas["Referencing"];
+
+            // Assert
+            Assert.IsType<OpenApiSchemaReference>(referencing);
+            Assert.NotNull(referencing.Vocabulary);
+            Assert.Equal(2, referencing.Vocabulary.Count);
+            Assert.True(referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/core"]);
+            Assert.False(referencing.Vocabulary["https://json-schema.org/draft/2020-12/vocab/applicator"]);
+        }
+
+        [Fact]
+        public async Task ParseSchemaReferencePreservesDynamicAnchorInsideDefsInAllOf()
+        {
+            // Arrange — the allOf-based binding variant: $defs sits inside allOf[0],
+            // and the nested schema has $ref + $dynamicAnchor (the binding entry).
+            var yaml = """
+                openapi: 3.2.0
+                info:
+                  title: allOf binding variant
+                  version: 1.0.0
+                paths: {}
+                components:
+                  schemas:
+                    Asset:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                    Paged:
+                      type: object
+                      properties:
+                        items:
+                          type: array
+                    AssetPaged:
+                      allOf:
+                        - $defs:
+                            contentType:
+                              $dynamicAnchor: contentType
+                              $ref: '#/components/schemas/Asset'
+                        - $ref: '#/components/schemas/Paged'
+                """;
+
+            // Act
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            Assert.NotNull(result.Document.Components);
+            Assert.NotNull(result.Document.Components.Schemas);
+            var assetPaged = result.Document.Components.Schemas["AssetPaged"];
+
+            // Assert
+            Assert.NotNull(assetPaged.AllOf);
+            Assert.Equal(2, assetPaged.AllOf.Count);
+            var defsHolder = assetPaged.AllOf[0];
+            Assert.NotNull(defsHolder.Definitions);
+            Assert.True(defsHolder.Definitions.ContainsKey("contentType"));
+            var contentType = defsHolder.Definitions["contentType"];
+            Assert.IsType<OpenApiSchemaReference>(contentType);
+            Assert.Equal("contentType", contentType.DynamicAnchor);
+        }
     }
 }
