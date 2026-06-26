@@ -378,7 +378,14 @@ namespace Microsoft.OpenApi.Reader.V3
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
+                var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
+                if (GetJsonSchemaReferenceExtensionObject(jsonObject) is { Count: > 0 } referenceMetadataNode &&
+                    Microsoft.OpenApi.Reader.V31.OpenApiV31Deserializer.LoadSchema(referenceMetadataNode, hostDocument, context) is OpenApiSchema referenceMetadata)
+                {
+                    result.Reference.ApplySchemaMetadata(referenceMetadata, referenceMetadataNode);
+                }
+
+                return result;
             }
 
             var schema = new OpenApiSchema();
@@ -396,6 +403,22 @@ namespace Microsoft.OpenApi.Reader.V3
             }
 
             return schema;
+        }
+
+        private static JsonObject? GetJsonSchemaReferenceExtensionObject(JsonObject jsonObject)
+        {
+            JsonObject? result = null;
+            foreach (var property in jsonObject)
+            {
+                const string prefix = "x-jsonschema-";
+                if (property.Key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) && property.Value is not null)
+                {
+                    result ??= new JsonObject();
+                    result[property.Key.Substring(prefix.Length)] = property.Value.DeepClone();
+                }
+            }
+
+            return result;
         }
     }
 }
