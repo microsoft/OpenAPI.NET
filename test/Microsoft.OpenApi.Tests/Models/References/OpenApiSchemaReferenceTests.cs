@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
             var schemaReference = new OpenApiSchemaReference(referenceId, workingDocument)
             {
                 Title = "Override Title",
-                Description = "Override Description", 
+                Description = "Override Description",
                 ReadOnly = true,
                 WriteOnly = true,
                 Deprecated = true,
@@ -162,6 +162,130 @@ namespace Microsoft.OpenApi.Tests.Models.References
             Assert.Contains("token", missingProperties.If.Required);
             Assert.Equal(1, missingProperties.Then?.MinProperties);
             Assert.Equal(0, missingProperties.Else?.MaxProperties);
+        }
+
+        [Fact]
+        public void SchemaReferenceWithKeywordSiblingsShouldOverrideTargetValues()
+        {
+            var workingDocument = new OpenApiDocument
+            {
+                Components = new OpenApiComponents(),
+            };
+            const string referenceId = "targetSchema";
+            workingDocument.Components.Schemas = new Dictionary<string, IOpenApiSchema>
+            {
+                [referenceId] = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.Object,
+                    Format = "target-format",
+                    MaxLength = 20,
+                    Required = new HashSet<string> { "target" },
+                    Properties = new Dictionary<string, IOpenApiSchema>
+                    {
+                        ["target"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                    },
+                    AdditionalPropertiesAllowed = true,
+                    ContentEncoding = "gzip",
+                    If = new OpenApiSchema { Required = new HashSet<string> { "target" } }
+                }
+            };
+            workingDocument.Workspace.RegisterComponents(workingDocument);
+
+            var schemaReference = new OpenApiSchemaReference(referenceId, workingDocument)
+            {
+                Type = JsonSchemaType.String,
+                Format = "reference-format",
+                MaxLength = 10,
+                Required = new HashSet<string> { "reference" },
+                Properties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["reference"] = new OpenApiSchema { Type = JsonSchemaType.Integer }
+                },
+                AdditionalPropertiesAllowed = false,
+                ContentEncoding = "base64",
+                If = new OpenApiSchema { Required = new HashSet<string> { "reference" } }
+            };
+
+            Assert.Equal(JsonSchemaType.String, schemaReference.Type);
+            Assert.Equal("reference-format", schemaReference.Format);
+            Assert.Equal(10, schemaReference.MaxLength);
+            Assert.NotNull(schemaReference.Required);
+            Assert.Contains("reference", schemaReference.Required);
+            Assert.Equal(JsonSchemaType.Integer, schemaReference.Properties?["reference"].Type);
+            Assert.False(schemaReference.AdditionalPropertiesAllowed);
+            Assert.Equal("base64", schemaReference.ContentEncoding);
+            Assert.NotNull(schemaReference.If?.Required);
+            Assert.Contains("reference", schemaReference.If.Required);
+        }
+
+        [Fact]
+        public void ParseSchemaReferenceWithKeywordSiblingsWorks()
+        {
+            var jsonContent = @"{
+  ""openapi"": ""3.1.0"",
+  ""info"": {
+    ""title"": ""Test API"",
+    ""version"": ""1.0.0""
+  },
+  ""paths"": {
+    ""/test"": {
+      ""get"": {
+        ""responses"": {
+          ""200"": {
+            ""description"": ""OK"",
+            ""content"": {
+              ""application/json"": {
+                ""schema"": {
+                  ""$ref"": ""#/components/schemas/Pet"",
+                  ""type"": ""string"",
+                  ""format"": ""uuid"",
+                  ""maxLength"": 36,
+                  ""required"": [""id""],
+                  ""properties"": {
+                    ""id"": {
+                      ""type"": ""string""
+                    }
+                  },
+                  ""additionalProperties"": false,
+                  ""contentEncoding"": ""base64"",
+                  ""if"": {
+                    ""required"": [""id""]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  ""components"": {
+    ""schemas"": {
+      ""Pet"": {
+        ""type"": ""object"",
+        ""format"": ""target-format"",
+        ""maxLength"": 10,
+        ""additionalProperties"": true
+      }
+    }
+  }
+}";
+
+            var readResult = OpenApiDocument.Parse(jsonContent, "json");
+
+            Assert.Empty(readResult.Diagnostic.Errors);
+            var schemaReference = Assert.IsType<OpenApiSchemaReference>(readResult.Document?.Paths["/test"].Operations[HttpMethod.Get]
+                .Responses["200"].Content["application/json"].Schema);
+            Assert.Equal(JsonSchemaType.String, schemaReference.Type);
+            Assert.Equal("uuid", schemaReference.Format);
+            Assert.Equal(36, schemaReference.MaxLength);
+            Assert.NotNull(schemaReference.Required);
+            Assert.Contains("id", schemaReference.Required);
+            Assert.Equal(JsonSchemaType.String, schemaReference.Properties?["id"].Type);
+            Assert.False(schemaReference.AdditionalPropertiesAllowed);
+            Assert.Equal("base64", schemaReference.ContentEncoding);
+            Assert.NotNull(schemaReference.If?.Required);
+            Assert.Contains("id", schemaReference.If.Required);
         }
 
         [Theory]
@@ -319,13 +443,13 @@ namespace Microsoft.OpenApi.Tests.Models.References
             // Assert
             Assert.NotNull(document);
             Assert.Empty(readResult.Diagnostic.Errors);
-            
+
             var schema = document.Paths["/test"].Operations[HttpMethod.Get]
                 .Responses["200"].Content["application/json"].Schema;
-            
+
             Assert.IsType<OpenApiSchemaReference>(schema);
             var schemaRef = (OpenApiSchemaReference)schema;
-            
+
             // Test that reference annotations override target values
             Assert.Equal("Pet Response Schema", schemaRef.Title);
             Assert.Equal("A pet object returned from the API", schemaRef.Description);
@@ -334,7 +458,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
             Assert.False(schemaRef.WriteOnly);
             Assert.NotNull(schemaRef.Default);
             Assert.Single(schemaRef.Examples);
-            
+
             // Test that target schema still has original values
             var targetSchema = schemaRef.Target;
             Assert.NotNull(targetSchema);
