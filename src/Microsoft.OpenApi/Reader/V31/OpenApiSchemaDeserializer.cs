@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -457,41 +457,12 @@ internal static partial class OpenApiV31Deserializer
             // so it cannot be done inside SetAdditional31MetadataFromMapNode.
             if (jsonObject.TryGetPropertyValue(OpenApiConstants.Defs, out var defsNode) && defsNode is JsonObject defsObj)
             {
-                var defs = new Dictionary<string, IOpenApiSchema>(StringComparer.Ordinal);
                 context.StartObject(OpenApiConstants.Defs);
-                try
+                if (defsNode.CreateMap(LoadSchema, hostDocument, context) is { Count: > 0 } definitions)
                 {
-                    foreach (var kvp in defsObj)
-                    {
-                        if (kvp.Value is null) continue;
-                        try
-                        {
-                            context.StartObject(kvp.Key);
-                            defs[kvp.Key] = LoadSchema(kvp.Value, hostDocument, context);
-                        }
-                        catch (OpenApiReaderException ex)
-                        {
-                            context.Diagnostic.Errors.Add(new(ex));
-                        }
-                        catch (OpenApiException ex)
-                        {
-                            ex.Pointer = context.GetLocation();
-                            context.Diagnostic.Errors.Add(new(ex));
-                        }
-                        finally
-                        {
-                            context.EndObject();
-                        }
-                    }
+                    result.Reference.Definitions = definitions;
                 }
-                finally
-                {
-                    context.EndObject();
-                }
-                if (defs.Count > 0)
-                {
-                    result.Reference.Definitions = defs;
-                }
+                context.EndObject();
             }
 
             return result;
