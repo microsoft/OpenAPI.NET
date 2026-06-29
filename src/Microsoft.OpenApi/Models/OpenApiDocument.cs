@@ -89,6 +89,7 @@ namespace Microsoft.OpenApi
             {
                 if (value is null)
                 {
+                    _tags = null;
                     return;
                 }
                 _tags = value switch
