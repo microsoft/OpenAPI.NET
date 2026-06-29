@@ -172,6 +172,76 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             Assert.Equal(JsonSchemaType.Object, schema.Type);
         }
 
+        [Theory]
+        [InlineData("OAS-schemas.yaml#address", @"
+openapi: 3.2.0
+info:
+  title: OpenAPI document containing reusable components
+  version: 1.0.0
+components:
+  schemas:
+    person:
+      type: object
+      properties:
+        address:
+          $anchor: address
+          type: object
+")]
+        [InlineData("OAS-schemas.yaml#/person/properties/address", @"
+person:
+  type: object
+  properties:
+    address:
+      type: object
+")]
+        public async Task UnsupportedExternalJsonSchemaLocatorReferenceDoesNotResolve(string reference, string externalDocument)
+        {
+            var tempDirectory = Path.Join(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempDirectory);
+
+            var rootPath = Path.Join(tempDirectory, "root.yaml");
+            var externalPath = Path.Join(tempDirectory, "OAS-schemas.yaml");
+
+            await File.WriteAllTextAsync(rootPath,
+            $@"openapi: 3.2.0
+info:
+  title: T
+  version: 1.0.0
+paths:
+  /person/{{id}}:
+    get:
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '{reference}'
+");
+            await File.WriteAllTextAsync(externalPath, externalDocument);
+
+            try
+            {
+                var settings = new OpenApiReaderSettings
+                {
+                    LoadExternalRefs = true,
+                    BaseUrl = new Uri(rootPath),
+                };
+                settings.AddYamlReader();
+
+                var result = await OpenApiDocument.LoadAsync(rootPath, settings);
+                var schema = result.Document.Paths["/person/{id}"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
+                var schemaReference = Assert.IsType<OpenApiSchemaReference>(schema);
+
+                Assert.True(schemaReference.UnresolvedReference);
+                Assert.Null(schema.Type);
+            }
+            finally
+            {
+                Directory.Delete(tempDirectory, true);
+            }
+        }
+
         [Fact]
         public async Task ParseReferenceToInternalComponentUsingDollarIdWorks()
         {
@@ -184,6 +254,57 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
 
             // Assert
             Assert.Equal(JsonSchemaType.Object, schema.Type);
+        }
+
+        [Fact]
+        public async Task ParseReferenceToInternalSubschemaUsingDollarIdWorks()
+        {
+            var tempDirectory = Path.Join(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempDirectory);
+
+            var rootPath = Path.Join(tempDirectory, "root.yaml");
+
+            await File.WriteAllTextAsync(rootPath,
+            @"openapi: 3.2.0
+info:
+  title: T
+  version: 1.0.0
+paths:
+  /person/{id}/address:
+    get:
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: 'https://schemas.acme.org/address'
+components:
+  schemas:
+    person:
+      $id: 'https://schemas.acme.org/person'
+      type: object
+      properties:
+        address:
+          $id: 'address'
+          type: object
+          properties:
+            street:
+              type: string
+");
+
+            try
+            {
+                var result = await OpenApiDocument.LoadAsync(rootPath, SettingsFixture.ReaderSettings);
+                var schema = result.Document.Paths["/person/{id}/address"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
+
+                Assert.Equal(JsonSchemaType.Object, schema.Type);
+                Assert.Equal(JsonSchemaType.String, schema.Properties["street"].Type);
+            }
+            finally
+            {
+                Directory.Delete(tempDirectory, true);
+            }
         }
 
         [Fact]
@@ -512,4 +633,3 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         }
     }
 }
-

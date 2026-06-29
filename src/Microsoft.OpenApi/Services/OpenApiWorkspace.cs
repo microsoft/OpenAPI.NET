@@ -97,10 +97,7 @@ namespace Microsoft.OpenApi
                     location = baseUri + ReferenceType.Schema.GetDisplayName() + ComponentSegmentSeparator + item.Key;
                     RegisterComponent(location, item.Value);
 
-                    if (item.Value is not OpenApiSchemaReference && item.Value.Id is string schemaId && schemaId.Length > 0)
-                    {
-                        RegisterComponent(schemaId, item.Value);
-                    }
+                    RegisterSchemaIdentifiers(item.Value, document.BaseUri);
                 }
             }
 
@@ -286,6 +283,71 @@ namespace Microsoft.OpenApi
             }            
 
             return false;
+        }
+
+        private void RegisterSchemaIdentifiers(IOpenApiSchema schema, Uri baseUri)
+        {
+            RegisterSchemaIdentifiers(schema, baseUri, new HashSet<IOpenApiSchema>());
+        }
+
+        private void RegisterSchemaIdentifiers(IOpenApiSchema schema, Uri baseUri, ISet<IOpenApiSchema> visitedSchemas)
+        {
+            if (schema is OpenApiSchemaReference || !visitedSchemas.Add(schema))
+            {
+                return;
+            }
+
+            var schemaBaseUri = baseUri;
+            if (!string.IsNullOrEmpty(schema.Id) &&
+                Uri.TryCreate(schema.Id, UriKind.RelativeOrAbsolute, out var schemaIdUri))
+            {
+                schemaBaseUri = schemaIdUri.IsAbsoluteUri ? schemaIdUri : new Uri(baseUri, schemaIdUri);
+                RegisterComponent(schemaBaseUri.AbsoluteUri, schema);
+            }
+
+            RegisterSchemaIdentifier(schema.Items, schemaBaseUri, visitedSchemas);
+            RegisterSchemaIdentifier(schema.AdditionalProperties, schemaBaseUri, visitedSchemas);
+            RegisterSchemaIdentifier(schema.Not, schemaBaseUri, visitedSchemas);
+
+            RegisterSchemaIdentifiers(schema.Properties?.Values, schemaBaseUri, visitedSchemas);
+            RegisterSchemaIdentifiers(schema.PatternProperties?.Values, schemaBaseUri, visitedSchemas);
+            RegisterSchemaIdentifiers(schema.Definitions?.Values, schemaBaseUri, visitedSchemas);
+            RegisterSchemaIdentifiers(schema.AllOf, schemaBaseUri, visitedSchemas);
+            RegisterSchemaIdentifiers(schema.AnyOf, schemaBaseUri, visitedSchemas);
+            RegisterSchemaIdentifiers(schema.OneOf, schemaBaseUri, visitedSchemas);
+
+            if (schema is IOpenApiSchemaMissingProperties missingProperties)
+            {
+                RegisterSchemaIdentifier(missingProperties.Contains, schemaBaseUri, visitedSchemas);
+                RegisterSchemaIdentifier(missingProperties.PropertyNames, schemaBaseUri, visitedSchemas);
+                RegisterSchemaIdentifier(missingProperties.UnevaluatedPropertiesSchema, schemaBaseUri, visitedSchemas);
+                RegisterSchemaIdentifier(missingProperties.ContentSchema, schemaBaseUri, visitedSchemas);
+                RegisterSchemaIdentifier(missingProperties.If, schemaBaseUri, visitedSchemas);
+                RegisterSchemaIdentifier(missingProperties.Then, schemaBaseUri, visitedSchemas);
+                RegisterSchemaIdentifier(missingProperties.Else, schemaBaseUri, visitedSchemas);
+                RegisterSchemaIdentifiers(missingProperties.DependentSchemas?.Values, schemaBaseUri, visitedSchemas);
+            }
+        }
+
+        private void RegisterSchemaIdentifiers(IEnumerable<IOpenApiSchema>? schemas, Uri baseUri, ISet<IOpenApiSchema> visitedSchemas)
+        {
+            if (schemas is null)
+            {
+                return;
+            }
+
+            foreach (var schema in schemas)
+            {
+                RegisterSchemaIdentifiers(schema, baseUri, visitedSchemas);
+            }
+        }
+
+        private void RegisterSchemaIdentifier(IOpenApiSchema? schema, Uri baseUri, ISet<IOpenApiSchema> visitedSchemas)
+        {
+            if (schema is not null)
+            {
+                RegisterSchemaIdentifiers(schema, baseUri, visitedSchemas);
+            }
         }
 
         /// <summary>
