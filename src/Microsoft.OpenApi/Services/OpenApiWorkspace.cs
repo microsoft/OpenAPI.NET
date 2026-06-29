@@ -298,6 +298,15 @@ namespace Microsoft.OpenApi
             }
 
             var schemaBaseUri = baseUri;
+            if (schema is IOpenApiSchemaMissingProperties { Anchor.Length: > 0 } schemaWithAnchor)
+            {
+                var anchorUriBuilder = new UriBuilder(schemaBaseUri)
+                {
+                    Fragment = schemaWithAnchor.Anchor
+                };
+                RegisterComponent(anchorUriBuilder.Uri.AbsoluteUri, schema);
+            }
+
             if (!string.IsNullOrEmpty(schema.Id) &&
                 Uri.TryCreate(schema.Id, UriKind.RelativeOrAbsolute, out var schemaIdUri))
             {
@@ -431,6 +440,11 @@ namespace Microsoft.OpenApi
              */
 
             if (string.IsNullOrEmpty(location) || ToLocationUrl(location) is not Uri uri) return default;
+
+            if (!string.IsNullOrEmpty(uri.Fragment) && !uri.Fragment.StartsWith("#/", StringComparison.Ordinal))
+            {
+                return ResolveReference<IOpenApiSchema>(location);
+            }
 
 #if NETSTANDARD2_1 || NETCOREAPP || NET5_0_OR_GREATER
             if (!location.Contains("#/components/schemas/", StringComparison.OrdinalIgnoreCase))

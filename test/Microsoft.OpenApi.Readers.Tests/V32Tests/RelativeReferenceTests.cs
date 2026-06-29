@@ -172,8 +172,33 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             Assert.Equal(JsonSchemaType.Object, schema.Type);
         }
 
-        [Theory]
-        [InlineData("OAS-schemas.yaml#address", @"
+        [Fact]
+        public async Task ParseExternalInlineSubschemaUsingAnchorWorks()
+        {
+            var tempDirectory = Path.Join(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempDirectory);
+
+            var rootPath = Path.Join(tempDirectory, "root.yaml");
+            var externalPath = Path.Join(tempDirectory, "OAS-schemas.yaml");
+
+            await File.WriteAllTextAsync(rootPath,
+            @"openapi: 3.2.0
+info:
+  title: T
+  version: 1.0.0
+paths:
+  /person/{id}:
+    get:
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: 'OAS-schemas.yaml#address'
+");
+            await File.WriteAllTextAsync(externalPath,
+            @"
 openapi: 3.2.0
 info:
   title: OpenAPI document containing reusable components
@@ -186,15 +211,30 @@ components:
         address:
           $anchor: address
           type: object
-")]
-        [InlineData("OAS-schemas.yaml#/person/properties/address", @"
-person:
-  type: object
-  properties:
-    address:
-      type: object
-")]
-        public async Task UnsupportedExternalJsonSchemaLocatorReferenceDoesNotResolve(string reference, string externalDocument)
+");
+
+            try
+            {
+                var settings = new OpenApiReaderSettings
+                {
+                    LoadExternalRefs = true,
+                    BaseUrl = new Uri(rootPath),
+                };
+                settings.AddYamlReader();
+
+                var result = await OpenApiDocument.LoadAsync(rootPath, settings);
+                var schema = result.Document.Paths["/person/{id}"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
+
+                Assert.Equal(JsonSchemaType.Object, schema.Type);
+            }
+            finally
+            {
+                Directory.Delete(tempDirectory, true);
+            }
+        }
+
+        [Fact]
+        public async Task ExternalJsonSchemaFragmentReferenceDoesNotResolve()
         {
             var tempDirectory = Path.Join(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(tempDirectory);
@@ -203,12 +243,12 @@ person:
             var externalPath = Path.Join(tempDirectory, "OAS-schemas.yaml");
 
             await File.WriteAllTextAsync(rootPath,
-            $@"openapi: 3.2.0
+            @"openapi: 3.2.0
 info:
   title: T
   version: 1.0.0
 paths:
-  /person/{{id}}:
+  /person/{id}:
     get:
       responses:
         '200':
@@ -216,9 +256,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '{reference}'
+                $ref: 'OAS-schemas.yaml#/person/properties/address'
 ");
-            await File.WriteAllTextAsync(externalPath, externalDocument);
+            await File.WriteAllTextAsync(externalPath,
+            @"
+person:
+  type: object
+  properties:
+    address:
+      type: object
+");
 
             try
             {
