@@ -2145,6 +2145,17 @@ components:
             Assert.Equal(2, document.Tags.Count);
         }
 
+        [Fact]
+        public void TagsCanBeReInitializedToNull()
+        {
+            var document = new OpenApiDocument();
+            Assert.Null(document.Tags);
+            document.Tags = new HashSet<OpenApiTag>();
+            Assert.NotNull(document.Tags);
+            document.Tags = null;
+            Assert.Null(document.Tags);
+        }
+
         private sealed class CaseInsensitiveOpenApiTagEqualityComparer : IEqualityComparer<OpenApiTag>
         {
             public bool Equals(OpenApiTag x, OpenApiTag y)
