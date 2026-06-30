@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Reader;
 
@@ -52,18 +53,9 @@ namespace Microsoft.OpenApi
             if (_version == OpenApiSpecVersion.OpenApi2_0)
                 throw new NotSupportedException("Deserializing OpenApiSchema is not supported for OpenAPI 2.0.");
 
-            using var document = JsonDocument.ParseValue(ref reader);
-            var schemaBytes = Encoding.UTF8.GetBytes(document.RootElement.GetRawText());
-
-            using var stream = new MemoryStream(schemaBytes);
-            var schema = OpenApiModelFactory.Load<OpenApiSchema>(
-                stream,
-                _version,
-                OpenApiConstants.Json,
-                new OpenApiDocument(),
-                out _);
-
-            return schema;
+            var jsonNode = JsonNode.Parse(ref reader);
+            var jsonReader = new OpenApiJsonReader();
+            return jsonReader.ReadFragment<OpenApiSchema>(jsonNode!, _version, new OpenApiDocument(), out _);
         }
 
         /// <inheritdoc/>
