@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Reader;
 
 namespace Microsoft.OpenApi
 {
@@ -26,9 +27,9 @@ namespace Microsoft.OpenApi
         private readonly OpenApiSpecVersion _version;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="OpenApiSchemaJsonConverter"/> targeting OpenAPI 3.1.
+        /// Initializes a new instance of <see cref="OpenApiSchemaJsonConverter"/> targeting OpenAPI 3.2.
         /// </summary>
-        public OpenApiSchemaJsonConverter() : this(OpenApiSpecVersion.OpenApi3_1) { }
+        public OpenApiSchemaJsonConverter() : this(OpenApiSpecVersion.OpenApi3_2) { }
 
         /// <summary>
         /// Initializes a new instance of <see cref="OpenApiSchemaJsonConverter"/> targeting the specified OpenAPI version.
@@ -41,22 +42,28 @@ namespace Microsoft.OpenApi
 
         /// <inheritdoc/>
         /// <remarks>
-        /// Deserializes a bare JSON Schema object into an <see cref="OpenApiSchema"/> by temporarily
-        /// embedding it in a minimal OpenAPI 3.1 document for parsing.
+        /// Deserializes a bare JSON Schema object into an <see cref="OpenApiSchema"/> using
+        /// <see cref="OpenApiModelFactory"/> to parse it as a schema fragment.
+        /// Only OpenAPI 3.x versions support JSON Schema; deserializing with <see cref="OpenApiSpecVersion.OpenApi2_0"/>
+        /// is not supported and will throw <see cref="NotSupportedException"/>.
         /// </remarks>
         public override OpenApiSchema? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
+            if (_version == OpenApiSpecVersion.OpenApi2_0)
+                throw new NotSupportedException("Deserializing OpenApiSchema is not supported for OpenAPI 2.0.");
+
             using var document = JsonDocument.ParseValue(ref reader);
-            var schemaJson = document.RootElement.GetRawText();
+            var schemaBytes = Encoding.UTF8.GetBytes(document.RootElement.GetRawText());
 
-            var wrapper = string.Concat(
-                "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"temp\",\"version\":\"0.0.0\"},",
-                "\"components\":{\"schemas\":{\"schema\":", schemaJson, "}}}");
+            using var stream = new MemoryStream(schemaBytes);
+            var schema = OpenApiModelFactory.Load<OpenApiSchema>(
+                stream,
+                _version,
+                OpenApiConstants.Json,
+                new OpenApiDocument(),
+                out _);
 
-            var result = OpenApiDocument.Parse(wrapper);
-            IOpenApiSchema? schema = null;
-            result.Document?.Components?.Schemas?.TryGetValue("schema", out schema);
-            return schema as OpenApiSchema;
+            return schema;
         }
 
         /// <inheritdoc/>

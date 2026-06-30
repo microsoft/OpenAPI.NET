@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Text.Json;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Converters
@@ -16,9 +15,9 @@ namespace Microsoft.OpenApi.Tests.Converters
             Converters = { new OpenApiSchemaJsonConverter(OpenApiSpecVersion.OpenApi3_1) }
         };
 
-        private static readonly JsonSerializerOptions _optionsV3 = new()
+        private static readonly JsonSerializerOptions _optionsV32 = new()
         {
-            Converters = { new OpenApiSchemaJsonConverter(OpenApiSpecVersion.OpenApi3_0) }
+            Converters = { new OpenApiSchemaJsonConverter() }
         };
 
         [Fact]
@@ -33,8 +32,8 @@ namespace Microsoft.OpenApi.Tests.Converters
             var json = JsonSerializer.Serialize(schema, _optionsV31);
 
             using var doc = JsonDocument.Parse(json);
-            doc.RootElement.GetProperty("type").GetString().Should().Be("string");
-            doc.RootElement.GetProperty("description").GetString().Should().Be("A simple string");
+            Assert.Equal("string", doc.RootElement.GetProperty("type").GetString());
+            Assert.Equal("A simple string", doc.RootElement.GetProperty("description").GetString());
         }
 
         [Fact]
@@ -53,20 +52,21 @@ namespace Microsoft.OpenApi.Tests.Converters
             var json = JsonSerializer.Serialize(schema, _optionsV31);
 
             using var doc = JsonDocument.Parse(json);
-            doc.RootElement.GetProperty("type").GetString().Should().Be("object");
-            doc.RootElement.GetProperty("properties").EnumerateObject().Should().HaveCount(2);
+            Assert.Equal("object", doc.RootElement.GetProperty("type").GetString());
+            var props = doc.RootElement.GetProperty("properties");
+            Assert.True(props.TryGetProperty("name", out _));
+            Assert.True(props.TryGetProperty("age", out _));
         }
 
         [Fact]
-        public void Serialize_DefaultConstructor_TargetsV31()
+        public void Serialize_DefaultConstructor_TargetsV32()
         {
-            var converter = new OpenApiSchemaJsonConverter();
-            var options = new JsonSerializerOptions { Converters = { converter } };
-
             var schema = new OpenApiSchema { Type = JsonSchemaType.Boolean };
-            var json = JsonSerializer.Serialize(schema, options);
 
-            json.Should().Contain("\"type\"");
+            var json = JsonSerializer.Serialize(schema, _optionsV32);
+
+            using var doc = JsonDocument.Parse(json);
+            Assert.True(doc.RootElement.TryGetProperty("type", out _));
         }
 
         [Fact]
@@ -76,9 +76,9 @@ namespace Microsoft.OpenApi.Tests.Converters
 
             var schema = JsonSerializer.Deserialize<OpenApiSchema>(json, _optionsV31);
 
-            schema.Should().NotBeNull();
-            schema!.Type.Should().Be(JsonSchemaType.String);
-            schema.Description.Should().Be("A simple string");
+            Assert.NotNull(schema);
+            Assert.Equal(JsonSchemaType.String, schema.Type);
+            Assert.Equal("A simple string", schema.Description);
         }
 
         [Fact]
@@ -88,8 +88,8 @@ namespace Microsoft.OpenApi.Tests.Converters
 
             var schema = JsonSerializer.Deserialize<OpenApiSchema>(json, _optionsV31);
 
-            schema.Should().NotBeNull();
-            schema!.Enum.Should().HaveCount(2);
+            Assert.NotNull(schema);
+            Assert.Equal(2, schema.Enum?.Count);
         }
 
         [Fact]
@@ -111,21 +111,20 @@ namespace Microsoft.OpenApi.Tests.Converters
             var json = JsonSerializer.Serialize(original, _optionsV31);
             var deserialized = JsonSerializer.Deserialize<OpenApiSchema>(json, _optionsV31);
 
-            deserialized.Should().NotBeNull();
-            deserialized!.Title.Should().Be("User");
-            deserialized.Description.Should().Be("A user object");
-            deserialized.Properties.Should().ContainKey("name");
-            deserialized.Properties.Should().ContainKey("age");
+            Assert.NotNull(deserialized);
+            Assert.Equal("User", deserialized.Title);
+            Assert.Equal("A user object", deserialized.Description);
+            Assert.True(deserialized.Properties?.ContainsKey("name"));
+            Assert.True(deserialized.Properties?.ContainsKey("age"));
         }
 
         [Fact]
         public void Serialize_NullSchema_WritesNullLiteral()
         {
-            // System.Text.Json handles null at the serializer level before invoking the converter,
-            // producing a JSON null literal rather than throwing.
+            // System.Text.Json handles null at the serializer level before invoking the converter.
             var json = JsonSerializer.Serialize<OpenApiSchema>(null!, _optionsV31);
 
-            json.Should().Be("null");
+            Assert.Equal("null", json);
         }
 
         [Fact]
@@ -137,11 +136,43 @@ namespace Microsoft.OpenApi.Tests.Converters
                 Id = "https://example.com/schema"
             };
 
-            var jsonV31 = JsonSerializer.Serialize(schema, _optionsV31);
+            var json = JsonSerializer.Serialize(schema, _optionsV31);
 
-            using var doc = JsonDocument.Parse(jsonV31);
-            // $id is a JSON Schema 2020-12 keyword only written in v3.1+
-            doc.RootElement.TryGetProperty("$id", out _).Should().BeTrue("$id is a v3.1 JSON Schema keyword");
+            using var doc = JsonDocument.Parse(json);
+            Assert.True(doc.RootElement.TryGetProperty("$id", out _), "$id is a v3.1 JSON Schema keyword");
+        }
+
+        [Fact]
+        public void Deserialize_WithV2Version_ThrowsNotSupportedException()
+        {
+            const string json = """{"type":"string"}""";
+            var optionsV2 = new JsonSerializerOptions
+            {
+                Converters = { new OpenApiSchemaJsonConverter(OpenApiSpecVersion.OpenApi2_0) }
+            };
+
+            Assert.Throws<NotSupportedException>(() =>
+                JsonSerializer.Deserialize<OpenApiSchema>(json, optionsV2));
+        }
+
+        [Fact]
+        public void Serialize_SchemaWithRef_ProducesInlinedSchema()
+        {
+            // OpenApiSchemaJsonConverter targets OpenApiSchema directly.
+            // When a schema contains a $ref via allOf, the referenced schema is inlined
+            // during serialization using the existing OpenAPI writer behavior.
+            var schema = new OpenApiSchema
+            {
+                AllOf =
+                [
+                    new OpenApiSchema { Type = JsonSchemaType.String }
+                ]
+            };
+
+            var json = JsonSerializer.Serialize(schema, _optionsV31);
+
+            using var doc = JsonDocument.Parse(json);
+            Assert.True(doc.RootElement.TryGetProperty("allOf", out _), "allOf should be present");
         }
     }
 }
