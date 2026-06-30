@@ -173,8 +173,9 @@ namespace Microsoft.OpenApi.Tests.Converters
         }
 
         [Fact]
-        public void Serialize_SchemaReference_ProducesRefProperty()
+        public void Serialize_SchemaWithInlineReference_ProducesRefInAllOf()
         {
+            // A schema that uses an OpenApiSchemaReference inside allOf produces a $ref in the output.
             var document = new OpenApiDocument();
             document.Components = new OpenApiComponents
             {
@@ -185,15 +186,18 @@ namespace Microsoft.OpenApi.Tests.Converters
             };
             document.RegisterComponents();
 
-            // OpenApiSchemaReference is a reference type — converter handles OpenApiSchema only.
-            // Casting to OpenApiSchema returns null; serializing the concrete schema works correctly.
-            var referencedSchema = document.Components.Schemas["MySchema"] as OpenApiSchema;
-            Assert.NotNull(referencedSchema);
+            var schema = new OpenApiSchema
+            {
+                AllOf = [new OpenApiSchemaReference("MySchema", document)]
+            };
 
-            var json = JsonSerializer.Serialize(referencedSchema, _optionsV31);
+            var json = JsonSerializer.Serialize(schema, _optionsV31);
 
             using var doc = JsonDocument.Parse(json);
-            Assert.Equal("string", doc.RootElement.GetProperty("type").GetString());
+            Assert.True(doc.RootElement.TryGetProperty("allOf", out var allOf));
+            var firstItem = allOf.EnumerateArray().GetEnumerator();
+            Assert.True(firstItem.MoveNext());
+            Assert.True(firstItem.Current.TryGetProperty("$ref", out _), "allOf item should contain a $ref");
         }
     }
 }

@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         /// <remarks>
         /// Deserializes a bare JSON Schema object into an <see cref="OpenApiSchema"/> using
-        /// <see cref="OpenApiModelFactory"/> to parse it as a schema fragment.
+        /// <see cref="OpenApiJsonReader"/> to parse it as a schema fragment.
         /// Only OpenAPI 3.x versions support JSON Schema; deserializing with <see cref="OpenApiSpecVersion.OpenApi2_0"/>
         /// is not supported and will throw <see cref="NotSupportedException"/>.
         /// </remarks>
@@ -53,9 +53,10 @@ namespace Microsoft.OpenApi
             if (_version == OpenApiSpecVersion.OpenApi2_0)
                 throw new NotSupportedException("Deserializing OpenApiSchema is not supported for OpenAPI 2.0.");
 
-            var jsonNode = JsonNode.Parse(ref reader);
+            var jsonNode = JsonNode.Parse(ref reader)
+                ?? throw new JsonException("Failed to parse the JSON input into a valid JsonNode.");
             var jsonReader = new OpenApiJsonReader();
-            return jsonReader.ReadFragment<OpenApiSchema>(jsonNode!, _version, new OpenApiDocument(), out _);
+            return jsonReader.ReadFragment<OpenApiSchema>(jsonNode, _version, new OpenApiDocument(), out _);
         }
 
         /// <inheritdoc/>
