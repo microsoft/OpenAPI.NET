@@ -521,6 +521,7 @@ namespace Microsoft.OpenApi
             IList<IOpenApiSchema>? effectiveOneOf = OneOf;
             IList<IOpenApiSchema>? effectiveAnyOf = AnyOf;
             bool hasNullInComposition = false;
+            bool hasOneOfNullAndSingleEnumWith3_0 = false;
             JsonSchemaType? inferredType = null;
 
             if (version == OpenApiSpecVersion.OpenApi3_0)
@@ -531,6 +532,9 @@ namespace Microsoft.OpenApi
                 (effectiveAnyOf, var inferredAnyOf, var nullInAnyOf) = ProcessCompositionForNull(AnyOf);
                 hasNullInComposition |= nullInAnyOf;
                 inferredType = inferredAnyOf ?? inferredType;
+
+                hasOneOfNullAndSingleEnumWith3_0 = nullInOneOf && effectiveOneOf is { Count: 1 } &&
+                    effectiveOneOf[0].Enum is { Count: > 0 };
             }
 
             // type
@@ -543,7 +547,21 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalCollection(OpenApiConstants.AnyOf, effectiveAnyOf, callback);
 
             // oneOf
-            writer.WriteOptionalCollection(OpenApiConstants.OneOf, effectiveOneOf, callback);
+            if (hasOneOfNullAndSingleEnumWith3_0 &&
+                effectiveOneOf![0] is OpenApiSchema { Enum.Count: > 0 } singleEffectiveOneOf)
+            {
+                writer.WriteRequiredCollection(OpenApiConstants.OneOf, effectiveOneOf, (writer, element) =>
+                {
+                    var clonedToMutateEnum = (OpenApiSchema)((OpenApiSchema)element).MemberwiseClone();
+                    clonedToMutateEnum.Enum = [.. clonedToMutateEnum.Enum!, null!];
+                    callback(writer, clonedToMutateEnum);
+                });
+            }
+            else
+            {
+                writer.WriteOptionalCollection(OpenApiConstants.OneOf, effectiveOneOf, callback);
+            }
+
 
             // not
             writer.WriteOptionalObject(OpenApiConstants.Not, Not, callback);
@@ -1070,10 +1088,17 @@ namespace Microsoft.OpenApi
 
                 foreach (var schema in nonNullSchemas)
                 {
-                    commonType |= schema.Type.GetValueOrDefault() & ~JsonSchemaType.Null;
+                    if (schema.Type.HasValue)
+                    {
+                        commonType |= schema.Type.Value & ~JsonSchemaType.Null;
+                    }
+                    else if (schema.Enum is { Count: > 0 })
+                    {
+                        commonType |= JsonSchemaType.String;
+                    }
                 }
 
-                return (nonNullSchemas, commonType, true);
+                return (nonNullSchemas, commonType == 0 ? null : commonType, true);
             }
             else
             {
