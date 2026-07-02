@@ -1,6 +1,1 @@
 #nullable enable
-Microsoft.OpenApi.OpenApiSchemaJsonConverter
-Microsoft.OpenApi.OpenApiSchemaJsonConverter.OpenApiSchemaJsonConverter() -> void
-Microsoft.OpenApi.OpenApiSchemaJsonConverter.OpenApiSchemaJsonConverter(Microsoft.OpenApi.OpenApiSpecVersion version) -> void
-override Microsoft.OpenApi.OpenApiSchemaJsonConverter.Read(ref System.Text.Json.Utf8JsonReader reader, System.Type! typeToConvert, System.Text.Json.JsonSerializerOptions! options) -> Microsoft.OpenApi.OpenApiSchema?
-override Microsoft.OpenApi.OpenApiSchemaJsonConverter.Write(System.Text.Json.Utf8JsonWriter! writer, Microsoft.OpenApi.OpenApiSchema! value, System.Text.Json.JsonSerializerOptions! options) -> void
