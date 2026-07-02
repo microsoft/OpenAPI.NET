@@ -1868,7 +1868,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // It's unclear if it's an issue of the validators or not, but it's safer to do it that way.
             var schema = CreateNullableEnumSchema();
             var result = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
-            Assert.Equal("""
+            var expected = """
                 {
                   "type": "string",
                   "oneOf": [
@@ -1882,7 +1882,9 @@ namespace Microsoft.OpenApi.Tests.Models
                   ],
                   "nullable": true
                 }
-                """.ReplaceLineEndings(), result.ReplaceLineEndings());
+                """;
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
         }
 
         [Theory]
@@ -1892,7 +1894,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             var schema = CreateNullableEnumSchema();
             var result = await schema.SerializeAsJsonAsync(version);
-            Assert.Equal("""
+            var expected = """
                 {
                   "oneOf": [
                     {
@@ -1906,7 +1908,8 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                   ]
                 }
-                """.ReplaceLineEndings(), result.ReplaceLineEndings());
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
         }
 
         private OpenApiSchema CreateNullableEnumSchema()
@@ -1923,11 +1926,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             });
             return schema;
-        }
-
-        private enum MyEnum
-        {
-            A, B
         }
 
         internal class SchemaVisitor : OpenApiVisitorBase

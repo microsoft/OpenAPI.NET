@@ -547,14 +547,20 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalCollection(OpenApiConstants.AnyOf, effectiveAnyOf, callback);
 
             // oneOf
-            if (hasOneOfNullAndSingleEnumWith3_0 &&
-                effectiveOneOf![0] is OpenApiSchema { Enum.Count: > 0 } singleEffectiveOneOf)
+            if (hasOneOfNullAndSingleEnumWith3_0)
             {
-                writer.WriteRequiredCollection(OpenApiConstants.OneOf, effectiveOneOf, (writer, element) =>
-                {
-                    var clonedToMutateEnum = (OpenApiSchema)((OpenApiSchema)element).MemberwiseClone();
-                    clonedToMutateEnum.Enum = [.. clonedToMutateEnum.Enum!, null!];
-                    callback(writer, clonedToMutateEnum);
+                writer.WriteRequiredCollection(OpenApiConstants.OneOf, effectiveOneOf!, (writer, element) =>
+                {                    
+                    var clonedToMutateEnum = element.CreateShallowCopy();
+                    if (clonedToMutateEnum is OpenApiSchema { Enum: { } existingEnum } concreteCloned)
+                    {
+                        concreteCloned.Enum = [.. existingEnum, null!];
+                        callback(writer, clonedToMutateEnum);
+                    }
+                    else
+                    {
+                        callback(writer, element);
+                    }
                 });
             }
             else
@@ -1094,6 +1100,23 @@ namespace Microsoft.OpenApi
                     }
                     else if (schema.Enum is { Count: > 0 })
                     {
+                        foreach (var enumValue in schema.Enum)
+                        {
+                            if (enumValue is not null)
+                            {
+                                var currentType = enumValue.GetValueKind() switch
+                                {
+                                    JsonValueKind.Array => JsonSchemaType.Array,
+                                    JsonValueKind.String => JsonSchemaType.String,
+                                    JsonValueKind.Number => JsonSchemaType.Number,
+                                    JsonValueKind.True or JsonValueKind.False => JsonSchemaType.Boolean,
+                                    JsonValueKind.Null => (JsonSchemaType)0,
+                                    _ => JsonSchemaType.Object,
+                                };
+
+                                commonType |= currentType;
+                            }
+                        }
                         commonType |= JsonSchemaType.String;
                     }
                 }
