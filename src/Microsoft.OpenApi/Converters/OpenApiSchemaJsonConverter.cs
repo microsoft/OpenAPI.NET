@@ -25,6 +25,7 @@ namespace Microsoft.OpenApi
     /// </remarks>
     public sealed class OpenApiSchemaJsonConverter : JsonConverter<OpenApiSchema>
     {
+        private static readonly UTF8Encoding Utf8NoBom = new(encoderShouldEmitUTF8Identifier: false);
         private readonly OpenApiSpecVersion _version;
 
         /// <summary>
@@ -66,7 +67,7 @@ namespace Microsoft.OpenApi
             Utils.CheckArgumentNull(value);
 
             using var stream = new MemoryStream();
-            using (var textWriter = new StreamWriter(stream, Encoding.UTF8, bufferSize: 1024, leaveOpen: true))
+            using (var textWriter = new StreamWriter(stream, Utf8NoBom, bufferSize: 1024, leaveOpen: true))
             {
                 var openApiWriter = new OpenApiJsonWriter(textWriter);
                 SerializeSchema(value, openApiWriter);
