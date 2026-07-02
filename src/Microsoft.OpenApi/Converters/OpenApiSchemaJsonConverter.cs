@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -73,9 +73,7 @@ namespace Microsoft.OpenApi
                 textWriter.Flush();
             }
 
-            stream.Position = 0;
-            using var document = JsonDocument.Parse(stream);
-            document.RootElement.WriteTo(writer);
+            writer.WriteRawValue(stream.ToArray(), skipInputValidation: true);
         }
 
         private void SerializeSchema(OpenApiSchema schema, OpenApiJsonWriter writer)
