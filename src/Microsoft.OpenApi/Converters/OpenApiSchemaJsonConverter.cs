@@ -29,9 +29,9 @@ namespace Microsoft.OpenApi
         private readonly OpenApiSpecVersion _version;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="OpenApiSchemaJsonConverter"/> targeting OpenAPI 3.2.
+        /// Initializes a new instance of <see cref="OpenApiSchemaJsonConverter"/> targeting OpenAPI 3.1.
         /// </summary>
-        public OpenApiSchemaJsonConverter() : this(OpenApiSpecVersion.OpenApi3_2) { }
+        public OpenApiSchemaJsonConverter() : this(OpenApiSpecVersion.OpenApi3_1) { }
 
         /// <summary>
         /// Initializes a new instance of <see cref="OpenApiSchemaJsonConverter"/> targeting the specified OpenAPI version.
@@ -81,9 +81,6 @@ namespace Microsoft.OpenApi
         {
             switch (_version)
             {
-                case OpenApiSpecVersion.OpenApi3_2:
-                    schema.SerializeAsV32(writer);
-                    break;
                 case OpenApiSpecVersion.OpenApi3_1:
                     schema.SerializeAsV31(writer);
                     break;
