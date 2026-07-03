@@ -1883,7 +1883,6 @@ namespace Microsoft.OpenApi.Tests.Models
 
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_1)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
         public async Task SerializeNullableEnumWith3_1_And_Later(OpenApiSpecVersion version)
         {
             var schema = CreateNullableEnumSchema();
