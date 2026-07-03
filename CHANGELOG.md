@@ -1,5 +1,23 @@
 # Changelog
 
+## [3.8.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.7.0...v3.8.0) (2026-07-03)
+
+
+### Features
+
+* add JsonConverter for OpenApiSchema System.Text.Json serialization ([#2915](https://github.com/microsoft/OpenAPI.NET/issues/2915)) ([2f8b3d2](https://github.com/microsoft/OpenAPI.NET/commit/2f8b3d2a160f5b44b5aeaa3d83ff2025302ce1e2))
+* **library:** support schema keywords on references ([434b2f8](https://github.com/microsoft/OpenAPI.NET/commit/434b2f8b34e4a3a27bd99e43f61692f0b00c3054))
+* **library:** support schema keywords on references ([66a9d04](https://github.com/microsoft/OpenAPI.NET/commit/66a9d04036556945ee3222849b7d071a30016b81)), closes [#2903](https://github.com/microsoft/OpenAPI.NET/issues/2903)
+
+
+### Bug Fixes
+
+* Don't silently skip null assignment to OpenApiDocument.Tags ([3764142](https://github.com/microsoft/OpenAPI.NET/commit/37641424837df0b5e142ca130cb16df699bdb09f))
+* handling of nullable enums for 3.0 ([#2920](https://github.com/microsoft/OpenAPI.NET/issues/2920)) ([beb68f5](https://github.com/microsoft/OpenAPI.NET/commit/beb68f52b86c1437e50f7561d9be1ebdbe146963))
+* **library:** keep v3 schema references ref-only ([c938727](https://github.com/microsoft/OpenAPI.NET/commit/c9387274be6a6955952174d677bea0a35bda2624))
+* preserve JSON Schema 2020-12 keyword siblings on $ref schemas for OAS 3.1+ ([#2896](https://github.com/microsoft/OpenAPI.NET/issues/2896)) ([08160c8](https://github.com/microsoft/OpenAPI.NET/commit/08160c872a5f931eecd12446335c2f51fdad083e))
+* use async method for crypto flush ([6e675d9](https://github.com/microsoft/OpenAPI.NET/commit/6e675d943537312386c9683790848ad1cbacb713))
+
 ## [3.7.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.6.0...v3.7.0) (2026-06-10)
 
 
