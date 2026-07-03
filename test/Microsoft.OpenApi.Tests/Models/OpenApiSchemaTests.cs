@@ -5,7 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Schema;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FluentAssertions;
 using VerifyXunit;
@@ -1845,6 +1848,78 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey(OpenApiConstants.ContainsExtension));
             Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey(OpenApiConstants.MaxContainsExtension));
             Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey(OpenApiConstants.MinContainsExtension));
+        }
+
+        [Fact]
+        public async Task SerializeNullableEnumWith3_0()
+        {
+            // https://spec.openapis.org/oas/v3.0.4.html#fixed-fields-20
+            // Documentation for nullable states:
+            // This keyword only takes effect if type is explicitly defined within the same Schema Object.
+            // So, we want to ensure that we emit the type property if we will be adding nullable property.
+            // In addition, we need to still keep 'null' in the enum array.
+            // Otherwise, validators will consider null as invalid even if nullable is set to true.
+            // It's unclear if it's an issue of the validators or not, but it's safer to do it that way.
+            var schema = CreateNullableEnumSchema();
+            var result = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var expected = """
+                {
+                  "type": "string",
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "A",
+                        "B",
+                        null
+                      ]
+                    }
+                  ],
+                  "nullable": true
+                }
+                """;
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
+        public async Task SerializeNullableEnumWith3_1_And_Later(OpenApiSpecVersion version)
+        {
+            var schema = CreateNullableEnumSchema();
+            var result = await schema.SerializeAsJsonAsync(version);
+            var expected = """
+                {
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "enum": [
+                        "A",
+                        "B"
+                      ]
+                    }
+                  ]
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+        }
+
+        private OpenApiSchema CreateNullableEnumSchema()
+        {
+            var schema = new OpenApiSchema();
+            schema.OneOf ??= [];
+            schema.OneOf.Add(new OpenApiSchema() { Type = JsonSchemaType.Null });
+            schema.OneOf.Add(new OpenApiSchema()
+            {
+                Enum = new List<JsonNode>
+                {
+                    JsonValue.Create("A"),
+                    JsonValue.Create("B")
+                }
+            });
+            return schema;
         }
 
         internal class SchemaVisitor : OpenApiVisitorBase
