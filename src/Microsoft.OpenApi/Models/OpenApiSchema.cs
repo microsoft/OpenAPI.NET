@@ -1100,23 +1100,21 @@ namespace Microsoft.OpenApi
                     }
                     else if (schema.Enum is { Count: > 0 })
                     {
-                        foreach (var enumValue in schema.Enum)
+                        foreach (var enumValue in schema.Enum.Where(x => x is not null))
                         {
-                            if (enumValue is not null)
+                            var currentType = enumValue.GetValueKind() switch
                             {
-                                var currentType = enumValue.GetValueKind() switch
-                                {
-                                    JsonValueKind.Array => JsonSchemaType.Array,
-                                    JsonValueKind.String => JsonSchemaType.String,
-                                    JsonValueKind.Number => JsonSchemaType.Number,
-                                    JsonValueKind.True or JsonValueKind.False => JsonSchemaType.Boolean,
-                                    JsonValueKind.Null => (JsonSchemaType)0,
-                                    _ => JsonSchemaType.Object,
-                                };
+                                JsonValueKind.Array => JsonSchemaType.Array,
+                                JsonValueKind.String => JsonSchemaType.String,
+                                JsonValueKind.Number => JsonSchemaType.Number,
+                                JsonValueKind.True or JsonValueKind.False => JsonSchemaType.Boolean,
+                                JsonValueKind.Null => (JsonSchemaType)0,
+                                _ => JsonSchemaType.Object,
+                            };
 
-                                commonType |= currentType;
-                            }
+                            commonType |= currentType;
                         }
+
                         commonType |= JsonSchemaType.String;
                     }
                 }
