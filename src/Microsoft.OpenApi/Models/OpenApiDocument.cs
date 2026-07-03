@@ -712,7 +712,11 @@ namespace Microsoft.OpenApi
             var parts = reference.Split('#');
             if (parts.Length == 2 &&
                 !string.IsNullOrEmpty(parts[1]) &&
+#if NETSTANDARD2_1 || NETCOREAPP || NET5_0_OR_GREATER
+                !parts[1].StartsWith('/'))
+#else
                 !parts[1].StartsWith("/", StringComparison.Ordinal))
+#endif
             {
                 fragment = $"#{parts[1]}";
                 return true;
