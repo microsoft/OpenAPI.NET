@@ -298,6 +298,13 @@ namespace Microsoft.OpenApi
             }
 
             var schemaBaseUri = baseUri;
+            if (!string.IsNullOrEmpty(schema.Id) &&
+                Uri.TryCreate(schema.Id, UriKind.RelativeOrAbsolute, out var schemaIdUri))
+            {
+                schemaBaseUri = schemaIdUri.IsAbsoluteUri ? schemaIdUri : new Uri(baseUri, schemaIdUri);
+                RegisterComponent(schemaBaseUri.AbsoluteUri, schema);
+            }
+
             if (schema is IOpenApiSchemaMissingProperties { Anchor.Length: > 0 } schemaWithAnchor)
             {
                 var anchorUriBuilder = new UriBuilder(schemaBaseUri)
@@ -305,13 +312,6 @@ namespace Microsoft.OpenApi
                     Fragment = schemaWithAnchor.Anchor
                 };
                 RegisterComponent(anchorUriBuilder.Uri.AbsoluteUri, schema);
-            }
-
-            if (!string.IsNullOrEmpty(schema.Id) &&
-                Uri.TryCreate(schema.Id, UriKind.RelativeOrAbsolute, out var schemaIdUri))
-            {
-                schemaBaseUri = schemaIdUri.IsAbsoluteUri ? schemaIdUri : new Uri(baseUri, schemaIdUri);
-                RegisterComponent(schemaBaseUri.AbsoluteUri, schema);
             }
 
             RegisterSchemaIdentifier(schema.Items, schemaBaseUri, visitedSchemas);
