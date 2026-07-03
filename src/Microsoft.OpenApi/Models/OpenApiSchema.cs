@@ -554,7 +554,7 @@ namespace Microsoft.OpenApi
                     var clonedToMutateEnum = element.CreateShallowCopy();
                     if (clonedToMutateEnum is OpenApiSchema { Enum: { } existingEnum } concreteCloned)
                     {
-                        concreteCloned.Enum = [.. existingEnum, null!];
+                        concreteCloned.Enum = [.. existingEnum, JsonNullSentinel.JsonNull];
                         callback(writer, clonedToMutateEnum);
                     }
                     else
