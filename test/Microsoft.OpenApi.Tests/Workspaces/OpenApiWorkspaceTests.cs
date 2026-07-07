@@ -120,6 +120,38 @@ namespace Microsoft.OpenApi.Tests
             Assert.Same(responseFragment.Headers["header1"], resolvedElement.Headers["header1"]);
         }
 
+        [Fact]
+        public void OpenApiWorkspacesCanResolveSchemaAnchorAgainstSchemaId()
+        {
+            // Arrange
+            var workspace = new OpenApiWorkspace();
+            var schema = new OpenApiSchema
+            {
+                Id = "https://example.com/schema",
+                Anchor = "address",
+                Type = JsonSchemaType.Object
+            };
+            var document = new OpenApiDocument
+            {
+                BaseUri = new Uri("https://example.com/openapi.yaml"),
+                Components = new OpenApiComponents
+                {
+                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    {
+                        ["person"] = schema
+                    }
+                }
+            };
+
+            workspace.RegisterComponents(document);
+
+            // Act
+            var resolvedSchema = workspace.ResolveReference<OpenApiSchema>("https://example.com/schema#address");
+
+            // Assert
+            Assert.Same(schema, resolvedSchema);
+        }
+
         // Test artifacts
         private static OpenApiDocument CreateCommonDocument()
         {
