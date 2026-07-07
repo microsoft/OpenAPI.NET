@@ -639,7 +639,11 @@ namespace Microsoft.OpenApi
                 string relativePath;
                 var referenceV3 = !string.IsNullOrEmpty(reference.ReferenceV3) ? reference.ReferenceV3! : string.Empty;
 
-                if (!string.IsNullOrEmpty(referenceV3) && IsSubComponent(referenceV3))
+                if (reference.Type is ReferenceType.Schema && useExternal && TryGetPlainNameFragment(referenceV3, out var plainNameFragment))
+                {
+                    relativePath = plainNameFragment;
+                }
+                else if (!string.IsNullOrEmpty(referenceV3) && IsSubComponent(referenceV3))
                 {
                     // Enables setting the complete JSON path for nested subschemas e.g. #/components/schemas/person/properties/address
                     if (useExternal)
@@ -697,6 +701,25 @@ namespace Microsoft.OpenApi
                 // Expect exactly 3 segments for root-level schema: ["components", "schemas", "person"]
                 // Anything longer means it's a subcomponent.
                 return segments.Length > 3;
+            }
+
+            return false;
+        }
+
+        private static bool TryGetPlainNameFragment(string reference, out string fragment)
+        {
+            fragment = string.Empty;
+            var parts = reference.Split('#');
+            if (parts.Length == 2 &&
+                !string.IsNullOrEmpty(parts[1]) &&
+#if NETSTANDARD2_1 || NETCOREAPP || NET5_0_OR_GREATER
+                !parts[1].StartsWith('/'))
+#else
+                !parts[1].StartsWith("/", StringComparison.Ordinal))
+#endif
+            {
+                fragment = $"#{parts[1]}";
+                return true;
             }
 
             return false;
