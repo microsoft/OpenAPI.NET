@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Xunit;
@@ -33,6 +34,42 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             Assert.NotNull(actual);
             Assert.Equal("#/components/schemas/Pet", actual[propertyName]?.GetValue<string>());
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
+        public async Task SerializeMappingValuesAsReferenceStrings(OpenApiSpecVersion specVersion)
+        {
+            // Arrange
+            var document = new OpenApiDocument();
+            var discriminator = new OpenApiDiscriminator
+            {
+                PropertyName = "pet_type",
+                Mapping = new Dictionary<string, OpenApiSchemaReference>
+                {
+                    ["simple"] = new OpenApiSchemaReference("Pet", document),
+                    ["explicit"] = new OpenApiSchemaReference("#/components/schemas/Pet", document),
+                    ["noDocument"] = new OpenApiSchemaReference("Pet")
+                }
+            };
+
+            // Act
+            var actual = JsonNode.Parse(await discriminator.SerializeAsJsonAsync(specVersion));
+
+            // Assert
+            Assert.NotNull(actual);
+            var mapping = Assert.IsAssignableFrom<JsonObject>(actual["mapping"]);
+            AssertMappingValue(mapping, "simple");
+            AssertMappingValue(mapping, "explicit");
+            AssertMappingValue(mapping, "noDocument");
+        }
+
+        private static void AssertMappingValue(JsonObject mapping, string key)
+        {
+            var value = Assert.IsAssignableFrom<JsonValue>(mapping[key]);
+            Assert.Equal("#/components/schemas/Pet", value.GetValue<string>());
         }
     }
 }
