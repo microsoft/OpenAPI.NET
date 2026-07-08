@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi
             var reference = schemaReference.Reference.ReferenceV3;
             if (!string.IsNullOrEmpty(reference))
             {
-                writer.WriteValue(reference);
+                writer.WriteValue(reference!);
             }
         }
 
