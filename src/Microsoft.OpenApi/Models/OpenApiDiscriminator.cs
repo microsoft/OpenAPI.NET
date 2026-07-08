@@ -108,10 +108,7 @@ namespace Microsoft.OpenApi
             writer.WriteProperty(OpenApiConstants.PropertyName, PropertyName);
 
             // mapping
-            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, s) =>
-            {
-                WriteMappingReference(w, s);
-            });
+            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, WriteMappingReference);
         }
 
         private static void WriteMappingReference(IOpenApiWriter writer, OpenApiSchemaReference schemaReference)
