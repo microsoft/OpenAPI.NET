@@ -225,7 +225,11 @@ namespace Microsoft.OpenApi.Reader.V3
                 {
                     if (bool.TryParse(n.GetScalarValue(), out var parsed) && parsed)
                     {
-                        o.Nullable = true;
+                        // While we are dealing with v3 document, we are still using x-nullable extension here.
+                        // This is used only as a marker during deserialization to indicate that the schema is nullable.
+                        // When we do FinalizeDeserialization, we will modify the OpenApiSchema.Type to
+                        // include JsonSchemaType.Null (only if needed), and always remove the extension.
+                        o.AddExtension(OpenApiConstants.NullableExtension, new JsonNodeExtension(JsonValue.Create(true)));
                     }
                 }
             },

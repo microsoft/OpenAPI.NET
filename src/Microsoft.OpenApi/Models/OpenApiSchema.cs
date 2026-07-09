@@ -111,12 +111,9 @@ namespace Microsoft.OpenApi
         /// <inheritdoc />
         public JsonSchemaType? Type { get; set; }
 
-        internal bool Nullable { get; set; }
+        private bool HasNullType
+            => Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null);
 
-        private bool NullableOrHasNullType
-            => Nullable || (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null));
-
-        // x-nullable is filtered out by deserializers, but keep the check here in case it gets added from user code.
         private bool HasTrueNullableExtension
             => Extensions is not null &&
                 Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) &&
@@ -795,15 +792,13 @@ namespace Microsoft.OpenApi
 
         internal void FinalizeDeserialization(OpenApiSpecVersion version)
         {
-            if (version is OpenApiSpecVersion.OpenApi2_0 && HasTrueNullableExtension)
+            if (version is OpenApiSpecVersion.OpenApi2_0 or OpenApiSpecVersion.OpenApi3_0 && HasTrueNullableExtension)
             {
                 Extensions!.Remove(OpenApiConstants.NullableExtension);
-                Nullable = true;
-            }
-
-            if (Nullable && Type is not null && Type != 0)
-            {
-                Type |= JsonSchemaType.Null;
+                if (Type is not null && Type != 0)
+                {
+                    Type |= JsonSchemaType.Null;
+                }
             }
         }
 
@@ -1062,7 +1057,7 @@ namespace Microsoft.OpenApi
 
         private void SerializeNullable(IOpenApiWriter writer, OpenApiSpecVersion version, bool hasNullInComposition = false)
         {
-            if (NullableOrHasNullType || hasNullInComposition)
+            if (HasNullType || hasNullInComposition)
             {
                 switch (version)
                 {
