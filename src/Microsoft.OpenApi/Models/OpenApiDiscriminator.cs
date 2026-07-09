@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi
             if (DefaultMapping != null)
             {
                 writer.WritePropertyName("defaultMapping");
-                DefaultMapping.SerializeAsV32(writer);
+                WriteMappingReference(writer, DefaultMapping);
             }
 
             // extensions
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi
             if (DefaultMapping != null)
             {
                 writer.WritePropertyName("x-oas-default-mapping");
-                DefaultMapping.SerializeAsV31(writer);
+                WriteMappingReference(writer, DefaultMapping);
             }
 
             // extensions
@@ -108,13 +108,16 @@ namespace Microsoft.OpenApi
             writer.WriteProperty(OpenApiConstants.PropertyName, PropertyName);
 
             // mapping
-            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, s) =>
+            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, WriteMappingReference);
+        }
+
+        private static void WriteMappingReference(IOpenApiWriter writer, OpenApiSchemaReference schemaReference)
+        {
+            var reference = schemaReference.Reference.ReferenceV3;
+            if (!string.IsNullOrEmpty(reference))
             {
-                if (!string.IsNullOrEmpty(s.Reference.ReferenceV3) && s.Reference.ReferenceV3 is not null)
-                {
-                    w.WriteValue(s.Reference.ReferenceV3);
-                }
-            });
+                writer.WriteValue(reference!);
+            }
         }
 
         /// <summary>
