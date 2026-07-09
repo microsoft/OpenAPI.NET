@@ -327,17 +327,6 @@ internal static partial class OpenApiV32Deserializer
             (o, n, _, _) => o.Default = n
         },
         {
-            "nullable",
-            (o, n, _, _) =>
-            {
-                var value = n.GetScalarValue();
-                if (value is not null)
-                {
-                    o.IsNullableFromDeserialization = bool.Parse(value);
-                }
-            }
-        },
-        {
             "discriminator",
             (o, n, doc, c) => o.Discriminator = LoadDiscriminator(n, doc, c)
         },
@@ -470,7 +459,7 @@ internal static partial class OpenApiV32Deserializer
                 schema.UnrecognizedKeywords[name] = value;
             });
 
-        schema.FinalizeDeserialization();
+        schema.FinalizeDeserialization(OpenApiSpecVersion.OpenApi3_2);
 
         if (!string.IsNullOrEmpty(identifier) && hostDocument.Workspace is not null)
         {

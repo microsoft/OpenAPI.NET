@@ -800,12 +800,15 @@ namespace Microsoft.OpenApi
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
         }
 
-        internal void FinalizeDeserialization()
+        internal void FinalizeDeserialization(OpenApiSpecVersion version)
         {
-            if (HasTrueNullableExtension)
+            if (version is OpenApiSpecVersion.OpenApi2_0)
             {
-                Extensions!.Remove(OpenApiConstants.NullableExtension);
-                IsNullableFromDeserialization = true;
+                if (HasTrueNullableExtension)
+                {
+                    Extensions!.Remove(OpenApiConstants.NullableExtension);
+                    IsNullableFromDeserialization = true;
+                }
             }
 
             if (IsNullableFromDeserialization && Type is not null && Type != 0)

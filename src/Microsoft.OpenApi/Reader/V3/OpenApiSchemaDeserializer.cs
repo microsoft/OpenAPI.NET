@@ -385,7 +385,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             ParseMap(jsonObject, schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context);
 
-            schema.FinalizeDeserialization();
+            schema.FinalizeDeserialization(OpenApiSpecVersion.OpenApi3_0);
 
             return schema;
         }
