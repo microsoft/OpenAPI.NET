@@ -545,7 +545,7 @@ namespace Microsoft.OpenApi
             }
 
             // type
-            var serializedTypeProperty = SerializeTypeProperty(writer, version, inferredType);
+            var serializedTypeProperty = TrySerializeTypeProperty(writer, version, inferredType);
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, callback);
@@ -838,7 +838,7 @@ namespace Microsoft.OpenApi
             writer.WriteStartObject();
 
             // type
-            SerializeTypeProperty(writer, OpenApiSpecVersion.OpenApi2_0);
+            TrySerializeTypeProperty(writer, OpenApiSpecVersion.OpenApi2_0);
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -1001,7 +1001,7 @@ namespace Microsoft.OpenApi
             writer.WriteEndObject();
         }
 
-        private bool SerializeTypeProperty(IOpenApiWriter writer, OpenApiSpecVersion version, JsonSchemaType? inferredType = null)
+        private bool TrySerializeTypeProperty(IOpenApiWriter writer, OpenApiSpecVersion version, JsonSchemaType? inferredType = null)
         {
             // Use original type or inferred type when the explicit type is not set
             var typeToUse = Type ?? inferredType;
