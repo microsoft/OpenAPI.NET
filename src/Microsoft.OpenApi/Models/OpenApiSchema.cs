@@ -111,12 +111,18 @@ namespace Microsoft.OpenApi
         /// <inheritdoc />
         public JsonSchemaType? Type { get; set; }
 
+        /// <summary>
+        /// This property is internal and is only used to mark the "nullable" state when doing deserialization.
+        /// It's only set during deserialization to flag whether we encountered "nullable" or not.
+        /// And it's read:
+        /// 1. During FinalizeDeserialization to determine whether the Type should be changed to include null or not.
+        /// 2. When serializing nullable, if IsNullable was false and IsNullableFromDeserialization was true, we will still serialize "nullable".
+        /// </summary>
+        internal bool IsNullableFromDeserialization { get; set; }
+
         // x-nullable is filtered out by deserializers, but keep the check here in case it gets added from user code.
         internal bool IsNullable
-        {
-            get => field || HasTrueNullableExtension || (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null));
-            set => field = value;
-        }
+            => HasTrueNullableExtension || (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null));
 
         private bool HasTrueNullableExtension
             => Extensions is not null &&
@@ -798,11 +804,11 @@ namespace Microsoft.OpenApi
         {
             if (HasTrueNullableExtension)
             {
-                IsNullable = true;
                 Extensions!.Remove(OpenApiConstants.NullableExtension);
+                IsNullableFromDeserialization = true;
             }
 
-            if (IsNullable && Type is not null && Type != 0)
+            if (IsNullableFromDeserialization && Type is not null && Type != 0)
             {
                 Type |= JsonSchemaType.Null;
             }
@@ -1065,7 +1071,7 @@ namespace Microsoft.OpenApi
 
         private void SerializeNullable(IOpenApiWriter writer, OpenApiSpecVersion version, bool hasNullInComposition = false)
         {
-            if (IsNullable || hasNullInComposition)
+            if (IsNullable || IsNullableFromDeserialization || hasNullInComposition)
             {
                 switch (version)
                 {

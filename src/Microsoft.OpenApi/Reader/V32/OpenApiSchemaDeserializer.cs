@@ -333,7 +333,7 @@ internal static partial class OpenApiV32Deserializer
                 var value = n.GetScalarValue();
                 if (value is not null)
                 {
-                    o.IsNullable = bool.Parse(value);
+                    o.IsNullableFromDeserialization = bool.Parse(value);
                 }
             }
         },
