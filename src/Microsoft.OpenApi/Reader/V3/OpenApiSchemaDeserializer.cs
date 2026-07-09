@@ -225,7 +225,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {
                     if (bool.TryParse(n.GetScalarValue(), out var parsed) && parsed)
                     {
-                        o.IsNullableFromDeserialization = true;
+                        o.Nullable = true;
                     }
                 }
             },

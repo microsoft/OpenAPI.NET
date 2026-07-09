@@ -111,19 +111,12 @@ namespace Microsoft.OpenApi
         /// <inheritdoc />
         public JsonSchemaType? Type { get; set; }
 
-        /// <summary>
-        /// This property is internal and is only used to mark the "nullable" state when doing deserialization.
-        /// It's only set during deserialization to flag whether we encountered "nullable" or not.
-        /// And it's read:
-        /// 1. During FinalizeDeserialization to determine whether the Type should be changed to include null or not.
-        /// 2. When serializing nullable, if IsNullable was false and IsNullableFromDeserialization was true, we will still serialize "nullable".
-        /// </summary>
-        internal bool IsNullableFromDeserialization { get; set; }
+        internal bool Nullable { get; set; }
+
+        private bool NullableOrHasNullType
+            => Nullable || (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null));
 
         // x-nullable is filtered out by deserializers, but keep the check here in case it gets added from user code.
-        internal bool IsNullable
-            => HasTrueNullableExtension || (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null));
-
         private bool HasTrueNullableExtension
             => Extensions is not null &&
                 Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) &&
@@ -802,16 +795,13 @@ namespace Microsoft.OpenApi
 
         internal void FinalizeDeserialization(OpenApiSpecVersion version)
         {
-            if (version is OpenApiSpecVersion.OpenApi2_0)
+            if (version is OpenApiSpecVersion.OpenApi2_0 && HasTrueNullableExtension)
             {
-                if (HasTrueNullableExtension)
-                {
-                    Extensions!.Remove(OpenApiConstants.NullableExtension);
-                    IsNullableFromDeserialization = true;
-                }
+                Extensions!.Remove(OpenApiConstants.NullableExtension);
+                Nullable = true;
             }
 
-            if (IsNullableFromDeserialization && Type is not null && Type != 0)
+            if (Nullable && Type is not null && Type != 0)
             {
                 Type |= JsonSchemaType.Null;
             }
@@ -1031,7 +1021,7 @@ namespace Microsoft.OpenApi
                     }
                     break;
                 default:
-                    WriteUnifiedSchemaType(IsNullable ? typeToUse.Value | JsonSchemaType.Null : typeToUse.Value, writer);
+                    WriteUnifiedSchemaType(typeToUse.Value, writer);
                     return true;
             }
 
@@ -1072,7 +1062,7 @@ namespace Microsoft.OpenApi
 
         private void SerializeNullable(IOpenApiWriter writer, OpenApiSpecVersion version, bool hasNullInComposition = false)
         {
-            if (IsNullable || IsNullableFromDeserialization || hasNullInComposition)
+            if (NullableOrHasNullType || hasNullInComposition)
             {
                 switch (version)
                 {
