@@ -1017,12 +1017,10 @@ namespace Microsoft.OpenApi
                 return false;
             }
 
-            var unifiedType = IsNullable ? typeToUse.Value | JsonSchemaType.Null : typeToUse.Value;
-            var typeWithoutNull = unifiedType & ~JsonSchemaType.Null;
-
             switch (version)
             {
                 case OpenApiSpecVersion.OpenApi2_0 or OpenApiSpecVersion.OpenApi3_0:
+                    var typeWithoutNull = typeToUse.Value & ~JsonSchemaType.Null;
                     if (typeWithoutNull != 0 && !HasMultipleTypes(typeWithoutNull))
                     {
                         writer.WriteProperty(OpenApiConstants.Type, typeWithoutNull.ToFirstIdentifier());
@@ -1030,7 +1028,7 @@ namespace Microsoft.OpenApi
                     }
                     break;
                 default:
-                    WriteUnifiedSchemaType(unifiedType, writer);
+                    WriteUnifiedSchemaType(IsNullable ? typeToUse.Value | JsonSchemaType.Null : typeToUse.Value, writer);
                     return true;
             }
 
