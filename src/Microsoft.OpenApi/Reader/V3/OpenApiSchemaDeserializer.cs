@@ -1,12 +1,13 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
-
-using System.Text.Json.Nodes;
 
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V3
 {
@@ -16,6 +17,8 @@ namespace Microsoft.OpenApi.Reader.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
+        private static readonly IOpenApiExtension _nullableTrueExtension = new JsonNodeExtension(JsonValue.Create(true));
+
         private static readonly FixedFieldMap<OpenApiSchema> _openApiSchemaFixedFields = new()
         {
             {
@@ -222,10 +225,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {
                     if (bool.TryParse(n.GetScalarValue(), out var parsed) && parsed)
                     {
-                        if (o.Type.HasValue)
-                            o.Type |= JsonSchemaType.Null;
-                        else
-                            o.Type = JsonSchemaType.Null;
+                        o.IsNullable = true;
                     }
                 }
             },
@@ -385,14 +385,16 @@ namespace Microsoft.OpenApi.Reader.V3
 
             ParseMap(jsonObject, schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context);
 
-            if (schema.Extensions is not null && schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
+            if (schema.Extensions is not null && schema.Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullableExtension))
             {
-                if (schema.Type.HasValue)
-                    schema.Type |= JsonSchemaType.Null;
-                else
-                    schema.Type = JsonSchemaType.Null;
-
+                var isNullable = nullableExtension is JsonNodeExtension { Node: JsonNode jsonNode } && jsonNode.GetValueKind() is JsonValueKind.True;
+                schema.IsNullable = isNullable;
                 schema.Extensions.Remove(OpenApiConstants.NullableExtension);
+            }
+
+            if (schema.IsNullable && schema.Type is not null && schema.Type != 0)
+            {
+                schema.Type |= JsonSchemaType.Null;
             }
 
             return schema;

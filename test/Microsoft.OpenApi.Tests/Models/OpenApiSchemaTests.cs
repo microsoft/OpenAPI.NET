@@ -962,6 +962,11 @@ namespace Microsoft.OpenApi.Tests.Models
                   "type": "string",
                   "oneOf": [
                     {
+                      "enum": [
+                        null
+                      ]
+                    },
+                    {
                       "maxLength": 10,
                       "type": "string"
                     }
@@ -1002,13 +1007,17 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                   "oneOf": [
                     {
+                      "enum": [
+                        null
+                      ]
+                    },
+                    {
                       "type": "string"
                     },
                     {
                       "type": "number"
                     }
-                  ],
-                  "nullable": true
+                  ]
                 }
                 """;
 
@@ -1050,6 +1059,11 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                   "type": "object",
                   "anyOf": [
+                    {
+                      "enum": [
+                        null
+                      ]
+                    },
                     {
                       "type": "object",
                       "properties": {
@@ -1094,14 +1108,18 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                   "anyOf": [
                     {
+                      "enum": [
+                        null
+                      ]
+                    },
+                    {
                       "minLength": 1,
                       "type": "string"
                     },
                     {
                       "type": "integer"
                     }
-                  ],
-                  "nullable": true
+                  ]
                 }
                 """;
 
@@ -1133,7 +1151,13 @@ namespace Microsoft.OpenApi.Tests.Models
             var expectedV3Schema =
                 """
                 {
-                  "nullable": true
+                  "oneOf": [
+                    {
+                      "enum": [
+                        null
+                      ]
+                    }
+                  ]
                 }
                 """;
 
@@ -1232,6 +1256,11 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                   "type": "object",
                   "oneOf": [
+                    {
+                      "enum": [
+                        null
+                      ]
+                    },
                     {
                       "$ref": "#/components/schemas/Pet"
                     }
@@ -1874,9 +1903,13 @@ namespace Microsoft.OpenApi.Tests.Models
                   "oneOf": [
                     {
                       "enum": [
-                        "A",
-                        "B",
                         null
+                      ]
+                    },
+                    {
+                      "enum": [
+                        "A",
+                        "B"
                       ]
                     }
                   ],
@@ -1912,6 +1945,37 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
         }
 
+        [Fact]
+        public async Task SerializeNullableTypeWith3_0()
+        {
+            var schema = CreateTypeNullSchema();
+            var result = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var expected = """
+                {
+                  "enum": [
+                    null
+                  ]
+                }
+                """;
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
+        public async Task SerializeNullableTypeWith3_1_And_Later(OpenApiSpecVersion version)
+        {
+            var schema = CreateTypeNullSchema();
+            var result = await schema.SerializeAsJsonAsync(version);
+            var expected = """
+                {
+                  "type": "null"
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+        }
+
         private OpenApiSchema CreateNullableEnumSchema()
         {
             var schema = new OpenApiSchema();
@@ -1925,6 +1989,13 @@ namespace Microsoft.OpenApi.Tests.Models
                     JsonValue.Create("B")
                 }
             });
+            return schema;
+        }
+
+        private OpenApiSchema CreateTypeNullSchema()
+        {
+            var schema = new OpenApiSchema();
+            schema.Type = JsonSchemaType.Null;
             return schema;
         }
 
