@@ -229,7 +229,7 @@ namespace Microsoft.OpenApi.Reader.V3
                         // This is used only as a marker during deserialization to indicate that the schema is nullable.
                         // When we do FinalizeDeserialization, we will modify the OpenApiSchema.Type to
                         // include JsonSchemaType.Null (only if needed), and always remove the extension.
-                        o.AddExtension(OpenApiConstants.NullableExtension, new JsonNodeExtension(JsonValue.Create(true)));
+                        o.AddExtension(OpenApiConstants.NullableExtension, _nullableTrueExtension);
                     }
                 }
             },
