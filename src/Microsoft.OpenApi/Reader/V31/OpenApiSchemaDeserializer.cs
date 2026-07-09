@@ -470,17 +470,7 @@ internal static partial class OpenApiV31Deserializer
                 schema.UnrecognizedKeywords[name] = value;
             });
 
-        if (schema.Extensions is not null && schema.Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullableExtension))
-        {
-            var isNullable = nullableExtension is JsonNodeExtension { Node: JsonNode jsonNode } && jsonNode.GetValueKind() is JsonValueKind.True;
-            schema.IsNullable = isNullable;
-            schema.Extensions.Remove(OpenApiConstants.NullableExtension);
-        }
-
-        if (schema.IsNullable && schema.Type is not null && schema.Type != 0)
-        {
-            schema.Type |= JsonSchemaType.Null;
-        }
+        schema.FinalizeDeserialization();
 
         if (!string.IsNullOrEmpty(identifier) && hostDocument.Workspace is not null)
         {

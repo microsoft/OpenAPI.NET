@@ -114,11 +114,11 @@ namespace Microsoft.OpenApi
         // x-nullable is filtered out by deserializers, but keep the check here in case it gets added from user code.
         internal bool IsNullable
         {
-            get => field || HasNullableExtension || (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null));
+            get => field || HasTrueNullableExtension || (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null));
             set => field = value;
         }
 
-        private bool HasNullableExtension
+        private bool HasTrueNullableExtension
             => Extensions is not null &&
                 Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) &&
                 nullExtRawValue is JsonNodeExtension { Node: JsonNode jsonNode } &&
@@ -792,6 +792,20 @@ namespace Microsoft.OpenApi
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
+        }
+
+        internal void FinalizeDeserialization()
+        {
+            if (HasTrueNullableExtension)
+            {
+                IsNullable = true;
+                Extensions!.Remove(OpenApiConstants.NullableExtension);
+            }
+
+            if (IsNullable && Type is not null && Type != 0)
+            {
+                Type |= JsonSchemaType.Null;
+            }
         }
 
         private void WriteFormatProperty(IOpenApiWriter writer)

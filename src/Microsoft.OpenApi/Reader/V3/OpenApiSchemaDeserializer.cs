@@ -385,17 +385,7 @@ namespace Microsoft.OpenApi.Reader.V3
 
             ParseMap(jsonObject, schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context);
 
-            if (schema.Extensions is not null && schema.Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullableExtension))
-            {
-                var isNullable = nullableExtension is JsonNodeExtension { Node: JsonNode jsonNode } && jsonNode.GetValueKind() is JsonValueKind.True;
-                schema.IsNullable = isNullable;
-                schema.Extensions.Remove(OpenApiConstants.NullableExtension);
-            }
-
-            if (schema.IsNullable && schema.Type is not null && schema.Type != 0)
-            {
-                schema.Type |= JsonSchemaType.Null;
-            }
+            schema.FinalizeDeserialization();
 
             return schema;
         }
