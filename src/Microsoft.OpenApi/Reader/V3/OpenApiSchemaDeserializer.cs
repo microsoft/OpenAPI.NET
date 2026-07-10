@@ -17,8 +17,6 @@ namespace Microsoft.OpenApi.Reader.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly IOpenApiExtension _nullableTrueExtension = new JsonNodeExtension(JsonValue.Create(true));
-
         private static readonly FixedFieldMap<OpenApiSchema> _openApiSchemaFixedFields = new()
         {
             {
@@ -231,15 +229,13 @@ namespace Microsoft.OpenApi.Reader.V3
                         }
                         else
                         {
-                            // While we are dealing with v3 document, we are still using x-nullable extension here.
-                            // This is used only as a marker during deserialization to indicate that the schema is nullable.
-                            // When we complete the deserialization, we will modify the OpenApiSchema.Type to
-                            // include JsonSchemaType.Null (**only if** needed), and always remove the extension.
-                            // The reason is that "nullable" property should only take effect if "Type" is set.
-                            // If we knew Type is set, we add "Null" to it.
-                            // Otherwise, it might be that it will be set later.
-                            // In this case, we add the marker extension, and check at the end of deserialization, and remove the extension.
-                            o.AddExtension(OpenApiConstants.NullableExtension, _nullableTrueExtension);
+                            // "nullable" is a type modifier.
+                            // It only has effect if there is a "Type" set.
+                            // Given that we don't have a Type set yet, we want to keep track of it until the end of deserialization.
+                            // If, at a later point during deserialization, Type was set, we apply nullable to it.
+                            // Otherwise, we throw it away.
+                            o.Metadata ??= new Dictionary<string, object>();
+                            o.Metadata["encounteredNullable"] = true;
                         }
                     }
                 }
@@ -400,15 +396,10 @@ namespace Microsoft.OpenApi.Reader.V3
 
             ParseMap(jsonObject, schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context);
 
-            if (schema.Extensions?.TryGetValue(OpenApiConstants.NullableExtension, out var value) == true &&
-                value == _nullableTrueExtension)
+            if (schema.Metadata?.TryGetValue("encounteredNullable", out var value) == true)
             {
-                // If this is "our own" internal _nullableTrueExtension instance, then we know we encountered "nullable": true in the schema
-                // at a point where Type wasn't set yet.
-                // We check now if schema.Type is set.
-                // If it is, we add JsonSchemaType.Null to it.
-                schema.Extensions.Remove(OpenApiConstants.NullableExtension);
-                if (schema.Type is not null && schema.Type != 0)
+                schema.Metadata.Remove("encounteredNullable");
+                if (schema.Type is not null && schema.Type != 0 && value is bool isNullable && isNullable)
                 {
                     schema.Type |= JsonSchemaType.Null;
                 }

@@ -959,7 +959,6 @@ namespace Microsoft.OpenApi.Tests.Models
             var expectedV3Schema =
                 """
                 {
-                  "type": "string",
                   "oneOf": [
                     {
                       "enum": [
@@ -970,8 +969,7 @@ namespace Microsoft.OpenApi.Tests.Models
                       "maxLength": 10,
                       "type": "string"
                     }
-                  ],
-                  "nullable": true
+                  ]
                 }
                 """;
 
@@ -1057,7 +1055,6 @@ namespace Microsoft.OpenApi.Tests.Models
             var expectedV3Schema =
                 """
                 {
-                  "type": "object",
                   "anyOf": [
                     {
                       "enum": [
@@ -1072,8 +1069,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                       }
                     }
-                  ],
-                  "nullable": true
+                  ]
                 }
                 """;
             // Assert
@@ -1254,7 +1250,6 @@ namespace Microsoft.OpenApi.Tests.Models
             var expectedV3Schema =
                 """
                 {
-                  "type": "object",
                   "oneOf": [
                     {
                       "enum": [
@@ -1264,8 +1259,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                       "$ref": "#/components/schemas/Pet"
                     }
-                  ],
-                  "nullable": true
+                  ]
                 }
                 """;
 
@@ -1899,7 +1893,6 @@ namespace Microsoft.OpenApi.Tests.Models
             var result = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
             var expected = """
                 {
-                  "type": "string",
                   "oneOf": [
                     {
                       "enum": [
@@ -1912,8 +1905,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         "B"
                       ]
                     }
-                  ],
-                  "nullable": true
+                  ]
                 }
                 """;
 
