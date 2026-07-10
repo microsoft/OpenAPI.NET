@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader
@@ -169,6 +170,51 @@ namespace Microsoft.OpenApi.Reader
             }
 
             return Convert.ToString(scalarNode.GetValue<object>(), CultureInfo.InvariantCulture);
+        }
+
+        public static bool GetScalarBoolValue(this JsonNode? node)
+        {
+            var scalarNode = node is JsonValue value ? value : throw new OpenApiException("Expected scalar value.");
+            return scalarNode.GetValue<bool>();
+        }
+
+        public static int GetScalarIntValue(this JsonNode? node)
+        {
+            var scalarNode = node is JsonValue value && value.GetValueKind() == JsonValueKind.Number ? value : throw new OpenApiException("Expected numeric scalar value.");
+
+            if (scalarNode.TryGetValue<int>(out var intValue))
+            {
+                return intValue;
+            }
+            else if (scalarNode.TryGetValue<long>(out var longValue))
+            {
+                return (int)longValue;
+            }
+            else if (scalarNode.TryGetValue<decimal>(out var decimalValue))
+            {
+                return (int)decimalValue;
+            }
+
+            return Convert.ToInt32(scalarNode.GetValue<object>());
+        }
+
+        public static uint GetScalarUIntValue(this JsonNode? node)
+        {
+            var scalarNode = node is JsonValue value && value.GetValueKind() == JsonValueKind.Number ? value : throw new OpenApiException("Expected numeric scalar value.");
+            if (scalarNode.TryGetValue<uint>(out var uintValue))
+            {
+                return uintValue;
+            }
+            else if (scalarNode.TryGetValue<ulong>(out var ulongValue))
+            {
+                return (uint)ulongValue;
+            }
+            else if (scalarNode.TryGetValue<decimal>(out var decimalValue))
+            {
+                return (uint)decimalValue;
+            }
+
+            return Convert.ToUInt32(scalarNode.GetValue<object>());
         }
 
         public static string? GetReferencePointer(this JsonObject jsonObject)

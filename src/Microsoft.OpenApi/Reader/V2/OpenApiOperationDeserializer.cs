@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -82,11 +82,7 @@ namespace Microsoft.OpenApi.Reader.V2
                     "deprecated",
                     (o, n, _, _) =>
                     {
-                        var deprecated = n.GetScalarValue();
-                        if (deprecated != null)
-                        {
-                            o.Deprecated = bool.Parse(deprecated);
-                        }
+                        o.Deprecated = n.GetScalarBoolValue();
                     }
                 },
                 {

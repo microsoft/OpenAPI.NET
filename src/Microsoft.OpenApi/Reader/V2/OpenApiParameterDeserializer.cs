@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Text.Json.Nodes;
@@ -34,33 +34,21 @@ namespace Microsoft.OpenApi.Reader.V2
                     "required",
                     (o, n, _, _) =>
                     {
-                        var required = n.GetScalarValue();
-                        if (required != null)
-                        {
-                            o.Required = bool.Parse(required);
-                        }
+                        o.Required = n.GetScalarBoolValue();
                     }
                 },
                 {
                     "deprecated",
                     (o, n, _, _) =>
                     {
-                        var deprecated = n.GetScalarValue();
-                        if (deprecated != null)
-                        {
-                            o.Deprecated = bool.Parse(deprecated);
-                        }
+                        o.Deprecated = n.GetScalarBoolValue();
                     }
                 },
                 {
                     "allowEmptyValue",
                     (o, n, _, _) =>
                     {
-                        var allowEmptyValue = n.GetScalarValue();
-                        if (allowEmptyValue != null)
-                        {
-                            o.AllowEmptyValue = bool.Parse(allowEmptyValue);
-                        }
+                        o.AllowEmptyValue = n.GetScalarBoolValue();
                     }
                 },
                 {
@@ -124,33 +112,21 @@ namespace Microsoft.OpenApi.Reader.V2
                     "maxLength",
                     (o, n, _, _) =>
                     {
-                        var maxLength = n.GetScalarValue();
-                        if (maxLength != null)
-                        {
-                            GetOrCreateSchema(o).MaxLength = int.Parse(maxLength, CultureInfo.InvariantCulture);
-                        }
+                        GetOrCreateSchema(o).MaxLength = n.GetScalarIntValue();
                     }
                 },
                 {
                     "minLength",
                     (o, n, _, _) =>
                     {
-                        var minLength = n.GetScalarValue();
-                        if (minLength != null)
-                        {
-                            GetOrCreateSchema(o).MinLength = int.Parse(minLength, CultureInfo.InvariantCulture);
-                        }
+                        GetOrCreateSchema(o).MinLength = n.GetScalarIntValue();
                     }
                 },
                 {
                     "readOnly",
                     (o, n, _, _) =>
                     {
-                        var readOnly = n.GetScalarValue();
-                        if (readOnly != null)
-                        {
-                            GetOrCreateSchema(o).ReadOnly = bool.Parse(readOnly);
-                        }
+                        GetOrCreateSchema(o).ReadOnly = n.GetScalarBoolValue();
                     }
                 },
                 {

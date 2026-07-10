@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Text.Json.Nodes;
@@ -38,22 +38,14 @@ namespace Microsoft.OpenApi.Reader.V3
                 "explode",
                 (o, n, _, _) =>
                 {
-                    var explode = n.GetScalarValue();
-                    if (explode != null)
-                    {
-                        o.Explode = bool.Parse(explode);
-                    }
+                    o.Explode = n.GetScalarBoolValue();
                 }
             },
             {
                 "allowReserved", 
                 (o, n, _, _) =>
                 {
-                    var allowReserved = n.GetScalarValue();
-                    if (allowReserved != null)
-                    {
-                         o.AllowReserved = bool.Parse(allowReserved);
-                     }
+                    o.AllowReserved = n.GetScalarBoolValue();
                 }
             },
         };

@@ -32,7 +32,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "$vocabulary",
-            (o, n, _, c) => o.Vocabulary = n.CreateSimpleMap(LoadBool, c).ToDictionary(kvp => kvp.Key, kvp => kvp.Value ?? false)
+            (o, n, _, c) => o.Vocabulary = n.CreateSimpleMap(LoadBool, c).ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
         },
         {
             "$dynamicRef",
@@ -95,22 +95,14 @@ internal static partial class OpenApiV31Deserializer
             "maxLength",
             (o, n, _, _) =>
             {
-                var maxLength = n.GetScalarValue();
-                if (maxLength != null)
-                {
-                    o.MaxLength = int.Parse(maxLength, CultureInfo.InvariantCulture);
-                }
+                o.MaxLength = n.GetScalarIntValue();
             }
         },
         {
             "minLength",
             (o, n, _, _) =>
             {
-                var minLength = n.GetScalarValue();
-                if (minLength != null)
-                {
-                    o.MinLength = int.Parse(minLength, CultureInfo.InvariantCulture);
-                }
+                o.MinLength = n.GetScalarIntValue();
             }
         },
         {
@@ -121,33 +113,21 @@ internal static partial class OpenApiV31Deserializer
             "maxItems",
             (o, n, _, _) =>
             {
-                var maxItems = n.GetScalarValue();
-                if (maxItems != null)
-                {
-                    o.MaxItems = int.Parse(maxItems, CultureInfo.InvariantCulture);
-                }
+                o.MaxItems = n.GetScalarIntValue();
             }
         },
         {
             "minItems",
             (o, n, _, _) =>
             {
-                var minItems = n.GetScalarValue();
-                if (minItems != null)
-                {
-                    o.MinItems = int.Parse(minItems, CultureInfo.InvariantCulture);
-                }
+                o.MinItems = n.GetScalarIntValue();
             }
         },
         {
             "uniqueItems",
             (o, n, _, _) =>
             {
-                var uniqueItems = n.GetScalarValue();
-                if (uniqueItems != null)
-                {
-                    o.UniqueItems = bool.Parse(uniqueItems);
-                }
+                o.UniqueItems = n.GetScalarBoolValue();
             }
         },
         {
@@ -158,22 +138,14 @@ internal static partial class OpenApiV31Deserializer
             OpenApiConstants.MaxContains,
             (o, n, _, _) =>
             {
-                var maxContains = n.GetScalarValue();
-                if (maxContains != null)
-                {
-                    o.MaxContains = uint.Parse(maxContains, CultureInfo.InvariantCulture);
-                }
+                o.MaxContains = n.GetScalarUIntValue();
             }
         },
         {
             OpenApiConstants.MinContains,
             (o, n, _, _) =>
             {
-                var minContains = n.GetScalarValue();
-                if (minContains != null)
-                {
-                    o.MinContains = uint.Parse(minContains, CultureInfo.InvariantCulture);
-                }
+                o.MinContains = n.GetScalarUIntValue();
             }
         },
         {
@@ -183,11 +155,7 @@ internal static partial class OpenApiV31Deserializer
                 // Handle both boolean (false/true) and schema object cases
                 if (n is JsonValue)
                 {
-                    var value = n.GetScalarValue();
-                    if (value is not null)
-                    {
-                        o.UnevaluatedProperties = bool.Parse(value);
-                    }
+                    o.UnevaluatedProperties = n.GetScalarBoolValue();
                 }
                 else
                 {
@@ -212,22 +180,14 @@ internal static partial class OpenApiV31Deserializer
             "maxProperties",
             (o, n, _, _) =>
             {
-                var maxProps = n.GetScalarValue();
-                if (maxProps != null)
-                {
-                    o.MaxProperties = int.Parse(maxProps, CultureInfo.InvariantCulture);
-                }
+                o.MaxProperties = n.GetScalarIntValue();
             }
         },
         {
             "minProperties",
             (o, n, _, _) =>
             {
-                var minProps = n.GetScalarValue();
-                if (minProps != null)
-                {
-                    o.MinProperties = int.Parse(minProps, CultureInfo.InvariantCulture);
-                }
+                o.MinProperties = n.GetScalarIntValue();
             }
         },
         {
@@ -302,11 +262,7 @@ internal static partial class OpenApiV31Deserializer
             {
                 if (n is JsonValue)
                 {
-                    var value = n.GetScalarValue();
-                    if (value is not null)
-                    {
-                        o.AdditionalPropertiesAllowed = bool.Parse(value);
-                    }
+                    o.AdditionalPropertiesAllowed = n.GetScalarBoolValue();
                 }
                 else
                 {
@@ -334,22 +290,14 @@ internal static partial class OpenApiV31Deserializer
             "readOnly",
             (o, n, _, _) =>
             {
-                var readOnly = n.GetScalarValue();
-                if (readOnly != null)
-                {
-                    o.ReadOnly = bool.Parse(readOnly);
-                }
+                o.ReadOnly = n.GetScalarBoolValue();
             }
         },
         {
             "writeOnly",
             (o, n, _, _) =>
             {
-                var writeOnly = n.GetScalarValue();
-                if (writeOnly != null)
-                {
-                    o.WriteOnly = bool.Parse(writeOnly);
-                }
+                o.WriteOnly = n.GetScalarBoolValue();
             }
         },
         {
@@ -372,11 +320,7 @@ internal static partial class OpenApiV31Deserializer
             "deprecated",
             (o, n, _, _) =>
             {
-                var deprecated = n.GetScalarValue();
-                if (deprecated != null)
-                {
-                    o.Deprecated = bool.Parse(deprecated);
-                }
+                o.Deprecated = n.GetScalarBoolValue();
             }
         },
         {

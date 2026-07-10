@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -144,10 +144,9 @@ namespace Microsoft.OpenApi.Reader.V31
             return node.GetScalarValue();
         }
 
-        private static bool? LoadBool(JsonNode node)
+        private static bool LoadBool(JsonNode node)
         {
-            var value = node.GetScalarValue();
-            return value is not null ? bool.Parse(value) : null;
+            return node.GetScalarBoolValue();
         }
 
         private static (string, string?) GetReferenceIdAndExternalResource(string pointer)

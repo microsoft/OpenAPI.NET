@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V32
@@ -27,11 +27,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 {
                     "required", (o, n, _, _) =>
                     {
-                        var required = n.GetScalarValue();
-                        if (required != null)
-                        {
-                            o.Required = bool.Parse(required);
-                        }
+                        o.Required = n.GetScalarBoolValue();
                     }
                 },
             };
