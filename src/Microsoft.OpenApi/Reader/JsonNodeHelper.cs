@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -158,6 +158,15 @@ namespace Microsoft.OpenApi.Reader
         public static string? GetScalarValue(this JsonNode? node)
         {
             var scalarNode = node is JsonValue value ? value : throw new OpenApiException("Expected scalar value.");
+
+            // It's much more efficient to call scalarNode.TryGetValue<string> than to call scalarNode.GetValue<object>() and then convert to string.
+            // When asking for "object" type, if scalarNode is JsonValueOfElement (internal type in STJ), we will get back
+            // a boxed JsonElement (paying the cost of unnecessary boxing allocation), and we then call JsonElement.ToString.
+            // So, we first check if we can get the string value directly, and only if that fails, we fallback to the expensive code.
+            if (scalarNode.TryGetValue<string>(out var stringValue))
+            {
+                return stringValue;
+            }
 
             return Convert.ToString(scalarNode.GetValue<object>(), CultureInfo.InvariantCulture);
         }
