@@ -268,7 +268,16 @@ namespace Microsoft.OpenApi.Reader.V2
 
             ParseMap(jsonObject, schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context);
 
-            schema.FinalizeDeserialization(OpenApiSpecVersion.OpenApi2_0);
+            var extensions = schema.Extensions;
+            if (extensions?.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) == true &&
+                nullExtRawValue is JsonNodeExtension { Node: JsonNode jsonNode })
+            {
+                extensions.Remove(OpenApiConstants.NullableExtension);
+                if (schema.Type is not null && schema.Type != 0 && jsonNode.GetValueKind() is JsonValueKind.True)
+                {
+                    schema.Type |= JsonSchemaType.Null;
+                }
+            }
 
             return schema;
         }

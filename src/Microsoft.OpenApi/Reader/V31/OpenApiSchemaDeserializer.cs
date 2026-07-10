@@ -459,8 +459,6 @@ internal static partial class OpenApiV31Deserializer
                 schema.UnrecognizedKeywords[name] = value;
             });
 
-        schema.FinalizeDeserialization(OpenApiSpecVersion.OpenApi3_1);
-
         if (!string.IsNullOrEmpty(identifier) && hostDocument.Workspace is not null)
         {
             // register the schema in our registry using the identifier's URL

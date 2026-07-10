@@ -233,8 +233,8 @@ namespace Microsoft.OpenApi.Reader.V3
                         {
                             // While we are dealing with v3 document, we are still using x-nullable extension here.
                             // This is used only as a marker during deserialization to indicate that the schema is nullable.
-                            // When we do FinalizeDeserialization, we will modify the OpenApiSchema.Type to
-                            // include JsonSchemaType.Null (only if needed), and always remove the extension.
+                            // When we complete the deserialization, we will modify the OpenApiSchema.Type to
+                            // include JsonSchemaType.Null (**only if** needed), and always remove the extension.
                             // The reason is that "nullable" property should only take effect if "Type" is set.
                             // If we knew Type is set, we add "Null" to it.
                             // Otherwise, it might be that it will be set later.
@@ -400,7 +400,19 @@ namespace Microsoft.OpenApi.Reader.V3
 
             ParseMap(jsonObject, schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context);
 
-            schema.FinalizeDeserialization(OpenApiSpecVersion.OpenApi3_0);
+            if (schema.Extensions?.TryGetValue(OpenApiConstants.NullableExtension, out var value) == true &&
+                value == _nullableTrueExtension)
+            {
+                // If this is "our own" internal _nullableTrueExtension instance, then we know we encountered "nullable": true in the schema
+                // at a point where Type wasn't set yet.
+                // We check now if schema.Type is set.
+                // If it is, we add JsonSchemaType.Null to it.
+                schema.Extensions.Remove(OpenApiConstants.NullableExtension);
+                if (schema.Type is not null && schema.Type != 0)
+                {
+                    schema.Type |= JsonSchemaType.Null;
+                }
+            }
 
             return schema;
         }

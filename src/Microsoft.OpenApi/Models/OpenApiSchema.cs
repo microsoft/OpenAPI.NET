@@ -114,12 +114,6 @@ namespace Microsoft.OpenApi
         private bool HasNullType
             => Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null);
 
-        private bool HasTrueNullableExtension
-            => Extensions is not null &&
-                Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) &&
-                nullExtRawValue is JsonNodeExtension { Node: JsonNode jsonNode } &&
-                jsonNode.GetValueKind() is JsonValueKind.True;
-
         /// <inheritdoc />
         public string? Const { get; set; }
 
@@ -788,18 +782,6 @@ namespace Microsoft.OpenApi
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
-        }
-
-        internal void FinalizeDeserialization(OpenApiSpecVersion version)
-        {
-            if (version is OpenApiSpecVersion.OpenApi2_0 or OpenApiSpecVersion.OpenApi3_0 && HasTrueNullableExtension)
-            {
-                Extensions!.Remove(OpenApiConstants.NullableExtension);
-                if (Type is not null && Type != 0)
-                {
-                    Type |= JsonSchemaType.Null;
-                }
-            }
         }
 
         private void WriteFormatProperty(IOpenApiWriter writer)
