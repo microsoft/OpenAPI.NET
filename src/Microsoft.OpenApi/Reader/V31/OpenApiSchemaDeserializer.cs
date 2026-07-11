@@ -455,7 +455,10 @@ internal static partial class OpenApiV31Deserializer
         {
             var nodeLocation = context.GetLocation();
             var anchorName = JsonNodeHelper.ExtractDynamicAnchorName(dynamicPointer);
-            var result = new OpenApiSchemaReference(!string.IsNullOrEmpty(anchorName) ? anchorName! : dynamicPointer, hostDocument);
+            string? externalResource = JsonNodeHelper.IsFragmentOnlyDynamicRef(dynamicPointer)
+                ? null
+                : JsonNodeHelper.ExtractDocumentUri(dynamicPointer);
+            var result = new OpenApiSchemaReference(!string.IsNullOrEmpty(anchorName) ? anchorName! : dynamicPointer, hostDocument, externalResource);
             var referenceMetadata = new OpenApiSchema();
             jsonObject.ParseMap(referenceMetadata, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context,
                 static (schema, name, value) =>

@@ -689,6 +689,12 @@ namespace Microsoft.OpenApi
         /// For fragment-only refs (#node), resolves against the host document.
         /// For URI refs (absolute), finds the external document and resolves there.
         /// </summary>
+        /// <summary>
+        /// Resolves a $dynamicRef value against the workspace's anchor registries.
+        /// For fragment-only refs (#node), resolves against the host document.
+        /// For URI refs (absolute or relative), finds the external document and resolves there.
+        /// Relative URIs are resolved against the host document's BaseUri.
+        /// </summary>
         internal IOpenApiSchema? ResolveDynamicRef(OpenApiDocument hostDocument, string dynamicRef)
         {
             var anchorName = JsonNodeHelper.ExtractDynamicAnchorName(dynamicRef);
@@ -698,7 +704,16 @@ namespace Microsoft.OpenApi
             if (!JsonNodeHelper.IsFragmentOnlyDynamicRef(dynamicRef))
             {
                 var docUri = JsonNodeHelper.ExtractDocumentUri(dynamicRef);
-                targetDoc = docUri is not null ? FindDocumentByBaseUri(docUri) : null;
+                if (docUri is not null)
+                {
+                    if (!Uri.IsWellFormedUriString(docUri, UriKind.Absolute) && hostDocument.BaseUri is not null)
+                        docUri = new Uri(hostDocument.BaseUri, docUri).AbsoluteUri;
+                    targetDoc = FindDocumentByBaseUri(docUri);
+                }
+                else
+                {
+                    targetDoc = null;
+                }
             }
 
             if (targetDoc is null) return null;
