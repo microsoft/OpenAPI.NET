@@ -1,1 +1,6 @@
 #nullable enable
+override Microsoft.OpenApi.JsonSchemaReference.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+override Microsoft.OpenApi.JsonSchemaReference.SerializeAsV32(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+override Microsoft.OpenApi.OpenApiSchemaReference.Target.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiWorkspace.GetDynamicAnchorCandidates(Microsoft.OpenApi.OpenApiDocument! hostDocument, string! anchorName) -> System.Collections.Generic.IReadOnlyList<Microsoft.OpenApi.IOpenApiSchema!>!
+static Microsoft.OpenApi.OpenApiWorkspace.ResolveDynamicAnchorInContext(Microsoft.OpenApi.IOpenApiSchema? contextSchema, string! anchorName) -> Microsoft.OpenApi.IOpenApiSchema?
