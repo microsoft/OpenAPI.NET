@@ -436,7 +436,7 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);
         writer.WriteProperty(OpenApiConstants.DynamicAnchor, DynamicAnchor);
 
-        writer.WriteProperty(OpenApiConstants.Const, Const);
+        writer.WriteRequiredProperty(OpenApiConstants.Const, Const);
         WriteSchemaType(writer, OpenApiConstants.Type, SchemaType, allowMultipleTypes: true);
         writer.WriteProperty(OpenApiConstants.Format, Format);
         writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
