@@ -117,7 +117,7 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
     /// <summary>
     /// Follow <see href="https://json-schema.org/draft/2020-12/json-schema-validation">JSON Schema definition</see>.
     /// </summary>
-    public string? Const { get; set; }
+    public string? Const { get; set; } = OpenApiUnsetValues.UnsetString;
 
     /// <summary>
     /// Follow <see href="https://json-schema.org/draft/2020-12/json-schema-validation">JSON Schema definition</see>.
