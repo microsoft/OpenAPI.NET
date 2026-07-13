@@ -750,15 +750,22 @@ namespace Microsoft.OpenApi
                 if (osr.Reference.DynamicAnchor is string a && a.Equals(anchorName, StringComparison.Ordinal))
                     return contextSchema;
                 return osr.Reference.Definitions?.Values.FirstOrDefault(def =>
-                    def.DynamicAnchor is string da && da.Equals(anchorName, StringComparison.Ordinal));
+                    AuthoredDynamicAnchor(def) is string da && da.Equals(anchorName, StringComparison.Ordinal));
             }
 
             if (contextSchema.DynamicAnchor is string b && b.Equals(anchorName, StringComparison.Ordinal))
                 return contextSchema;
 
             return contextSchema.Definitions?.Values.FirstOrDefault(def =>
-                def.DynamicAnchor is string da && da.Equals(anchorName, StringComparison.Ordinal));
+                AuthoredDynamicAnchor(def) is string da && da.Equals(anchorName, StringComparison.Ordinal));
         }
+
+        // Reads only the authored $dynamicAnchor on the schema itself. For OpenApiSchemaReference,
+        // IOpenApiSchema.DynamicAnchor falls through to Target when the reference's authored sibling
+        // is empty, which would resolve an anchor declared on the referenced target rather than on
+        // the $defs entry. Context-bound resolution must consider only the authored sibling.
+        private static string? AuthoredDynamicAnchor(IOpenApiSchema schema)
+            => schema is OpenApiSchemaReference r ? r.Reference.DynamicAnchor : schema.DynamicAnchor;
 
         /// <summary>
         /// Adds a document id to the dictionaries of document locations and their ids.

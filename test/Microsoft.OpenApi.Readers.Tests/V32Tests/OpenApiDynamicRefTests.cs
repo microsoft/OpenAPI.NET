@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -943,5 +944,60 @@ public class OpenApiDynamicRefTests
         Assert.Equal(JsonSchemaType.Object, inlined.Type);
         Assert.NotNull(inlined.Properties);
         Assert.True(inlined.Properties.ContainsKey("value"));
+    }
+
+    [Fact]
+    public async Task ResolveDynamicAnchorInContextDoesNotReadFromTargetForReferenceDefsEntries()
+    {
+        // A $defs entry that is itself a $ref must contribute its own authored $dynamicAnchor,
+        // not an anchor declared on the referenced target. The "aliased" def points at a target
+        // that declares $dynamicAnchor: node, but the def itself does not author it, so the
+        // context-bound lookup must return null.
+        var yaml =
+        """
+        openapi: 3.2.0
+        info:
+          title: Test
+          version: 1.0.0
+        paths: {}
+        components:
+          schemas:
+            Target:
+              $dynamicAnchor: node
+              type: object
+              properties:
+                name:
+                  type: string
+            Container:
+              type: object
+              $defs:
+                aliased:
+                  $ref: '#/components/schemas/Target'
+        """;
+
+        var doc = await LoadDocumentAsync(yaml);
+
+        var container = doc.Components.Schemas["Container"];
+        var aliased = Assert.IsType<OpenApiSchemaReference>(container.Definitions!["aliased"]);
+        // Sanity: the fall-through property would surface the target's anchor...
+        Assert.Equal("node", aliased.DynamicAnchor);
+        // ...but the authored sibling on the def entry is empty.
+        Assert.Null(aliased.Reference.DynamicAnchor);
+
+        // Both the non-reference context branch (Container) and the reference-holder branch
+        // (a ref whose Reference.Definitions carries the entry) must ignore the target's anchor.
+        Assert.Null(OpenApiWorkspace.ResolveDynamicAnchorInContext(container, "node"));
+
+        var refWithDefs = new OpenApiSchemaReference("Container", doc)
+        {
+            Reference =
+            {
+                Definitions = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["aliased"] = aliased
+                }
+            }
+        };
+        Assert.Null(OpenApiWorkspace.ResolveDynamicAnchorInContext(refWithDefs, "node"));
     }
 }
