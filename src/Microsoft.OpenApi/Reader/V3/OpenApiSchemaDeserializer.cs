@@ -17,6 +17,8 @@ namespace Microsoft.OpenApi.Reader.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
+        private const string EncounteredNullableTrueMetadataKey = "encounteredNullable";
+
         private static readonly FixedFieldMap<OpenApiSchema> _openApiSchemaFixedFields = new()
         {
             {
@@ -235,7 +237,7 @@ namespace Microsoft.OpenApi.Reader.V3
                             // If, at a later point during deserialization, Type was set, we apply nullable to it.
                             // Otherwise, we throw it away.
                             o.Metadata ??= new Dictionary<string, object>();
-                            o.Metadata["encounteredNullable"] = true;
+                            o.Metadata[EncounteredNullableTrueMetadataKey] = true;
                         }
                     }
                 }
@@ -396,9 +398,9 @@ namespace Microsoft.OpenApi.Reader.V3
 
             ParseMap(jsonObject, schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context);
 
-            if (schema.Metadata?.TryGetValue("encounteredNullable", out var value) == true)
+            if (schema.Metadata?.TryGetValue(EncounteredNullableTrueMetadataKey, out var value) == true)
             {
-                schema.Metadata.Remove("encounteredNullable");
+                schema.Metadata.Remove(EncounteredNullableTrueMetadataKey);
                 if (schema.Type is not null && schema.Type != 0 && value is bool isNullable && isNullable)
                 {
                     schema.Type |= JsonSchemaType.Null;
