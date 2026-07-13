@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V32;
@@ -326,24 +327,6 @@ internal static partial class OpenApiV32Deserializer
             (o, n, _, _) => o.Default = n
         },
         {
-            "nullable",
-            (o, n, _, _) =>
-            {
-                var value = n.GetScalarValue();
-                if (value is not null)
-                {
-                    var nullable = bool.Parse(value);
-                    if (nullable) // if nullable, convert type into an array of type(s) and null
-                    {
-                        if (o.Type.HasValue)
-                            o.Type |= JsonSchemaType.Null;
-                        else
-                            o.Type = JsonSchemaType.Null;
-                    }
-                }
-            }
-        },
-        {
             "discriminator",
             (o, n, doc, c) => o.Discriminator = LoadDiscriminator(n, doc, c)
         },
@@ -475,16 +458,6 @@ internal static partial class OpenApiV32Deserializer
                 schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
                 schema.UnrecognizedKeywords[name] = value;
             });
-
-        if (schema.Extensions is not null && schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
-        {
-            if (schema.Type.HasValue)
-                schema.Type |= JsonSchemaType.Null;
-            else
-                schema.Type = JsonSchemaType.Null;
-
-            schema.Extensions.Remove(OpenApiConstants.NullableExtension);
-        }
 
         if (!string.IsNullOrEmpty(identifier) && hostDocument.Workspace is not null)
         {

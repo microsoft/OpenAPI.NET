@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -173,8 +173,10 @@ x-nullable: true";
         [Fact]
         public async Task SerializeSchemaWithOnlyNullableShouldSucceed()
         {
+            // NOTE: x-nullable extension has no effect on the schema if type is not specified, so it is omitted in the serialized output.
+
             // Arrange
-            var expected = @"x-nullable: true";
+            var expected = @"{ }";
 
             var path = Path.Combine(SampleFolderPath, "schemaWithOnlyNullableExtension.yaml");
 

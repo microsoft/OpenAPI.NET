@@ -141,13 +141,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         [Theory]
         [InlineData(@"{ ""nullable"": true, ""type"": ""string"" }")]
         [InlineData(@"{ ""type"": ""string"", ""nullable"": true }")]
-        public void ParseSchemaWithNullableBeforeOrAfterTypePreservesNullFlag(string schemaJson)
+        public void ParseSchemaWithNullableBeforeOrAfterTypeDoesNotPreserveNullFlag(string schemaJson)
         {
+            // "nullable" is only for 3.0.
+
             // Act
             var schema = OpenApiModelFactory.Parse<OpenApiSchema>(schemaJson, OpenApiSpecVersion.OpenApi3_1, new(), out _, "json", SettingsFixture.ReaderSettings);
 
             // Assert
-            Assert.Equal(JsonSchemaType.String | JsonSchemaType.Null, schema.Type);
+            Assert.Equal(JsonSchemaType.String, schema.Type);
         }
 
         [Fact]
@@ -517,7 +519,7 @@ x-nullable: true";
 - ""int""
 nullable: true";
 
-            var expected = @"x-nullable: true";
+            var expected = @"{ }";
 
             var schema = OpenApiModelFactory.Parse<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_1, new(), out _, "yaml", SettingsFixture.ReaderSettings);
 
@@ -531,8 +533,10 @@ nullable: true";
         [Theory]
         [InlineData("schemaWithNullable.yaml")]
         [InlineData("schemaWithNullableExtension.yaml")]
-        public async Task LoadSchemaWithNullableExtensionAsV31Works(string filePath)
+        public async Task LoadSchemaWithNullableExtensionAsV31ShouldNotWork(string filePath)
         {
+            // "nullable" is only for 3.0.
+            // and "x-nullable" is only for 2.0.
             // Arrange
             var path = Path.Combine(SampleFolderPath, filePath);
 
@@ -540,7 +544,7 @@ nullable: true";
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
 
             // Assert
-            Assert.Equal(JsonSchemaType.String | JsonSchemaType.Null, schema.Type);
+            Assert.Equal(JsonSchemaType.String, schema.Type);
         }
 
         [Fact]
