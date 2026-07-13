@@ -1,12 +1,12 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System.Text.Json.Nodes;
-
+using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V2
 {
@@ -16,6 +16,8 @@ namespace Microsoft.OpenApi.Reader.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
+        private const string EncounteredNullableExtensionTrueMetadataKey = "encounteredNullable";
+
         private static readonly FixedFieldMap<OpenApiSchema> _openApiSchemaFixedFields = new()
         {
             {
@@ -211,6 +213,29 @@ namespace Microsoft.OpenApi.Reader.V2
                 (o, n, _, _) => o.Default = n
             },
             {
+                OpenApiConstants.NullableExtension,
+                (o, n, _, _) =>
+                {
+                    if (bool.TryParse(n.GetScalarValue(), out var parsed) && parsed)
+                    {
+                        if (o.Type is not null && o.Type != 0)
+                        {
+                            o.Type |= JsonSchemaType.Null;
+                        }
+                        else
+                        {
+                            // We mirror the same behavior of OpenAPI 3.0 "nullable" which is a type modifier.
+                            // It only has effect if there is a "Type" set.
+                            // Given that we don't have a Type set yet, we want to keep track of it until the end of deserialization.
+                            // If, at a later point during deserialization, Type was set, we apply nullable to it.
+                            // Otherwise, we throw it away.
+                            o.Metadata ??= new Dictionary<string, object>();
+                            o.Metadata[EncounteredNullableExtensionTrueMetadataKey] = true;
+                        }
+                    }
+                }
+            },
+            {
                 "discriminator", (o, n, _, _) =>
                 {
                     o.Discriminator = new()
@@ -268,14 +293,13 @@ namespace Microsoft.OpenApi.Reader.V2
 
             ParseMap(jsonObject, schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context);
 
-            if (schema.Extensions is not null && schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
+            if (schema.Metadata?.TryGetValue(EncounteredNullableExtensionTrueMetadataKey, out var value) == true)
             {
-                if (schema.Type.HasValue)
+                schema.Metadata.Remove(EncounteredNullableExtensionTrueMetadataKey);
+                if (schema.Type is not null && schema.Type != 0 && value is bool isNullable && isNullable)
+                {
                     schema.Type |= JsonSchemaType.Null;
-                else
-                    schema.Type = JsonSchemaType.Null;
-
-                schema.Extensions.Remove(OpenApiConstants.NullableExtension);
+                }
             }
 
             return schema;
