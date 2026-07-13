@@ -517,7 +517,11 @@ namespace Microsoft.OpenApi
             if (version == OpenApiSpecVersion.OpenApi3_0)
             {
                 // If we have a schema that's only just { "type": "null" }, we serialize it as enum with null value.
-                if (Type == JsonSchemaType.Null && OneOf is not { Count: > 0 } && AnyOf is not { Count: > 0 } && Enum is not { Count: > 0 })
+                if (Type == JsonSchemaType.Null &&
+                    OneOf is not { Count: > 0 } &&
+                    AnyOf is not { Count: > 0 } &&
+                    AllOf is not { Count: > 0 } &&
+                    Enum is not { Count: > 0 })
                 {
                     writer.WriteOptionalCollection(OpenApiConstants.Enum, s_singleNullElementList, (nodeWriter, s) => nodeWriter.WriteAny(s));
                 }

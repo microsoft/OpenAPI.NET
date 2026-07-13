@@ -211,6 +211,29 @@ namespace Microsoft.OpenApi.Reader.V2
                 (o, n, _, _) => o.Default = n
             },
             {
+                OpenApiConstants.NullableExtension,
+                (o, n, _, _) =>
+                {
+                    if (bool.TryParse(n.GetScalarValue(), out var parsed) && parsed)
+                    {
+                        if (o.Type is not null && o.Type != 0)
+                        {
+                            o.Type |= JsonSchemaType.Null;
+                        }
+                        else
+                        {
+                            // We mirror the same behavior of OpenAPI 3.0 "nullable" which is a type modifier.
+                            // It only has effect if there is a "Type" set.
+                            // Given that we don't have a Type set yet, we want to keep track of it until the end of deserialization.
+                            // If, at a later point during deserialization, Type was set, we apply nullable to it.
+                            // Otherwise, we throw it away.
+                            o.Metadata ??= new Dictionary<string, object>();
+                            o.Metadata["encounteredNullable"] = true;
+                        }
+                    }
+                }
+            },
+            {
                 "discriminator", (o, n, _, _) =>
                 {
                     o.Discriminator = new()
@@ -268,12 +291,10 @@ namespace Microsoft.OpenApi.Reader.V2
 
             ParseMap(jsonObject, schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context);
 
-            var extensions = schema.Extensions;
-            if (extensions?.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) == true &&
-                nullExtRawValue is JsonNodeExtension { Node: JsonNode jsonNode })
+            if (schema.Metadata?.TryGetValue("encounteredNullable", out var value) == true)
             {
-                extensions.Remove(OpenApiConstants.NullableExtension);
-                if (schema.Type is not null && schema.Type != 0 && jsonNode.GetValueKind() is JsonValueKind.True)
+                schema.Metadata.Remove("encounteredNullable");
+                if (schema.Type is not null && schema.Type != 0 && value is bool isNullable && isNullable)
                 {
                     schema.Type |= JsonSchemaType.Null;
                 }
