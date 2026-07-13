@@ -1,1 +1,3 @@
 #nullable enable
+Microsoft.OpenApi.OpenApiUnsetValues
+static readonly Microsoft.OpenApi.OpenApiUnsetValues.UnsetString -> string!
