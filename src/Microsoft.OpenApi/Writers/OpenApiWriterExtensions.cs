@@ -41,6 +41,7 @@ namespace Microsoft.OpenApi
         public static void WriteRequiredProperty(this IOpenApiWriter writer, string name, string? value)
         {
             Utils.CheckArgumentNullOrEmpty(name);
+
             writer.WritePropertyName(name);
             if (value == null)
             {

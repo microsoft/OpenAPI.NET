@@ -114,10 +114,22 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
     /// </summary>
     public JsonSchemaType? SchemaType { get; set; }
 
+    internal bool WasConstExplicitlySet { get; private set; }
+
     /// <summary>
     /// Follow <see href="https://json-schema.org/draft/2020-12/json-schema-validation">JSON Schema definition</see>.
     /// </summary>
-    public string? Const { get; set; }
+    public string? Const
+    {
+        get => field;
+        set
+        {
+            // TODO: In the next major release, Const should be made a JsonNode.
+            // See https://github.com/microsoft/OpenAPI.NET/issues/2935 for more information.
+            WasConstExplicitlySet = true;
+            field = value;
+        }
+    }
 
     /// <summary>
     /// Follow <see href="https://json-schema.org/draft/2020-12/json-schema-validation">JSON Schema definition</see>.
@@ -376,6 +388,7 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         ExclusiveMinimum = reference.ExclusiveMinimum;
         SchemaType = reference.SchemaType;
         Const = reference.Const;
+        WasConstExplicitlySet = reference.WasConstExplicitlySet;
         Format = reference.Format;
         Maximum = reference.Maximum;
         Minimum = reference.Minimum;
@@ -477,7 +490,11 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         writer.WriteProperty(OpenApiConstants.DynamicRef, DynamicRef);
         writer.WriteProperty(OpenApiConstants.DynamicAnchor, DynamicAnchor);
 
-        writer.WriteProperty(OpenApiConstants.Const, Const);
+        if (WasConstExplicitlySet)
+        {
+            writer.WriteRequiredProperty(OpenApiConstants.Const, Const);
+        }
+
         WriteSchemaType(writer, OpenApiConstants.Type, SchemaType, allowMultipleTypes: true);
         writer.WriteProperty(OpenApiConstants.Format, Format);
         writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
@@ -648,6 +665,7 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
         ExclusiveMinimum = schema.ExclusiveMinimum;
         SchemaType = schema.Type;
         Const = schema.Const;
+        WasConstExplicitlySet = schema.WasConstExplicitlySet;
         Format = schema.Format;
         Maximum = schema.Maximum;
         Minimum = schema.Minimum;
