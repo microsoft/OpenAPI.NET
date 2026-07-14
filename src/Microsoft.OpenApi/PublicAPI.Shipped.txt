@@ -2142,3 +2142,7 @@ Microsoft.OpenApi.OpenApiSchemaJsonConverter.OpenApiSchemaJsonConverter() -> voi
 Microsoft.OpenApi.OpenApiSchemaJsonConverter.OpenApiSchemaJsonConverter(Microsoft.OpenApi.OpenApiSpecVersion version) -> void
 override Microsoft.OpenApi.OpenApiSchemaJsonConverter.Read(ref System.Text.Json.Utf8JsonReader reader, System.Type! typeToConvert, System.Text.Json.JsonSerializerOptions! options) -> Microsoft.OpenApi.OpenApiSchema?
 override Microsoft.OpenApi.OpenApiSchemaJsonConverter.Write(System.Text.Json.Utf8JsonWriter! writer, Microsoft.OpenApi.OpenApiSchema! value, System.Text.Json.JsonSerializerOptions! options) -> void
+override Microsoft.OpenApi.JsonSchemaReference.SerializeAsV31(Microsoft.OpenApi.IOpenApiWriter! writer) -> void
+override Microsoft.OpenApi.OpenApiSchemaReference.Target.get -> Microsoft.OpenApi.IOpenApiSchema?
+Microsoft.OpenApi.OpenApiWorkspace.GetDynamicAnchorCandidates(Microsoft.OpenApi.OpenApiDocument! hostDocument, string! anchorName) -> System.Collections.Generic.IReadOnlyList<Microsoft.OpenApi.IOpenApiSchema!>!
+static Microsoft.OpenApi.OpenApiWorkspace.ResolveDynamicAnchorInContext(Microsoft.OpenApi.IOpenApiSchema? contextSchema, string! anchorName) -> Microsoft.OpenApi.IOpenApiSchema?
