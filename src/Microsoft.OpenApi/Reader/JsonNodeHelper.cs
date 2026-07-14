@@ -167,6 +167,17 @@ namespace Microsoft.OpenApi.Reader
             return jsonObject.TryGetPropertyValue("$ref", out var refNode) ? refNode?.GetScalarValue() : null;
         }
 
+        public static void ValidateReferencePointerFormat(string pointer)
+        {
+            var hashIndex = pointer.IndexOf('#');
+            if (hashIndex >= 0 &&
+                pointer.Length > hashIndex + 1 &&
+                pointer[hashIndex + 1] != '/')
+            {
+                throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, pointer));
+            }
+        }
+
         /// <summary>
         /// Returns the value of $dynamicRef if $ref is absent. Used to create a schema reference
         /// for bare $dynamicRef schemas (no $ref) so they participate in reference resolution.
