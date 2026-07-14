@@ -30,7 +30,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             {
                 Converters =
                 {
-                    new HttpMethodOperationDictionaryConverter()
+                    new HttpMethodOperationDictionaryConverter(),
+                    new OpenApiSchemaInterfaceJsonConverter(static (w, s) => s.SerializeAsV32(w))
                 },
             };
             var originalSerialized = JsonSerializer.Serialize(doc, options);

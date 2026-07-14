@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V31;
@@ -326,24 +327,6 @@ internal static partial class OpenApiV31Deserializer
             (o, n, _, _) => o.Default = n
         },
         {
-            "nullable",
-            (o, n, _, _) =>
-            {
-                var value = n.GetScalarValue();
-                if (value is not null)
-                {
-                    var nullable = bool.Parse(value);
-                    if (nullable) // if nullable, convert type into an array of type(s) and null
-                    {
-                        if (o.Type.HasValue)
-                            o.Type |= JsonSchemaType.Null;
-                        else
-                            o.Type = JsonSchemaType.Null;
-                    }
-                }
-            }
-        },
-        {
             "discriminator",
             (o, n, doc, c) => o.Discriminator = LoadDiscriminator(n, doc, c)
         },
@@ -444,6 +427,7 @@ internal static partial class OpenApiV31Deserializer
         var jsonObject = node.CheckMapNode(OpenApiConstants.Schema, context);
 
         var pointer = jsonObject.GetReferencePointer();
+        var dynamicPointer = jsonObject.GetDynamicReferencePointer();
         var identifier = jsonObject.GetJsonSchemaIdentifier();
 
         if (pointer != null)
@@ -467,6 +451,26 @@ internal static partial class OpenApiV31Deserializer
             return result;
         }
 
+        if (dynamicPointer != null)
+        {
+            var nodeLocation = context.GetLocation();
+            var anchorName = JsonNodeHelper.ExtractDynamicAnchorName(dynamicPointer);
+            var result = new OpenApiSchemaReference(!string.IsNullOrEmpty(anchorName) ? anchorName! : dynamicPointer, hostDocument);
+            var referenceMetadata = new OpenApiSchema();
+            jsonObject.ParseMap(referenceMetadata, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context,
+                static (schema, name, value) =>
+                {
+                    if (!string.Equals(name, OpenApiConstants.DynamicRef, StringComparison.Ordinal))
+                    {
+                        schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
+                        schema.UnrecognizedKeywords[name] = value;
+                    }
+                });
+            result.Reference.ApplySchemaMetadata(referenceMetadata, jsonObject);
+            result.Reference.SetJsonPointerPath(dynamicPointer, nodeLocation);
+            return result;
+        }
+
         var schema = new OpenApiSchema();
 
         jsonObject.ParseMap(schema, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context,
@@ -475,16 +479,6 @@ internal static partial class OpenApiV31Deserializer
                 schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
                 schema.UnrecognizedKeywords[name] = value;
             });
-
-        if (schema.Extensions is not null && schema.Extensions.ContainsKey(OpenApiConstants.NullableExtension))
-        {
-            if (schema.Type.HasValue)
-                schema.Type |= JsonSchemaType.Null;
-            else
-                schema.Type = JsonSchemaType.Null;
-
-            schema.Extensions.Remove(OpenApiConstants.NullableExtension);
-        }
 
         if (!string.IsNullOrEmpty(identifier) && hostDocument.Workspace is not null)
         {

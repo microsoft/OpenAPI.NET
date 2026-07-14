@@ -21,6 +21,8 @@ namespace Microsoft.OpenApi
     /// </summary>
     public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema, IOpenApiSchemaMissingProperties, IOpenApiSchemaWithUnevaluatedProperties, IMetadataContainer
     {
+        private static readonly IEnumerable<JsonNode> s_singleNullElementList = [ JsonNullSentinel.JsonNull ];
+
         /// <inheritdoc />
         public string? Title { get; set; }
 
@@ -109,13 +111,8 @@ namespace Microsoft.OpenApi
         /// <inheritdoc />
         public JsonSchemaType? Type { get; set; }
 
-        // x-nullable is filtered out by deserializers, but keep the check here in case it gets added from user code.
-        private bool IsNullable =>
-            (Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null)) ||
-            Extensions is not null &&
-            Extensions.TryGetValue(OpenApiConstants.NullableExtension, out var nullExtRawValue) &&
-            nullExtRawValue is JsonNodeExtension { Node: JsonNode jsonNode } &&
-            jsonNode.GetValueKind() is JsonValueKind.True;
+        private bool HasNullType
+            => Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null);
 
         internal bool WasConstExplicitlySet { get; private set; }
 
@@ -538,57 +535,30 @@ namespace Microsoft.OpenApi
                 : Enum;
             writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValue, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
-            // Handle oneOf/anyOf with null type for v3.0 downcast
-            IList<IOpenApiSchema>? effectiveOneOf = OneOf;
-            IList<IOpenApiSchema>? effectiveAnyOf = AnyOf;
-            bool hasNullInComposition = false;
-            bool hasOneOfNullAndSingleEnumWith3_0 = false;
-            JsonSchemaType? inferredType = null;
-
             if (version == OpenApiSpecVersion.OpenApi3_0)
             {
-                (effectiveOneOf, var inferredOneOf, var nullInOneOf) = ProcessCompositionForNull(OneOf);
-                hasNullInComposition |= nullInOneOf;
-                inferredType = inferredOneOf ?? inferredType;
-                (effectiveAnyOf, var inferredAnyOf, var nullInAnyOf) = ProcessCompositionForNull(AnyOf);
-                hasNullInComposition |= nullInAnyOf;
-                inferredType = inferredAnyOf ?? inferredType;
-
-                hasOneOfNullAndSingleEnumWith3_0 = nullInOneOf && effectiveOneOf is { Count: 1 } &&
-                    effectiveOneOf[0].Enum is { Count: > 0 };
+                // If we have a schema that's only just { "type": "null" }, we serialize it as enum with null value.
+                if (Type == JsonSchemaType.Null &&
+                    OneOf is not { Count: > 0 } &&
+                    AnyOf is not { Count: > 0 } &&
+                    AllOf is not { Count: > 0 } &&
+                    Enum is not { Count: > 0 })
+                {
+                    writer.WriteOptionalCollection(OpenApiConstants.Enum, s_singleNullElementList, (nodeWriter, s) => nodeWriter.WriteAny(s));
+                }
             }
 
             // type
-            SerializeTypeProperty(writer, version, inferredType);
+            var serializedTypeProperty = TrySerializeTypeProperty(writer, version);
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, callback);
 
             // anyOf
-            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, effectiveAnyOf, callback);
+            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, callback);
 
             // oneOf
-            if (hasOneOfNullAndSingleEnumWith3_0)
-            {
-                writer.WriteRequiredCollection(OpenApiConstants.OneOf, effectiveOneOf!, (writer, element) =>
-                {                    
-                    var clonedToMutateEnum = element.CreateShallowCopy();
-                    if (clonedToMutateEnum is OpenApiSchema { Enum: { } existingEnum } concreteCloned)
-                    {
-                        concreteCloned.Enum = [.. existingEnum, JsonNullSentinel.JsonNull];
-                        callback(writer, clonedToMutateEnum);
-                    }
-                    else
-                    {
-                        callback(writer, element);
-                    }
-                });
-            }
-            else
-            {
-                writer.WriteOptionalCollection(OpenApiConstants.OneOf, effectiveOneOf, callback);
-            }
-
+            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, callback);
 
             // not
             writer.WriteOptionalObject(OpenApiConstants.Not, Not, callback);
@@ -624,9 +594,14 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // nullable
-            if (version == OpenApiSpecVersion.OpenApi3_0)
+            if (version == OpenApiSpecVersion.OpenApi3_0 && serializedTypeProperty)
             {
-                SerializeNullable(writer, version, hasNullInComposition);
+                // https://spec.openapis.org/oas/v3.0.4.html#fixed-fields-20
+                // This keyword only takes effect if type is explicitly defined within the same Schema Object.
+                //
+                // If the user explicitly set IsNullable to true, we serialize it even if redundant.
+                // But if **we** are inferring it (from oneOf/anyOf), we don't serialize it when it's redundant.
+                SerializeNullable(writer, version);
             }
 
             // discriminator
@@ -858,7 +833,7 @@ namespace Microsoft.OpenApi
             writer.WriteStartObject();
 
             // type
-            SerializeTypeProperty(writer, OpenApiSpecVersion.OpenApi2_0);
+            TrySerializeTypeProperty(writer, OpenApiSpecVersion.OpenApi2_0);
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -1021,31 +996,32 @@ namespace Microsoft.OpenApi
             writer.WriteEndObject();
         }
 
-        private void SerializeTypeProperty(IOpenApiWriter writer, OpenApiSpecVersion version, JsonSchemaType? inferredType = null)
+        private bool TrySerializeTypeProperty(IOpenApiWriter writer, OpenApiSpecVersion version, JsonSchemaType? inferredType = null)
         {
             // Use original type or inferred type when the explicit type is not set
             var typeToUse = Type ?? inferredType;
 
             if (typeToUse is null)
             {
-                return;
+                return false;
             }
-
-            var unifiedType = IsNullable ? typeToUse.Value | JsonSchemaType.Null : typeToUse.Value;
-            var typeWithoutNull = unifiedType & ~JsonSchemaType.Null;
 
             switch (version)
             {
                 case OpenApiSpecVersion.OpenApi2_0 or OpenApiSpecVersion.OpenApi3_0:
+                    var typeWithoutNull = typeToUse.Value & ~JsonSchemaType.Null;
                     if (typeWithoutNull != 0 && !HasMultipleTypes(typeWithoutNull))
                     {
                         writer.WriteProperty(OpenApiConstants.Type, typeWithoutNull.ToFirstIdentifier());
+                        return true;
                     }
                     break;
                 default:
-                    WriteUnifiedSchemaType(unifiedType, writer);
-                    break;
+                    WriteUnifiedSchemaType(typeToUse.Value, writer);
+                    return true;
             }
+
+            return false;
         }
 
         private static bool IsPowerOfTwo(int x)
@@ -1080,9 +1056,9 @@ namespace Microsoft.OpenApi
             }
         }
 
-        private void SerializeNullable(IOpenApiWriter writer, OpenApiSpecVersion version, bool hasNullInComposition = false)
+        private void SerializeNullable(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
-            if (IsNullable || hasNullInComposition)
+            if (HasNullType)
             {
                 switch (version)
                 {
@@ -1093,63 +1069,6 @@ namespace Microsoft.OpenApi
                         writer.WriteProperty(OpenApiConstants.Nullable, true);
                         break;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Processes a composition (oneOf or anyOf) for null types, filtering out null schemas and inferring common type.
-        /// </summary>
-        /// <param name="composition">The list of schemas in the composition.</param>
-        /// <returns>A tuple with the effective list, inferred type, and whether null is present in composition.</returns>
-        private static (IList<IOpenApiSchema>? effective, JsonSchemaType? inferredType, bool hasNullInComposition)
-            ProcessCompositionForNull(IList<IOpenApiSchema>? composition)
-        {
-            if (composition is null || !composition.Any(static s => s.Type is JsonSchemaType.Null))
-            {
-                // Nothing to patch
-                return (composition, null, false);
-            }
-
-            var nonNullSchemas = composition
-                .Where(static s => s.Type is null or not JsonSchemaType.Null)
-                .ToList();
-
-            if (nonNullSchemas.Count > 0)
-            {
-                JsonSchemaType commonType = 0;
-
-                foreach (var schema in nonNullSchemas)
-                {
-                    if (schema.Type.HasValue)
-                    {
-                        commonType |= schema.Type.Value & ~JsonSchemaType.Null;
-                    }
-                    else if (schema.Enum is { Count: > 0 })
-                    {
-                        foreach (var enumValue in schema.Enum.Where(x => x is not null))
-                        {
-                            var currentType = enumValue.GetValueKind() switch
-                            {
-                                JsonValueKind.Array => JsonSchemaType.Array,
-                                JsonValueKind.String => JsonSchemaType.String,
-                                JsonValueKind.Number => JsonSchemaType.Number,
-                                JsonValueKind.True or JsonValueKind.False => JsonSchemaType.Boolean,
-                                JsonValueKind.Null => (JsonSchemaType)0,
-                                _ => JsonSchemaType.Object,
-                            };
-
-                            commonType |= currentType;
-                        }
-
-                        commonType |= JsonSchemaType.String;
-                    }
-                }
-
-                return (nonNullSchemas, commonType == 0 ? null : commonType, true);
-            }
-            else
-            {
-                return (null, null, true);
             }
         }
 
