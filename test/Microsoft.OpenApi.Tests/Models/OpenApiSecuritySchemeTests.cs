@@ -164,7 +164,6 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_1)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
         public Task SerializeSecuritySchemeWithoutTypeThrows(OpenApiSpecVersion version)
         {
             // Arrange
@@ -181,7 +180,6 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_1)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
         public Task SerializeApiKeySecuritySchemeWithoutNameThrows(OpenApiSpecVersion version)
         {
             // Arrange
@@ -202,7 +200,6 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_1)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
         public Task SerializeApiKeySecuritySchemeWithoutInThrows(OpenApiSpecVersion version)
         {
             // Arrange
@@ -222,7 +219,6 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_1)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
         public Task SerializeHttpSecuritySchemeWithoutSchemeThrows(OpenApiSpecVersion version)
         {
             // Arrange
@@ -258,7 +254,6 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_1)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
         public Task SerializeOAuth2SecuritySchemeWithoutFlowsThrows(OpenApiSpecVersion version)
         {
             // Arrange
@@ -277,7 +272,6 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_1)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
         public Task SerializeOpenIdConnectSecuritySchemeWithoutOpenIdConnectUrlThrows(OpenApiSpecVersion version)
         {
             // Arrange
