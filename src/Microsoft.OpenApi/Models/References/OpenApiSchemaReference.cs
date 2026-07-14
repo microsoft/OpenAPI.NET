@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public JsonSchemaType? Type { get => Reference.SchemaType ?? Target?.Type; set => Reference.SchemaType = value; }
         /// <inheritdoc/>
-        public string? Const { get => string.IsNullOrEmpty(Reference.Const) ? Target?.Const : Reference.Const; set => Reference.Const = value; }
+        public string? Const { get => Reference.WasConstExplicitlySet ? Reference.Const : Target?.Const; set => Reference.Const = value; }
         /// <inheritdoc/>
         public string? Format { get => string.IsNullOrEmpty(Reference.Format) ? Target?.Format : Reference.Format; set => Reference.Format = value; }
         /// <inheritdoc/>

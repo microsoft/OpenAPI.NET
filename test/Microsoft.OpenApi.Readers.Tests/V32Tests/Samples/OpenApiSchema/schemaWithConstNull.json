@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "const": null
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "const": null
+        }
+      },
+      "required": [ "role" ]
+    }
+  },
+  "required": [ "status" ]
+}
+

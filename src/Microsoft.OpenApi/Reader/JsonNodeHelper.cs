@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -157,6 +157,11 @@ namespace Microsoft.OpenApi.Reader
 
         public static string? GetScalarValue(this JsonNode? node)
         {
+            if (node.IsJsonNullSentinel())
+            {
+                return null;
+            }
+
             var scalarNode = node is JsonValue value ? value : throw new OpenApiException("Expected scalar value.");
 
             return Convert.ToString(scalarNode.GetValue<object>(), CultureInfo.InvariantCulture);
