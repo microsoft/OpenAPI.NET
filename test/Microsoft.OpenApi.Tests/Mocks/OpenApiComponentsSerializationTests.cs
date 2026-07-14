@@ -26,6 +26,8 @@ namespace Microsoft.OpenApi.Tests.Mocks
             _components.Responses["200"] = _responseMock.Object;
             _components.Parameters["limit"] = _parameterMock.Object;
             _components.Headers["x-rate-limit"] = _headerMock.Object;
+            _securitySchemeMock.Object.Type = SecuritySchemeType.Http;
+            _securitySchemeMock.Object.Scheme = "bearer";
             _components.SecuritySchemes["api_key"] = _securitySchemeMock.Object;
             _components.Links["UserRepositories"] = _linkMock.Object;
             _components.Callbacks["onData"] = _callbackMock.Object;
