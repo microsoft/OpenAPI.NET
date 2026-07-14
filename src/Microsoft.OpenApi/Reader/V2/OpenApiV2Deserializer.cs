@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Reader.V2
         private static (string, string?) GetReferenceIdAndExternalResource(string pointer)
         {
             var refSegments = pointer.Split('/');
-            var refId = refSegments[^1];
+            var refId = refSegments[refSegments.Length - 1];
             var isExternalResource = !refSegments[0].StartsWith("#", StringComparison.OrdinalIgnoreCase);
 
             string? externalResource = isExternalResource ? $"{refSegments[0]}/{refSegments[1].TrimEnd('#')}" : null;
