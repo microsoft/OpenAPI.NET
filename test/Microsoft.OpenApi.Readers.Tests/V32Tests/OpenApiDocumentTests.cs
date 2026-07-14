@@ -17,6 +17,40 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         private const string SampleFolderPath = "V32Tests/Samples/OpenApiDocument/";
 
         [Fact]
+        public void ParseDocumentWithMalformedReferenceShouldYieldExpectedDiagnostic()
+        {
+            var result = OpenApiDocument.Parse(
+                """
+                openapi: 3.2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                paths:
+                  /test:
+                    get:
+                      responses:
+                        '200':
+                          description: successful operation
+                          content:
+                            application/json:
+                              schema:
+                                $ref: '#components/schemas/Item'
+                components:
+                  schemas:
+                    Item:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                """,
+                OpenApiConstants.Yaml,
+                SettingsFixture.ReaderSettings);
+
+            var error = Assert.Single(result.Diagnostic.Errors);
+            Assert.Equal("The reference string '#components/schemas/Item' has invalid format.", error.Message);
+        }
+
+        [Fact]
         public async Task ParseDocumentWithWebhooksShouldSucceed()
         {
             // Arrange and Act
@@ -665,4 +699,3 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         }
     }
 }
-

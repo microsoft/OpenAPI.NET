@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -152,6 +152,8 @@ namespace Microsoft.OpenApi.Reader.V32
 
         private static (string, string?) GetReferenceIdAndExternalResource(string pointer)
         {
+            JsonNodeHelper.ValidateReferencePointerFormat(pointer);
+
             /* Check whether the reference pointer is a URL
              * (id keyword allows you to supply a URL for the schema as a target for referencing)
              * E.g. $ref: 'https://example.com/schemas/resource.json' 
@@ -159,7 +161,7 @@ namespace Microsoft.OpenApi.Reader.V32
              * E.g. $ref: '#/components/schemas/pet'
              */
             var refSegments = pointer.Split('/');
-            string refId = !pointer.Contains('#') ? pointer : refSegments[refSegments.Count()-1];
+            string refId = !pointer.Contains('#') ? pointer : refSegments[refSegments.Length - 1];
 
             var isExternalResource = !refSegments[0].StartsWith("#", StringComparison.OrdinalIgnoreCase);
             string? externalResource = null;
