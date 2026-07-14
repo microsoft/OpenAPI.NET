@@ -117,8 +117,20 @@ namespace Microsoft.OpenApi
             nullExtRawValue is JsonNodeExtension { Node: JsonNode jsonNode } &&
             jsonNode.GetValueKind() is JsonValueKind.True;
 
+        internal bool WasConstExplicitlySet { get; private set; }
+
         /// <inheritdoc />
-        public string? Const { get; set; } = OpenApiUnsetValues.UnsetString;
+        public string? Const
+        {
+            get => field;
+            set
+            {
+                // TODO: In the next major release, Const should be made a JsonNode.
+                // See https://github.com/microsoft/OpenAPI.NET/issues/2935 for more information.
+                WasConstExplicitlySet = true;
+                field = value;
+            }
+        }
 
         /// <inheritdoc />
         public string? Format { get; set; }
@@ -316,6 +328,15 @@ namespace Microsoft.OpenApi
             Title = schema.Title ?? Title;
             Id = schema.Id ?? Id;
             Const = schema.Const ?? Const;
+            if (schema is OpenApiSchema concreteSchema)
+            {
+                WasConstExplicitlySet = concreteSchema.WasConstExplicitlySet;
+            }
+            else if (Const is null)
+            {
+                WasConstExplicitlySet = false;
+            }
+
             Schema = schema.Schema ?? Schema;
             Comment = schema.Comment ?? Comment;
             Vocabulary = schema.Vocabulary != null ? new Dictionary<string, bool>(schema.Vocabulary) : null;
@@ -511,7 +532,7 @@ namespace Microsoft.OpenApi
 
             // enum
             var enumValue = Enum is not { Count: > 0 }
-                && !ReferenceEquals(Const, OpenApiUnsetValues.UnsetString)
+                && WasConstExplicitlySet
                 && version < OpenApiSpecVersion.OpenApi3_1
                 ? new List<JsonNode> { JsonValue.Create(Const)! }
                 : Enum;
@@ -685,7 +706,12 @@ namespace Microsoft.OpenApi
             writer.WriteProperty(OpenApiConstants.Id, Id);
             writer.WriteProperty(OpenApiConstants.DollarSchema, Schema?.ToString());
             writer.WriteProperty(OpenApiConstants.Comment, Comment);
-            writer.WriteRequiredProperty(OpenApiConstants.Const, Const);
+            
+            if (WasConstExplicitlySet)
+            {
+                writer.WriteRequiredProperty(OpenApiConstants.Const, Const);
+            }
+
             writer.WriteOptionalMap(OpenApiConstants.Vocabulary, Vocabulary, (w, s) => w.WriteValue(s));
             writer.WriteOptionalMap(OpenApiConstants.Defs, Definitions, callback);
             writer.WriteProperty(OpenApiConstants.Anchor, Anchor);
@@ -891,7 +917,7 @@ namespace Microsoft.OpenApi
             });
 
             // enum
-            var enumValue = Enum is not { Count: > 0 } && !ReferenceEquals(Const, OpenApiUnsetValues.UnsetString)
+            var enumValue = Enum is not { Count: > 0 } && WasConstExplicitlySet
                 ? new List<JsonNode> { JsonValue.Create(Const)! }
                 : Enum;
             writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValue, (nodeWriter, s) => nodeWriter.WriteAny(s));

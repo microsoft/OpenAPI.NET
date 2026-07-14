@@ -42,11 +42,6 @@ namespace Microsoft.OpenApi
         {
             Utils.CheckArgumentNullOrEmpty(name);
 
-            if (ReferenceEquals(value, OpenApiUnsetValues.UnsetString))
-            {
-                return;
-            }
-
             writer.WritePropertyName(name);
             if (value == null)
             {
