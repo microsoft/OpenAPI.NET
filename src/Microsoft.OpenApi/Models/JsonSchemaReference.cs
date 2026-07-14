@@ -336,6 +336,17 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
     public IOpenApiSchema? Else { get; set; }
 
     /// <summary>
+    /// Indicates whether this reference represents a bare $dynamicRef (no $ref to a component).
+    /// When true, serialization emits $dynamicRef instead of $ref, and Target resolution
+    /// uses the $dynamicAnchor index rather than the $ref URI lookup.
+    /// Computed from whether $dynamicRef is set and ReferenceV3 does not point to a component path.
+    /// </summary>
+    internal bool IsDynamicRefOnly
+        => !string.IsNullOrEmpty(DynamicRef)
+           && ReferenceV3 is string refV3
+           && !refV3.StartsWith("#/components/", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
     /// Parameterless constructor
     /// </summary>
     public JsonSchemaReference() { }
@@ -410,7 +421,27 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
     }
 
     /// <inheritdoc/>
+    public override void SerializeAsV31(IOpenApiWriter writer)
+    {
+        if (IsDynamicRefOnly)
+        {
+            writer.WriteStartObject();
+            SerializeAdditionalV3XProperties(writer, (w, e) => e.SerializeAsV31(w), base.SerializeAdditionalV31Properties);
+            writer.WriteEndObject();
+        }
+        else
+        {
+            base.SerializeAsV31(writer);
+        }
+    }
+
+    /// <inheritdoc/>
     protected override void SerializeAdditionalV31Properties(IOpenApiWriter writer)
+    {
+        SerializeAdditionalV3XProperties(writer, (w, e) => e.SerializeAsV31(w), base.SerializeAdditionalV31Properties);
+    }
+
+    private void SerializeAdditionalV3XProperties(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> serializeCallback, Action<IOpenApiWriter> baseSerializer)
     {
         if (Type != ReferenceType.Schema) throw new InvalidOperationException(
             $"JsonSchemaReference can only be serialized for ReferenceType.Schema, but was {Type}.");
