@@ -155,7 +155,7 @@ namespace Microsoft.OpenApi.Reader.V3
             JsonNodeHelper.ValidateReferencePointerFormat(pointer);
 
             var refSegments = pointer.Split('/');
-            var refId = refSegments[refSegments.Count() -1];
+            var refId = refSegments[^1];
             var isExternalResource = !refSegments[0].StartsWith("#", StringComparison.OrdinalIgnoreCase);
           
             string? externalResource = null;
