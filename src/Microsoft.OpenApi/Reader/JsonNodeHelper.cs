@@ -167,6 +167,52 @@ namespace Microsoft.OpenApi.Reader
             return jsonObject.TryGetPropertyValue("$ref", out var refNode) ? refNode?.GetScalarValue() : null;
         }
 
+        /// <summary>
+        /// Returns the value of $dynamicRef if $ref is absent. Used to create a schema reference
+        /// for bare $dynamicRef schemas (no $ref) so they participate in reference resolution.
+        /// </summary>
+        public static string? GetDynamicReferencePointer(this JsonObject jsonObject)
+        {
+            if (jsonObject.TryGetPropertyValue("$ref", out _))
+                return null;
+            return jsonObject.TryGetPropertyValue("$dynamicRef", out var dynRefNode) ? dynRefNode?.GetScalarValue() : null;
+        }
+
+        /// <summary>
+        /// Splits a $dynamicRef value on the last '#' and returns the fragment part.
+        /// For "#meta" returns "meta". For "https://example.com#meta" returns "meta".
+        /// For values with no '#' returns the original string. Returns null for null/empty input.
+        /// This is a string operation only — it does not validate or resolve the reference.
+        /// </summary>
+        public static string? ExtractDynamicAnchorName(string? dynamicRef)
+        {
+            if (string.IsNullOrEmpty(dynamicRef)) return null;
+            var hashIndex = dynamicRef!.LastIndexOf('#');
+            return hashIndex >= 0 ? dynamicRef.Substring(hashIndex + 1) : dynamicRef;
+        }
+
+        /// <summary>
+        /// Determines whether a $dynamicRef value is a fragment-only reference (e.g. "#node")
+        /// that targets an anchor within the current document, as opposed to an absolute/relative
+        /// URI reference (e.g. "https://example.com/schema#node") that targets another resource.
+        /// Per JSON Schema 2020-12, only fragment-only dynamic refs resolve against the local
+        /// $dynamicAnchor index; URI-based refs require resolving their target resource first.
+        /// </summary>
+        public static bool IsFragmentOnlyDynamicRef(string? dynamicRef)
+            => !string.IsNullOrEmpty(dynamicRef) && dynamicRef![0] == '#';
+
+        /// <summary>
+        /// Extracts the document URI from a $dynamicRef value. Returns null for fragment-only
+        /// refs (e.g. "#node"). For URI refs (e.g. "https://example.com/external#node"), returns
+        /// the part before the fragment (e.g. "https://example.com/external").
+        /// </summary>
+        public static string? ExtractDocumentUri(string? dynamicRef)
+        {
+            if (string.IsNullOrEmpty(dynamicRef)) return null;
+            var hashIndex = dynamicRef!.IndexOf('#');
+            return hashIndex > 0 ? dynamicRef.Substring(0, hashIndex) : null;
+        }
+
         public static string? GetJsonSchemaIdentifier(this JsonObject jsonObject)
         {
             return jsonObject.TryGetPropertyValue("$id", out var idNode) ? idNode?.GetScalarValue() : null;
