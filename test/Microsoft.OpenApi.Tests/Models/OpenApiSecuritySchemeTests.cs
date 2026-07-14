@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
@@ -157,6 +158,149 @@ namespace Microsoft.OpenApi.Tests.Models
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        public Task SerializeSecuritySchemeWithoutTypeThrows(OpenApiSpecVersion version)
+        {
+            // Arrange
+            var securityScheme = new OpenApiSecurityScheme();
+
+            // Act & Assert
+            return AssertRequiredPropertyThrowsAsync(
+                securityScheme,
+                version,
+                "The 'type' property is required for security schemes.");
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        public Task SerializeApiKeySecuritySchemeWithoutNameThrows(OpenApiSpecVersion version)
+        {
+            // Arrange
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.ApiKey,
+                In = ParameterLocation.Query
+            };
+
+            // Act & Assert
+            return AssertRequiredPropertyThrowsAsync(
+                securityScheme,
+                version,
+                "The 'name' property is required for apiKey security schemes.");
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        public Task SerializeApiKeySecuritySchemeWithoutInThrows(OpenApiSpecVersion version)
+        {
+            // Arrange
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Name = "parameterName",
+                Type = SecuritySchemeType.ApiKey
+            };
+
+            // Act & Assert
+            return AssertRequiredPropertyThrowsAsync(
+                securityScheme,
+                version,
+                "The 'in' property is required for apiKey security schemes.");
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        public Task SerializeHttpSecuritySchemeWithoutSchemeThrows(OpenApiSpecVersion version)
+        {
+            // Arrange
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http
+            };
+
+            // Act & Assert
+            return AssertRequiredPropertyThrowsAsync(
+                securityScheme,
+                version,
+                "The 'scheme' property is required for http security schemes.");
+        }
+
+        [Fact]
+        public async Task SerializeHttpSecuritySchemeWithoutSchemeAsV2DoesNotThrow()
+        {
+            // Arrange
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http
+            };
+
+            // Act
+            var actual = await securityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse("{}"), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        public Task SerializeOAuth2SecuritySchemeWithoutFlowsThrows(OpenApiSpecVersion version)
+        {
+            // Arrange
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.OAuth2
+            };
+
+            // Act & Assert
+            return AssertRequiredPropertyThrowsAsync(
+                securityScheme,
+                version,
+                "The 'flows' property is required for oauth2 security schemes.");
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        public Task SerializeOpenIdConnectSecuritySchemeWithoutOpenIdConnectUrlThrows(OpenApiSpecVersion version)
+        {
+            // Arrange
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.OpenIdConnect
+            };
+
+            // Act & Assert
+            return AssertRequiredPropertyThrowsAsync(
+                securityScheme,
+                version,
+                "The 'openIdConnectUrl' property is required for openIdConnect security schemes.");
+        }
+
+        [Fact]
+        public async Task SerializeOpenIdConnectSecuritySchemeWithoutOpenIdConnectUrlAsV2DoesNotThrow()
+        {
+            // Arrange
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.OpenIdConnect
+            };
+
+            // Act
+            var actual = await securityScheme.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse("{}"), JsonNode.Parse(actual)));
         }
 
         [Fact]
@@ -347,6 +491,11 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+        private static async Task AssertRequiredPropertyThrowsAsync(OpenApiSecurityScheme securityScheme, OpenApiSpecVersion version, string message)
+        {
+            var exception = await Assert.ThrowsAsync<OpenApiException>(() => securityScheme.SerializeAsJsonAsync(version));
+            Assert.Contains(message, exception.Message);
         }
     }
 }
