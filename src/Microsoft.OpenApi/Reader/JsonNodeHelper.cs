@@ -175,9 +175,10 @@ namespace Microsoft.OpenApi.Reader
         public static void ValidateReferencePointerFormat(string pointer)
         {
             var hashIndex = pointer.IndexOf('#');
-            if (hashIndex >= 0 &&
-                pointer.Length > hashIndex + 1 &&
-                pointer[hashIndex + 1] != '/')
+            if (hashIndex < 0) return;
+            var slashIndex = pointer.IndexOf('/', hashIndex);
+            if (slashIndex >= 0 &&
+                slashIndex != hashIndex + 1)
             {
                 throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, pointer));
             }
