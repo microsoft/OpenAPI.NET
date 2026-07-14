@@ -97,6 +97,7 @@ namespace Microsoft.OpenApi
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);
+            EnsureRequiredPropertiesAreSet(version);
 
             writer.WriteStartObject();
 
@@ -176,6 +177,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
+            EnsureRequiredPropertiesAreSet(OpenApiSpecVersion.OpenApi2_0);
 
             if (Type == SecuritySchemeType.Http && Scheme != OpenApiConstants.Basic)
             {
@@ -237,6 +239,25 @@ namespace Microsoft.OpenApi
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
+        }
+
+        private void EnsureRequiredPropertiesAreSet(OpenApiSpecVersion version)
+        {
+            switch (Type)
+            {
+                case null:
+                    throw new OpenApiException("The 'type' property is required for security schemes.");
+                case SecuritySchemeType.ApiKey when string.IsNullOrEmpty(Name):
+                    throw new OpenApiException("The 'name' property is required for apiKey security schemes.");
+                case SecuritySchemeType.ApiKey when In is null:
+                    throw new OpenApiException("The 'in' property is required for apiKey security schemes.");
+                case SecuritySchemeType.Http when version >= OpenApiSpecVersion.OpenApi3_0 && string.IsNullOrEmpty(Scheme):
+                    throw new OpenApiException("The 'scheme' property is required for http security schemes.");
+                case SecuritySchemeType.OAuth2 when Flows is null:
+                    throw new OpenApiException("The 'flows' property is required for oauth2 security schemes.");
+                case SecuritySchemeType.OpenIdConnect when version >= OpenApiSpecVersion.OpenApi3_0 && OpenIdConnectUrl is null:
+                    throw new OpenApiException("The 'openIdConnectUrl' property is required for openIdConnect security schemes.");
+            }
         }
 
         /// <summary>
