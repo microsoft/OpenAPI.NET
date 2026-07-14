@@ -130,7 +130,9 @@ namespace Microsoft.OpenApi.YamlReader
         {
             return yaml.Style switch
             {
-                ScalarStyle.Plain when decimal.TryParse(yaml.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var d) => JsonValue.Create(d),
+                // JsonNode.Parse will create a JsonValue that is suitable for representing any numeric value (it's wrapping JsonElement).
+                // So, if we call '.TryGetValue<int>' on it and the underlying value can be represented as int, it will succeed.
+                ScalarStyle.Plain when decimal.TryParse(yaml.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var d) => (JsonNode.Parse(yaml.Value) as JsonValue) ?? JsonValue.Create(d),
                 ScalarStyle.Plain when bool.TryParse(yaml.Value, out var b) => JsonValue.Create(b),
                 ScalarStyle.Plain when YamlNullRepresentations.Contains(yaml.Value) => (JsonValue)JsonNullSentinel.JsonNull.DeepClone(),
                 ScalarStyle.Plain => JsonValue.Create(yaml.Value),
