@@ -17,6 +17,9 @@ namespace Microsoft.OpenApi
         /// Initializes a copy of <see cref="OpenApiPaths"/> object
         /// </summary>
         /// <param name="paths">The <see cref="OpenApiPaths"/>.</param>
+        /// <remarks>
+        /// This creates a shallow copy, the path items are the same reference as in the provided parameter.
+        /// </remarks>
         public OpenApiPaths(OpenApiPaths paths) : base(dictionary: paths) { }
     }
 }
