@@ -633,6 +633,55 @@ description: Schema for a person object
         }
 
         [Fact]
+        public async Task ParseSchemaWithConstNullWorks()
+        {
+            var expected = @"{
+  ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
+  ""required"": [
+    ""status""
+  ],
+  ""type"": ""object"",
+  ""properties"": {
+    ""status"": {
+      ""const"": null,
+      ""type"": ""string""
+    },
+    ""user"": {
+      ""required"": [
+        ""role""
+      ],
+      ""type"": ""object"",
+      ""properties"": {
+        ""role"": {
+          ""const"": null,
+          ""type"": ""string""
+        }
+      }
+    }
+  }
+}";
+
+            var path = Path.Combine(SampleFolderPath, "schemaWithConstNull.json");
+
+            // Act
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
+
+            var statusSchema = Assert.IsType<OpenApiSchema>(schema.Properties["status"]);
+            Assert.Null(statusSchema.Const);
+            Assert.True(statusSchema.WasConstExplicitlySet);
+
+            var userRoleSchema = Assert.IsType<OpenApiSchema>(schema.Properties["user"].Properties["role"]);
+            Assert.Null(userRoleSchema.Const);
+            Assert.True(userRoleSchema.WasConstExplicitlySet);
+
+            // serialization
+            var writer = new StringWriter();
+            schema.SerializeAsV31(new OpenApiJsonWriter(writer));
+            var schemaString = writer.ToString();
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
         public void ParseSchemaWithUnrecognizedKeywordsWorks()
         {
             var input = @"{
