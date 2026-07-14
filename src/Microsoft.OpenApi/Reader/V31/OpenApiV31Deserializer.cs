@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Reader.V31
              * E.g. $ref: '#/components/schemas/pet'
              */
             var refSegments = pointer.Split('/');
-            string refId = !pointer.Contains('#') ? pointer : refSegments[^1];
+            string refId = !pointer.Contains('#') ? pointer : refSegments[refSegments.Length - 1];
 
             var isExternalResource = !refSegments[0].StartsWith("#", StringComparison.OrdinalIgnoreCase);
             string? externalResource = null;
