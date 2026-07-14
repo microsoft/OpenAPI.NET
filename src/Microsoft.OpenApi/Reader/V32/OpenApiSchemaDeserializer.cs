@@ -427,6 +427,7 @@ internal static partial class OpenApiV32Deserializer
         var jsonObject = node.CheckMapNode(OpenApiConstants.Schema, context);
 
         var pointer = jsonObject.GetReferencePointer();
+        var dynamicPointer = jsonObject.GetDynamicReferencePointer();
         var identifier = jsonObject.GetJsonSchemaIdentifier();
 
         if (pointer != null)
@@ -447,6 +448,26 @@ internal static partial class OpenApiV32Deserializer
             result.Reference.ApplySchemaMetadata(referenceMetadata, jsonObject);
             result.Reference.SetJsonPointerPath(pointer, nodeLocation);
 
+            return result;
+        }
+
+        if (dynamicPointer != null)
+        {
+            var nodeLocation = context.GetLocation();
+            var anchorName = JsonNodeHelper.ExtractDynamicAnchorName(dynamicPointer);
+            var result = new OpenApiSchemaReference(!string.IsNullOrEmpty(anchorName) ? anchorName! : dynamicPointer, hostDocument);
+            var referenceMetadata = new OpenApiSchema();
+            jsonObject.ParseMap(referenceMetadata, _openApiSchemaFixedFields, _openApiSchemaPatternFields, hostDocument, context,
+                static (schema, name, value) =>
+                {
+                    if (!string.Equals(name, OpenApiConstants.DynamicRef, StringComparison.Ordinal))
+                    {
+                        schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
+                        schema.UnrecognizedKeywords[name] = value;
+                    }
+                });
+            result.Reference.ApplySchemaMetadata(referenceMetadata, jsonObject);
+            result.Reference.SetJsonPointerPath(dynamicPointer, nodeLocation);
             return result;
         }
 
