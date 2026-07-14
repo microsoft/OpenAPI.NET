@@ -35,6 +35,26 @@ namespace Microsoft.OpenApi
         {
         }
 
+        /// <summary>
+        /// Resolves the target schema. For $dynamicRef-only references, delegates to
+        /// <see cref="OpenApiWorkspace.ResolveDynamicRef"/> which resolves via per-document
+        /// $dynamicAnchor and $anchor registries. Returns null when anchors are ambiguous
+        /// (multiple candidates require dynamic-scope tracking this library does not perform).
+        /// </summary>
+        public override IOpenApiSchema? Target
+        {
+            get
+            {
+                if (Reference.IsDynamicRefOnly
+                    && Reference.HostDocument is { } doc
+                    && doc.Workspace is { } ws)
+                {
+                    return ws.ResolveDynamicRef(doc, Reference.DynamicRef!);
+                }
+                return base.Target;
+            }
+        }
+
         /// <inheritdoc/>
         public string? Description
         {
