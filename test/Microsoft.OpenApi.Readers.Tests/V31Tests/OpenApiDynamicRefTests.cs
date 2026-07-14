@@ -635,7 +635,7 @@ public class OpenApiDynamicRefTests
         docA.BaseUri = new("https://example.com/main");
         docB.BaseUri = new("https://example.com/external");
 
-        var workspace = docA.Workspace ?? new OpenApiWorkspace();
+        var workspace = docA.Workspace!;
         workspace.RegisterComponents(docA);
         workspace.RegisterComponents(docB);
 
@@ -1494,7 +1494,7 @@ public class OpenApiDynamicRefTests
         docA.BaseUri = new("https://example.com/main");
         docB.BaseUri = new("https://example.com/external");
 
-        var workspace = docA.Workspace ?? new OpenApiWorkspace();
+        var workspace = docA.Workspace!;
         workspace.RegisterComponents(docA);
         workspace.RegisterComponents(docB);
 
@@ -1554,7 +1554,7 @@ public class OpenApiDynamicRefTests
         docA.BaseUri = new("https://example.com/main.yaml");
         docB.BaseUri = new("https://example.com/external.yaml");
 
-        var workspace = docA.Workspace ?? new OpenApiWorkspace();
+        var workspace = docA.Workspace!;
         workspace.RegisterComponents(docA);
         workspace.RegisterComponents(docB);
 
