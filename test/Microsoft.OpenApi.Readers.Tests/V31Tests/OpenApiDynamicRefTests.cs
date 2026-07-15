@@ -38,6 +38,7 @@ public class OpenApiDynamicRefTests
         var reference = Assert.IsType<OpenApiSchemaReference>(result);
         Assert.Equal("#category", reference.Reference.DynamicRef);
         Assert.True(reference.Reference.IsDynamicRefOnly);
+        Assert.Null(reference.Reference.ExternalResource);
     }
 
     [Fact]
@@ -634,7 +635,7 @@ public class OpenApiDynamicRefTests
         docA.BaseUri = new("https://example.com/main");
         docB.BaseUri = new("https://example.com/external");
 
-        var workspace = docA.Workspace ?? new OpenApiWorkspace();
+        var workspace = docA.Workspace!;
         workspace.RegisterComponents(docA);
         workspace.RegisterComponents(docB);
 
@@ -1493,7 +1494,7 @@ public class OpenApiDynamicRefTests
         docA.BaseUri = new("https://example.com/main");
         docB.BaseUri = new("https://example.com/external");
 
-        var workspace = docA.Workspace ?? new OpenApiWorkspace();
+        var workspace = docA.Workspace!;
         workspace.RegisterComponents(docA);
         workspace.RegisterComponents(docB);
 
@@ -1501,6 +1502,67 @@ public class OpenApiDynamicRefTests
         var next = tree.Properties["next"];
         var reference = Assert.IsType<OpenApiSchemaReference>(next);
         Assert.True(reference.Reference.IsDynamicRefOnly);
+        Assert.Equal("https://example.com/external", reference.Reference.ExternalResource);
+        Assert.NotNull(reference.Target);
+        Assert.Same(docB.Components.Schemas["ExternalNode"], reference.Target);
+    }
+
+    [Fact]
+    public async Task ExternalDynamicRefWithRelativeUriResolvesAcrossDocuments()
+    {
+        var yamlA =
+        """
+        openapi: 3.1.0
+        info:
+          title: Doc A
+          version: 1.0.0
+        paths: {}
+        components:
+          schemas:
+            Tree:
+              type: object
+              properties:
+                next:
+                  $dynamicRef: 'external.yaml#node'
+        """;
+
+        var yamlB =
+        """
+        openapi: 3.1.0
+        info:
+          title: Doc B
+          version: 1.0.0
+        paths: {}
+        components:
+          schemas:
+            ExternalNode:
+              $dynamicAnchor: node
+              type: object
+              properties:
+                value:
+                  type: string
+        """;
+
+        using var streamA = new MemoryStream(Encoding.UTF8.GetBytes(yamlA));
+        using var streamB = new MemoryStream(Encoding.UTF8.GetBytes(yamlB));
+        var resultA = await OpenApiDocument.LoadAsync(streamA, "yaml", SettingsFixture.ReaderSettings);
+        var resultB = await OpenApiDocument.LoadAsync(streamB, "yaml", SettingsFixture.ReaderSettings);
+
+        var docA = resultA.Document;
+        var docB = resultB.Document;
+
+        docA.BaseUri = new("https://example.com/main.yaml");
+        docB.BaseUri = new("https://example.com/external.yaml");
+
+        var workspace = docA.Workspace!;
+        workspace.RegisterComponents(docA);
+        workspace.RegisterComponents(docB);
+
+        var tree = docA.Components.Schemas["Tree"];
+        var next = tree.Properties["next"];
+        var reference = Assert.IsType<OpenApiSchemaReference>(next);
+        Assert.True(reference.Reference.IsDynamicRefOnly);
+        Assert.Equal("external.yaml", reference.Reference.ExternalResource);
         Assert.NotNull(reference.Target);
         Assert.Same(docB.Components.Schemas["ExternalNode"], reference.Target);
     }
