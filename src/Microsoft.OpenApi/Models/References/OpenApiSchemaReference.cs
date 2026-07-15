@@ -9,7 +9,11 @@ namespace Microsoft.OpenApi
 {
 #pragma warning disable CS0618
     /// <summary>
-    /// Schema reference object
+    /// Schema reference object.
+    /// Convenience getters return <c>$ref</c>-sibling keyword values authored on
+    /// <see cref="IOpenApiReferenceHolder{V}.Reference"/> before falling back to resolved values from <see cref="Target"/>.
+    /// These getters are object-model conveniences and do not represent JSON Schema
+    /// evaluation semantics.
     /// </summary>
     public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema, IOpenApiSchemaMissingProperties, IOpenApiSchemaWithUnevaluatedProperties, IOpenApiExtensible
     {
