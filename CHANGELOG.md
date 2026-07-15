@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.11.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.10.0...v2.11.0) (2026-07-15)
+
+
+### Features
+
+* adds support for anchor and id external resolution ([557bd6a](https://github.com/microsoft/OpenAPI.NET/commit/557bd6a8ca81e80f9f305aca3396e0e2fb45c09d))
+* adds support for anchor and id external resolution ([4138e47](https://github.com/microsoft/OpenAPI.NET/commit/4138e478cc6e8ceb9d371ac3a4848887c80ec16f))
+* **schema:** resolve bare $dynamicRef via $dynamicAnchor index ([#2913](https://github.com/microsoft/OpenAPI.NET/issues/2913)) ([baf8428](https://github.com/microsoft/OpenAPI.NET/commit/baf8428f488b0f1de8cb91b29c4f073f808f2ffe))
+* **schema:** resolve bare $dynamicRef via $dynamicAnchor index ([#2913](https://github.com/microsoft/OpenAPI.NET/issues/2913)) ([a139f83](https://github.com/microsoft/OpenAPI.NET/commit/a139f83981b251315b55ad9a4d64756a5dead335))
+* support relative URI resolution in $dynamicRef ([#2928](https://github.com/microsoft/OpenAPI.NET/issues/2928)) ([#2945](https://github.com/microsoft/OpenAPI.NET/issues/2945)) ([6091f5a](https://github.com/microsoft/OpenAPI.NET/commit/6091f5a799711f822f864ed67995cd518fd30e2e))
+* support relative URI resolution in $dynamicRef ([#2928](https://github.com/microsoft/OpenAPI.NET/issues/2928)) ([#2945](https://github.com/microsoft/OpenAPI.NET/issues/2945)) ([a8688dc](https://github.com/microsoft/OpenAPI.NET/commit/a8688dc59ab69060e5413e5ac2f15430bd96e40f))
+
+
+### Bug Fixes
+
+* adds explicit error message for invalid json pointers ([#2955](https://github.com/microsoft/OpenAPI.NET/issues/2955)) ([a304e56](https://github.com/microsoft/OpenAPI.NET/commit/a304e5646f4ccec388892238ce475945eb2af1b8))
+* differentiate unset value from null value in OpenApiSchema.Const ([#2936](https://github.com/microsoft/OpenAPI.NET/issues/2936)) ([a8787af](https://github.com/microsoft/OpenAPI.NET/commit/a8787af57769821ee963be773be0b984a5078402))
+* differentiate unset value from null value in OpenApiSchema.Const ([#2936](https://github.com/microsoft/OpenAPI.NET/issues/2936)) ([e08570f](https://github.com/microsoft/OpenAPI.NET/commit/e08570f99174b22e33775920212e478aac14df7c))
+* handle nullability more accurately during serialization for 3.0/2.0 ([#2933](https://github.com/microsoft/OpenAPI.NET/issues/2933)) ([bc11356](https://github.com/microsoft/OpenAPI.NET/commit/bc113563d174e6a6b1220b7e58f3b1c12e5a3f6f))
+* handle nullability more accurately during serialization for 3.0/2.0 ([#2933](https://github.com/microsoft/OpenAPI.NET/issues/2933)) ([310b6e2](https://github.com/microsoft/OpenAPI.NET/commit/310b6e29b3a17615efd7a38bbf5f73427cdec6e8))
+
 ## [2.10.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.9.0...v2.10.0) (2026-07-03)
 
 
