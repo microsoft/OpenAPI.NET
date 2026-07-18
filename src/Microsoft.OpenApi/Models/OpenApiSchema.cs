@@ -588,7 +588,13 @@ namespace Microsoft.OpenApi
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // format
-            writer.WriteProperty(OpenApiConstants.Format, Format);
+            var format = Format;
+            if (version < OpenApiSpecVersion.OpenApi3_1)
+            {
+                format ??= GetKnownTypeAndFormatPreOpenApi31()?.Format;
+            }
+
+            writer.WriteProperty(OpenApiConstants.Format, format);
 
             // default
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
@@ -839,7 +845,14 @@ namespace Microsoft.OpenApi
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // format
-            WriteFormatProperty(writer);
+            if (Format is null && GetKnownTypeAndFormatPreOpenApi31() is { } typeAndFormat)
+            {
+                writer.WriteProperty(OpenApiConstants.Format, typeAndFormat.Format);
+            }
+            else
+            {
+                WriteFormatProperty(writer);
+            }
 
             // title
             writer.WriteProperty(OpenApiConstants.Title, Title);
@@ -996,10 +1009,15 @@ namespace Microsoft.OpenApi
             writer.WriteEndObject();
         }
 
-        private bool TrySerializeTypeProperty(IOpenApiWriter writer, OpenApiSpecVersion version, JsonSchemaType? inferredType = null)
+        private bool TrySerializeTypeProperty(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
-            // Use original type or inferred type when the explicit type is not set
-            var typeToUse = Type ?? inferredType;
+            // TODO: Handle "file" type for 2.0.
+            // Spec https://spec.openapis.org/oas/v2.0.html#data-types
+            var typeToUse = Type;
+            if (version < OpenApiSpecVersion.OpenApi3_1)
+            {
+                typeToUse ??= GetKnownTypeAndFormatPreOpenApi31()?.Type;
+            }
 
             if (typeToUse is null)
             {
@@ -1070,6 +1088,22 @@ namespace Microsoft.OpenApi
                         break;
                 }
             }
+        }
+
+        private (JsonSchemaType Type, string Format)? GetKnownTypeAndFormatPreOpenApi31()
+        {
+            // https://spec.openapis.org/oas/v3.2.0.html#migrating-binary-descriptions-from-oas-3-0
+            if (Type is not null && Type.Value.HasFlag(JsonSchemaType.String) && ContentEncoding == "base64")
+            {
+                return (Type.Value, "byte");
+            }
+
+            if (Type is null && !string.IsNullOrEmpty(ContentMediaType))
+            {
+                return (JsonSchemaType.String, "binary");
+            }
+
+            return null;
         }
 
 #if NET5_0_OR_GREATER

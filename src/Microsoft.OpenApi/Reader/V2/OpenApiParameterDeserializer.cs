@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Text.Json.Nodes;
@@ -72,6 +72,16 @@ namespace Microsoft.OpenApi.Reader.V2
                         {                            
                             var schema = GetOrCreateSchema(o);
                             schema.Type = type.ToJsonSchemaType();
+                            // TODO: This should be represented using the 3.2 approach.
+                            // The object model must reflect the "latest" version of the spec.
+                            // Note that for parameters in 2.0, the "file" type is specified directly
+                            // on the parameter object. But for responses, the "file" type is an
+                            // extension of the Json Schema object, as in, it's not allowed by
+                            // Json Schema Draft 4, but is allowed as an OpenAPI 2.0 extension.
+                            // All that should be handled correctly.
+                            // The deserialization logic should try to map everything to the "3.2" way
+                            // of doing things.
+                            // And serialization should assume that the object model is in the "3.2" way of doing things.
                             if ("file".Equals(type, StringComparison.OrdinalIgnoreCase))
                             {
                                 schema.Format = "binary";

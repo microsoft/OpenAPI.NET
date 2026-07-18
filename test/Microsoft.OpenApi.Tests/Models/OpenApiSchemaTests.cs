@@ -1545,6 +1545,8 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             var expected = JsonNode.Parse("""
                 {
+                  "type": "string",
+                  "format": "binary",
                   "x-jsonschema-$anchor": "root",
                   "x-jsonschema-contentEncoding": "base64",
                   "x-jsonschema-contentMediaType": "application/jwt",
