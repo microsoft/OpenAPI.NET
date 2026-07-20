@@ -622,6 +622,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         [Theory]
         [MemberData(nameof(SchemaExamples))]
+#pragma warning disable CS0618
         public void CloningSchemaExamplesWorks(JsonNode example)
         {
             // Arrange
@@ -638,6 +639,7 @@ namespace Microsoft.OpenApi.Tests.Models
             .IgnoringCyclicReferences()
             .Excluding(x => x.Options));
         }
+#pragma warning restore CS0618
 
         [Fact]
         public void CloningSchemaExtensionsWorks()
@@ -1938,7 +1940,9 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Assert.Empty(readResult.Diagnostic.Errors);
             var schema = readResult.Document.Components.Schemas["TestSchema"];
+#pragma warning disable CS0618 // Type or member is obsolete
             Assert.Equal("primary example", schema.Example?.GetValue<string>());
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.NotNull(schema.Examples);
             Assert.Collection(
                 schema.Examples,
@@ -1974,7 +1978,9 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Assert.Empty(readResult.Diagnostic.Errors);
             var schema = readResult.Document.Components.Schemas["TestSchema"];
+#pragma warning disable CS0618 // Type or member is obsolete
             Assert.Equal("primary example", schema.Example?.GetValue<string>());
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.NotNull(schema.Examples);
             Assert.Collection(
                 schema.Examples,

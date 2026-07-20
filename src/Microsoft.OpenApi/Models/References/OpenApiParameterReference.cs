@@ -1,11 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi
 {
+#pragma warning disable CS0618
     /// <summary>
     /// Parameter Object Reference.
     /// </summary>
@@ -50,6 +52,7 @@ namespace Microsoft.OpenApi
         public bool Deprecated { get => Target?.Deprecated ?? default; }
 
         /// <inheritdoc/>
+        [Obsolete("Use of AllowEmptyValue is not recommended and it is likely to be removed in a later revision.")]
         public bool AllowEmptyValue { get => Target?.AllowEmptyValue ?? default; }
 
         /// <inheritdoc/>

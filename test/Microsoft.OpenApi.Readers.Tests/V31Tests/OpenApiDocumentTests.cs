@@ -10,6 +10,8 @@ using VerifyXunit;
 using System;
 using System.Net.Http;
 
+#pragma warning disable CS0618
+
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
     public class OpenApiDocumentTests

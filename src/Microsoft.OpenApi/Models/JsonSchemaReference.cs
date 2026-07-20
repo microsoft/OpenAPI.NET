@@ -8,6 +8,8 @@ using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi;
 
+#pragma warning disable CS0618
+
 /// <summary>
 /// Schema reference information that includes metadata annotations from JSON Schema 2020-12.
 /// This class extends OpenApiReference to provide schema-specific metadata override capabilities.
@@ -267,6 +269,7 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
     /// A free-form property to include an example of an instance for this schema.
     /// Follow <see href="https://spec.openapis.org/oas/v3.1.1.html#schema-object">OpenAPI Schema Object definition</see>.
     /// </summary>
+    [Obsolete("Use Examples instead.")]
     public JsonNode? Example { get; set; }
 
     /// <summary>

@@ -167,6 +167,7 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public OpenApiDiscriminator? Discriminator { get => Reference.Discriminator ?? Target?.Discriminator; set => Reference.Discriminator = value; }
         /// <inheritdoc/>
+        [Obsolete("Use Examples instead.")]
         public JsonNode? Example { get => Reference.Example ?? Target?.Example; set => Reference.Example = value; }
         /// <inheritdoc/>
         public IList<JsonNode>? Examples
