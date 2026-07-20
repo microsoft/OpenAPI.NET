@@ -83,7 +83,15 @@ namespace Microsoft.OpenApi.Reader.V31
             {
                 {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => 
                 {
-                    if (p.Equals("x-oai-deprecated", StringComparison.OrdinalIgnoreCase))
+                    if (p.Equals(OpenApiConstants.OAuth2MetadataUrlExtension, StringComparison.OrdinalIgnoreCase))
+                    {
+                        var metadataUrl = n.GetScalarValue();
+                        if (metadataUrl != null)
+                        {
+                            o.OAuth2MetadataUrl = new(metadataUrl, UriKind.RelativeOrAbsolute);
+                        }
+                    }
+                    else if (p.Equals("x-oai-deprecated", StringComparison.OrdinalIgnoreCase))
                     {
                         var deprecated = n.GetScalarValue();
                         if (deprecated != null)

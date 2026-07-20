@@ -1755,6 +1755,83 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializeSingleExampleAsExampleInV2V3WhenExampleUnset(OpenApiSpecVersion version)
+        {
+            var expected = """
+                {
+                  "example": "example value"
+                }
+                """;
+            var schema = new OpenApiSchema
+            {
+                Examples =
+                [
+                    JsonValue.Create("example value")!
+                ]
+            };
+
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializeMultipleExamplesInV2V3WhenExampleUnset(OpenApiSpecVersion version)
+        {
+            var expected = """
+                {
+                  "example": "example value",
+                  "x-jsonschema-examples": [
+                    42
+                  ]
+                }
+                """;
+            var schema = new OpenApiSchema
+            {
+                Examples =
+                [
+                    JsonValue.Create("example value")!,
+                    JsonValue.Create(42)!
+                ]
+            };
+
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
+        public async Task SerializeExamplesAsJsonSchemaKeywordInV31AndLater(OpenApiSpecVersion version)
+        {
+            var expected = """
+                {
+                  "examples": [
+                    "example value",
+                    42
+                  ]
+                }
+                """;
+            var schema = new OpenApiSchema
+            {
+                Examples =
+                [
+                    JsonValue.Create("example value")!,
+                    JsonValue.Create(42)!
+                ]
+            };
+
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         public async Task SerializeEmptyPatternPropertiesNotEmittedInEarlierVersions(OpenApiSpecVersion version)
         {
             var expected = @"{ }";
@@ -1841,6 +1918,76 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.Equal(JsonSchemaType.String, schema.PatternProperties["^[a-z]+"].Type);
             // Extension should NOT be present on the schema (it was consumed)
             Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey("x-jsonschema-patternProperties"));
+        }
+
+        [Fact]
+        public void DeserializeExamplesExtensionInV2AssignsExamplesProperty()
+        {
+            var jsonContent = """
+            {
+              "swagger": "2.0",
+              "info": { "title": "Test", "version": "1.0" },
+              "paths": {},
+              "definitions": {
+                "TestSchema": {
+                  "type": "string",
+                  "example": "primary example",
+                  "x-jsonschema-examples": [
+                    "secondary example",
+                    42
+                  ]
+                }
+              }
+            }
+            """;
+
+            var readResult = OpenApiDocument.Parse(jsonContent, "json");
+
+            Assert.Empty(readResult.Diagnostic.Errors);
+            var schema = readResult.Document.Components.Schemas["TestSchema"];
+            Assert.Equal("primary example", schema.Example?.GetValue<string>());
+            Assert.NotNull(schema.Examples);
+            Assert.Collection(
+                schema.Examples,
+                example => Assert.Equal("secondary example", example.GetValue<string>()),
+                example => Assert.Equal(42, example.GetValue<int>()));
+            Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey(OpenApiConstants.JsonSchemaExamplesExtension));
+        }
+
+        [Fact]
+        public void DeserializeExamplesExtensionInV3AssignsExamplesProperty()
+        {
+            var jsonContent = """
+            {
+              "openapi": "3.0.0",
+              "info": { "title": "Test", "version": "1.0" },
+              "paths": {},
+              "components": {
+                "schemas": {
+                  "TestSchema": {
+                    "type": "string",
+                    "example": "primary example",
+                    "x-jsonschema-examples": [
+                      "secondary example",
+                      42
+                    ]
+                  }
+                }
+              }
+            }
+            """;
+
+            var readResult = OpenApiDocument.Parse(jsonContent, "json");
+
+            Assert.Empty(readResult.Diagnostic.Errors);
+            var schema = readResult.Document.Components.Schemas["TestSchema"];
+            Assert.Equal("primary example", schema.Example?.GetValue<string>());
+            Assert.NotNull(schema.Examples);
+            Assert.Collection(
+                schema.Examples,
+                example => Assert.Equal("secondary example", example.GetValue<string>()),
+                example => Assert.Equal(42, example.GetValue<int>()));
+            Assert.True(schema.Extensions is null || !schema.Extensions.ContainsKey(OpenApiConstants.JsonSchemaExamplesExtension));
         }
 
         [Fact]

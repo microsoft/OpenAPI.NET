@@ -3,8 +3,10 @@
 
 using System;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Reader.V3;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -121,6 +123,32 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             Assert.Equal(new Uri("https://example.com/api/oauth/device"), securityScheme.Flows.AuthorizationCode.DeviceAuthorizationUrl);
             Assert.NotNull(securityScheme.Flows.AuthorizationCode.Scopes);
             Assert.Equal(2, securityScheme.Flows.AuthorizationCode.Scopes.Count);
+        }
+
+        [Fact]
+        public void ParseOAuth2SecuritySchemeWithMetadataUrlExtensionShouldSucceed()
+        {
+            var json =
+                """
+                {
+                  "type": "oauth2",
+                  "x-oai-oauth2-metadata-url": "https://idp.example.com/.well-known/oauth-authorization-server",
+                  "flows": {
+                    "clientCredentials": {
+                      "tokenUrl": "https://idp.example.com/oauth/token",
+                      "scopes": {
+                        "scope:one": "Scope one"
+                      }
+                    }
+                  }
+                }
+                """;
+
+            var securityScheme = Assert.IsType<OpenApiSecurityScheme>(
+                OpenApiV3Deserializer.LoadSecurityScheme(JsonNode.Parse(json)!, new(), new ParsingContext(new())));
+
+            Assert.Equal(new Uri("https://idp.example.com/.well-known/oauth-authorization-server"), securityScheme.OAuth2MetadataUrl);
+            Assert.True(securityScheme.Extensions is null || !securityScheme.Extensions.ContainsKey(OpenApiConstants.OAuth2MetadataUrlExtension));
         }
     }
 }

@@ -99,7 +99,21 @@ namespace Microsoft.OpenApi.Reader.V2
         private static readonly PatternFieldMap<OpenApiSecurityScheme> _securitySchemePatternFields =
             new()
             {
-                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) => o.AddExtension(p, LoadExtension(p, n, c))}
+                {s => s.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix, StringComparison.OrdinalIgnoreCase), (o, p, n, _, c) =>
+                {
+                    if (p.Equals(OpenApiConstants.OAuth2MetadataUrlExtension, StringComparison.OrdinalIgnoreCase))
+                    {
+                        var metadataUrl = n.GetScalarValue();
+                        if (metadataUrl != null)
+                        {
+                            o.OAuth2MetadataUrl = new(metadataUrl, UriKind.RelativeOrAbsolute);
+                        }
+                    }
+                    else
+                    {
+                        o.AddExtension(p, LoadExtension(p, n, c));
+                    }
+                }}
             };
 
         public static IOpenApiSecurityScheme LoadSecurityScheme(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
