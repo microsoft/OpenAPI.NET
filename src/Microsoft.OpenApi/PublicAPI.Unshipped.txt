@@ -1,2 +1,3 @@
 #nullable enable
 const Microsoft.OpenApi.OpenApiConstants.JsonSchemaExamplesExtension = "x-jsonschema-examples" -> string!
+const Microsoft.OpenApi.OpenApiConstants.OaiLicenseIdentifier = "x-oai-license-identifier" -> string!
