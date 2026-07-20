@@ -1755,6 +1755,60 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializeExamplesAsExtensionInEarlierVersions(OpenApiSpecVersion version)
+        {
+            var expected = """
+                {
+                  "x-jsonschema-examples": [
+                    "example value",
+                    42
+                  ]
+                }
+                """;
+            var schema = new OpenApiSchema
+            {
+                Examples =
+                [
+                    JsonValue.Create("example value")!,
+                    JsonValue.Create(42)!
+                ]
+            };
+
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
+        public async Task SerializeExamplesAsJsonSchemaKeywordInV31AndLater(OpenApiSpecVersion version)
+        {
+            var expected = """
+                {
+                  "examples": [
+                    "example value",
+                    42
+                  ]
+                }
+                """;
+            var schema = new OpenApiSchema
+            {
+                Examples =
+                [
+                    JsonValue.Create("example value")!,
+                    JsonValue.Create(42)!
+                ]
+            };
+
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         public async Task SerializeEmptyPatternPropertiesNotEmittedInEarlierVersions(OpenApiSpecVersion version)
         {
             var expected = @"{ }";

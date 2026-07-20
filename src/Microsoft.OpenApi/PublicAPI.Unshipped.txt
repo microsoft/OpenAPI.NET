@@ -1,1 +1,2 @@
 #nullable enable
+const Microsoft.OpenApi.OpenApiConstants.JsonSchemaExamplesExtension = "x-jsonschema-examples" -> string!

@@ -746,6 +746,7 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalObject(OpenApiConstants.IfExtension, If, callback);
             writer.WriteOptionalObject(OpenApiConstants.ThenExtension, Then, callback);
             writer.WriteOptionalObject(OpenApiConstants.ElseExtension, Else, callback);
+            writer.WriteOptionalCollection(OpenApiConstants.JsonSchemaExamplesExtension, Examples, (nodeWriter, s) => nodeWriter.WriteAny(s));
         }
 
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
@@ -989,6 +990,8 @@ namespace Microsoft.OpenApi
             {
                 writer.WriteOptionalMap(OpenApiConstants.PatternPropertiesExtension, PatternProperties, (w, s) => s.SerializeAsV2(w));
             }
+
+            writer.WriteOptionalCollection(OpenApiConstants.JsonSchemaExamplesExtension, Examples, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);

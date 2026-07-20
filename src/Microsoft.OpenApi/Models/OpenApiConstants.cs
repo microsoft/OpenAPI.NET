@@ -806,6 +806,11 @@ namespace Microsoft.OpenApi
         public const string ExamplesExtension = "x-examples";
 
         /// <summary>
+        /// Extension: x-jsonschema-examples
+        /// </summary>
+        public const string JsonSchemaExamplesExtension = "x-jsonschema-examples";
+
+        /// <summary>
         /// Field: version3_0_0
         /// </summary>
         public static readonly Version version3_0_0 = new(3, 0, 0);
