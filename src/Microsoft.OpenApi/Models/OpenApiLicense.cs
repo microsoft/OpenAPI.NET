@@ -73,6 +73,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);
+            writer.WriteProperty(OpenApiConstants.OaiLicenseIdentifier, Identifier);
             writer.WriteEndObject();
         }
 
@@ -82,6 +83,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             WriteInternal(writer, OpenApiSpecVersion.OpenApi2_0);
+            writer.WriteProperty(OpenApiConstants.OaiLicenseIdentifier, Identifier);
             writer.WriteEndObject();
         }
 

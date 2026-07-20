@@ -148,6 +148,25 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
 
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        public async Task SerializeLicenseWithIdentifierAsJsonWorksForV3AndV2(OpenApiSpecVersion version)
+        {
+            // Arrange
+            var expected =
+                @"{
+  ""name"": ""Apache 2.0"",
+  ""x-oai-license-identifier"": ""Apache-2.0""
+}";
+
+            // Act
+            var actual = await LicenseWithIdentifier.SerializeAsJsonAsync(version);
+
+            // Assert
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+        }
+
         [Fact]
         public async Task SerializeLicenseWithIdentifierAsYamlWorks()
         {
@@ -157,6 +176,22 @@ identifier: Apache-2.0";
 
             // Act
             var actual = await LicenseWithIdentifier.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        public async Task SerializeLicenseWithIdentifierAsYamlWorksForV3AndV2(OpenApiSpecVersion version)
+        {
+            // Arrange
+            var expected = @"name: Apache 2.0
+x-oai-license-identifier: Apache-2.0";
+
+            // Act
+            var actual = await LicenseWithIdentifier.SerializeAsYamlAsync(version);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
