@@ -268,6 +268,10 @@ namespace Microsoft.OpenApi.Reader.V2
                 (o, n, _, _) => o.Example = n
             },
             {
+                OpenApiConstants.JsonSchemaExamplesExtension,
+                (o, n, _, c) => o.Examples = n.CreateListOfAny(c)
+            },
+            {
                 OpenApiConstants.PatternPropertiesExtension,
                 (o, n, t, c) => o.PatternProperties = n.CreateMap(LoadSchema, t, c)
             },
