@@ -251,6 +251,7 @@ namespace Microsoft.OpenApi
         public OpenApiDiscriminator? Discriminator { get; set; }
 
         /// <inheritdoc />
+        [Obsolete("Use Examples instead.")]
         public JsonNode? Example { get; set; }
 
         /// <inheritdoc />
@@ -963,7 +964,10 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.SerializeAsV2(w));
 
             // example
+#pragma warning disable CS0618
             writer.WriteOptionalObject(OpenApiConstants.Example, GetCompatibilityExample(), (w, e) => w.WriteAny(e));
+            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
+#pragma warning restore CS0618
 
             // x-nullable extension
             SerializeNullable(writer, OpenApiSpecVersion.OpenApi2_0);
@@ -1032,7 +1036,9 @@ namespace Microsoft.OpenApi
 
         private JsonNode? GetCompatibilityExample()
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             return Example ?? Examples?.FirstOrDefault();
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         private IEnumerable<JsonNode>? GetCompatibilityExamplesExtension()
@@ -1042,10 +1048,12 @@ namespace Microsoft.OpenApi
                 return null;
             }
 
+#pragma warning disable CS0618 // Type or member is obsolete
             if (Example is not null)
             {
                 return Examples;
             }
+#pragma warning restore CS0618 // Type or member is obsolete
 
             return Examples.Count > 1 ? Examples.Skip(1) : null;
         }

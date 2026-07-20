@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi
         /// Declares whether the property definition translates to an attribute instead of an element.
         /// Default value is false.
         /// </summary>
-        [Obsolete("Use NodeType property instead. This property will be removed in a future version.")]
+        [Obsolete("Use NodeType set to OpenApiXmlNodeType.Attribute instead. This property will be removed in a future version.")]
         internal bool Attribute
         {
             get
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi
         /// Signifies whether the array is wrapped.
         /// Default value is false.
         /// </summary>
-        [Obsolete("Use NodeType property instead. This property will be removed in a future version.")]
+        [Obsolete("Use NodeType set to OpenApiXmlNodeType.Element instead. This property will be removed in a future version.")]
         internal bool Wrapped
         {
             get
