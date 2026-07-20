@@ -231,6 +231,11 @@ namespace Microsoft.OpenApi
         public const string Identifier = "identifier";
 
         /// <summary>
+        /// Field: x-oai-license-identifier
+        /// </summary>
+        public const string OaiLicenseIdentifier = "x-oai-license-identifier";
+
+        /// <summary>
         /// Field: Namespace
         /// </summary>
         public const string Namespace = "namespace";
