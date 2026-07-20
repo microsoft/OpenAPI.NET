@@ -281,6 +281,10 @@ namespace Microsoft.OpenApi.Reader.V3
                 (o, n, _, _) => o.Example = n
             },
             {
+                OpenApiConstants.JsonSchemaExamplesExtension,
+                (o, n, _, c) => o.Examples = n.CreateListOfAny(c)
+            },
+            {
                 "deprecated",
                 (o, n, _, _) =>
                 {
