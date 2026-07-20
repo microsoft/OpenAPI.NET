@@ -12,6 +12,8 @@ using Microsoft.OpenApi.Reader.V2;
 using Microsoft.OpenApi.Tests;
 using Xunit;
 
+#pragma warning disable CS0618
+
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
     [Collection("DefaultSettings")]

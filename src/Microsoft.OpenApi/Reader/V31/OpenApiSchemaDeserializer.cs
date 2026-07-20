@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
+#pragma warning disable CS0618
+
 namespace Microsoft.OpenApi.Reader.V31;
 
 internal static partial class OpenApiV31Deserializer
