@@ -1755,12 +1755,35 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
-        public async Task SerializeExamplesAsExtensionInEarlierVersions(OpenApiSpecVersion version)
+        public async Task SerializeSingleExampleAsExamplePropertyInEarlierVersionsWhenExampleIsUnset(OpenApiSpecVersion version)
         {
             var expected = """
                 {
+                  "example": "example value"
+                }
+                """;
+            var schema = new OpenApiSchema
+            {
+                Examples =
+                [
+                    JsonValue.Create("example value")!
+                ]
+            };
+
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializeMultipleExamplesAsExampleAndExtensionInEarlierVersionsWhenExampleIsUnset(OpenApiSpecVersion version)
+        {
+            var expected = """
+                {
+                  "example": "example value",
                   "x-jsonschema-examples": [
-                    "example value",
                     42
                   ]
                 }
