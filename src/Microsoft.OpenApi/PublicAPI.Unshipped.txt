@@ -1,1 +1,2 @@
 #nullable enable
+const Microsoft.OpenApi.OpenApiConstants.OaiLicenseIdentifier = "x-oai-license-identifier" -> string!
