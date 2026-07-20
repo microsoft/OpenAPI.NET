@@ -771,6 +771,11 @@ namespace Microsoft.OpenApi
         public const string OAuth2MetadataUrl = "oauth2MetadataUrl";
 
         /// <summary>
+        /// Extension: x-oai-oauth2-metadata-url
+        /// </summary>
+        internal const string OAuth2MetadataUrlExtension = "x-oai-oauth2-metadata-url";
+
+        /// <summary>
         /// Field: OpenIdConnectUrl
         /// </summary>
         public const string OpenIdConnectUrl = "openIdConnectUrl";
