@@ -1749,7 +1749,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
-        public async Task SerializeSingleExampleAsExamplePropertyInEarlierVersionsWhenExampleIsUnset(OpenApiSpecVersion version)
+        public async Task SerializeSingleExampleAsExampleInV2V3WhenExampleUnset(OpenApiSpecVersion version)
         {
             var expected = """
                 {
@@ -1772,7 +1772,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
-        public async Task SerializeMultipleExamplesAsExampleAndExtensionInEarlierVersionsWhenExampleIsUnset(OpenApiSpecVersion version)
+        public async Task SerializeMultipleExamplesInV2V3WhenExampleUnset(OpenApiSpecVersion version)
         {
             var expected = """
                 {
