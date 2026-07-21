@@ -2285,3 +2285,5 @@ override Microsoft.OpenApi.JsonSchemaReference.SerializeAsV32(Microsoft.OpenApi.
 override Microsoft.OpenApi.OpenApiSchemaReference.Target.get -> Microsoft.OpenApi.IOpenApiSchema?
 Microsoft.OpenApi.OpenApiWorkspace.GetDynamicAnchorCandidates(Microsoft.OpenApi.OpenApiDocument! hostDocument, string! anchorName) -> System.Collections.Generic.IReadOnlyList<Microsoft.OpenApi.IOpenApiSchema!>!
 static Microsoft.OpenApi.OpenApiWorkspace.ResolveDynamicAnchorInContext(Microsoft.OpenApi.IOpenApiSchema? contextSchema, string! anchorName) -> Microsoft.OpenApi.IOpenApiSchema?
+const Microsoft.OpenApi.OpenApiConstants.JsonSchemaExamplesExtension = "x-jsonschema-examples" -> string!
+const Microsoft.OpenApi.OpenApiConstants.OaiLicenseIdentifier = "x-oai-license-identifier" -> string!
