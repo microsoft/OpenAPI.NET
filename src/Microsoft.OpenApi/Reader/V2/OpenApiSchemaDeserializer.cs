@@ -277,6 +277,18 @@ namespace Microsoft.OpenApi.Reader.V2
                 OpenApiConstants.PatternPropertiesExtension,
                 (o, n, t, c) => o.PatternProperties = n.CreateMap(LoadSchema, t, c)
             },
+            {
+                OpenApiConstants.ContentEncodingExtension,
+                (o, n, _, _) => o.ContentEncoding = n.GetScalarValue()
+            },
+            {
+                OpenApiConstants.ContentMediaTypeExtension,
+                (o, n, _, _) => o.ContentMediaType = n.GetScalarValue()
+            },
+            {
+                OpenApiConstants.ContentSchemaExtension,
+                (o, n, doc, c) => o.ContentSchema = LoadSchema(n, doc, c)
+            },
         };
 
         private static readonly PatternFieldMap<OpenApiSchema> _openApiSchemaPatternFields = new PatternFieldMap<OpenApiSchema>
@@ -306,6 +318,26 @@ namespace Microsoft.OpenApi.Reader.V2
                 {
                     schema.Type |= JsonSchemaType.Null;
                 }
+            }
+
+            // The object model represents the latest version of the spec.
+            // https://spec.openapis.org/oas/v3.2.0.html#migrating-binary-descriptions-from-oas-3-0
+            // When we deserializing from V2, we detect the "old way" of specifying binary descriptions, and
+            // transform it in the object model to the latest thing.
+            if (schema.Type.HasValue && schema.Type.Value.HasFlag(JsonSchemaType.String) &&
+                schema.Format == "byte" &&
+                schema.ContentEncoding is null)
+            {
+                schema.ContentEncoding = "base64";
+                schema.Format = null;
+            }
+
+            if (schema.Type.HasValue && schema.Type.Value == JsonSchemaType.String &&
+                schema.Format == "binary")
+            {
+                schema.ContentMediaType ??= "application/octet-stream";
+                schema.Format = null;
+                schema.Type = null;
             }
 
             return schema;
