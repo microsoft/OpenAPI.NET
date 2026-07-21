@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.12.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.11.0...v2.12.0) (2026-07-21)
+
+
+### Features
+
+* adds deserialization of the example extension ([095ae3b](https://github.com/microsoft/OpenAPI.NET/commit/095ae3bbdf3c248ba18db17278889cf5a8faf01c))
+* serialize license identifier as extension for earlier versions ([d5cdce8](https://github.com/microsoft/OpenAPI.NET/commit/d5cdce83cfc210806afbd8850bb5ebe14eef5116))
+* serialize license identifier as extension for earlier versions ([fde38d8](https://github.com/microsoft/OpenAPI.NET/commit/fde38d8bec7af0304b0f522683ccda2d245cd860))
+
+
+### Bug Fixes
+
+* marks deprecated properties from the specification as obsolete ([26aba69](https://github.com/microsoft/OpenAPI.NET/commit/26aba69cd9c7ab1ecb8b1c61dd0094d291980af4))
+* marks deprecated properties from the specification as obsolete ([abc5301](https://github.com/microsoft/OpenAPI.NET/commit/abc5301a82cb913fea696aa1248a2e17b317ce10))
+* **schema:** serialize compatibility examples from examples list ([be57a7c](https://github.com/microsoft/OpenAPI.NET/commit/be57a7c4cf1e4ae2025b987520316420c897cb46))
+* serialize examples as extension in v2/v3 ([d27141b](https://github.com/microsoft/OpenAPI.NET/commit/d27141b5203e5895f0fb812b913dd7621274e6a3))
+
 ## [2.11.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.10.0...v2.11.0) (2026-07-15)
 
 
