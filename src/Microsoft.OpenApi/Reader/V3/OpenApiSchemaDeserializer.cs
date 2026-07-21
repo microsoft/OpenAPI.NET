@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "exclusiveMaximum",
-                (o, n, _, _) => o.IsExclusiveMaximum = bool.Parse(n.GetScalarValue()!)
+                (o, n, _, _) => o.IsExclusiveMaximum = n.GetScalarBoolValue()
             },
             {
                "minimum",
@@ -66,28 +66,20 @@ namespace Microsoft.OpenApi.Reader.V3
             },
             {
                 "exclusiveMinimum",
-                (o, n, _, _) => o.IsExclusiveMinimum = bool.Parse(n.GetScalarValue()!)
+                (o, n, _, _) => o.IsExclusiveMinimum = n.GetScalarBoolValue()
             },
             {
                 "maxLength",
                 (o, n, _, _) =>
                 {
-                    var maxLength = n.GetScalarValue();
-                    if (maxLength != null)
-                    {
-                        o.MaxLength = int.Parse(maxLength, CultureInfo.InvariantCulture);
-                    }
+                    o.MaxLength = n.GetScalarIntValue();
                 }
             },
             {
                 "minLength",
                 (o, n, _, _) =>
                 {
-                    var minLength = n.GetScalarValue();
-                    if (minLength != null)
-                    {
-                        o.MinLength = int.Parse(minLength, CultureInfo.InvariantCulture);
-                    }
+                    o.MinLength = n.GetScalarIntValue();
                 }
             },
             {
@@ -98,55 +90,35 @@ namespace Microsoft.OpenApi.Reader.V3
                 "maxItems",
                 (o, n, _, _) =>
                 {
-                    var maxItems = n.GetScalarValue();
-                    if (maxItems != null)
-                    {
-                        o.MaxItems = int.Parse(maxItems, CultureInfo.InvariantCulture);
-                    }
+                    o.MaxItems = n.GetScalarIntValue();
                 }
             },
             {
                 "minItems",
                 (o, n, _, _) =>
                 {
-                    var minItems = n.GetScalarValue();
-                    if (minItems != null)
-                    {
-                        o.MinItems = int.Parse(minItems, CultureInfo.InvariantCulture);
-                    }
+                    o.MinItems = n.GetScalarIntValue();
                 }
             },
             {
                 "uniqueItems",
                 (o, n, _, _) =>
                 {
-                    var uniqueItems = n.GetScalarValue();
-                    if (uniqueItems != null)
-                    {
-                        o.UniqueItems = bool.Parse(uniqueItems);
-                    }
+                    o.UniqueItems = n.GetScalarBoolValue();
                 }
             },
             {
                 "maxProperties",
                 (o, n, _, _) =>
                 {
-                    var maxProps = n.GetScalarValue();
-                    if (maxProps != null)
-                    {
-                        o.MaxProperties = int.Parse(maxProps, CultureInfo.InvariantCulture);
-                    }
+                    o.MaxProperties = n.GetScalarIntValue();
                 }
             },
             {
                 "minProperties",
                 (o, n, _, _) =>
                 {
-                    var minProps = n.GetScalarValue();
-                    if (minProps != null)
-                    {
-                        o.MinProperties = int.Parse(minProps, CultureInfo.InvariantCulture);
-                    }
+                    o.MinProperties = n.GetScalarIntValue();
                 }
             },
             {
@@ -197,11 +169,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {
                     if (n is JsonValue)
                     {
-                        var value = n.GetScalarValue();
-                        if (value is not null)
-                        {
-                            o.AdditionalPropertiesAllowed = bool.Parse(value);
-                        }
+                        o.AdditionalPropertiesAllowed = n.GetScalarBoolValue();
                     }
                     else
                     {
@@ -225,7 +193,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 "nullable",
                 (o, n, _, _) =>
                 {
-                    if (bool.TryParse(n.GetScalarValue(), out var parsed) && parsed)
+                    if (n.GetScalarBoolValue())
                     {
                         if (o.Type is not null && o.Type != 0)
                         {
@@ -252,22 +220,14 @@ namespace Microsoft.OpenApi.Reader.V3
                 "readOnly",
                 (o, n, _, _) =>
                 {
-                    var readOnly = n.GetScalarValue();
-                    if (readOnly != null)
-                    {
-                        o.ReadOnly = bool.Parse(readOnly);
-                    }
+                    o.ReadOnly = n.GetScalarBoolValue();
                 }
             },
             {
                 "writeOnly",
                 (o, n, _, _) =>
                 {
-                    var writeOnly = n.GetScalarValue();
-                    if (writeOnly != null)
-                    {
-                        o.WriteOnly = bool.Parse(writeOnly);
-                    }
+                    o.WriteOnly = n.GetScalarBoolValue();
                 }
             },
             {
@@ -290,11 +250,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 "deprecated",
                 (o, n, _, _) =>
                 {
-                    var deprecated = n.GetScalarValue();
-                    if (deprecated != null)
-                    {
-                        o.Deprecated = bool.Parse(deprecated);
-                    }
+                    o.Deprecated = n.GetScalarBoolValue();
                 }
             },
             {
@@ -307,11 +263,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 {
                     if (n is JsonValue)
                     {
-                        var value = n.GetScalarValue();
-                        if (value is not null)
-                        {
-                            o.UnevaluatedProperties = bool.Parse(value);
-                        }
+                        o.UnevaluatedProperties = n.GetScalarBoolValue();
                     }
                     else
                     {
@@ -343,22 +295,14 @@ namespace Microsoft.OpenApi.Reader.V3
                 OpenApiConstants.MaxContainsExtension,
                 (o, n, _, _) =>
                 {
-                    var maxContains = n.GetScalarValue();
-                    if (maxContains != null)
-                    {
-                        o.MaxContains = uint.Parse(maxContains, CultureInfo.InvariantCulture);
-                    }
+                    o.MaxContains = n.GetScalarUIntValue();
                 }
             },
             {
                 OpenApiConstants.MinContainsExtension,
                 (o, n, _, _) =>
                 {
-                    var minContains = n.GetScalarValue();
-                    if (minContains != null)
-                    {
-                        o.MinContains = uint.Parse(minContains, CultureInfo.InvariantCulture);
-                    }
+                    o.MinContains = n.GetScalarUIntValue();
                 }
             },
             {

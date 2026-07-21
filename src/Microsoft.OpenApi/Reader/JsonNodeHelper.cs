@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader
@@ -164,7 +165,45 @@ namespace Microsoft.OpenApi.Reader
 
             var scalarNode = node is JsonValue value ? value : throw new OpenApiException("Expected scalar value.");
 
+            // It's much more efficient to call scalarNode.TryGetValue<string> than to call scalarNode.GetValue<object>() and then convert to string.
+            // When asking for "object" type, if scalarNode is JsonValueOfElement (internal type in STJ), we will get back
+            // a boxed JsonElement (paying the cost of unnecessary boxing allocation), and we then call JsonElement.ToString.
+            // So, we first check if we can get the string value directly, and only if that fails, we fallback to the expensive code.
+            if (scalarNode.TryGetValue<string>(out var stringValue))
+            {
+                return stringValue;
+            }
+
             return Convert.ToString(scalarNode.GetValue<object>(), CultureInfo.InvariantCulture);
+        }
+
+        public static bool GetScalarBoolValue(this JsonNode? node)
+        {
+            var scalarNode = node is JsonValue value ? value : throw new OpenApiException("Expected scalar value.");
+            return scalarNode.GetValue<bool>();
+        }
+
+        public static int GetScalarIntValue(this JsonNode? node)
+        {
+            var scalarNode = node is JsonValue value && value.GetValueKind() == JsonValueKind.Number ? value : throw new OpenApiException("Expected numeric scalar value.");
+
+            if (scalarNode.TryGetValue<int>(out var intValue))
+            {
+                return intValue;
+            }
+
+            return Convert.ToInt32(scalarNode.GetValue<object>());
+        }
+
+        public static uint GetScalarUIntValue(this JsonNode? node)
+        {
+            var scalarNode = node is JsonValue value && value.GetValueKind() == JsonValueKind.Number ? value : throw new OpenApiException("Expected numeric scalar value.");
+            if (scalarNode.TryGetValue<uint>(out var uintValue))
+            {
+                return uintValue;
+            }
+
+            return Convert.ToUInt32(scalarNode.GetValue<object>());
         }
 
         public static string? GetReferencePointer(this JsonObject jsonObject)

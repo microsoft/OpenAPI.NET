@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.Json.Nodes;
 using System.Linq;
 
@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi.Reader.V31
     /// </summary>
     internal static partial class OpenApiV31Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiOAuthFlow> _oAuthFlowFixedFileds =
+        private static readonly FixedFieldMap<OpenApiOAuthFlow> _oAuthFlowFixedFields =
             new()
             {
                 {
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Reader.V31
             var jsonObject = node.CheckMapNode("OAuthFlow", context);
 
             var oauthFlow = new OpenApiOAuthFlow();
-            ParseMap(jsonObject, oauthFlow, _oAuthFlowFixedFileds, _oAuthFlowPatternFields, hostDocument, context);
+            ParseMap(jsonObject, oauthFlow, _oAuthFlowFixedFields, _oAuthFlowPatternFields, hostDocument, context);
 
             return oauthFlow;
         }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.Json.Nodes;
 
 #pragma warning disable CS0618
@@ -40,44 +40,28 @@ namespace Microsoft.OpenApi.Reader.V31
                     "required",
                     (o, n, _, _) =>
                     {
-                        var required = n.GetScalarValue();
-                        if (required != null)
-                        {
-                            o.Required = bool.Parse(required);
-                        }
+                        o.Required = n.GetScalarBoolValue();
                     }
                 },
                 {
                     "deprecated",
                     (o, n, _, _) =>
                     {
-                        var deprecated = n.GetScalarValue();
-                        if (deprecated != null)
-                        {
-                            o.Deprecated = bool.Parse(deprecated);
-                        }
+                        o.Deprecated = n.GetScalarBoolValue();
                     }
                 },
                 {
                     "allowEmptyValue",
                     (o, n, _, _) =>
                     {
-                        var allowEmptyValue = n.GetScalarValue();
-                        if (allowEmptyValue != null)
-                        {
-                            o.AllowEmptyValue = bool.Parse(allowEmptyValue);
-                        }
+                        o.AllowEmptyValue = n.GetScalarBoolValue();
                     }
                 },
                 {
                     "allowReserved",
                     (o, n, _, _) =>
                     {
-                        var allowReserved = n.GetScalarValue();
-                        if (allowReserved != null)
-                        {
-                            o.AllowReserved = bool.Parse(allowReserved);
-                        }
+                        o.AllowReserved = n.GetScalarBoolValue();
                     }
                 },
                 {
@@ -93,11 +77,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 {
                     "explode", (o, n, _, _) =>
                     {
-                        var explode = n.GetScalarValue();
-                        if (explode != null)
-                        {
-                            o.Explode = bool.Parse(explode);
-                        }
+                        o.Explode = n.GetScalarBoolValue();
                     }
                 },
                 {
