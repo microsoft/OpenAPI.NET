@@ -15,6 +15,8 @@ using Microsoft.OpenApi.YamlReader;
 using SharpYaml.Serialization;
 using Xunit;
 
+#pragma warning disable CS0618
+
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
     [Collection("DefaultSettings")]

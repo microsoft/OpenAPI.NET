@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi;
@@ -42,6 +43,7 @@ public interface IOpenApiParameter : IOpenApiDescribedElement, IOpenApiReadOnlyE
     /// If style is used, and if behavior is n/a (cannot be serialized),
     /// the value of allowEmptyValue SHALL be ignored.
     /// </summary>
+    [Obsolete("Use of AllowEmptyValue is not recommended and it is likely to be removed in a later revision.")]
     public bool AllowEmptyValue { get; }
 
     /// <summary>
