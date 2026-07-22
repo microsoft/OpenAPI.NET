@@ -90,4 +90,60 @@ public class OpenApiSerializableExtensionsTests
 
         Assert.Equal("{\n  \"name\": \"param1\",\n  \"in\": \"query\",\n  \"description\": \"A sample parameter\",\n  \"schema\": {\n    \"type\": \"string\"\n  }\n}", output);
     }
+
+    [Fact]
+    public async Task SerializeAsJsonAsync_WithTerseSettings_WritesToStream()
+    {
+        var parameter = new OpenApiParameter
+        {
+            Name = "param1",
+            In = ParameterLocation.Query,
+            Schema = new OpenApiSchema { Type = JsonSchemaType.String }
+        };
+
+        var settings = new OpenApiJsonWriterSettings { Terse = true };
+
+        using var stream = new MemoryStream();
+        await parameter.SerializeAsJsonAsync(stream, OpenApiSpecVersion.OpenApi3_1, settings);
+
+        stream.Position = 0;
+        using var reader = new StreamReader(stream);
+        var output = await reader.ReadToEndAsync();
+
+        Assert.Equal("{\"name\":\"param1\",\"in\":\"query\",\"schema\":{\"type\":\"string\"}}", output);
+    }
+
+    [Fact]
+    public async Task SerializeAsJsonAsync_WithTerseSettings_ReturnsCompactString()
+    {
+        var parameter = new OpenApiParameter
+        {
+            Name = "param1",
+            In = ParameterLocation.Query,
+            Schema = new OpenApiSchema { Type = JsonSchemaType.String }
+        };
+
+        var settings = new OpenApiJsonWriterSettings { Terse = true };
+
+        var output = await parameter.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, settings);
+
+        Assert.Equal("{\"name\":\"param1\",\"in\":\"query\",\"schema\":{\"type\":\"string\"}}", output);
+    }
+
+    [Fact]
+    public async Task SerializeAsync_WithSettings_ReturnsFormattedString()
+    {
+        var parameter = new OpenApiParameter
+        {
+            Name = "param1",
+            In = ParameterLocation.Query,
+            Schema = new OpenApiSchema { Type = JsonSchemaType.String }
+        };
+
+        var settings = new OpenApiJsonWriterSettings { Terse = false };
+
+        var output = await parameter.SerializeAsync(OpenApiSpecVersion.OpenApi3_1, OpenApiConstants.Json, settings);
+
+        Assert.Equal("{\n  \"name\": \"param1\",\n  \"in\": \"query\",\n  \"schema\": {\n    \"type\": \"string\"\n  }\n}", output);
+    }
 }
