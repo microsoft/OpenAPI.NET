@@ -64,7 +64,7 @@ jobs:
 
       - name: Upload coverage report
         if: (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]') || (github.event_name != 'pull_request' && github.ref_name == github.event.repository.default_branch)
-        uses: actions/upload-code-coverage@v1
+        uses: actions/upload-code-coverage@v1.3.0
         with:
           file: ./reports/coverage/Cobertura.xml
           language: CSharp
