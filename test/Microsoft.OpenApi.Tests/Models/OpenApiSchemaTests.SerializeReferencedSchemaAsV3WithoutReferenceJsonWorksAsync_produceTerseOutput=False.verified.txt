@@ -3,6 +3,7 @@
   "multipleOf": 3,
   "maximum": 42,
   "default": 15,
+  "nullable": true,
   "externalDocs": {
     "url": "http://example.com/externalDocs"
   }

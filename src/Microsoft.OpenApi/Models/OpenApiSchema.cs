@@ -1030,7 +1030,7 @@ namespace Microsoft.OpenApi
 
         private void SerializeNullable(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
-            if (IsNullableCompatibility)
+            if (version == OpenApiSpecVersion.OpenApi3_0 ? HasNullType || IsNullableCompatibility : IsNullableCompatibility)
             {
                 switch (version)
                 {

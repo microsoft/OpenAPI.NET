@@ -240,6 +240,7 @@ namespace Microsoft.OpenApi.Tests.Models
                   "multipleOf": 3,
                   "maximum": 42,
                   "default": 15,
+                  "nullable": true,
                   "externalDocs": {
                     "url": "http://example.com/externalDocs"
                   }
@@ -286,6 +287,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "title": "title1",
+                  "nullable": true,
                   "properties": {
                     "property1": {
                       "properties": {
@@ -383,6 +385,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "title": "title1",
+                  "nullable": true,
                   "allOf": [
                     {
                       "title": "title2",
@@ -398,6 +401,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     },
                     {
                       "title": "title3",
+                      "nullable": true,
                       "properties": {
                         "property3": {
                           "properties": {

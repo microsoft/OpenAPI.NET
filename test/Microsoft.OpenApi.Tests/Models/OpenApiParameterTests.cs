@@ -270,7 +270,6 @@ schema:
                   "name": "name1",
                   "description": "description1",
                   "required": true,
-                  "format": "double",
                   "x-examples": {
                     "test": {
                       "summary": "summary3",
