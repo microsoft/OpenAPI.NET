@@ -229,7 +229,7 @@ namespace Microsoft.OpenApi.Reader.V3
                     {
                         if (o.Type is not null && o.Type != 0)
                         {
-                            o.Type |= JsonSchemaType.Null;
+                            o.IsNullableCompatibility = true;
                         }
                         else
                         {
@@ -409,7 +409,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 schema.Metadata.Remove(EncounteredNullableTrueMetadataKey);
                 if (schema.Type is not null && schema.Type != 0 && value is bool isNullable && isNullable)
                 {
-                    schema.Type |= JsonSchemaType.Null;
+                    schema.IsNullableCompatibility = true;
                 }
             }
 

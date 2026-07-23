@@ -34,11 +34,21 @@ public sealed class OpenApiV3ToV3_1DeserializationConverter : OpenApiVisitorBase
     /// <inheritdoc />
     public override void Visit(IOpenApiSchema schema)
     {
-        if (schema is OpenApiSchema concreteSchema && ShouldConvertNullEnumToNullType(concreteSchema))
+        if (schema is not OpenApiSchema concreteSchema)
+        {
+            return;
+        }
+
+        if (ShouldConvertNullEnumToNullType(concreteSchema))
         {
             concreteSchema.Type = JsonSchemaType.Null;
             concreteSchema.Enum = null;
         }
+
+        OpenApiV2ToV3DeserializationConverter.ConvertSingletonStringEnumToConst(concreteSchema);
+        OpenApiV2ToV3DeserializationConverter.ConvertExampleToExamples(concreteSchema);
+        concreteSchema.ConvertNullableCompatibilityToNullType();
+        concreteSchema.ConvertCompatibilityBooleansToExclusiveBounds();
     }
 
     private static bool ShouldConvertNullEnumToNullType(OpenApiSchema schema) =>

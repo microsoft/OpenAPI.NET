@@ -13,6 +13,7 @@ using System.Text.Json.Schema;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.OpenApi.Reader;
 using VerifyXunit;
 using Xunit;
 
@@ -238,10 +239,6 @@ namespace Microsoft.OpenApi.Tests.Models
                   "title": "title1",
                   "multipleOf": 3,
                   "maximum": 42,
-                  "minimum": 10,
-                  "exclusiveMinimum": true,
-                  "type": "integer",
-                  "nullable": true,
                   "default": 15,
                   "externalDocs": {
                     "url": "http://example.com/externalDocs"
@@ -257,6 +254,31 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
+        public async Task SerializeConvertedAdvancedSchemaNumberAsV3JsonWorks()
+        {
+            var expected =
+                """
+                {
+                  "title": "title1",
+                  "multipleOf": 3,
+                  "maximum": 42,
+                  "minimum": 10,
+                  "exclusiveMinimum": true,
+                  "type": "integer",
+                  "nullable": true,
+                  "default": 15,
+                  "externalDocs": {
+                    "url": "http://example.com/externalDocs"
+                  }
+                }
+                """;
+
+            var actual = await SerializeConvertedCloneAsV3Async(AdvancedSchemaNumber);
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
         public async Task SerializeAdvancedSchemaObjectAsV3JsonWorks()
         {
             // Arrange
@@ -264,8 +286,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "title": "title1",
-                  "type": "object",
-                  "nullable": true,
                   "properties": {
                     "property1": {
                       "properties": {
@@ -308,9 +328,107 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
+        public async Task SerializeConvertedAdvancedSchemaObjectAsV3JsonWorks()
+        {
+            var expected =
+                """
+                {
+                  "title": "title1",
+                  "type": "object",
+                  "nullable": true,
+                  "properties": {
+                    "property1": {
+                      "properties": {
+                        "property2": {
+                          "type": "integer"
+                        },
+                        "property3": {
+                          "maxLength": 15,
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "property4": {
+                      "properties": {
+                        "property5": {
+                          "properties": {
+                            "property6": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "property7": {
+                          "minLength": 2,
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "externalDocs": {
+                    "url": "http://example.com/externalDocs"
+                  }
+                }
+                """;
+
+            var actual = await SerializeConvertedCloneAsV3Async(AdvancedSchemaObject);
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
         public async Task SerializeAdvancedSchemaWithAllOfAsV3JsonWorks()
         {
             // Arrange
+            var expected =
+                """
+                {
+                  "title": "title1",
+                  "allOf": [
+                    {
+                      "title": "title2",
+                      "properties": {
+                        "property1": {
+                          "type": "integer"
+                        },
+                        "property2": {
+                          "maxLength": 15,
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "title": "title3",
+                      "properties": {
+                        "property3": {
+                          "properties": {
+                            "property4": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "property5": {
+                          "minLength": 2,
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ],
+                  "externalDocs": {
+                    "url": "http://example.com/externalDocs"
+                  }
+                }
+                """;
+
+            // Act
+            var actual = await AdvancedSchemaWithAllOf.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            Assert.True(JsonObject.DeepEquals(JsonObject.Parse(expected), JsonObject.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeConvertedAdvancedSchemaWithAllOfAsV3JsonWorks()
+        {
             var expected =
                 """
                 {
@@ -355,10 +473,8 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
                 """;
 
-            // Act
-            var actual = await AdvancedSchemaWithAllOf.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await SerializeConvertedCloneAsV3Async(AdvancedSchemaWithAllOf);
 
-            // Assert
             Assert.True(JsonObject.DeepEquals(JsonObject.Parse(expected), JsonObject.Parse(actual)));
         }
 
@@ -414,7 +530,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public async Task SerializeAsV2ShouldSetFormatPropertyInParentSchemaIfPresentInChildrenSchema()
+        public async Task SerializeAsV2ShouldNotInferFormatPropertyFromChildrenSchema()
         {
             // Arrange
             var schema = new OpenApiSchema
@@ -443,7 +559,6 @@ namespace Microsoft.OpenApi.Tests.Models
             var expectedV2Schema =
                 """
                 {
-                  "format": "decimal",
                   "allOf": [
                     {
                       "type": "number",
@@ -454,7 +569,41 @@ namespace Microsoft.OpenApi.Tests.Models
                 """.MakeLineBreaksEnvironmentNeutral();
 
             // Assert
-            Assert.Equal(v2Schema, expectedV2Schema);
+            Assert.Equal(expectedV2Schema, v2Schema);
+        }
+
+        [Fact]
+        public async Task SerializeAsConvertedV2ShouldSetFormatPropertyInParentSchemaIfPresentInChildrenSchema()
+        {
+            var schema = new OpenApiSchema
+            {
+                OneOf =
+                [
+                    new OpenApiSchema()
+                    {
+                        Type = JsonSchemaType.Number,
+                        Format = "decimal"
+                    },
+                    new OpenApiSchema() { Type = JsonSchemaType.String },
+                ]
+            };
+
+            var v2Schema = await SerializeConvertedCloneAsV2Async(schema);
+
+            var expectedV2Schema =
+                """
+                {
+                  "format": "decimal",
+                  "allOf": [
+                    {
+                      "type": "number",
+                      "format": "decimal"
+                    }
+                  ]
+                }
+                """.MakeLineBreaksEnvironmentNeutral();
+
+            Assert.Equal(expectedV2Schema, v2Schema.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
@@ -765,7 +914,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
         [Fact]
-        public async Task SerializeConstAsEnumV30()
+        public async Task SerializeConstAsV30DoesNotConvertToEnum()
         {
             // Arrange
             var schema = new OpenApiSchema
@@ -781,12 +930,29 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             var v3Node = JsonNode.Parse(actual);
             Assert.NotNull(v3Node);
+            Assert.False(v3Node.AsObject().ContainsKey("enum"));
+            Assert.False(v3Node.AsObject().ContainsKey("const"));
+        }
+
+        [Fact]
+        public async Task SerializeConvertedConstAsEnumV30()
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String,
+                Const = "foo"
+            };
+
+            var actual = await SerializeConvertedCloneAsV3Async(schema);
+
+            var v3Node = JsonNode.Parse(actual);
+            Assert.NotNull(v3Node);
             Assert.True(v3Node["enum"] is JsonArray singleEnum && singleEnum.Count == 1 && singleEnum[0]?.ToString() == "foo");
             Assert.False(v3Node.AsObject().ContainsKey("const"));
         }
 
         [Fact]
-        public async Task SerializeConstAsEnumV20()
+        public async Task SerializeConstAsV20DoesNotConvertToEnum()
         {
             // Arrange
             var schema = new OpenApiSchema
@@ -799,6 +965,23 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
+            var v2Node = JsonNode.Parse(actual);
+            Assert.NotNull(v2Node);
+            Assert.False(v2Node.AsObject().ContainsKey("enum"));
+            Assert.False(v2Node.AsObject().ContainsKey("const"));
+        }
+
+        [Fact]
+        public async Task SerializeConvertedConstAsEnumV20()
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String,
+                Const = "foo"
+            };
+
+            var actual = await SerializeConvertedCloneAsV2Async(schema);
+
             var v2Node = JsonNode.Parse(actual);
             Assert.NotNull(v2Node);
             Assert.True(v2Node["enum"] is JsonArray singleEnum && singleEnum.Count == 1 && singleEnum[0]?.ToString() == "foo");
@@ -1576,6 +1759,62 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
+        public void ConvertV3NullableSchemaToV31NullType()
+        {
+            var schema = ReadSchema(
+                """
+                {
+                  "type": "integer",
+                  "nullable": true
+                }
+                """,
+                OpenApiSpecVersion.OpenApi3_0);
+
+            new OpenApiV3ToV3_1DeserializationConverter().Convert(schema);
+
+            Assert.Equal(JsonSchemaType.Integer | JsonSchemaType.Null, schema.Type);
+        }
+
+        [Fact]
+        public void ConvertV2NullableSchemaToV3NullType()
+        {
+            var schema = ReadSchema(
+                """
+                {
+                  "type": "integer",
+                  "x-nullable": true
+                }
+                """,
+                OpenApiSpecVersion.OpenApi2_0);
+
+            new OpenApiV2ToV3DeserializationConverter().Convert(schema);
+
+            Assert.Equal(JsonSchemaType.Integer | JsonSchemaType.Null, schema.Type);
+        }
+
+        [Fact]
+        public void ConvertV3ExclusiveBoundsToV31NumericExclusiveBounds()
+        {
+            var schema = ReadSchema(
+                """
+                {
+                  "minimum": 10,
+                  "exclusiveMinimum": true,
+                  "maximum": 42,
+                  "exclusiveMaximum": true
+                }
+                """,
+                OpenApiSpecVersion.OpenApi3_0);
+
+            new OpenApiV3ToV3_1DeserializationConverter().Convert(schema);
+
+            Assert.Equal("10", schema.ExclusiveMinimum);
+            Assert.Null(schema.Minimum);
+            Assert.Equal("42", schema.ExclusiveMaximum);
+            Assert.Null(schema.Maximum);
+        }
+
+        [Fact]
         public void ApplySemanticConversionsFromV3ToV31ConvertsNullEnumToNullType()
         {
             var nullSchema = new OpenApiSchema
@@ -2119,11 +2358,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         public async Task SerializeSingleExampleAsExampleInV2V3WhenExampleUnset(OpenApiSpecVersion version)
         {
-            var expected = """
-                {
-                  "example": "example value"
-                }
-                """;
+            var expected = "{ }";
             var schema = new OpenApiSchema
             {
                 Examples =
@@ -2142,6 +2377,51 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         public async Task SerializeMultipleExamplesInV2V3WhenExampleUnset(OpenApiSpecVersion version)
         {
+            var expected = "{ }";
+            var schema = new OpenApiSchema
+            {
+                Examples =
+                [
+                    JsonValue.Create("example value")!,
+                    JsonValue.Create(42)!
+                ]
+            };
+
+            var actual = await schema.SerializeAsJsonAsync(version);
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializeSingleExampleAsExampleInConvertedV2V3WhenExampleUnset(OpenApiSpecVersion version)
+        {
+            var expected = """
+                {
+                  "example": "example value"
+                }
+                """;
+            var schema = new OpenApiSchema
+            {
+                Examples =
+                [
+                    JsonValue.Create("example value")!
+                ]
+            };
+
+            var actual = version == OpenApiSpecVersion.OpenApi2_0
+                ? await SerializeConvertedCloneAsV2Async(schema)
+                : await SerializeConvertedCloneAsV3Async(schema);
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        public async Task SerializeMultipleExamplesInConvertedV2V3WhenExampleUnset(OpenApiSpecVersion version)
+        {
             var expected = """
                 {
                   "example": "example value",
@@ -2159,7 +2439,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 ]
             };
 
-            var actual = await schema.SerializeAsJsonAsync(version);
+            var actual = version == OpenApiSpecVersion.OpenApi2_0
+                ? await SerializeConvertedCloneAsV2Async(schema)
+                : await SerializeConvertedCloneAsV3Async(schema);
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
@@ -2540,6 +2822,31 @@ namespace Microsoft.OpenApi.Tests.Models
             convertedSchema.SerializeAsV3(writer);
             await writer.FlushAsync();
             return outputStringWriter.GetStringBuilder().ToString();
+        }
+
+        private static async Task<string> SerializeConvertedCloneAsV2Async(OpenApiSchema schema)
+        {
+            var convertedSchema = Assert.IsType<OpenApiSchema>(schema.CreateDeepCopy());
+            new OpenApiV3ToV2SerializationConverter().Convert(convertedSchema);
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+            convertedSchema.SerializeAsV2(writer);
+            await writer.FlushAsync();
+            return outputStringWriter.GetStringBuilder().ToString();
+        }
+
+        private static OpenApiSchema ReadSchema(string input, OpenApiSpecVersion version)
+        {
+            var reader = new OpenApiJsonReader();
+            var schema = reader.ReadFragment<OpenApiSchema>(
+                JsonNode.Parse(input),
+                version,
+                new OpenApiDocument(),
+                out var diagnostic);
+
+            Assert.Empty(diagnostic.Errors);
+            return Assert.IsType<OpenApiSchema>(schema);
         }
 
         private OpenApiSchema CreateNullableEnumSchema()

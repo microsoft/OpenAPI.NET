@@ -1,5 +1,4 @@
-﻿{
-  "type": "object",
+{
   "title": "title1",
   "required": [
     "property1"
@@ -38,6 +37,5 @@
   },
   "externalDocs": {
     "url": "http://example.com/externalDocs"
-  },
-  "x-nullable": true
+  }
 }

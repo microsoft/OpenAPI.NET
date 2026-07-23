@@ -169,13 +169,24 @@ namespace Microsoft.OpenApi
         [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public void ApplySemanticConversions(OpenApiSpecVersion currentApiSpecVersion, OpenApiSpecVersion targetApiSpecVersion)
         {
+            if (currentApiSpecVersion == OpenApiSpecVersion.OpenApi2_0 && targetApiSpecVersion >= OpenApiSpecVersion.OpenApi3_0)
+            {
+                new OpenApiV2ToV3DeserializationConverter().Convert(this);
+            }
+
             if (currentApiSpecVersion <= OpenApiSpecVersion.OpenApi3_0 && targetApiSpecVersion >= OpenApiSpecVersion.OpenApi3_1)
             {
                 new OpenApiV3ToV3_1DeserializationConverter().Convert(this);
             }
-            else if (currentApiSpecVersion >= OpenApiSpecVersion.OpenApi3_1 && targetApiSpecVersion <= OpenApiSpecVersion.OpenApi3_0)
+
+            if (currentApiSpecVersion >= OpenApiSpecVersion.OpenApi3_1 && targetApiSpecVersion <= OpenApiSpecVersion.OpenApi3_0)
             {
                 new OpenApiV3_1ToV3SerializationConverter().Convert(this);
+            }
+
+            if (currentApiSpecVersion >= OpenApiSpecVersion.OpenApi3_0 && targetApiSpecVersion == OpenApiSpecVersion.OpenApi2_0)
+            {
+                new OpenApiV3ToV2SerializationConverter().Convert(this);
             }
         }
 

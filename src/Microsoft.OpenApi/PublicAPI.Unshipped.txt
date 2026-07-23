@@ -13,6 +13,16 @@ const Microsoft.OpenApi.OpenApiConstants.OaiLicenseIdentifier = "x-oai-license-i
 [OPENAPI001]Microsoft.OpenApi.OpenApiV3ToV3_1DeserializationConverter.Convert(Microsoft.OpenApi.OpenApiDocument! document) -> void
 [OPENAPI001]Microsoft.OpenApi.OpenApiV3ToV3_1DeserializationConverter.OpenApiV3ToV3_1DeserializationConverter() -> void
 [OPENAPI001]override Microsoft.OpenApi.OpenApiV3ToV3_1DeserializationConverter.Visit(Microsoft.OpenApi.IOpenApiSchema! schema) -> void
+[OPENAPI001]Microsoft.OpenApi.OpenApiV2ToV3DeserializationConverter
+[OPENAPI001]Microsoft.OpenApi.OpenApiV2ToV3DeserializationConverter.Convert(Microsoft.OpenApi.IOpenApiSchema! schema) -> void
+[OPENAPI001]Microsoft.OpenApi.OpenApiV2ToV3DeserializationConverter.Convert(Microsoft.OpenApi.OpenApiDocument! document) -> void
+[OPENAPI001]Microsoft.OpenApi.OpenApiV2ToV3DeserializationConverter.OpenApiV2ToV3DeserializationConverter() -> void
+[OPENAPI001]override Microsoft.OpenApi.OpenApiV2ToV3DeserializationConverter.Visit(Microsoft.OpenApi.IOpenApiSchema! schema) -> void
+[OPENAPI001]Microsoft.OpenApi.OpenApiV3ToV2SerializationConverter
+[OPENAPI001]Microsoft.OpenApi.OpenApiV3ToV2SerializationConverter.Convert(Microsoft.OpenApi.IOpenApiSchema! schema) -> void
+[OPENAPI001]Microsoft.OpenApi.OpenApiV3ToV2SerializationConverter.Convert(Microsoft.OpenApi.OpenApiDocument! document) -> void
+[OPENAPI001]Microsoft.OpenApi.OpenApiV3ToV2SerializationConverter.OpenApiV3ToV2SerializationConverter() -> void
+[OPENAPI001]override Microsoft.OpenApi.OpenApiV3ToV2SerializationConverter.Visit(Microsoft.OpenApi.IOpenApiSchema! schema) -> void
 [OPENAPI001]Microsoft.OpenApi.OpenApiCallback.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiCallback!
 [OPENAPI001]Microsoft.OpenApi.OpenApiCallbackReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiCallback!
 [OPENAPI001]Microsoft.OpenApi.OpenApiComponents.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiComponents!

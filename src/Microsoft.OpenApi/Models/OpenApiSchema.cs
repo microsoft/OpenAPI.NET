@@ -112,6 +112,8 @@ namespace Microsoft.OpenApi
         private bool HasNullType
             => Type.HasValue && Type.Value.HasFlag(JsonSchemaType.Null);
 
+        internal bool IsNullableCompatibility { get; set; }
+
         internal bool WasConstExplicitlySet { get; private set; }
 
         /// <inheritdoc />
@@ -368,6 +370,7 @@ namespace Microsoft.OpenApi
             {
                 IsExclusiveMaximum = eMSchema.IsExclusiveMaximum;
                 IsExclusiveMinimum = eMSchema.IsExclusiveMinimum;
+                IsNullableCompatibility = eMSchema.IsNullableCompatibility;
             }
             Type = schema.Type ?? Type;
             Format = schema.Format ?? Format;
@@ -436,12 +439,6 @@ namespace Microsoft.OpenApi
                     writer.WritePropertyName(exclusivePropertyName);
                     writer.WriteRaw(exclusiveValue);
                 }
-                else if (isExclusiveValue == true && !string.IsNullOrEmpty(value) && value is not null)
-                {
-                    // came from parsing an old document
-                    writer.WritePropertyName(exclusivePropertyName);
-                    writer.WriteRaw(value);
-                }
                 else if (!string.IsNullOrEmpty(value) && value is not null)
                 {
                     // was explicitly set in the document or object model
@@ -451,14 +448,7 @@ namespace Microsoft.OpenApi
             }
             else
             {
-                if (!string.IsNullOrEmpty(exclusiveValue) && exclusiveValue is not null)
-                {
-                    // was explicitly set in a new document being downcast or object model
-                    writer.WritePropertyName(propertyName);
-                    writer.WriteRaw(exclusiveValue);
-                    writer.WriteProperty(isExclusivePropertyName, true);
-                }
-                else if (!string.IsNullOrEmpty(value) && value is not null)
+                if (!string.IsNullOrEmpty(value) && value is not null)
                 {
                     // came from parsing an old document, we're just mirroring the information
                     writer.WritePropertyName(propertyName);
@@ -487,11 +477,11 @@ namespace Microsoft.OpenApi
 
             // maximum
             // exclusiveMaximum
-            SerializeBounds(writer, version, OpenApiConstants.Maximum, OpenApiConstants.ExclusiveMaximum, OpenApiConstants.V31ExclusiveMaximum, Maximum, ExclusiveMaximum, IsExclusiveMaximum);
+            SerializeBounds(writer, version, OpenApiConstants.Maximum, OpenApiConstants.ExclusiveMaximum, OpenApiConstants.V31ExclusiveMaximum, _maximum, ExclusiveMaximum, IsExclusiveMaximum);
 
             // minimum
             // exclusiveMinimum
-            SerializeBounds(writer, version, OpenApiConstants.Minimum, OpenApiConstants.ExclusiveMinimum, OpenApiConstants.V31ExclusiveMinimum, Minimum, ExclusiveMinimum, IsExclusiveMinimum);
+            SerializeBounds(writer, version, OpenApiConstants.Minimum, OpenApiConstants.ExclusiveMinimum, OpenApiConstants.V31ExclusiveMinimum, _minimum, ExclusiveMinimum, IsExclusiveMinimum);
 
             // maxLength
             writer.WriteProperty(OpenApiConstants.MaxLength, MaxLength);
@@ -527,12 +517,7 @@ namespace Microsoft.OpenApi
             });
 
             // enum
-            var enumValue = Enum is not { Count: > 0 }
-                && WasConstExplicitlySet
-                && version < OpenApiSpecVersion.OpenApi3_1
-                ? new List<JsonNode> { JsonValue.Create(Const)! }
-                : Enum;
-            writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValue, (nodeWriter, s) => nodeWriter.WriteAny(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // type
             TrySerializeTypeProperty(writer, version);
@@ -601,10 +586,12 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, callback);
 
             // example
+#pragma warning disable CS0618
             writer.WriteOptionalObject(
                 OpenApiConstants.Example,
-                version < OpenApiSpecVersion.OpenApi3_1 ? GetCompatibilityExample() : Example,
+                Example,
                 (w, e) => w.WriteAny(e));
+#pragma warning restore CS0618
 
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
@@ -730,7 +717,6 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalObject(OpenApiConstants.IfExtension, If, callback);
             writer.WriteOptionalObject(OpenApiConstants.ThenExtension, Then, callback);
             writer.WriteOptionalObject(OpenApiConstants.ElseExtension, Else, callback);
-            writer.WriteOptionalCollection(OpenApiConstants.JsonSchemaExamplesExtension, GetCompatibilityExamplesExtension(), (nodeWriter, s) => nodeWriter.WriteAny(s));
         }
 
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
@@ -757,11 +743,11 @@ namespace Microsoft.OpenApi
 
             // maximum
             // exclusiveMaximum
-            SerializeBounds(writer, OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Maximum, OpenApiConstants.ExclusiveMaximum, OpenApiConstants.V31ExclusiveMaximum, Maximum, ExclusiveMaximum, IsExclusiveMaximum);
+            SerializeBounds(writer, OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Maximum, OpenApiConstants.ExclusiveMaximum, OpenApiConstants.V31ExclusiveMaximum, _maximum, ExclusiveMaximum, IsExclusiveMaximum);
 
             // minimum
             // exclusiveMinimum
-            SerializeBounds(writer, OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Minimum, OpenApiConstants.ExclusiveMinimum, OpenApiConstants.V31ExclusiveMinimum, Minimum, ExclusiveMinimum, IsExclusiveMinimum);
+            SerializeBounds(writer, OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Minimum, OpenApiConstants.ExclusiveMinimum, OpenApiConstants.V31ExclusiveMinimum, _minimum, ExclusiveMinimum, IsExclusiveMinimum);
 
             // maxLength
             writer.WriteProperty(OpenApiConstants.MaxLength, MaxLength);
@@ -790,15 +776,7 @@ namespace Microsoft.OpenApi
 
         private void WriteFormatProperty(IOpenApiWriter writer)
         {
-            var formatToWrite = Format;
-            if (string.IsNullOrEmpty(formatToWrite))
-            {
-                formatToWrite = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
-                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
-                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
-            }
-
-            writer.WriteProperty(OpenApiConstants.Format, formatToWrite);
+            writer.WriteProperty(OpenApiConstants.Format, Format);
         }
 
         /// <summary>
@@ -837,11 +815,11 @@ namespace Microsoft.OpenApi
 
             // maximum
             // exclusiveMaximum
-            SerializeBounds(writer, OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Maximum, OpenApiConstants.ExclusiveMaximum, OpenApiConstants.V31ExclusiveMaximum, Maximum, ExclusiveMaximum, IsExclusiveMaximum);
+            SerializeBounds(writer, OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Maximum, OpenApiConstants.ExclusiveMaximum, OpenApiConstants.V31ExclusiveMaximum, _maximum, ExclusiveMaximum, IsExclusiveMaximum);
 
             // minimum
             // exclusiveMinimum
-            SerializeBounds(writer, OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Minimum, OpenApiConstants.ExclusiveMinimum, OpenApiConstants.V31ExclusiveMinimum, Minimum, ExclusiveMinimum, IsExclusiveMinimum);
+            SerializeBounds(writer, OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Minimum, OpenApiConstants.ExclusiveMinimum, OpenApiConstants.V31ExclusiveMinimum, _minimum, ExclusiveMinimum, IsExclusiveMinimum);
 
             // maxLength
             writer.WriteProperty(OpenApiConstants.MaxLength, MaxLength);
@@ -877,10 +855,7 @@ namespace Microsoft.OpenApi
             });
 
             // enum
-            var enumValue = Enum is not { Count: > 0 } && WasConstExplicitlySet
-                ? new List<JsonNode> { JsonValue.Create(Const)! }
-                : Enum;
-            writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValue, (nodeWriter, s) => nodeWriter.WriteAny(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // items
             writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV2(w));
@@ -945,7 +920,6 @@ namespace Microsoft.OpenApi
 
             // example
 #pragma warning disable CS0618
-            writer.WriteOptionalObject(OpenApiConstants.Example, GetCompatibilityExample(), (w, e) => w.WriteAny(e));
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 #pragma warning restore CS0618
 
@@ -978,7 +952,6 @@ namespace Microsoft.OpenApi
                 writer.WriteOptionalMap(OpenApiConstants.PatternPropertiesExtension, PatternProperties, (w, s) => s.SerializeAsV2(w));
             }
 
-            writer.WriteOptionalCollection(OpenApiConstants.JsonSchemaExamplesExtension, GetCompatibilityExamplesExtension(), (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
@@ -999,10 +972,19 @@ namespace Microsoft.OpenApi
             switch (version)
             {
                 case OpenApiSpecVersion.OpenApi2_0 or OpenApiSpecVersion.OpenApi3_0:
-                    var typeWithoutNull = typeToUse.Value & ~JsonSchemaType.Null;
-                    if (typeWithoutNull != 0 && !HasMultipleTypes(typeWithoutNull))
+                    if (typeToUse.Value.HasFlag(JsonSchemaType.Null))
                     {
-                        writer.WriteProperty(OpenApiConstants.Type, typeWithoutNull.ToFirstIdentifier());
+                        if (!IsNullableCompatibility)
+                        {
+                            return false;
+                        }
+
+                        typeToUse &= ~JsonSchemaType.Null;
+                    }
+
+                    if (typeToUse != 0 && !HasMultipleTypes(typeToUse.Value))
+                    {
+                        writer.WriteProperty(OpenApiConstants.Type, typeToUse.Value.ToFirstIdentifier());
                         return true;
                     }
                     break;
@@ -1012,30 +994,6 @@ namespace Microsoft.OpenApi
             }
 
             return false;
-        }
-
-        private JsonNode? GetCompatibilityExample()
-        {
-#pragma warning disable CS0618 // Type or member is obsolete
-            return Example ?? Examples?.FirstOrDefault();
-#pragma warning restore CS0618 // Type or member is obsolete
-        }
-
-        private IEnumerable<JsonNode>? GetCompatibilityExamplesExtension()
-        {
-            if (Examples is null || Examples.Count == 0)
-            {
-                return null;
-            }
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (Example is not null)
-            {
-                return Examples;
-            }
-#pragma warning restore CS0618 // Type or member is obsolete
-
-            return Examples.Count > 1 ? Examples.Skip(1) : null;
         }
 
         private static bool IsPowerOfTwo(int x)
@@ -1072,7 +1030,7 @@ namespace Microsoft.OpenApi
 
         private void SerializeNullable(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
-            if (HasNullType)
+            if (IsNullableCompatibility)
             {
                 switch (version)
                 {
@@ -1083,6 +1041,62 @@ namespace Microsoft.OpenApi
                         writer.WriteProperty(OpenApiConstants.Nullable, true);
                         break;
                 }
+            }
+        }
+
+        internal void ConvertNullTypeToNullableCompatibility()
+        {
+            if (Type is not { } type || !type.HasFlag(JsonSchemaType.Null))
+            {
+                return;
+            }
+
+            var typeWithoutNull = type & ~JsonSchemaType.Null;
+            if (typeWithoutNull != 0)
+            {
+                Type = typeWithoutNull;
+                IsNullableCompatibility = true;
+            }
+        }
+
+        internal void ConvertNullableCompatibilityToNullType()
+        {
+            if (IsNullableCompatibility && Type is not null and not 0)
+            {
+                Type |= JsonSchemaType.Null;
+                IsNullableCompatibility = false;
+            }
+        }
+
+        internal void ConvertExclusiveBoundsToCompatibilityBooleans()
+        {
+            if (!string.IsNullOrEmpty(_exclusiveMaximum))
+            {
+                _maximum = _exclusiveMaximum;
+                _exclusiveMaximum = null;
+                IsExclusiveMaximum = true;
+            }
+
+            if (!string.IsNullOrEmpty(_exclusiveMinimum))
+            {
+                _minimum = _exclusiveMinimum;
+                _exclusiveMinimum = null;
+                IsExclusiveMinimum = true;
+            }
+        }
+
+        internal void ConvertCompatibilityBooleansToExclusiveBounds()
+        {
+            if (IsExclusiveMaximum == true && !string.IsNullOrEmpty(_maximum))
+            {
+                _exclusiveMaximum = _maximum;
+                _maximum = null;
+            }
+
+            if (IsExclusiveMinimum == true && !string.IsNullOrEmpty(_minimum))
+            {
+                _exclusiveMinimum = _minimum;
+                _minimum = null;
             }
         }
 
