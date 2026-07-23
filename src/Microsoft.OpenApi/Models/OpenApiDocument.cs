@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -159,6 +159,24 @@ namespace Microsoft.OpenApi
         public OpenApiDocument CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);
+        }
+
+        /// <summary>
+        /// Applies semantic conversions needed to represent this document in a different OpenAPI specification version.
+        /// </summary>
+        /// <param name="currentApiSpecVersion">The OpenAPI specification version this document currently represents.</param>
+        /// <param name="targetApiSpecVersion">The target OpenAPI specification version.</param>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public void ApplySemanticConversions(OpenApiSpecVersion currentApiSpecVersion, OpenApiSpecVersion targetApiSpecVersion)
+        {
+            if (currentApiSpecVersion <= OpenApiSpecVersion.OpenApi3_0 && targetApiSpecVersion >= OpenApiSpecVersion.OpenApi3_1)
+            {
+                new OpenApiV3ToV3_1DeserializationConverter().Convert(this);
+            }
+            else if (currentApiSpecVersion >= OpenApiSpecVersion.OpenApi3_1 && targetApiSpecVersion <= OpenApiSpecVersion.OpenApi3_0)
+            {
+                new OpenApiV3_1ToV3SerializationConverter().Convert(this);
+            }
         }
 
         /// <summary>

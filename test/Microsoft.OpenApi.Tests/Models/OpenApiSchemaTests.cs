@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+#pragma warning disable OPENAPI001
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -963,9 +965,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                   "oneOf": [
                     {
-                      "enum": [
-                        null
-                      ]
+                      "nullable": true
                     },
                     {
                       "maxLength": 10,
@@ -1007,9 +1007,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                   "oneOf": [
                     {
-                      "enum": [
-                        null
-                      ]
+                      "nullable": true
                     },
                     {
                       "type": "string"
@@ -1059,9 +1057,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                   "anyOf": [
                     {
-                      "enum": [
-                        null
-                      ]
+                      "nullable": true
                     },
                     {
                       "type": "object",
@@ -1106,9 +1102,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                   "anyOf": [
                     {
-                      "enum": [
-                        null
-                      ]
+                      "nullable": true
                     },
                     {
                       "minLength": 1,
@@ -1151,9 +1145,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                   "oneOf": [
                     {
-                      "enum": [
-                        null
-                      ]
+                      "nullable": true
                     }
                   ]
                 }
@@ -1254,6 +1246,244 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                   "oneOf": [
                     {
+                      "nullable": true
+                    },
+                    {
+                      "$ref": "#/components/schemas/Pet"
+                    }
+                  ]
+                }
+                """;
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
+        }
+
+        [Fact]
+        public async Task SerializeOneOfWithNullAsConvertedV3ShouldUseNullEnumAsync()
+        {
+            var schema = new OpenApiSchema
+            {
+                OneOf = new List<IOpenApiSchema>
+                {
+                    new OpenApiSchema { Type = JsonSchemaType.Null },
+                    new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String,
+                        MaxLength = 10
+                    }
+                }
+            };
+
+            var v3Schema = await SerializeConvertedCloneAsV3Async(schema);
+
+            var expectedV3Schema =
+                """
+                {
+                  "oneOf": [
+                    {
+                      "enum": [
+                        null
+                      ]
+                    },
+                    {
+                      "maxLength": 10,
+                      "type": "string"
+                    }
+                  ]
+                }
+                """;
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
+        }
+
+        [Fact]
+        public async Task SerializeOneOfWithNullAndMultipleSchemasAsConvertedV3ShouldUseNullEnum()
+        {
+            var schema = new OpenApiSchema
+            {
+                OneOf = new List<IOpenApiSchema>
+                {
+                    new OpenApiSchema { Type = JsonSchemaType.Null },
+                    new OpenApiSchema { Type = JsonSchemaType.String },
+                    new OpenApiSchema { Type = JsonSchemaType.Number },
+                }
+            };
+
+            var v3Schema = await SerializeConvertedCloneAsV3Async(schema);
+
+            var expectedV3Schema =
+                """
+                {
+                  "oneOf": [
+                    {
+                      "enum": [
+                        null
+                      ]
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ]
+                }
+                """;
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
+        }
+
+        [Fact]
+        public async Task SerializeAnyOfWithNullAsConvertedV3ShouldUseNullEnumAsync()
+        {
+            var schema = new OpenApiSchema
+            {
+                AnyOf = new List<IOpenApiSchema>
+                {
+                    new OpenApiSchema { Type = JsonSchemaType.Null },
+                    new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.Object,
+                        Properties = new Dictionary<string, IOpenApiSchema>
+                        {
+                            ["id"] = new OpenApiSchema { Type = JsonSchemaType.Integer }
+                        }
+                    }
+                }
+            };
+
+            var v3Schema = await SerializeConvertedCloneAsV3Async(schema);
+
+            var expectedV3Schema =
+                """
+                {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        null
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  ]
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
+        }
+
+        [Fact]
+        public async Task SerializeAnyOfWithNullAndMultipleSchemasAsConvertedV3ShouldUseNullEnum()
+        {
+            var schema = new OpenApiSchema
+            {
+                AnyOf = new List<IOpenApiSchema>
+                {
+                    new OpenApiSchema { Type = JsonSchemaType.Null },
+                    new OpenApiSchema { Type = JsonSchemaType.String, MinLength = 1 },
+                    new OpenApiSchema { Type = JsonSchemaType.Integer }
+                }
+            };
+
+            var v3Schema = await SerializeConvertedCloneAsV3Async(schema);
+
+            var expectedV3Schema =
+                """
+                {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        null
+                      ]
+                    },
+                    {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ]
+                }
+                """;
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
+        }
+
+        [Fact]
+        public async Task SerializeOneOfWithOnlyNullAsConvertedV3ShouldUseNullEnumAsync()
+        {
+            var schema = new OpenApiSchema
+            {
+                OneOf = new List<IOpenApiSchema>
+                {
+                    new OpenApiSchema { Type = JsonSchemaType.Null }
+                }
+            };
+
+            var v3Schema = await SerializeConvertedCloneAsV3Async(schema);
+
+            var expectedV3Schema =
+                """
+                {
+                  "oneOf": [
+                    {
+                      "enum": [
+                        null
+                      ]
+                    }
+                  ]
+                }
+                """;
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
+        }
+
+        [Fact]
+        public async Task SerializeOneOfWithNullAndRefAsConvertedV3ShouldUseNullEnumAsync()
+        {
+            var document = new OpenApiDocument
+            {
+                Components = new OpenApiComponents
+                {
+                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    {
+                        ["Pet"] = new OpenApiSchema
+                        {
+                            Type = JsonSchemaType.Object,
+                            Properties = new Dictionary<string, IOpenApiSchema>
+                            {
+                                ["id"] = new OpenApiSchema { Type = JsonSchemaType.Integer },
+                                ["name"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                            }
+                        }
+                    }
+                }
+            };
+            document.Workspace.RegisterComponents(document);
+            var schemaRef = new OpenApiSchemaReference("Pet", document);
+            var schema = new OpenApiSchema
+            {
+                OneOf = new List<IOpenApiSchema>
+                {
+                    new OpenApiSchema { Type = JsonSchemaType.Null },
+                    schemaRef
+                }
+            };
+
+            var v3Schema = await SerializeConvertedCloneAsV3Async(schema);
+
+            var expectedV3Schema =
+                """
+                {
+                  "oneOf": [
+                    {
                       "enum": [
                         null
                       ]
@@ -1265,8 +1495,138 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
                 """;
 
-            // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expectedV3Schema), JsonNode.Parse(v3Schema)));
+        }
+
+        [Fact]
+        public async Task ConvertSingleNullEnumSchemaToV31TypeNullAsync()
+        {
+            var schema = new OpenApiSchema
+            {
+                Enum = new List<JsonNode>
+                {
+                    JsonNullSentinel.JsonNull
+                }
+            };
+
+            new OpenApiV3ToV3_1DeserializationConverter().Convert(schema);
+
+            Assert.Equal(JsonSchemaType.Null, schema.Type);
+            Assert.Null(schema.Enum);
+            var result = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+            var expected = """
+                {
+                  "type": "null"
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+        }
+
+        [Fact]
+        public void ConvertSingleNullEnumNestedInDocumentToV31TypeNull()
+        {
+            var nullSchema = new OpenApiSchema
+            {
+                Enum = new List<JsonNode>
+                {
+                    JsonNullSentinel.JsonNull
+                }
+            };
+            var document = new OpenApiDocument
+            {
+                Components = new OpenApiComponents
+                {
+                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    {
+                        ["NullableName"] = new OpenApiSchema
+                        {
+                            OneOf = new List<IOpenApiSchema>
+                            {
+                                nullSchema,
+                                new OpenApiSchema { Type = JsonSchemaType.String }
+                            }
+                        }
+                    }
+                }
+            };
+
+            new OpenApiV3ToV3_1DeserializationConverter().Convert(document);
+
+            Assert.Equal(JsonSchemaType.Null, nullSchema.Type);
+            Assert.Null(nullSchema.Enum);
+        }
+
+        [Fact]
+        public void ConvertDoesNotChangeEnumWithNullAndOtherValues()
+        {
+            var schema = new OpenApiSchema
+            {
+                Enum = new List<JsonNode>
+                {
+                    JsonNullSentinel.JsonNull,
+                    JsonValue.Create("A")
+                }
+            };
+
+            new OpenApiV3ToV3_1DeserializationConverter().Convert(schema);
+
+            Assert.Null(schema.Type);
+            Assert.NotNull(schema.Enum);
+            Assert.Equal(2, schema.Enum.Count);
+        }
+
+        [Fact]
+        public void ApplySemanticConversionsFromV3ToV31ConvertsNullEnumToNullType()
+        {
+            var nullSchema = new OpenApiSchema
+            {
+                Enum = new List<JsonNode>
+                {
+                    JsonNullSentinel.JsonNull
+                }
+            };
+            var document = new OpenApiDocument
+            {
+                Components = new OpenApiComponents
+                {
+                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    {
+                        ["NullableValue"] = nullSchema
+                    }
+                }
+            };
+
+            document.ApplySemanticConversions(OpenApiSpecVersion.OpenApi3_0, OpenApiSpecVersion.OpenApi3_1);
+
+            Assert.Equal(JsonSchemaType.Null, nullSchema.Type);
+            Assert.Null(nullSchema.Enum);
+        }
+
+        [Fact]
+        public void ApplySemanticConversionsFromV31ToV3ConvertsNullTypeToNullEnum()
+        {
+            var nullSchema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Null
+            };
+            var document = new OpenApiDocument
+            {
+                Components = new OpenApiComponents
+                {
+                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    {
+                        ["NullableValue"] = nullSchema
+                    }
+                }
+            };
+
+            document.ApplySemanticConversions(OpenApiSpecVersion.OpenApi3_1, OpenApiSpecVersion.OpenApi3_0);
+
+            Assert.Null(nullSchema.Type);
+            var enumValues = nullSchema.Enum;
+            Assert.NotNull(enumValues);
+            Assert.Single(enumValues);
+            Assert.True(enumValues[0].IsJsonNullSentinel());
         }
 
         [Fact]
@@ -2035,15 +2395,32 @@ namespace Microsoft.OpenApi.Tests.Models
         [Fact]
         public async Task SerializeNullableEnumWith3_0()
         {
-            // https://spec.openapis.org/oas/v3.0.4.html#fixed-fields-20
-            // Documentation for nullable states:
-            // This keyword only takes effect if type is explicitly defined within the same Schema Object.
-            // So, we want to ensure that we emit the type property if we will be adding nullable property.
-            // In addition, we need to still keep 'null' in the enum array.
-            // Otherwise, validators will consider null as invalid even if nullable is set to true.
-            // It's unclear if it's an issue of the validators or not, but it's safer to do it that way.
             var schema = CreateNullableEnumSchema();
             var result = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var expected = """
+                {
+                  "oneOf": [
+                    {
+                      "nullable": true
+                    },
+                    {
+                      "enum": [
+                        "A",
+                        "B"
+                      ]
+                    }
+                  ]
+                }
+                """;
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+        }
+
+        [Fact]
+        public async Task SerializeNullableEnumWithConverted3_0()
+        {
+            var schema = CreateNullableEnumSchema();
+            var result = await SerializeConvertedCloneAsV3Async(schema);
             var expected = """
                 {
                   "oneOf": [
@@ -2097,6 +2474,38 @@ namespace Microsoft.OpenApi.Tests.Models
             var result = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
             var expected = """
                 {
+                  "nullable": true
+                }
+                """;
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+        }
+
+        [Fact]
+        public async Task SerializeMultipleTypesIncludingNullWith3_0EmitsNullable()
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String | JsonSchemaType.Integer | JsonSchemaType.Null
+            };
+
+            var result = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var expected = """
+                {
+                  "nullable": true
+                }
+                """;
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+        }
+
+        [Fact]
+        public async Task SerializeNullableTypeWithConverted3_0()
+        {
+            var schema = CreateTypeNullSchema();
+            var result = await SerializeConvertedCloneAsV3Async(schema);
+            var expected = """
+                {
                   "enum": [
                     null
                   ]
@@ -2119,6 +2528,18 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
                 """;
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+        }
+
+        private static async Task<string> SerializeConvertedCloneAsV3Async(OpenApiSchema schema)
+        {
+            var convertedSchema = Assert.IsType<OpenApiSchema>(schema.CreateDeepCopy());
+            new OpenApiV3_1ToV3SerializationConverter().Convert(convertedSchema);
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+            convertedSchema.SerializeAsV3(writer);
+            await writer.FlushAsync();
+            return outputStringWriter.GetStringBuilder().ToString();
         }
 
         private OpenApiSchema CreateNullableEnumSchema()

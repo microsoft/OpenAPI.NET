@@ -3,12 +3,23 @@ const Microsoft.OpenApi.OpenApiConstants.JsonSchemaExamplesExtension = "x-jsonsc
 const Microsoft.OpenApi.OpenApiConstants.OaiLicenseIdentifier = "x-oai-license-identifier" -> string!
 [OPENAPI001]Microsoft.OpenApi.IDeepCopyable<T>
 [OPENAPI001]Microsoft.OpenApi.IDeepCopyable<T>.CreateDeepCopy() -> T
+[OPENAPI001]Microsoft.OpenApi.OpenApiV3_1ToV3SerializationConverter
+[OPENAPI001]Microsoft.OpenApi.OpenApiV3_1ToV3SerializationConverter.Convert(Microsoft.OpenApi.IOpenApiSchema! schema) -> void
+[OPENAPI001]Microsoft.OpenApi.OpenApiV3_1ToV3SerializationConverter.Convert(Microsoft.OpenApi.OpenApiDocument! document) -> void
+[OPENAPI001]Microsoft.OpenApi.OpenApiV3_1ToV3SerializationConverter.OpenApiV3_1ToV3SerializationConverter() -> void
+[OPENAPI001]override Microsoft.OpenApi.OpenApiV3_1ToV3SerializationConverter.Visit(Microsoft.OpenApi.IOpenApiSchema! schema) -> void
+[OPENAPI001]Microsoft.OpenApi.OpenApiV3ToV3_1DeserializationConverter
+[OPENAPI001]Microsoft.OpenApi.OpenApiV3ToV3_1DeserializationConverter.Convert(Microsoft.OpenApi.IOpenApiSchema! schema) -> void
+[OPENAPI001]Microsoft.OpenApi.OpenApiV3ToV3_1DeserializationConverter.Convert(Microsoft.OpenApi.OpenApiDocument! document) -> void
+[OPENAPI001]Microsoft.OpenApi.OpenApiV3ToV3_1DeserializationConverter.OpenApiV3ToV3_1DeserializationConverter() -> void
+[OPENAPI001]override Microsoft.OpenApi.OpenApiV3ToV3_1DeserializationConverter.Visit(Microsoft.OpenApi.IOpenApiSchema! schema) -> void
 [OPENAPI001]Microsoft.OpenApi.OpenApiCallback.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiCallback!
 [OPENAPI001]Microsoft.OpenApi.OpenApiCallbackReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiCallback!
 [OPENAPI001]Microsoft.OpenApi.OpenApiComponents.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiComponents!
 [OPENAPI001]Microsoft.OpenApi.OpenApiContact.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiContact!
 [OPENAPI001]Microsoft.OpenApi.OpenApiDiscriminator.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiDiscriminator!
 [OPENAPI001]Microsoft.OpenApi.OpenApiDocument.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiDocument!
+[OPENAPI001]Microsoft.OpenApi.OpenApiDocument.ApplySemanticConversions(Microsoft.OpenApi.OpenApiSpecVersion currentApiSpecVersion, Microsoft.OpenApi.OpenApiSpecVersion targetApiSpecVersion) -> void
 [OPENAPI001]Microsoft.OpenApi.OpenApiEncoding.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiEncoding!
 [OPENAPI001]Microsoft.OpenApi.OpenApiExample.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiExample!
 [OPENAPI001]Microsoft.OpenApi.OpenApiExampleReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiExample!
