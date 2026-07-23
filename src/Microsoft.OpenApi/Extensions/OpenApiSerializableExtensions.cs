@@ -37,10 +37,11 @@ namespace Microsoft.OpenApi
         /// <param name="stream">The output stream.</param>
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="settings">Settings controlling JSON output, including <see cref="OpenApiJsonWriterSettings.Terse"/> for compact formatting.</param>
-        public static Task SerializeAsJsonAsync<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, OpenApiJsonWriterSettings settings)
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static Task SerializeAsJsonAsync<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, OpenApiJsonWriterSettings settings, CancellationToken cancellationToken)
             where T : IOpenApiSerializable
         {
-            return element.SerializeAsync(stream, specVersion, OpenApiConstants.Json, settings, CancellationToken.None);
+            return element.SerializeAsync(stream, specVersion, OpenApiConstants.Json, settings, cancellationToken);
         }
 
         /// <summary>

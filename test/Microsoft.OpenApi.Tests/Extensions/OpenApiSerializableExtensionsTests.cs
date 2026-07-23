@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -104,7 +105,7 @@ public class OpenApiSerializableExtensionsTests
         var settings = new OpenApiJsonWriterSettings { Terse = true };
 
         using var stream = new MemoryStream();
-        await parameter.SerializeAsJsonAsync(stream, OpenApiSpecVersion.OpenApi3_1, settings);
+        await parameter.SerializeAsJsonAsync(stream, OpenApiSpecVersion.OpenApi3_1, settings, CancellationToken.None);
 
         stream.Position = 0;
         using var reader = new StreamReader(stream);
