@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi
     /// These getters are object-model conveniences and do not represent JSON Schema
     /// evaluation semantics.
     /// </summary>
-    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema, IOpenApiSchemaMissingProperties, IOpenApiSchemaWithUnevaluatedProperties, IOpenApiExtensible
+    public class OpenApiSchemaReference : BaseOpenApiReferenceHolder<OpenApiSchema, IOpenApiSchema, JsonSchemaReference>, IOpenApiSchema, IOpenApiSchemaMissingProperties, IOpenApiSchemaWithUnevaluatedProperties, IOpenApiExtensible, IDeepCopyable<IOpenApiSchema>
     {
 
         /// <summary>
@@ -272,9 +272,14 @@ namespace Microsoft.OpenApi
             return new OpenApiSchemaReference(this);
         }
         /// <inheritdoc/>
+        public IOpenApiSchema CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
+        }
+        /// <inheritdoc/>
         protected override JsonSchemaReference CopyReference(JsonSchemaReference sourceReference)
         {
-            return new JsonSchemaReference(sourceReference);
+            return new JsonSchemaReference(sourceReference)!;
         }
 #pragma warning restore CS0618
     }

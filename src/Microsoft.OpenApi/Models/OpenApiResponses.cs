@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 namespace Microsoft.OpenApi
@@ -6,7 +6,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Responses object.
     /// </summary>
-    public class OpenApiResponses : OpenApiExtensibleDictionary<IOpenApiResponse>
+    public class OpenApiResponses : OpenApiExtensibleDictionary<IOpenApiResponse>, IDeepCopyable<OpenApiResponses>
     {
         /// <summary>
         /// Parameterless constructor
@@ -18,5 +18,11 @@ namespace Microsoft.OpenApi
         /// </summary>
         /// <param name="openApiResponses">The <see cref="OpenApiResponses"/></param>
         public OpenApiResponses(OpenApiResponses openApiResponses) : base(dictionary: openApiResponses) { }
+
+        /// <inheritdoc/>
+        public OpenApiResponses CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
+        }
     }
 }

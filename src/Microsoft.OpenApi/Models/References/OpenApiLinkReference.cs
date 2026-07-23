@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Link Object Reference.
     /// </summary>
-    public class OpenApiLinkReference : BaseOpenApiReferenceHolder<OpenApiLink, IOpenApiLink, OpenApiReferenceWithDescription>, IOpenApiLink
+    public class OpenApiLinkReference : BaseOpenApiReferenceHolder<OpenApiLink, IOpenApiLink, OpenApiReferenceWithDescription>, IOpenApiLink, IDeepCopyable<IOpenApiLink>
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -72,6 +72,11 @@ namespace Microsoft.OpenApi
         public IOpenApiLink CreateShallowCopy()
         {
             return new OpenApiLinkReference(this);
+        }
+        /// <inheritdoc/>
+        public IOpenApiLink CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
         /// <inheritdoc/>
         protected override OpenApiReferenceWithDescription CopyReference(OpenApiReferenceWithDescription sourceReference)

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi
     /// Header Object.
     /// The Header Object follows the structure of the Parameter Object.
     /// </summary>
-    public class OpenApiHeader : IOpenApiHeader, IOpenApiExtensible
+    public class OpenApiHeader : IOpenApiHeader, IOpenApiExtensible, IDeepCopyable<IOpenApiHeader>
     {
         /// <inheritdoc/>
         public string? Description { get; set; }
@@ -195,6 +195,11 @@ namespace Microsoft.OpenApi
         public IOpenApiHeader CreateShallowCopy()
         {
             return new OpenApiHeader(this);
+        }
+        /// <inheritdoc/>
+        public IOpenApiHeader CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
     }
 }

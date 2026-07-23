@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Tag Object.
     /// </summary>
-    public class OpenApiTag : IOpenApiExtensible, IOpenApiTag, IOpenApiDescribedElement
+    public class OpenApiTag : IOpenApiExtensible, IOpenApiTag, IOpenApiDescribedElement, IDeepCopyable<IOpenApiTag>
     {
         /// <inheritdoc/>
         public string? Name { get; set; }
@@ -158,6 +158,11 @@ namespace Microsoft.OpenApi
         public IOpenApiTag CreateShallowCopy()
         {
             return new OpenApiTag(this);
+        }
+        /// <inheritdoc/>
+        public IOpenApiTag CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
     }
 }

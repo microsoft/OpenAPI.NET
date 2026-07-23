@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Request Body Object Reference.
     /// </summary>
-    public class OpenApiRequestBodyReference : BaseOpenApiReferenceHolder<OpenApiRequestBody, IOpenApiRequestBody, OpenApiReferenceWithDescription>, IOpenApiRequestBody
+    public class OpenApiRequestBodyReference : BaseOpenApiReferenceHolder<OpenApiRequestBody, IOpenApiRequestBody, OpenApiReferenceWithDescription>, IOpenApiRequestBody, IDeepCopyable<IOpenApiRequestBody>
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -87,6 +87,11 @@ namespace Microsoft.OpenApi
         public IOpenApiRequestBody CreateShallowCopy()
         {
             return new OpenApiRequestBodyReference(this);
+        }
+        /// <inheritdoc/>
+        public IOpenApiRequestBody CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
         /// <inheritdoc/>
         protected override OpenApiReferenceWithDescription CopyReference(OpenApiReferenceWithDescription sourceReference)

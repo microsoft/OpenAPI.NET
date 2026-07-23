@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Example Object.
     /// </summary>
-    public class OpenApiExample : IOpenApiExtensible, IOpenApiExample
+    public class OpenApiExample : IOpenApiExtensible, IOpenApiExample, IDeepCopyable<IOpenApiExample>
     {
         /// <inheritdoc/>
         public string? Summary { get; set; }
@@ -134,6 +134,11 @@ namespace Microsoft.OpenApi
         public IOpenApiExample CreateShallowCopy()
         {
             return new OpenApiExample(this);
+        }
+        /// <inheritdoc/>
+        public IOpenApiExample CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
     }
 }

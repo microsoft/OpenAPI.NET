@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 namespace Microsoft.OpenApi
@@ -6,7 +6,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Paths object.
     /// </summary>
-    public class OpenApiPaths : OpenApiExtensibleDictionary<IOpenApiPathItem>
+    public class OpenApiPaths : OpenApiExtensibleDictionary<IOpenApiPathItem>, IDeepCopyable<OpenApiPaths>
     {
         /// <summary>
         /// Parameterless constructor
@@ -21,5 +21,11 @@ namespace Microsoft.OpenApi
         /// This creates a shallow copy, the path items are the same reference as in the provided parameter.
         /// </remarks>
         public OpenApiPaths(OpenApiPaths paths) : base(dictionary: paths) { }
+
+        /// <inheritdoc/>
+        public OpenApiPaths CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
+        }
     }
 }

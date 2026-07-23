@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Open API Info Object, it provides the metadata about the Open API.
     /// </summary>
-    public class OpenApiInfo : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiInfo : IOpenApiSerializable, IOpenApiExtensible, IDeepCopyable<OpenApiInfo>
     {
         /// <summary>
         /// REQUIRED. The title of the application.
@@ -69,6 +69,12 @@ namespace Microsoft.OpenApi
             Contact = info?.Contact != null ? new(info.Contact) : null;
             License = info?.License != null ? new(info.License) : null;
             Extensions = info?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(info.Extensions) : null;
+        }
+
+        /// <inheritdoc/>
+        public OpenApiInfo CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>

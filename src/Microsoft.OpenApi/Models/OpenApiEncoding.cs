@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// ExternalDocs object.
     /// </summary>
-    public class OpenApiEncoding : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiEncoding : IOpenApiSerializable, IOpenApiExtensible, IDeepCopyable<OpenApiEncoding>
     {
         /// <summary>
         /// Explode backing variable
@@ -94,6 +94,12 @@ namespace Microsoft.OpenApi
             Explode = encoding?._explode;
             AllowReserved = encoding?.AllowReserved ?? AllowReserved;
             Extensions = encoding?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(encoding.Extensions) : null;
+        }
+
+        /// <inheritdoc/>
+        public OpenApiEncoding CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>

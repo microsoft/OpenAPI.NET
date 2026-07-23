@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Server Object: an object representing a Server.
     /// </summary>
-    public class OpenApiServer : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiServer : IOpenApiSerializable, IOpenApiExtensible, IDeepCopyable<OpenApiServer>
     {
         /// <summary>
         /// An optional string describing the host designated by the URL. CommonMark syntax MAY be used for rich text representation.
@@ -54,6 +54,12 @@ namespace Microsoft.OpenApi
             Url = server?.Url ?? Url;
             Variables = server?.Variables != null ? new Dictionary<string, OpenApiServerVariable>(server.Variables) : null;
             Extensions = server?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(server.Extensions) : null;
+        }
+
+        /// <inheritdoc/>
+        public OpenApiServer CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>

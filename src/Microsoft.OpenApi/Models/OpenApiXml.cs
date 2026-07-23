@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// XML Object.
     /// </summary>
-    public class OpenApiXml : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiXml : IOpenApiSerializable, IOpenApiExtensible, IDeepCopyable<OpenApiXml>
     {
         /// <summary>
         /// Replaces the name of the element/attribute used for the described schema property.
@@ -85,6 +85,12 @@ namespace Microsoft.OpenApi
             Prefix = xml?.Prefix ?? Prefix;
             NodeType = xml?.NodeType ?? NodeType;
             Extensions = xml?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(xml.Extensions) : null;
+        }
+
+        /// <inheritdoc/>
+        public OpenApiXml CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>

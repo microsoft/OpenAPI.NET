@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Response Object Reference.
     /// </summary>
-    public class OpenApiResponseReference : BaseOpenApiReferenceHolder<OpenApiResponse, IOpenApiResponse, OpenApiReferenceWithDescriptionAndSummary>, IOpenApiResponse
+    public class OpenApiResponseReference : BaseOpenApiReferenceHolder<OpenApiResponse, IOpenApiResponse, OpenApiReferenceWithDescriptionAndSummary>, IOpenApiResponse, IDeepCopyable<IOpenApiResponse>
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -68,6 +68,11 @@ namespace Microsoft.OpenApi
         public IOpenApiResponse CreateShallowCopy()
         {
             return new OpenApiResponseReference(this);
+        }
+        /// <inheritdoc/>
+        public IOpenApiResponse CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
         /// <inheritdoc/>
         protected override OpenApiReferenceWithDescriptionAndSummary CopyReference(OpenApiReferenceWithDescriptionAndSummary sourceReference)

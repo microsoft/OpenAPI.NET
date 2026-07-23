@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Operation Object.
     /// </summary>
-    public class OpenApiOperation : IOpenApiSerializable, IOpenApiExtensible, IMetadataContainer
+    public class OpenApiOperation : IOpenApiSerializable, IOpenApiExtensible, IMetadataContainer, IDeepCopyable<OpenApiOperation>
     {
         private ISet<OpenApiTagReference>? _tags;
         /// <summary>
@@ -143,6 +143,12 @@ namespace Microsoft.OpenApi
             Servers = operation.Servers != null ? [.. operation.Servers] : null;
             Extensions = operation.Extensions != null ? new Dictionary<string, IOpenApiExtension>(operation.Extensions) : null;
             Metadata = operation.Metadata != null ? new Dictionary<string, object>(operation.Metadata) : null;
+        }
+
+        /// <inheritdoc/>
+        public OpenApiOperation CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>

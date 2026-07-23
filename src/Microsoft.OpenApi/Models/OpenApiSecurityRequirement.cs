@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -16,7 +16,8 @@ namespace Microsoft.OpenApi
     /// For other security scheme types, the array MUST be empty.
     /// </summary>
     public class OpenApiSecurityRequirement : Dictionary<OpenApiSecuritySchemeReference, List<string>>,
-        IOpenApiSerializable
+        IOpenApiSerializable,
+        IDeepCopyable<OpenApiSecurityRequirement>
     {
         /// <summary>
         /// Initializes the <see cref="OpenApiSecurityRequirement"/> class.
@@ -124,6 +125,12 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (w, s) => s.SerializeAsV2(w));
+        }
+
+        /// <inheritdoc/>
+        public OpenApiSecurityRequirement CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Parameter Object.
     /// </summary>
-    public class OpenApiParameter : IOpenApiExtensible, IOpenApiParameter
+    public class OpenApiParameter : IOpenApiExtensible, IOpenApiParameter, IDeepCopyable<IOpenApiParameter>
     {
         private bool? _explode;
         private ParameterStyle? _style;
@@ -343,6 +343,11 @@ namespace Microsoft.OpenApi
         public IOpenApiParameter CreateShallowCopy()
         {
             return new OpenApiParameter(this);
+        }
+        /// <inheritdoc/>
+        public IOpenApiParameter CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
     }
 
