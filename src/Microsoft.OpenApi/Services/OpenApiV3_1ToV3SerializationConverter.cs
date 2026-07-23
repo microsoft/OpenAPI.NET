@@ -42,6 +42,7 @@ public sealed class OpenApiV3_1ToV3SerializationConverter : OpenApiVisitorBase
             {
                 JsonNullSentinel.JsonNull
             };
+            concreteSchema.Type = null;
         }
     }
 

@@ -964,7 +964,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "oneOf": [
-                    { },
+                    {
+                      "nullable": true
+                    },
                     {
                       "maxLength": 10,
                       "type": "string"
@@ -1004,7 +1006,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "oneOf": [
-                    { },
+                    {
+                      "nullable": true
+                    },
                     {
                       "type": "string"
                     },
@@ -1052,7 +1056,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "anyOf": [
-                    { },
+                    {
+                      "nullable": true
+                    },
                     {
                       "type": "object",
                       "properties": {
@@ -1095,7 +1101,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "anyOf": [
-                    { },
+                    {
+                      "nullable": true
+                    },
                     {
                       "minLength": 1,
                       "type": "string"
@@ -1136,7 +1144,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "oneOf": [
-                    { }
+                    {
+                      "nullable": true
+                    }
                   ]
                 }
                 """;
@@ -1235,7 +1245,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 """
                 {
                   "oneOf": [
-                    { },
+                    {
+                      "nullable": true
+                    },
                     {
                       "$ref": "#/components/schemas/Pet"
                     }
@@ -1610,7 +1622,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             document.ApplySemanticConversions(OpenApiSpecVersion.OpenApi3_1, OpenApiSpecVersion.OpenApi3_0);
 
-            Assert.Equal(JsonSchemaType.Null, nullSchema.Type);
+            Assert.Null(nullSchema.Type);
             var enumValues = nullSchema.Enum;
             Assert.NotNull(enumValues);
             Assert.Single(enumValues);
@@ -2388,7 +2400,9 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = """
                 {
                   "oneOf": [
-                    { },
+                    {
+                      "nullable": true
+                    },
                     {
                       "enum": [
                         "A",
@@ -2458,7 +2472,29 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             var schema = CreateTypeNullSchema();
             var result = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
-            var expected = "{ }";
+            var expected = """
+                {
+                  "nullable": true
+                }
+                """;
+
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+        }
+
+        [Fact]
+        public async Task SerializeMultipleTypesIncludingNullWith3_0EmitsNullable()
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String | JsonSchemaType.Integer | JsonSchemaType.Null
+            };
+
+            var result = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var expected = """
+                {
+                  "nullable": true
+                }
+                """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
         }

@@ -535,7 +535,7 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValue, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // type
-            var serializedTypeProperty = TrySerializeTypeProperty(writer, version);
+            TrySerializeTypeProperty(writer, version);
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, callback);
@@ -580,13 +580,8 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // nullable
-            if (version == OpenApiSpecVersion.OpenApi3_0 && serializedTypeProperty)
+            if (version == OpenApiSpecVersion.OpenApi3_0)
             {
-                // https://spec.openapis.org/oas/v3.0.4.html#fixed-fields-20
-                // This keyword only takes effect if type is explicitly defined within the same Schema Object.
-                //
-                // If the user explicitly set IsNullable to true, we serialize it even if redundant.
-                // But if **we** are inferring it (from oneOf/anyOf), we don't serialize it when it's redundant.
                 SerializeNullable(writer, version);
             }
 
