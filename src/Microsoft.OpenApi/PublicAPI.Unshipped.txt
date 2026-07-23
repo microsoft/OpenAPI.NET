@@ -1,3 +1,47 @@
 #nullable enable
 const Microsoft.OpenApi.OpenApiConstants.JsonSchemaExamplesExtension = "x-jsonschema-examples" -> string!
 const Microsoft.OpenApi.OpenApiConstants.OaiLicenseIdentifier = "x-oai-license-identifier" -> string!
+[OPENAPI001]Microsoft.OpenApi.IDeepCopyable<T>
+[OPENAPI001]Microsoft.OpenApi.IDeepCopyable<T>.CreateDeepCopy() -> T
+[OPENAPI001]Microsoft.OpenApi.OpenApiCallback.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiCallback!
+[OPENAPI001]Microsoft.OpenApi.OpenApiCallbackReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiCallback!
+[OPENAPI001]Microsoft.OpenApi.OpenApiComponents.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiComponents!
+[OPENAPI001]Microsoft.OpenApi.OpenApiContact.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiContact!
+[OPENAPI001]Microsoft.OpenApi.OpenApiDiscriminator.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiDiscriminator!
+[OPENAPI001]Microsoft.OpenApi.OpenApiDocument.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiDocument!
+[OPENAPI001]Microsoft.OpenApi.OpenApiEncoding.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiEncoding!
+[OPENAPI001]Microsoft.OpenApi.OpenApiExample.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiExample!
+[OPENAPI001]Microsoft.OpenApi.OpenApiExampleReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiExample!
+[OPENAPI001]Microsoft.OpenApi.OpenApiExternalDocs.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiExternalDocs!
+[OPENAPI001]Microsoft.OpenApi.OpenApiHeader.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiHeader!
+[OPENAPI001]Microsoft.OpenApi.OpenApiHeaderReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiHeader!
+[OPENAPI001]Microsoft.OpenApi.OpenApiInfo.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiInfo!
+[OPENAPI001]Microsoft.OpenApi.OpenApiLicense.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiLicense!
+[OPENAPI001]Microsoft.OpenApi.OpenApiLink.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiLink!
+[OPENAPI001]Microsoft.OpenApi.OpenApiLinkReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiLink!
+[OPENAPI001]Microsoft.OpenApi.OpenApiMediaType.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiMediaType!
+[OPENAPI001]Microsoft.OpenApi.OpenApiMediaTypeReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiMediaType!
+[OPENAPI001]Microsoft.OpenApi.OpenApiOAuthFlow.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiOAuthFlow!
+[OPENAPI001]Microsoft.OpenApi.OpenApiOAuthFlows.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiOAuthFlows!
+[OPENAPI001]Microsoft.OpenApi.OpenApiOperation.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiOperation!
+[OPENAPI001]Microsoft.OpenApi.OpenApiParameter.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiParameter!
+[OPENAPI001]Microsoft.OpenApi.OpenApiParameterReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiParameter!
+[OPENAPI001]Microsoft.OpenApi.OpenApiPathItem.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiPathItem!
+[OPENAPI001]Microsoft.OpenApi.OpenApiPathItemReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiPathItem!
+[OPENAPI001]Microsoft.OpenApi.OpenApiPaths.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiPaths!
+[OPENAPI001]Microsoft.OpenApi.OpenApiRequestBody.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiRequestBody!
+[OPENAPI001]Microsoft.OpenApi.OpenApiRequestBodyReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiRequestBody!
+[OPENAPI001]Microsoft.OpenApi.OpenApiResponse.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiResponse!
+[OPENAPI001]Microsoft.OpenApi.OpenApiResponseReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiResponse!
+[OPENAPI001]Microsoft.OpenApi.OpenApiResponses.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiResponses!
+[OPENAPI001]Microsoft.OpenApi.OpenApiSchema.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiSchema!
+[OPENAPI001]Microsoft.OpenApi.OpenApiSchemaReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiSchema!
+[OPENAPI001]Microsoft.OpenApi.OpenApiSecurityRequirement.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiSecurityRequirement!
+[OPENAPI001]Microsoft.OpenApi.OpenApiSecurityScheme.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiSecurityScheme!
+[OPENAPI001]Microsoft.OpenApi.OpenApiSecuritySchemeReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiSecurityScheme!
+[OPENAPI001]Microsoft.OpenApi.OpenApiServer.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiServer!
+[OPENAPI001]Microsoft.OpenApi.OpenApiServerVariable.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiServerVariable!
+[OPENAPI001]Microsoft.OpenApi.OpenApiTag.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiTag!
+[OPENAPI001]Microsoft.OpenApi.OpenApiTagReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiTag!
+[OPENAPI001]Microsoft.OpenApi.OpenApiXml.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiXml!
+[OPENAPI001]Microsoft.OpenApi.RuntimeExpressionAnyWrapper.CreateDeepCopy() -> Microsoft.OpenApi.RuntimeExpressionAnyWrapper!

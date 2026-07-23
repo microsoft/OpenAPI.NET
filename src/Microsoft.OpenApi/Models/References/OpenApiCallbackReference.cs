@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Callback Object Reference: A reference to a map of possible out-of band callbacks related to the parent operation.
     /// </summary>
-    public class OpenApiCallbackReference : BaseOpenApiReferenceHolder<OpenApiCallback, IOpenApiCallback, BaseOpenApiReference>, IOpenApiCallback
+    public class OpenApiCallbackReference : BaseOpenApiReferenceHolder<OpenApiCallback, IOpenApiCallback, BaseOpenApiReference>, IOpenApiCallback, IDeepCopyable<IOpenApiCallback>
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -55,6 +55,12 @@ namespace Microsoft.OpenApi
         public IOpenApiCallback CreateShallowCopy()
         {
             return new OpenApiCallbackReference(this);
+        }
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public IOpenApiCallback CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
         /// <inheritdoc/>
         protected override BaseOpenApiReference CopyReference(BaseOpenApiReference sourceReference)

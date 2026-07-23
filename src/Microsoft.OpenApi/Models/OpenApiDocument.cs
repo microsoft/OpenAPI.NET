@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Describes an OpenAPI object (OpenAPI document). See: https://spec.openapis.org
     /// </summary>
-    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IMetadataContainer
+    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IMetadataContainer, IDeepCopyable<OpenApiDocument>
     {
         /// <summary>
         /// Register components in the document to the workspace
@@ -152,6 +152,13 @@ namespace Microsoft.OpenApi
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
             Metadata = document?.Metadata != null ? new Dictionary<string, object>(document.Metadata) : null;
             BaseUri = document?.BaseUri != null ? document.BaseUri : new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid());
+        }
+
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public OpenApiDocument CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>

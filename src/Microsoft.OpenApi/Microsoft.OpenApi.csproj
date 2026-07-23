@@ -9,7 +9,7 @@
         <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net8.0'))">true</IsAotCompatible>
         <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <NoWarn>NU5048</NoWarn>
+        <NoWarn>$(NoWarn);NU5048;OPENAPI001</NoWarn>
         <Nullable>enable</Nullable>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>

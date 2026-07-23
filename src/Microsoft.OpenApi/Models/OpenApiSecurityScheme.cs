@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Security Scheme Object.
     /// </summary>
-    public class OpenApiSecurityScheme : IOpenApiExtensible, IOpenApiSecurityScheme, IOAuth2MetadataProvider
+    public class OpenApiSecurityScheme : IOpenApiExtensible, IOpenApiSecurityScheme, IOAuth2MetadataProvider, IDeepCopyable<IOpenApiSecurityScheme>
     {
         /// <inheritdoc/>
         public SecuritySchemeType? Type { get; set; }
@@ -306,6 +306,12 @@ namespace Microsoft.OpenApi
         public IOpenApiSecurityScheme CreateShallowCopy()
         {
             return new OpenApiSecurityScheme(this);
+        }
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public IOpenApiSecurityScheme CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
     }
 }

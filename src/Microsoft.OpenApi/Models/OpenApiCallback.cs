@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Callback Object: A map of possible out-of band callbacks related to the parent operation.
     /// </summary>
-    public class OpenApiCallback : IOpenApiExtensible, IOpenApiCallback
+    public class OpenApiCallback : IOpenApiExtensible, IOpenApiCallback, IDeepCopyable<IOpenApiCallback>
     {
         /// <inheritdoc/>
         public Dictionary<RuntimeExpression, IOpenApiPathItem>? PathItems { get; set; }
@@ -112,6 +112,12 @@ namespace Microsoft.OpenApi
         public IOpenApiCallback CreateShallowCopy()
         {
             return new OpenApiCallback(this);
+        }
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public IOpenApiCallback CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
     }
 }

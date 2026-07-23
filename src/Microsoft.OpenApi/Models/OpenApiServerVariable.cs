@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Server Variable Object.
     /// </summary>
-    public class OpenApiServerVariable : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiServerVariable : IOpenApiSerializable, IOpenApiExtensible, IDeepCopyable<OpenApiServerVariable>
     {
         /// <summary>
         /// An optional description for the server variable. CommonMark syntax MAY be used for rich text representation.
@@ -48,6 +48,13 @@ namespace Microsoft.OpenApi
             Default = serverVariable?.Default;
             Enum = serverVariable?.Enum != null ? new(serverVariable.Enum) : serverVariable?.Enum;
             Extensions = serverVariable?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(serverVariable.Extensions) : serverVariable?.Extensions;
+        }
+
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public OpenApiServerVariable CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>

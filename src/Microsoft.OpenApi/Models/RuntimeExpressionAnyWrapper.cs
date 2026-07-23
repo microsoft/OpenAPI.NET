@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Text.Json.Nodes;
@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// The wrapper either for <see cref="JsonNode"/> or <see cref="RuntimeExpression"/>
     /// </summary>
-    public class RuntimeExpressionAnyWrapper : IOpenApiElement
+    public class RuntimeExpressionAnyWrapper : IOpenApiElement, IDeepCopyable<RuntimeExpressionAnyWrapper>
     {
         private JsonNode? _any;
         private RuntimeExpression? _expression;
@@ -25,6 +25,13 @@ namespace Microsoft.OpenApi
         {
             Any = JsonNodeCloneHelper.Clone(runtimeExpressionAnyWrapper?.Any);
             Expression = runtimeExpressionAnyWrapper?.Expression;
+        }
+
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public RuntimeExpressionAnyWrapper CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>

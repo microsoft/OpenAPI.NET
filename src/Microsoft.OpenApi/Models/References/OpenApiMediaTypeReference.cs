@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Media Type Object Reference.
     /// </summary>
-    public class OpenApiMediaTypeReference : BaseOpenApiReferenceHolder<OpenApiMediaType, IOpenApiMediaType, BaseOpenApiReference>, IOpenApiMediaType
+    public class OpenApiMediaTypeReference : BaseOpenApiReferenceHolder<OpenApiMediaType, IOpenApiMediaType, BaseOpenApiReference>, IOpenApiMediaType, IDeepCopyable<IOpenApiMediaType>
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -67,6 +67,12 @@ namespace Microsoft.OpenApi
         public IOpenApiMediaType CreateShallowCopy()
         {
             return new OpenApiMediaTypeReference(this);
+        }
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public IOpenApiMediaType CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <inheritdoc/>

@@ -295,6 +295,12 @@ namespace Microsoft.OpenApi
             Utils.CheckArgumentNull(currentDocument);
             hostDocument ??= currentDocument;
         }
+
+        internal void SetHostDocument(OpenApiDocument currentDocument)
+        {
+            Utils.CheckArgumentNull(currentDocument);
+            hostDocument = currentDocument;
+        }
         /// <summary>
         /// Gets the property value from a JsonObject node.
         /// </summary>

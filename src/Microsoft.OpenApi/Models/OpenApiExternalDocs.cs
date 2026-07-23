@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// ExternalDocs object.
     /// </summary>
-    public class OpenApiExternalDocs : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiExternalDocs : IOpenApiSerializable, IOpenApiExtensible, IDeepCopyable<OpenApiExternalDocs>
     {
         /// <summary>
         /// A short description of the target documentation.
@@ -39,6 +39,13 @@ namespace Microsoft.OpenApi
             Description = externalDocs?.Description ?? Description;
             Url = externalDocs?.Url != null ? new Uri(externalDocs.Url.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Extensions = externalDocs?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(externalDocs.Extensions) : null;
+        }
+
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public OpenApiExternalDocs CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>
