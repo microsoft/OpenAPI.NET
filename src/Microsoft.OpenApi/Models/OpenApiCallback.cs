@@ -114,6 +114,7 @@ namespace Microsoft.OpenApi
             return new OpenApiCallback(this);
         }
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public IOpenApiCallback CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

@@ -48,6 +48,7 @@ namespace Microsoft.OpenApi
             Extensions = contact?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(contact.Extensions) : null;
         }
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public OpenApiContact CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

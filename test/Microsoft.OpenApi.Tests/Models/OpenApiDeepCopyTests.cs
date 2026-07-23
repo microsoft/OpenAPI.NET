@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+#pragma warning disable OPENAPI001
+
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;

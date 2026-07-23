@@ -70,6 +70,7 @@ namespace Microsoft.OpenApi
             return new OpenApiResponseReference(this);
         }
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public IOpenApiResponse CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

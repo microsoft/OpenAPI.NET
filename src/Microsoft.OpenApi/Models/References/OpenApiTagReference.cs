@@ -92,6 +92,7 @@ namespace Microsoft.OpenApi
             return new OpenApiTagReference(this);
         }
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public IOpenApiTag CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

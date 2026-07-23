@@ -69,6 +69,7 @@ namespace Microsoft.OpenApi
             return new OpenApiMediaTypeReference(this);
         }
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public IOpenApiMediaType CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

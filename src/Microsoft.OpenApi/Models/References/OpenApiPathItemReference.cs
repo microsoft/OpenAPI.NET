@@ -73,6 +73,7 @@ namespace Microsoft.OpenApi
             return new OpenApiPathItemReference(this);
         }
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public IOpenApiPathItem CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

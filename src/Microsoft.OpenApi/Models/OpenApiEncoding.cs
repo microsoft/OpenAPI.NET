@@ -97,6 +97,7 @@ namespace Microsoft.OpenApi
         }
 
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public OpenApiEncoding CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

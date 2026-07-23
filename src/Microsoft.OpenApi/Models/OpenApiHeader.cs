@@ -197,6 +197,7 @@ namespace Microsoft.OpenApi
             return new OpenApiHeader(this);
         }
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public IOpenApiHeader CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

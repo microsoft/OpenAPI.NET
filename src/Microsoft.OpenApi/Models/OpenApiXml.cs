@@ -88,6 +88,7 @@ namespace Microsoft.OpenApi
         }
 
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public OpenApiXml CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

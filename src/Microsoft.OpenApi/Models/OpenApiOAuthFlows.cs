@@ -61,6 +61,7 @@ namespace Microsoft.OpenApi
         }
 
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public OpenApiOAuthFlows CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

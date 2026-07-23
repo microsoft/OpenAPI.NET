@@ -20,6 +20,7 @@ namespace Microsoft.OpenApi
         public OpenApiResponses(OpenApiResponses openApiResponses) : base(dictionary: openApiResponses) { }
 
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public OpenApiResponses CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

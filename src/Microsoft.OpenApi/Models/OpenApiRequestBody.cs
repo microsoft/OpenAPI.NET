@@ -168,6 +168,7 @@ namespace Microsoft.OpenApi
             return new OpenApiRequestBody(this);
         }
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public IOpenApiRequestBody CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

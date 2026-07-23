@@ -308,6 +308,7 @@ namespace Microsoft.OpenApi
             return new OpenApiSecurityScheme(this);
         }
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public IOpenApiSecurityScheme CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

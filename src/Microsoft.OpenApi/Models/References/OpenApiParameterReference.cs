@@ -94,6 +94,7 @@ namespace Microsoft.OpenApi
             return new OpenApiParameterReference(this);
         }
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public IOpenApiParameter CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

@@ -80,6 +80,7 @@ namespace Microsoft.OpenApi
             return new OpenApiExampleReference(this);
         }
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public IOpenApiExample CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);

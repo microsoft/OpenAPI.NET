@@ -23,6 +23,7 @@ namespace Microsoft.OpenApi
         public OpenApiPaths(OpenApiPaths paths) : base(dictionary: paths) { }
 
         /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
         public OpenApiPaths CreateDeepCopy()
         {
             return new OpenApiDeepCopyContext().Copy(this);
