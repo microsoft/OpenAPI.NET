@@ -1564,6 +1564,60 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
+        public void ApplySemanticConversionsFromV3ToV31ConvertsNullEnumToNullType()
+        {
+            var nullSchema = new OpenApiSchema
+            {
+                Enum = new List<JsonNode>
+                {
+                    JsonNullSentinel.JsonNull
+                }
+            };
+            var document = new OpenApiDocument
+            {
+                Components = new OpenApiComponents
+                {
+                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    {
+                        ["NullableValue"] = nullSchema
+                    }
+                }
+            };
+
+            document.ApplySemanticConversions(OpenApiSpecVersion.OpenApi3_0, OpenApiSpecVersion.OpenApi3_1);
+
+            Assert.Equal(JsonSchemaType.Null, nullSchema.Type);
+            Assert.Null(nullSchema.Enum);
+        }
+
+        [Fact]
+        public void ApplySemanticConversionsFromV31ToV3ConvertsNullTypeToNullEnum()
+        {
+            var nullSchema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Null
+            };
+            var document = new OpenApiDocument
+            {
+                Components = new OpenApiComponents
+                {
+                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    {
+                        ["NullableValue"] = nullSchema
+                    }
+                }
+            };
+
+            document.ApplySemanticConversions(OpenApiSpecVersion.OpenApi3_1, OpenApiSpecVersion.OpenApi3_0);
+
+            Assert.Equal(JsonSchemaType.Null, nullSchema.Type);
+            var enumValues = nullSchema.Enum;
+            Assert.NotNull(enumValues);
+            Assert.Single(enumValues);
+            Assert.True(enumValues[0].IsJsonNullSentinel());
+        }
+
+        [Fact]
         public async Task SerializeContainsKeywordsAsV31Works()
         {
             // Arrange

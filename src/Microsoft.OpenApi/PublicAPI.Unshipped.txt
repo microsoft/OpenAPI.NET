@@ -19,6 +19,7 @@ const Microsoft.OpenApi.OpenApiConstants.OaiLicenseIdentifier = "x-oai-license-i
 [OPENAPI001]Microsoft.OpenApi.OpenApiContact.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiContact!
 [OPENAPI001]Microsoft.OpenApi.OpenApiDiscriminator.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiDiscriminator!
 [OPENAPI001]Microsoft.OpenApi.OpenApiDocument.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiDocument!
+[OPENAPI001]Microsoft.OpenApi.OpenApiDocument.ApplySemanticConversions(Microsoft.OpenApi.OpenApiSpecVersion currentApiSpecVersion, Microsoft.OpenApi.OpenApiSpecVersion targetApiSpecVersion) -> void
 [OPENAPI001]Microsoft.OpenApi.OpenApiEncoding.CreateDeepCopy() -> Microsoft.OpenApi.OpenApiEncoding!
 [OPENAPI001]Microsoft.OpenApi.OpenApiExample.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiExample!
 [OPENAPI001]Microsoft.OpenApi.OpenApiExampleReference.CreateDeepCopy() -> Microsoft.OpenApi.IOpenApiExample!
