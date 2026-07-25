@@ -38,7 +38,9 @@ namespace Microsoft.OpenApi
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="settings">Settings controlling JSON output, including <see cref="OpenApiJsonWriterSettings.Terse"/> for compact formatting.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        public static Task SerializeAsJsonAsync<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, OpenApiJsonWriterSettings settings, CancellationToken cancellationToken)
+#pragma warning disable RS0026 // Intentional overload alongside the CancellationToken-only variant; types are unambiguous.
+        public static Task SerializeAsJsonAsync<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, OpenApiJsonWriterSettings settings, CancellationToken cancellationToken = default)
+#pragma warning restore RS0026
             where T : IOpenApiSerializable
         {
             return element.SerializeAsync(stream, specVersion, OpenApiConstants.Json, settings, cancellationToken);
@@ -68,12 +70,14 @@ namespace Microsoft.OpenApi
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="format">The output format (JSON or YAML).</param>
         /// <param name="cancellationToken">The cancellation token.</param>
+#pragma warning disable RS0027 // The settings overload below has the same parameter count but different types; no ambiguity exists.
         public static Task SerializeAsync<T>(
             this T element,
             Stream stream,
             OpenApiSpecVersion specVersion,
             string format,
             CancellationToken cancellationToken = default)
+#pragma warning restore RS0027
             where T : IOpenApiSerializable
         {
             return element.SerializeAsync(stream, specVersion, format, null, cancellationToken);
@@ -179,13 +183,17 @@ namespace Microsoft.OpenApi
         /// <param name="element">The Open API element.</param>
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="settings">Settings controlling JSON output, including <see cref="OpenApiJsonWriterSettings.Terse"/> for compact formatting.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+#pragma warning disable RS0026 // Intentional overload alongside the CancellationToken-only variant; types are unambiguous.
         public static Task<string> SerializeAsJsonAsync<T>(
             this T element,
             OpenApiSpecVersion specVersion,
-            OpenApiJsonWriterSettings settings)
+            OpenApiJsonWriterSettings settings,
+            CancellationToken cancellationToken = default)
+#pragma warning restore RS0026
             where T : IOpenApiSerializable
         {
-            return element.SerializeAsync(specVersion, OpenApiConstants.Json, settings);
+            return element.SerializeAsync(specVersion, OpenApiConstants.Json, settings, cancellationToken);
         }
 
         /// <summary>
@@ -243,21 +251,29 @@ namespace Microsoft.OpenApi
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="format">Open API document format.</param>
         /// <param name="settings">Provide configuration settings for controlling writing output.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+#pragma warning disable RS0026 // Intentional overload alongside the CancellationToken-only variant; types are unambiguous.
         public static async Task<string> SerializeAsync<T>(
             this T element,
             OpenApiSpecVersion specVersion,
             string format,
-            OpenApiWriterSettings? settings)
+            OpenApiWriterSettings? settings,
+            CancellationToken cancellationToken = default)
+#pragma warning restore RS0026
             where T : IOpenApiSerializable
         {
             Utils.CheckArgumentNull(element);
 
             using var stream = new MemoryStream();
-            await element.SerializeAsync(stream, specVersion, format, settings, CancellationToken.None).ConfigureAwait(false);
+            await element.SerializeAsync(stream, specVersion, format, settings, cancellationToken).ConfigureAwait(false);
             stream.Position = 0;
 
             using var streamReader = new StreamReader(stream);
+#if NET7_0_OR_GREATER
+            return await streamReader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+#else
             return await streamReader.ReadToEndAsync().ConfigureAwait(false);
+#endif
         }
     }
 }

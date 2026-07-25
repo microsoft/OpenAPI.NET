@@ -105,7 +105,7 @@ public class OpenApiSerializableExtensionsTests
         var settings = new OpenApiJsonWriterSettings { Terse = true };
 
         using var stream = new MemoryStream();
-        await parameter.SerializeAsJsonAsync(stream, OpenApiSpecVersion.OpenApi3_1, settings, CancellationToken.None);
+        await parameter.SerializeAsJsonAsync(stream, OpenApiSpecVersion.OpenApi3_1, settings, TestContext.Current.CancellationToken);
 
         stream.Position = 0;
         using var reader = new StreamReader(stream);
@@ -126,7 +126,7 @@ public class OpenApiSerializableExtensionsTests
 
         var settings = new OpenApiJsonWriterSettings { Terse = true };
 
-        var output = await parameter.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, settings);
+        var output = await parameter.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, settings, TestContext.Current.CancellationToken);
 
         Assert.Equal("{\"name\":\"param1\",\"in\":\"query\",\"schema\":{\"type\":\"string\"}}", output);
     }
@@ -143,7 +143,7 @@ public class OpenApiSerializableExtensionsTests
 
         var settings = new OpenApiJsonWriterSettings { Terse = false };
 
-        var output = await parameter.SerializeAsync(OpenApiSpecVersion.OpenApi3_1, OpenApiConstants.Json, settings);
+        var output = await parameter.SerializeAsync(OpenApiSpecVersion.OpenApi3_1, OpenApiConstants.Json, settings, TestContext.Current.CancellationToken);
 
         Assert.Equal("{\n  \"name\": \"param1\",\n  \"in\": \"query\",\n  \"schema\": {\n    \"type\": \"string\"\n  }\n}", output);
     }
