@@ -7,6 +7,7 @@ using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi
 {
+#pragma warning disable CS0618
     /// <summary>
     /// Defines a non-default set of rules for validating examples in header, media type and parameter objects against the schema
     /// </summary>

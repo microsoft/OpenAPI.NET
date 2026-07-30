@@ -236,6 +236,11 @@ namespace Microsoft.OpenApi
         public const string Identifier = "identifier";
 
         /// <summary>
+        /// Field: x-oai-license-identifier
+        /// </summary>
+        public const string OaiLicenseIdentifier = "x-oai-license-identifier";
+
+        /// <summary>
         /// Field: Namespace
         /// </summary>
         public const string Namespace = "namespace";
@@ -771,6 +776,11 @@ namespace Microsoft.OpenApi
         public const string OAuth2MetadataUrl = "oauth2MetadataUrl";
 
         /// <summary>
+        /// Extension: x-oai-oauth2-metadata-url
+        /// </summary>
+        internal const string OAuth2MetadataUrlExtension = "x-oai-oauth2-metadata-url";
+
+        /// <summary>
         /// Field: OpenIdConnectUrl
         /// </summary>
         public const string OpenIdConnectUrl = "openIdConnectUrl";
@@ -804,6 +814,11 @@ namespace Microsoft.OpenApi
         /// Field: Examples Extension
         /// </summary>
         public const string ExamplesExtension = "x-examples";
+
+        /// <summary>
+        /// Extension: x-jsonschema-examples
+        /// </summary>
+        public const string JsonSchemaExamplesExtension = "x-jsonschema-examples";
 
         /// <summary>
         /// Field: version3_0_0

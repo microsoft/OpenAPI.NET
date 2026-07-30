@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.9.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.8.0...v3.9.0) (2026-07-15)
+
+
+### Features
+
+* adds support for anchor and id external resolution ([1591007](https://github.com/microsoft/OpenAPI.NET/commit/15910070f2bf3006f79e1c43dd9c2b56e45d665c))
+* **schema:** resolve bare $dynamicRef via $dynamicAnchor index ([#2913](https://github.com/microsoft/OpenAPI.NET/issues/2913)) ([eacc2fc](https://github.com/microsoft/OpenAPI.NET/commit/eacc2fc06537fbb11fe95765e4fb6df09861c9af))
+* support relative URI resolution in $dynamicRef ([#2928](https://github.com/microsoft/OpenAPI.NET/issues/2928)) ([#2945](https://github.com/microsoft/OpenAPI.NET/issues/2945)) ([821053b](https://github.com/microsoft/OpenAPI.NET/commit/821053ba02129e92868df2ae0c26551fb3d5276a))
+
+
+### Bug Fixes
+
+* adds explicit error message for invalid json pointers ([63fc55d](https://github.com/microsoft/OpenAPI.NET/commit/63fc55d69274ebd405e677983e0a72efd2b96079))
+* adds explicit error message for invalid json pointers ([bc93efe](https://github.com/microsoft/OpenAPI.NET/commit/bc93efe9d4694e89da1ea30fbc2d031e7f1318ae))
+* default mapping is not being serialized with the correct shape ([fe4a25f](https://github.com/microsoft/OpenAPI.NET/commit/fe4a25f1f25c853404540d30f11812f1208f93c9))
+* differentiate unset value from null value in OpenApiSchema.Const ([#2936](https://github.com/microsoft/OpenAPI.NET/issues/2936)) ([07b525f](https://github.com/microsoft/OpenAPI.NET/commit/07b525f568b65b5003deaccc56829f5e7e8e2641))
+* handle nullability more accurately during serialization for 3.0/2.0 ([#2933](https://github.com/microsoft/OpenAPI.NET/issues/2933)) ([0ace243](https://github.com/microsoft/OpenAPI.NET/commit/0ace243ebbabe82aacc52d49fe58f54f039bdf76))
+* validate required properties of security scheme before serialization ([#2952](https://github.com/microsoft/OpenAPI.NET/issues/2952)) ([f31b192](https://github.com/microsoft/OpenAPI.NET/commit/f31b192e9d59d39671fdfd03b4fa4d309b03021b))
+
 ## [3.8.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.7.0...v3.8.0) (2026-07-03)
 
 

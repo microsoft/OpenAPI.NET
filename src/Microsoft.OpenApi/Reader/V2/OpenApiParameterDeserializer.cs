@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
+#pragma warning disable CS0618
+
 namespace Microsoft.OpenApi.Reader.V2
 {
     /// <summary>

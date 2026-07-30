@@ -251,6 +251,7 @@ namespace Microsoft.OpenApi
         public OpenApiDiscriminator? Discriminator { get; set; }
 
         /// <inheritdoc />
+        [Obsolete("Use Examples instead.")]
         public JsonNode? Example { get; set; }
 
         /// <inheritdoc />
@@ -620,7 +621,10 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, callback);
 
             // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
+            writer.WriteOptionalObject(
+                OpenApiConstants.Example,
+                version < OpenApiSpecVersion.OpenApi3_1 ? GetCompatibilityExample() : Example,
+                (w, e) => w.WriteAny(e));
 
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
@@ -746,6 +750,7 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalObject(OpenApiConstants.IfExtension, If, callback);
             writer.WriteOptionalObject(OpenApiConstants.ThenExtension, Then, callback);
             writer.WriteOptionalObject(OpenApiConstants.ElseExtension, Else, callback);
+            writer.WriteOptionalCollection(OpenApiConstants.JsonSchemaExamplesExtension, GetCompatibilityExamplesExtension(), (nodeWriter, s) => nodeWriter.WriteAny(s));
         }
 
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
@@ -959,7 +964,10 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.SerializeAsV2(w));
 
             // example
+#pragma warning disable CS0618
+            writer.WriteOptionalObject(OpenApiConstants.Example, GetCompatibilityExample(), (w, e) => w.WriteAny(e));
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
+#pragma warning restore CS0618
 
             // x-nullable extension
             SerializeNullable(writer, OpenApiSpecVersion.OpenApi2_0);
@@ -989,6 +997,8 @@ namespace Microsoft.OpenApi
             {
                 writer.WriteOptionalMap(OpenApiConstants.PatternPropertiesExtension, PatternProperties, (w, s) => s.SerializeAsV2(w));
             }
+
+            writer.WriteOptionalCollection(OpenApiConstants.JsonSchemaExamplesExtension, GetCompatibilityExamplesExtension(), (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
@@ -1103,6 +1113,30 @@ namespace Microsoft.OpenApi
 
                 return schemas;
             }
+        }
+
+        private JsonNode? GetCompatibilityExample()
+        {
+#pragma warning disable CS0618 // Type or member is obsolete
+            return Example ?? Examples?.FirstOrDefault();
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        private IEnumerable<JsonNode>? GetCompatibilityExamplesExtension()
+        {
+            if (Examples is null || Examples.Count == 0)
+            {
+                return null;
+            }
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            if (Example is not null)
+            {
+                return Examples;
+            }
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            return Examples.Count > 1 ? Examples.Skip(1) : null;
         }
 
         private static bool IsPowerOfTwo(int x)

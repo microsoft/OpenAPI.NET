@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi
                     }
                     else
                     {
-                        writer.WriteProperty("x-oauth2-metadata-url", OAuth2MetadataUrl?.ToString());
+                        writer.WriteProperty(OpenApiConstants.OAuth2MetadataUrlExtension, OAuth2MetadataUrl?.ToString());
                     }
                     writer.WriteOptionalObject(OpenApiConstants.Flows, Flows, callback);
                     break;

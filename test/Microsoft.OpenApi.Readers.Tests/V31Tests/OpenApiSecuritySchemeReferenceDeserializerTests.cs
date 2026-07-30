@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V31;
@@ -66,5 +67,31 @@ public class OpenApiSecuritySchemeReferenceDeserializerTests
         Assert.Equal("api_key", resultScheme.Name);
         Assert.Equal(ParameterLocation.Header, resultScheme.In);
         Assert.True(resultScheme.Deprecated);
+    }
+
+    [Fact]
+    public void ShouldDeserializeSecuritySchemeWithOAuth2MetadataUrlExtension()
+    {
+        var json =
+        """
+        {
+            "type": "oauth2",
+            "x-oai-oauth2-metadata-url": "https://idp.example.com/.well-known/oauth-authorization-server",
+            "flows": {
+                "clientCredentials": {
+                    "tokenUrl": "https://idp.example.com/oauth/token",
+                    "scopes": {
+                        "scope:one": "Scope one"
+                    }
+                }
+            }
+        }
+        """;
+
+        var result = OpenApiV31Deserializer.LoadSecurityScheme(JsonNode.Parse(json), new OpenApiDocument(), new ParsingContext(new()));
+
+        var resultScheme = Assert.IsType<OpenApiSecurityScheme>(result);
+        Assert.Equal(new Uri("https://idp.example.com/.well-known/oauth-authorization-server"), resultScheme.OAuth2MetadataUrl);
+        Assert.True(resultScheme.Extensions is null || !resultScheme.Extensions.ContainsKey(OpenApiConstants.OAuth2MetadataUrlExtension));
     }
 }

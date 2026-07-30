@@ -13,6 +13,8 @@ using Microsoft.OpenApi.Tests;
 using Xunit;
 using System;
 
+#pragma warning disable CS0618
+
 namespace Microsoft.OpenApi.Readers.Tests.V32Tests
 {
     public class OpenApiSchemaTests

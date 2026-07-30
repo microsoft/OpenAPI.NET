@@ -36,6 +36,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         }
 
         [Fact]
+#pragma warning disable CS0618
         public void ValidateExampleAndDefaultShouldNotHaveDataTypeMismatchForSimpleSchema()
         {
             // Arrange
@@ -58,6 +59,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Assert
             Assert.True(result);
         }
+#pragma warning restore CS0618
 
         [Fact]
         public void ValidateEnumShouldNotHaveDataTypeMismatchForSimpleSchema()

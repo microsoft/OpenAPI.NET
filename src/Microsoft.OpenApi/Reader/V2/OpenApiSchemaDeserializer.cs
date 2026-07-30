@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
+#pragma warning disable CS0618
+
 namespace Microsoft.OpenApi.Reader.V2
 {
     /// <summary>
@@ -266,6 +268,10 @@ namespace Microsoft.OpenApi.Reader.V2
             {
                 "example",
                 (o, n, _, _) => o.Example = n
+            },
+            {
+                OpenApiConstants.JsonSchemaExamplesExtension,
+                (o, n, _, c) => o.Examples = n.CreateListOfAny(c)
             },
             {
                 OpenApiConstants.PatternPropertiesExtension,

@@ -8,6 +8,7 @@ using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi
 {
+#pragma warning disable CS0618
     /// <summary>
     /// Parameter Object.
     /// </summary>
@@ -32,6 +33,7 @@ namespace Microsoft.OpenApi
         public bool Deprecated { get; set; }
 
         /// <inheritdoc/>
+        [Obsolete("Use of AllowEmptyValue is not recommended and it is likely to be removed in a later revision.")]
         public bool AllowEmptyValue { get; set; }
 
         /// <inheritdoc/>

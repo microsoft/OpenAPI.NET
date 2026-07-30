@@ -1,6 +1,8 @@
 using System;
 using System.Text.Json.Nodes;
 
+#pragma warning disable CS0618
+
 namespace Microsoft.OpenApi.Reader.V31
 {
     /// <summary>
