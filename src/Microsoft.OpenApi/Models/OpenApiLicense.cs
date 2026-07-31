@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// License Object.
     /// </summary>
-    public class OpenApiLicense : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiLicense : IOpenApiSerializable, IOpenApiExtensible, IDeepCopyable<OpenApiLicense>
     {
         /// <summary>
         /// REQUIRED. The license name used for the API.
@@ -45,6 +45,13 @@ namespace Microsoft.OpenApi
             Identifier = license?.Identifier ?? Identifier;
             Url = license?.Url != null ? new Uri(license.Url.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Extensions = license?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(license.Extensions) : null;
+        }
+
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public OpenApiLicense CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>

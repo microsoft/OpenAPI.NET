@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Path Item Object Reference: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItemReference : BaseOpenApiReferenceHolder<OpenApiPathItem, IOpenApiPathItem, OpenApiReferenceWithDescriptionAndSummary>, IOpenApiPathItem
+    public class OpenApiPathItemReference : BaseOpenApiReferenceHolder<OpenApiPathItem, IOpenApiPathItem, OpenApiReferenceWithDescriptionAndSummary>, IOpenApiPathItem, IDeepCopyable<IOpenApiPathItem>
     {
 
         /// <summary>
@@ -71,6 +71,12 @@ namespace Microsoft.OpenApi
         public IOpenApiPathItem CreateShallowCopy()
         {
             return new OpenApiPathItemReference(this);
+        }
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public IOpenApiPathItem CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <inheritdoc/>

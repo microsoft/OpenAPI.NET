@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// OAuth Flow Object.
     /// </summary>
-    public class OpenApiOAuthFlow : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiOAuthFlow : IOpenApiSerializable, IOpenApiExtensible, IDeepCopyable<OpenApiOAuthFlow>
     {
         /// <summary>
         /// REQUIRED. The authorization URL to be used for this flow.
@@ -59,6 +59,13 @@ namespace Microsoft.OpenApi
             DeviceAuthorizationUrl = oAuthFlow?.DeviceAuthorizationUrl != null ? new Uri(oAuthFlow.DeviceAuthorizationUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Scopes = oAuthFlow?.Scopes != null ? new Dictionary<string, string>(oAuthFlow.Scopes) : null;
             Extensions = oAuthFlow?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(oAuthFlow.Extensions) : null;
+        }
+
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public OpenApiOAuthFlow CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>

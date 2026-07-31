@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Link Object.
     /// </summary>
-    public class OpenApiLink : IOpenApiExtensible, IOpenApiLink
+    public class OpenApiLink : IOpenApiExtensible, IOpenApiLink, IDeepCopyable<IOpenApiLink>
     {
         /// <inheritdoc/>
         public string? OperationRef { get; set; }
@@ -109,6 +109,12 @@ namespace Microsoft.OpenApi
         public IOpenApiLink CreateShallowCopy()
         {
             return new OpenApiLink(this);
+        }
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public IOpenApiLink CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
     }
 }

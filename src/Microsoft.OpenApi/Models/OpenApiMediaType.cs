@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Media Type Object.
     /// </summary>
-    public class OpenApiMediaType : IOpenApiSerializable, IOpenApiExtensible, IOpenApiMediaType
+    public class OpenApiMediaType : IOpenApiSerializable, IOpenApiExtensible, IOpenApiMediaType, IDeepCopyable<IOpenApiMediaType>
     {
         /// <inheritdoc />
         public IOpenApiSchema? Schema { get; set; }
@@ -78,6 +78,12 @@ namespace Microsoft.OpenApi
         public IOpenApiMediaType CreateShallowCopy()
         {
             return new OpenApiMediaType(this);
+        }
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public IOpenApiMediaType CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>

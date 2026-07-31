@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Components Object.
     /// </summary>
-    public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible, IDeepCopyable<OpenApiComponents>
     {
         /// <summary>
         /// An object to hold reusable <see cref="IOpenApiSchema"/> Objects.
@@ -94,6 +94,13 @@ namespace Microsoft.OpenApi
             PathItems = components?.PathItems != null ? new Dictionary<string, IOpenApiPathItem>(components.PathItems) : null;
             MediaTypes = components?.MediaTypes != null ? new Dictionary<string, IOpenApiMediaType>(components.MediaTypes) : null;
             Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
+        }
+
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public OpenApiComponents CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>

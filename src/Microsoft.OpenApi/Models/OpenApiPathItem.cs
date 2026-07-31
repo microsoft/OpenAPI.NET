@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Path Item Object: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItem : IOpenApiExtensible, IOpenApiPathItem
+    public class OpenApiPathItem : IOpenApiExtensible, IOpenApiPathItem, IDeepCopyable<IOpenApiPathItem>
     {
         /// <inheritdoc/>
         public string? Summary { get; set; }
@@ -217,6 +217,12 @@ namespace Microsoft.OpenApi
         public IOpenApiPathItem CreateShallowCopy()
         {
             return new OpenApiPathItem(this);
+        }
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public IOpenApiPathItem CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
     }
 }

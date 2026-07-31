@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Parameter Object Reference.
     /// </summary>
-    public class OpenApiParameterReference : BaseOpenApiReferenceHolder<OpenApiParameter, IOpenApiParameter, OpenApiReferenceWithDescription>, IOpenApiParameter
+    public class OpenApiParameterReference : BaseOpenApiReferenceHolder<OpenApiParameter, IOpenApiParameter, OpenApiReferenceWithDescription>, IOpenApiParameter, IDeepCopyable<IOpenApiParameter>
     {
         /// <summary>
         /// Constructor initializing the reference object.
@@ -92,6 +92,12 @@ namespace Microsoft.OpenApi
         public IOpenApiParameter CreateShallowCopy()
         {
             return new OpenApiParameterReference(this);
+        }
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public IOpenApiParameter CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <inheritdoc/>

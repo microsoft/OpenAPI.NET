@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Contact Object.
     /// </summary>
-    public class OpenApiContact : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiContact : IOpenApiSerializable, IOpenApiExtensible, IDeepCopyable<OpenApiContact>
     {
         /// <summary>
         /// The identifying name of the contact person/organization.
@@ -46,6 +46,12 @@ namespace Microsoft.OpenApi
             Url = contact?.Url != null ? new Uri(contact.Url.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Email = contact?.Email ?? Email;
             Extensions = contact?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(contact.Extensions) : null;
+        }
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public OpenApiContact CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
         /// <summary>
         /// Serialize <see cref="OpenApiContact"/> to Open Api v3.2

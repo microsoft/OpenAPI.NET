@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi
     /// - Serialization: To produce something functionally equivalent to boolean schemas, create an empty <see cref="OpenApiSchema"/>
     ///   for "true" behavior, or create a schema with only <see cref="Not"/> set to an empty schema for "false" behavior.
     /// </summary>
-    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema, IOpenApiSchemaMissingProperties, IOpenApiSchemaWithUnevaluatedProperties, IMetadataContainer
+    public class OpenApiSchema : IOpenApiExtensible, IOpenApiSchema, IOpenApiSchemaMissingProperties, IOpenApiSchemaWithUnevaluatedProperties, IMetadataContainer, IDeepCopyable<IOpenApiSchema>
     {
         private static readonly IEnumerable<JsonNode> s_singleNullElementList = [ JsonNullSentinel.JsonNull ];
 
@@ -1116,6 +1116,12 @@ namespace Microsoft.OpenApi
         public IOpenApiSchema CreateShallowCopy()
         {
             return new OpenApiSchema(this);
+        }
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public IOpenApiSchema CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
     }
 }

@@ -9,10 +9,12 @@ namespace Microsoft.OpenApi
     internal class ReferenceHostDocumentSetter : OpenApiVisitorBase
     {
         private readonly OpenApiDocument _currentDocument;
+        private readonly bool _overwriteExisting;
 
-        public ReferenceHostDocumentSetter(OpenApiDocument currentDocument)
+        public ReferenceHostDocumentSetter(OpenApiDocument currentDocument, bool overwriteExisting = false)
         {
             _currentDocument = currentDocument;
+            _overwriteExisting = overwriteExisting;
         }
 
         /// <inheritdoc/>
@@ -26,7 +28,14 @@ namespace Microsoft.OpenApi
                 IOpenApiReferenceHolder<BaseOpenApiReference> { Reference: BaseOpenApiReference baseReference } => baseReference,
                 _ => throw new OpenApiException($"Unsupported reference holder type: {referenceHolder.GetType().FullName}")
             };
-            reference.EnsureHostDocumentIsSet(_currentDocument);
+            if (_overwriteExisting)
+            {
+                reference.SetHostDocument(_currentDocument);
+            }
+            else
+            {
+                reference.EnsureHostDocumentIsSet(_currentDocument);
+            }
         }
     }
 }

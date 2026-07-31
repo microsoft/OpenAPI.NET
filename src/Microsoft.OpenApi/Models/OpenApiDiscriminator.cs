@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Discriminator object.
     /// </summary>
-    public class OpenApiDiscriminator : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiDiscriminator : IOpenApiSerializable, IOpenApiExtensible, IDeepCopyable<OpenApiDiscriminator>
     {
         /// <summary>
         /// REQUIRED. The name of the property in the payload that will hold the discriminator value.
@@ -44,6 +44,13 @@ namespace Microsoft.OpenApi
             Mapping = discriminator?.Mapping != null ? new Dictionary<string, OpenApiSchemaReference>(discriminator.Mapping) : null;
             Extensions = discriminator?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(discriminator.Extensions) : null;
             DefaultMapping = discriminator?.DefaultMapping;
+        }
+
+        /// <inheritdoc/>
+        [System.Diagnostics.CodeAnalysis.Experimental("OPENAPI001")]
+        public OpenApiDiscriminator CreateDeepCopy()
+        {
+            return new OpenApiDeepCopyContext().Copy(this);
         }
 
         /// <summary>
