@@ -2461,9 +2461,11 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                       "enum": [
                         null
-                      ]
+                      ],
+                      "nullable": true
                     }
-                  ]
+                  ],
+                  "nullable": true
                 }
                 """;
 
@@ -2501,7 +2503,8 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                       "enum": [
                         null
-                      ]
+                      ],
+                      "nullable": true
                     }
                   ],
                   "oneOf": [
@@ -2511,7 +2514,8 @@ namespace Microsoft.OpenApi.Tests.Models
                         "B"
                       ]
                     }
-                  ]
+                  ],
+                  "nullable": true
                 }
                 """;
 
@@ -2549,7 +2553,8 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                       "enum": [
                         null
-                      ]
+                      ],
+                      "nullable": true
                     }
                   ],
                   "anyOf": [
@@ -2559,7 +2564,8 @@ namespace Microsoft.OpenApi.Tests.Models
                         "B"
                       ]
                     }
-                  ]
+                  ],
+                  "nullable": true
                 }
                 """;
 
@@ -2613,7 +2619,8 @@ namespace Microsoft.OpenApi.Tests.Models
                         "B"
                       ]
                     }
-                  ]
+                  ],
+                  "nullable": true
                 }
                 """;
 

@@ -120,13 +120,20 @@ namespace Microsoft.OpenApi.Tests.Models
         [Fact]
         public async Task SerializeMultipleNonNullTypesAsV3OmitsType()
         {
-            // Current behavior isn't good. It loses the information about multiple types.
             var schema = new OpenApiSchema { Type = JsonSchemaType.String | JsonSchemaType.Integer };
 
             var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             var expected = """
                 {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
                 }
                 """;
 
@@ -139,7 +146,6 @@ namespace Microsoft.OpenApi.Tests.Models
         [Fact]
         public async Task SerializeMultipleNonNullTypesWithNullAsV3OmitsTypeButKeepsNullable()
         {
-            // Current behavior isn't good. It loses the information about multiple types.
             var schema = new OpenApiSchema
             {
                 Type = JsonSchemaType.String | JsonSchemaType.Integer | JsonSchemaType.Null
@@ -149,7 +155,21 @@ namespace Microsoft.OpenApi.Tests.Models
 
             var expected = """
                 {
-                    "nullable": true
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "enum": [
+                        null
+                      ],
+                      "nullable": true
+                    }
+                  ],
+                  "nullable": true
                 }
                 """;
 
