@@ -11,6 +11,7 @@ using System.Text.Json.Schema;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.OpenApi.Reader;
 using VerifyXunit;
 using Xunit;
 
@@ -2151,6 +2152,19 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+
+            var deserializedSchema = OpenApiModelFactory.Parse<OpenApiSchema>(expected, OpenApiSpecVersion.OpenApi3_0, new OpenApiDocument(), out _);
+            Assert.Null(deserializedSchema.OneOf);
+            Assert.Null(deserializedSchema.AnyOf);
+            Assert.Equal(schema.Type, deserializedSchema.Type);
+
+            var actual32 = await deserializedSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var expected32 = """
+                {
+                  "type": [ "integer", "string" ]
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected32), JsonNode.Parse(actual32)));
         }
 
         [Fact]
@@ -2194,6 +2208,27 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+
+            var deserializedSchema = OpenApiModelFactory.Parse<OpenApiSchema>(expected, OpenApiSpecVersion.OpenApi3_0, new OpenApiDocument(), out _);
+            Assert.NotNull(deserializedSchema.OneOf);
+            Assert.Null(deserializedSchema.AnyOf);
+            Assert.Equal(schema.Type, deserializedSchema.Type);
+
+            var actual32 = await deserializedSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var expected32 = """
+                {
+                  "type": [ "integer", "string" ],
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "A",
+                        "B"
+                      ]
+                    }
+                  ]
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected32), JsonNode.Parse(actual32)));
         }
 
         [Fact]
@@ -2237,6 +2272,27 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+
+            var deserializedSchema = OpenApiModelFactory.Parse<OpenApiSchema>(expected, OpenApiSpecVersion.OpenApi3_0, new OpenApiDocument(), out _);
+            Assert.Null(deserializedSchema.OneOf);
+            Assert.NotNull(deserializedSchema.AnyOf);
+            Assert.Equal(schema.Type, deserializedSchema.Type);
+
+            var actual32 = await deserializedSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var expected32 = """
+                {
+                  "type": [ "integer", "string" ],
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "A",
+                        "B"
+                      ]
+                    }
+                  ]
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected32), JsonNode.Parse(actual32)));
         }
 
         [Fact]
@@ -2291,6 +2347,34 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+
+            var deserializedSchema = OpenApiModelFactory.Parse<OpenApiSchema>(expected, OpenApiSpecVersion.OpenApi3_0, new OpenApiDocument(), out _);
+            Assert.NotNull(deserializedSchema.OneOf);
+            Assert.NotNull(deserializedSchema.AnyOf);
+            Assert.Null(deserializedSchema.Type);
+
+            var actual32 = await deserializedSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var expected32 = """
+                {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "A",
+                        "B"
+                      ]
+                    }
+                  ],
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "A",
+                        "B"
+                      ]
+                    }
+                  ]
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected32), JsonNode.Parse(actual32)));
         }
 
         [Fact]
@@ -2309,6 +2393,19 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+
+            var deserializedSchema = OpenApiModelFactory.Parse<OpenApiSchema>(expected, OpenApiSpecVersion.OpenApi3_0, new OpenApiDocument(), out _);
+            Assert.Null(deserializedSchema.OneOf);
+            Assert.Null(deserializedSchema.AnyOf);
+            Assert.Equal(schema.Type, deserializedSchema.Type);
+
+            var actual32 = await deserializedSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var expected32 = """
+                {
+                  "type": [ "null", "string" ]
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected32), JsonNode.Parse(actual32)));
         }
 
         [Fact]
@@ -2346,6 +2443,27 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+
+            var deserializedSchema = OpenApiModelFactory.Parse<OpenApiSchema>(expected, OpenApiSpecVersion.OpenApi3_0, new OpenApiDocument(), out _);
+            Assert.NotNull(deserializedSchema.OneOf);
+            Assert.Null(deserializedSchema.AnyOf);
+            Assert.Equal(schema.Type, deserializedSchema.Type);
+
+            var actual32 = await deserializedSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var expected32 = """
+                {
+                  "type": [ "null", "string" ],
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "A",
+                        "B"
+                      ]
+                    }
+                  ]
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected32), JsonNode.Parse(actual32)));
         }
 
         [Fact]
@@ -2383,6 +2501,27 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+
+            var deserializedSchema = OpenApiModelFactory.Parse<OpenApiSchema>(expected, OpenApiSpecVersion.OpenApi3_0, new OpenApiDocument(), out _);
+            Assert.Null(deserializedSchema.OneOf);
+            Assert.NotNull(deserializedSchema.AnyOf);
+            Assert.Equal(schema.Type, deserializedSchema.Type);
+
+            var actual32 = await deserializedSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var expected32 = """
+                {
+                  "type": [ "null", "string" ],
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "A",
+                        "B"
+                      ]
+                    }
+                  ]
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected32), JsonNode.Parse(actual32)));
         }
 
         [Fact]
@@ -2439,6 +2578,35 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+
+            var deserializedSchema = OpenApiModelFactory.Parse<OpenApiSchema>(expected, OpenApiSpecVersion.OpenApi3_0, new OpenApiDocument(), out _);
+            Assert.NotNull(deserializedSchema.OneOf);
+            Assert.NotNull(deserializedSchema.AnyOf);
+            Assert.Equal(schema.Type, deserializedSchema.Type);
+
+            var actual32 = await deserializedSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var expected32 = """
+                {
+                  "type": [ "null", "string" ],
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "A",
+                        "B"
+                      ]
+                    }
+                  ],
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "A",
+                        "B"
+                      ]
+                    }
+                  ]
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected32), JsonNode.Parse(actual32)));
         }
 
         [Fact]
@@ -2470,6 +2638,19 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+
+            var deserializedSchema = OpenApiModelFactory.Parse<OpenApiSchema>(expected, OpenApiSpecVersion.OpenApi3_0, new OpenApiDocument(), out _);
+            Assert.Null(deserializedSchema.OneOf);
+            Assert.Null(deserializedSchema.AnyOf);
+            Assert.Equal(schema.Type, deserializedSchema.Type);
+
+            var actual32 = await deserializedSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var expected32 = """
+                {
+                  "type": [ "null", "integer", "string" ]
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected32), JsonNode.Parse(actual32)));
         }
 
         [Fact]
@@ -2520,6 +2701,27 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+
+            var deserializedSchema = OpenApiModelFactory.Parse<OpenApiSchema>(expected, OpenApiSpecVersion.OpenApi3_0, new OpenApiDocument(), out _);
+            Assert.NotNull(deserializedSchema.OneOf);
+            Assert.Null(deserializedSchema.AnyOf);
+            Assert.Equal(schema.Type, deserializedSchema.Type);
+
+            var actual32 = await deserializedSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var expected32 = """
+                {
+                  "type": [ "null", "integer", "string" ],
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "A",
+                        "B"
+                      ]
+                    }
+                  ]
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected32), JsonNode.Parse(actual32)));
         }
 
         [Fact]
@@ -2570,6 +2772,27 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+
+            var deserializedSchema = OpenApiModelFactory.Parse<OpenApiSchema>(expected, OpenApiSpecVersion.OpenApi3_0, new OpenApiDocument(), out _);
+            Assert.Null(deserializedSchema.OneOf);
+            Assert.NotNull(deserializedSchema.AnyOf);
+            Assert.Equal(schema.Type, deserializedSchema.Type);
+
+            var actual32 = await deserializedSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var expected32 = """
+                {
+                  "type": [ "null", "integer", "string" ],
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "A",
+                        "B"
+                      ]
+                    }
+                  ]
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected32), JsonNode.Parse(actual32)));
         }
 
         [Fact]
@@ -2625,6 +2848,34 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(result)));
+
+            var deserializedSchema = OpenApiModelFactory.Parse<OpenApiSchema>(expected, OpenApiSpecVersion.OpenApi3_0, new OpenApiDocument(), out _);
+            Assert.NotNull(deserializedSchema.OneOf);
+            Assert.NotNull(deserializedSchema.AnyOf);
+            Assert.Null(deserializedSchema.Type);
+
+            var actual32 = await deserializedSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var expected32 = """
+                {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "A",
+                        "B"
+                      ]
+                    }
+                  ],
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "A",
+                        "B"
+                      ]
+                    }
+                  ]
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected32), JsonNode.Parse(actual32)));
         }
 
         private OpenApiSchema CreateNullableEnumSchema()

@@ -420,7 +420,47 @@ namespace Microsoft.OpenApi.Reader.V3
                 schema.Type = JsonSchemaType.Null;
             }
 
+            if (schema.Type is null)
+            {
+                if (schema.AnyOf is not null &&
+                    schema.AnyOf.All(childSchema => childSchema is OpenApiSchema schema && DoesSchemaRepresentSingleType(schema)))
+                {
+                    JsonSchemaType types = GetAllTypes(schema.AnyOf);
+                    schema.AnyOf = null;
+                    schema.Type = types;
+                }
+                else if (schema.OneOf is not null &&
+                    schema.OneOf.All(childSchema => childSchema is OpenApiSchema schema && DoesSchemaRepresentSingleType(schema)))
+                {
+                    JsonSchemaType types = GetAllTypes(schema.OneOf);
+                    schema.OneOf = null;
+                    schema.Type = types;
+                }
+            }
+
             return schema;
+        }
+
+        private static JsonSchemaType GetAllTypes(IList<IOpenApiSchema> schemas)
+        {
+            JsonSchemaType types = 0;
+            foreach (var schema in schemas)
+            {
+                types |= schema.Type!.Value;
+            }
+
+            return types;
+        }
+
+        private static bool DoesSchemaRepresentSingleType(OpenApiSchema schema)
+        {
+            return schema.Type is JsonSchemaType.Null or
+                JsonSchemaType.Boolean or
+                JsonSchemaType.Integer or
+                JsonSchemaType.Number or
+                JsonSchemaType.String or
+                JsonSchemaType.Object or
+                JsonSchemaType.Array;
         }
     }
 }

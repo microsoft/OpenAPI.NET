@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public async Task SerializeMultipleNonNullTypesAsV3OmitsType()
+        public async Task SerializeMultipleNonNullTypesAsV3DoesNotOmitType()
         {
             var schema = new OpenApiSchema { Type = JsonSchemaType.String | JsonSchemaType.Integer };
 
@@ -140,11 +140,11 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
 
             var deserializedSchema = ParseSchemaFromV30Document(actual);
-            Assert.Null(deserializedSchema.Type);
+            Assert.Equal(schema.Type, deserializedSchema.Type);
         }
 
         [Fact]
-        public async Task SerializeMultipleNonNullTypesWithNullAsV3OmitsTypeButKeepsNullable()
+        public async Task SerializeMultipleNonNullTypesWithNullAsV3DoesNotOmitType()
         {
             var schema = new OpenApiSchema
             {
@@ -176,7 +176,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
 
             var deserializedSchema = ParseSchemaFromV30Document(actual);
-            Assert.Null(deserializedSchema.Type);
+            Assert.Equal(schema.Type, deserializedSchema.Type);
         }
 
         [Fact]
