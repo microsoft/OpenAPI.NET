@@ -413,6 +413,13 @@ namespace Microsoft.OpenApi.Reader.V3
                 }
             }
 
+            if (schema.Type is null && schema.Enum is { Count: 1 } &&
+                schema.Enum[0].IsJsonNullSentinel())
+            {
+                schema.Enum = null;
+                schema.Type = JsonSchemaType.Null;
+            }
+
             return schema;
         }
     }

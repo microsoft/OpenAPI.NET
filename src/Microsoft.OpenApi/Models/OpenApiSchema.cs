@@ -550,7 +550,7 @@ namespace Microsoft.OpenApi
             }
 
             // type
-            var serializedTypeProperty = TrySerializeTypePropertyForVersion3AndLater(writer, version, callback);
+            SerializeTypePropertyForVersion3AndLater(writer, version, callback);
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, callback);
@@ -595,13 +595,13 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // nullable
-            if (version == OpenApiSpecVersion.OpenApi3_0 && serializedTypeProperty)
+            if (version == OpenApiSpecVersion.OpenApi3_0)
             {
                 // https://spec.openapis.org/oas/v3.0.4.html#fixed-fields-20
                 // This keyword only takes effect if type is explicitly defined within the same Schema Object.
                 //
-                // If the user explicitly set IsNullable to true, we serialize it even if redundant.
-                // But if **we** are inferring it (from oneOf/anyOf), we don't serialize it when it's redundant.
+                // We don't care to avoid an unnecessary serialization.
+                // So, we attempt to serialize it regardless of whether or not a type property was serialized.
                 SerializeNullable(writer, version);
             }
 
@@ -838,7 +838,7 @@ namespace Microsoft.OpenApi
             writer.WriteStartObject();
 
             // type
-            TrySerializeTypePropertyForVersion2(writer);
+            SerializeTypePropertyForVersion2(writer);
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -1006,21 +1006,18 @@ namespace Microsoft.OpenApi
             writer.WriteEndObject();
         }
 
-        private bool TrySerializeTypePropertyForVersion2(IOpenApiWriter writer)
+        private void SerializeTypePropertyForVersion2(IOpenApiWriter writer)
         {
-            if (Type is not { } type)
+            if (Type is not { } type || type == JsonSchemaType.Null)
             {
-                return false;
+                return;
             }
 
             var typeWithoutNull = type & ~JsonSchemaType.Null;
-            if (typeWithoutNull != 0 && !HasMultipleTypes(typeWithoutNull))
+            if (!HasMultipleTypes(typeWithoutNull))
             {
                 writer.WriteProperty(OpenApiConstants.Type, typeWithoutNull.ToFirstIdentifier());
-                return true;
             }
-
-            return false;
         }
 
         /// <summary>
@@ -1030,18 +1027,18 @@ namespace Microsoft.OpenApi
         /// true if the Type was serializable using "type" property, and false if
         /// it serialized using anyOf/oneOf or if it couldn't be serialized at all.
         /// </returns>
-        private bool TrySerializeTypePropertyForVersion3AndLater(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback)
+        private void SerializeTypePropertyForVersion3AndLater(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             if (Type is not { } type)
             {
-                return false;
+                return;
             }
 
             if (version == OpenApiSpecVersion.OpenApi3_0)
             {
                 if (type == JsonSchemaType.Null)
                 {
-                    return false;
+                    return;
                 }
 
                 var typeWithoutNull = type & ~JsonSchemaType.Null;
@@ -1061,18 +1058,18 @@ namespace Microsoft.OpenApi
                     if (canWriteAsAnyOf)
                     {
                         writer.WriteOptionalCollection(OpenApiConstants.AnyOf, ConstructChildSchemasForTypes(arrayWithoutNull, hasNull), callback);
-                        return false;
+                        return;
                     }
                     else if (canWriteAsOneOf)
                     {
                         writer.WriteOptionalCollection(OpenApiConstants.OneOf, ConstructChildSchemasForTypes(arrayWithoutNull, hasNull), callback);
-                        return false;
+                        return;
                     }
                 }
                 else
                 {
                     writer.WriteProperty(OpenApiConstants.Type, arrayWithoutNull[0].ToSingleIdentifier());
-                    return true;
+                    return;
                 }
             }
             else
@@ -1089,11 +1086,7 @@ namespace Microsoft.OpenApi
                 {
                     writer.WriteProperty(OpenApiConstants.Type, array[0].ToSingleIdentifier());
                 }
-
-                return true;
             }
-
-            return false;
 
             static OpenApiSchema[] ConstructChildSchemasForTypes(JsonSchemaType[] types, bool hasNull)
             {
