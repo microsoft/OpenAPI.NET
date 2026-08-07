@@ -1021,12 +1021,10 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
-        /// Tries to serialize the "type" property for OpenAPI v3 and later versions.
+        /// Serializes the "type" property for OpenAPI v3 and later versions,
+        /// falling back to anyOf/oneOf when multiple types cannot be expressed
+        /// using the "type" property alone (OpenAPI 3.0).
         /// </summary>
-        /// <returns>
-        /// true if the Type was serializable using "type" property, and false if
-        /// it serialized using anyOf/oneOf or if it couldn't be serialized at all.
-        /// </returns>
         private void SerializeTypePropertyForVersion3AndLater(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             if (Type is not { } type)
@@ -1066,7 +1064,7 @@ namespace Microsoft.OpenApi
                         return;
                     }
                 }
-                else
+                else if (arrayWithoutNull.Length == 1)
                 {
                     writer.WriteProperty(OpenApiConstants.Type, arrayWithoutNull[0].ToSingleIdentifier());
                     return;
@@ -1082,7 +1080,7 @@ namespace Microsoft.OpenApi
                 {
                     writer.WriteOptionalCollection(OpenApiConstants.Type, array, (w, s) => w.WriteValue(s.ToSingleIdentifier()));
                 }
-                else
+                else if (array.Length == 1)
                 {
                     writer.WriteProperty(OpenApiConstants.Type, array[0].ToSingleIdentifier());
                 }

@@ -180,6 +180,43 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
+        public void DeserializeAnyOfWithConstraintsAsV3PreservesConstraints()
+        {
+            var schemaJson = """
+                {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "email",
+                      "maxLength": 10
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  ]
+                }
+                """;
+
+            var deserializedSchema = ParseSchemaFromV30Document(schemaJson);
+
+            Assert.Null(deserializedSchema.Type);
+            Assert.NotNull(deserializedSchema.AnyOf);
+            Assert.Collection(deserializedSchema.AnyOf,
+                first =>
+                {
+                    Assert.Equal(JsonSchemaType.String, first.Type);
+                    Assert.Equal("email", first.Format);
+                    Assert.Equal(10, first.MaxLength);
+                },
+                second =>
+                {
+                    Assert.Equal(JsonSchemaType.Integer, second.Type);
+                    Assert.Equal("0", second.Minimum);
+                });
+        }
+
+        [Fact]
         public async Task SerializeConstAsV3EmitsSingleValueEnum()
         {
             var schema = new OpenApiSchema { Type = JsonSchemaType.String, Const = "foo" };
