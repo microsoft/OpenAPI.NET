@@ -118,28 +118,34 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public async Task SerializeMultipleNonNullTypesAsV3OmitsType()
+        public async Task SerializeMultipleNonNullTypesAsV3DoesNotOmitType()
         {
-            // Current behavior isn't good. It loses the information about multiple types.
             var schema = new OpenApiSchema { Type = JsonSchemaType.String | JsonSchemaType.Integer };
 
             var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
 
             var expected = """
                 {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
                 }
                 """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
 
             var deserializedSchema = ParseSchemaFromV30Document(actual);
-            Assert.Null(deserializedSchema.Type);
+            Assert.Equal(schema.Type, deserializedSchema.Type);
         }
 
         [Fact]
-        public async Task SerializeMultipleNonNullTypesWithNullAsV3OmitsTypeButKeepsNullable()
+        public async Task SerializeMultipleNonNullTypesWithNullAsV3DoesNotOmitType()
         {
-            // Current behavior isn't good. It loses the information about multiple types.
             var schema = new OpenApiSchema
             {
                 Type = JsonSchemaType.String | JsonSchemaType.Integer | JsonSchemaType.Null
@@ -149,14 +155,65 @@ namespace Microsoft.OpenApi.Tests.Models
 
             var expected = """
                 {
-                    "nullable": true
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "enum": [
+                        null
+                      ],
+                      "nullable": true
+                    }
+                  ],
+                  "nullable": true
                 }
                 """;
 
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
 
             var deserializedSchema = ParseSchemaFromV30Document(actual);
+            Assert.Equal(schema.Type, deserializedSchema.Type);
+        }
+
+        [Fact]
+        public void DeserializeAnyOfWithConstraintsAsV3PreservesConstraints()
+        {
+            var schemaJson = """
+                {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "email",
+                      "maxLength": 10
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  ]
+                }
+                """;
+
+            var deserializedSchema = ParseSchemaFromV30Document(schemaJson);
+
             Assert.Null(deserializedSchema.Type);
+            Assert.NotNull(deserializedSchema.AnyOf);
+            Assert.Collection(deserializedSchema.AnyOf,
+                first =>
+                {
+                    Assert.Equal(JsonSchemaType.String, first.Type);
+                    Assert.Equal("email", first.Format);
+                    Assert.Equal(10, first.MaxLength);
+                },
+                second =>
+                {
+                    Assert.Equal(JsonSchemaType.Integer, second.Type);
+                    Assert.Equal("0", second.Minimum);
+                });
         }
 
         [Fact]

@@ -69,7 +69,12 @@ namespace Microsoft.OpenApi
         /// <returns></returns>
         internal static string ToSingleIdentifier(this JsonSchemaType schemaType)
         {
-            return schemaType.ToIdentifiersInternal().Single();
+            if (allSchemaTypes.TryGetValue(schemaType, out var schemaTypeString))
+            {
+                return schemaTypeString;
+            }
+
+            throw new InvalidOperationException($"ToSingleIdentifier is called with unexpected value '{schemaType}'. Callers must ensure this is called with a valid single value JsonSchemaType.");
         }
 
         /// <summary>
