@@ -333,6 +333,54 @@ public class YamlConverterTests
         Assert.Equal(yamlInput.MakeLineBreaksEnvironmentNeutral(), convertedBackOutput.MakeLineBreaksEnvironmentNeutral());
     }
 
+    [Fact]
+    public void ExponentialAliasExpansionIsRejected()
+    {
+        // A "billion laughs" YAML bomb: each level references the previous one multiple times,
+        // so materializing the shared node graph into an independent JSON tree expands
+        // exponentially. The conversion must fail fast instead of exhausting memory.
+        var yamlBomb =
+        """
+        a: &a ["x","x","x","x","x","x","x","x","x"]
+        b: &b [*a,*a,*a,*a,*a,*a,*a,*a,*a]
+        c: &c [*b,*b,*b,*b,*b,*b,*b,*b,*b]
+        d: &d [*c,*c,*c,*c,*c,*c,*c,*c,*c]
+        e: &e [*d,*d,*d,*d,*d,*d,*d,*d,*d]
+        f: &f [*e,*e,*e,*e,*e,*e,*e,*e,*e]
+        g: &g [*f,*f,*f,*f,*f,*f,*f,*f,*f]
+        h: &h [*g,*g,*g,*g,*g,*g,*g,*g,*g]
+        i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
+        """;
+
+        Assert.Throws<OpenApiReaderException>(() => ConvertYamlStringToJsonNode(yamlBomb));
+    }
+
+    [Fact]
+    public void ExcessiveNestingDepthIsRejected()
+    {
+        // Deeper than the conversion depth limit (mirrors the System.Text.Json default of 64),
+        // which protects the recursive converter from stack exhaustion.
+        const int depth = 70;
+        var deeplyNested = new string('[', depth) + new string(']', depth);
+
+        Assert.Throws<OpenApiReaderException>(() => ConvertYamlStringToJsonNode(deeplyNested));
+    }
+
+    [Fact]
+    public void LegitimateAliasesStillConvert()
+    {
+        var yamlInput =
+        """
+        a: &val hello
+        b: *val
+        """;
+
+        var jsonNode = Assert.IsType<JsonObject>(ConvertYamlStringToJsonNode(yamlInput));
+
+        Assert.Equal("hello", jsonNode["a"]?.GetValue<string>());
+        Assert.Equal("hello", jsonNode["b"]?.GetValue<string>());
+    }
+
     private static JsonNode ConvertYamlStringToJsonNode(string yamlInput)
     {
         var yamlDocument = new YamlStream();
