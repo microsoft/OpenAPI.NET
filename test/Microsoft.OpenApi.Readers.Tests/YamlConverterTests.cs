@@ -381,6 +381,55 @@ public class YamlConverterTests
         Assert.Equal("hello", jsonNode["b"]?.GetValue<string>());
     }
 
+    [Fact]
+    public void ConversionLimitsDefaultToDocumentedValues()
+    {
+        Assert.Equal(64, YamlConverter.DefaultMaxDepth);
+        Assert.Equal(5_000_000, YamlConverter.DefaultMaxNodeCount);
+        Assert.Equal(YamlConverter.DefaultMaxDepth, YamlConverter.MaxDepth);
+        Assert.Equal(YamlConverter.DefaultMaxNodeCount, YamlConverter.MaxNodeCount);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void SettingMaxDepthBelowOneThrows(int value)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => YamlConverter.MaxDepth = value);
+        // The invalid assignment must not have changed the effective limit.
+        Assert.Equal(YamlConverter.DefaultMaxDepth, YamlConverter.MaxDepth);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void SettingMaxNodeCountBelowOneThrows(int value)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => YamlConverter.MaxNodeCount = value);
+        // The invalid assignment must not have changed the effective limit.
+        Assert.Equal(YamlConverter.DefaultMaxNodeCount, YamlConverter.MaxNodeCount);
+    }
+
+    [Fact]
+    public void RaisingMaxDepthAllowsDocumentsDeeperThanTheDefault()
+    {
+        // A document nested deeper than the default depth limit (64) is rejected by default
+        // but can be permitted by a consumer that opts into a higher limit.
+        const int depth = 70;
+        var deeplyNested = new string('[', depth) + new string(']', depth);
+
+        try
+        {
+            YamlConverter.MaxDepth = depth + 10;
+            var jsonNode = ConvertYamlStringToJsonNode(deeplyNested);
+            Assert.IsType<JsonArray>(jsonNode);
+        }
+        finally
+        {
+            YamlConverter.MaxDepth = YamlConverter.DefaultMaxDepth;
+        }
+    }
+
     private static JsonNode ConvertYamlStringToJsonNode(string yamlInput)
     {
         var yamlDocument = new YamlStream();
