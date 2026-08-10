@@ -384,28 +384,24 @@ public class YamlConverterTests
     [Fact]
     public void ConversionLimitsDefaultToDocumentedValues()
     {
-        Assert.Equal(64, YamlConverter.DefaultMaxDepth);
-        Assert.Equal(5_000_000, YamlConverter.DefaultMaxNodeCount);
+        Assert.Equal(64u, YamlConverter.DefaultMaxDepth);
+        Assert.Equal(5_000_000u, YamlConverter.DefaultMaxNodeCount);
         Assert.Equal(YamlConverter.DefaultMaxDepth, YamlConverter.MaxDepth);
         Assert.Equal(YamlConverter.DefaultMaxNodeCount, YamlConverter.MaxNodeCount);
     }
 
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-1)]
-    public void SettingMaxDepthBelowOneThrows(int value)
+    [Fact]
+    public void SettingMaxDepthToZeroThrows()
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => YamlConverter.MaxDepth = value);
+        Assert.Throws<ArgumentOutOfRangeException>(() => YamlConverter.MaxDepth = 0);
         // The invalid assignment must not have changed the effective limit.
         Assert.Equal(YamlConverter.DefaultMaxDepth, YamlConverter.MaxDepth);
     }
 
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-1)]
-    public void SettingMaxNodeCountBelowOneThrows(int value)
+    [Fact]
+    public void SettingMaxNodeCountToZeroThrows()
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => YamlConverter.MaxNodeCount = value);
+        Assert.Throws<ArgumentOutOfRangeException>(() => YamlConverter.MaxNodeCount = 0);
         // The invalid assignment must not have changed the effective limit.
         Assert.Equal(YamlConverter.DefaultMaxNodeCount, YamlConverter.MaxNodeCount);
     }
