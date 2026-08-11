@@ -1044,7 +1044,13 @@ namespace Microsoft.OpenApi
         /// </summary>
         private void SerializeTypePropertyForVersion3AndLater(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
-            if (Type is not { } type)
+            var type = Type;
+            if (version < OpenApiSpecVersion.OpenApi3_1)
+            {
+                type ??= GetKnownTypeAndFormatPreOpenApi31()?.Type;
+            }
+            
+            if (type is null)
             {
                 return;
             }
@@ -1059,7 +1065,7 @@ namespace Microsoft.OpenApi
                 var typeWithoutNull = type & ~JsonSchemaType.Null;
                 var hasNull = typeWithoutNull != type;
                 var arrayWithoutNull = (from JsonSchemaType flag in jsonSchemaTypeValues
-                                        where typeWithoutNull.HasFlag(flag)
+                                        where typeWithoutNull.Value.HasFlag(flag)
                                         select flag).ToArray();
 
                 // - If we have more than one type (excluding null), we have to use anyOf/oneOf.
@@ -1090,7 +1096,7 @@ namespace Microsoft.OpenApi
             else
             {
                 var array = (from JsonSchemaType flag in jsonSchemaTypeValues
-                                        where type.HasFlag(flag)
+                                        where type.Value.HasFlag(flag)
                                         select flag).ToArray();
 
                 if (array.Length > 1)
@@ -1177,7 +1183,7 @@ namespace Microsoft.OpenApi
         private (JsonSchemaType Type, string Format)? GetKnownTypeAndFormatPreOpenApi31()
         {
             // https://spec.openapis.org/oas/v3.2.0.html#migrating-binary-descriptions-from-oas-3-0
-            if (Type == JsonSchemaType.String && ContentEncoding == "base64" && !string.IsNullOrEmpty(ContentMediaType))
+            if (Type == JsonSchemaType.String && ContentEncoding == "base64")
             {
                 return (JsonSchemaType.String, "byte");
             }

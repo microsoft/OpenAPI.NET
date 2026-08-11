@@ -763,6 +763,38 @@ namespace Microsoft.OpenApi.Tests.Models
             """;
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
+
+        // Non-body parameters and headers in v2 serialize the schema inline, so the pre-3.1
+        // binary description has to be reconstructed there too.
+        // https://spec.openapis.org/oas/v3.2.0.html#migrating-binary-descriptions-from-oas-3-0
+        [Theory]
+        [InlineData("base64", null, """{ "type": "string", "format": "byte" }""")]
+        [InlineData(null, "image/png", """{ "type": "string", "format": "binary" }""")]
+        public async Task WriteAsItemsPropertiesReconstructsBinaryDescription(
+            string contentEncoding, string contentMediaType, string expected)
+        {
+            // Arrange
+            var schema = new OpenApiSchema
+            {
+                Type = contentEncoding is null ? null : JsonSchemaType.String,
+                ContentEncoding = contentEncoding,
+                ContentMediaType = contentMediaType
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+            writer.WriteStartObject();
+
+            // Act
+            schema.WriteAsItemsProperties(writer);
+            writer.WriteEndObject();
+            await writer.FlushAsync();
+
+            // Assert
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
         [Fact]
         public async Task SerializeConstAsEnumV30()
         {
