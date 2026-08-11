@@ -1177,12 +1177,12 @@ namespace Microsoft.OpenApi
         private (JsonSchemaType Type, string Format)? GetKnownTypeAndFormatPreOpenApi31()
         {
             // https://spec.openapis.org/oas/v3.2.0.html#migrating-binary-descriptions-from-oas-3-0
-            if (Type is not null && Type.Value.HasFlag(JsonSchemaType.String) && ContentEncoding == "base64")
+            if (Type == JsonSchemaType.String && ContentEncoding == "base64" && !string.IsNullOrEmpty(ContentMediaType))
             {
-                return (Type.Value, "byte");
+                return (JsonSchemaType.String, "byte");
             }
 
-            if (Type is null && !string.IsNullOrEmpty(ContentMediaType))
+            if (Type is null && ContentEncoding is null && !string.IsNullOrEmpty(ContentMediaType))
             {
                 return (JsonSchemaType.String, "binary");
             }
