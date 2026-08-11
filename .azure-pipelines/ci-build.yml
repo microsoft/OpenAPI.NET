@@ -69,7 +69,7 @@ extends:
         - task: UseDotNet@2
           displayName: 'Use .NET 10'
           inputs:
-            version: 10.x
+            useGlobalJson: true
         
         # Install the nuget tool.
         - task: NuGetToolInstaller@1
