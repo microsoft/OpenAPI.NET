@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
-                Output = new("sample.md")
+                Output = new($"{nameof(ShowCommandGeneratesMermaidMarkdownFileWithMermaidDiagramAsync)}.md")
             };
 
             await OpenApiService.ShowOpenApiDocumentAsync(options, _logger, TestContext.Current.CancellationToken);
@@ -217,7 +217,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
-                Output = new("sample.json"),
+                Output = new($"{nameof(TransformCommandConvertsOpenApiAsync)}.json"),
                 CleanOutput = true,
                 TerseOutput = false,
                 InlineLocal = false,
@@ -226,7 +226,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             // create a dummy ILogger instance for testing
             await OpenApiService.TransformOpenApiDocumentAsync(options, _logger, TestContext.Current.CancellationToken);
 
-            var output = await File.ReadAllTextAsync("sample.json", TestContext.Current.CancellationToken);
+            var output = await File.ReadAllTextAsync(options.Output.FullName, TestContext.Current.CancellationToken);
             Assert.NotEmpty(output);
         }
 
@@ -241,11 +241,12 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 TerseOutput = false,
                 InlineLocal = false,
                 InlineExternal = false,
+                Output = new FileInfo($"{nameof(TransformCommandConvertsOpenApiWithDefaultOutputNameAsync)}.yml")
             };
             // create a dummy ILogger instance for testing
             await OpenApiService.TransformOpenApiDocumentAsync(options, _logger, TestContext.Current.CancellationToken);
 
-            var output = await File.ReadAllTextAsync("output.yml", TestContext.Current.CancellationToken);
+            var output = await File.ReadAllTextAsync(options.Output.FullName, TestContext.Current.CancellationToken);
             Assert.NotEmpty(output);
         }
 
@@ -255,6 +256,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
+                Output = new($"{nameof(TransformCommandConvertsOpenApiWithDefaultOutputNameAndSwitchFormatAsync)}.yml"),
                 CleanOutput = true,
                 Version = "3.0",
                 OpenApiFormat = OpenApiConstants.Yaml,
@@ -265,7 +267,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             // create a dummy ILogger instance for testing
             await OpenApiService.TransformOpenApiDocumentAsync(options, _logger, TestContext.Current.CancellationToken);
 
-            var output = await File.ReadAllTextAsync("output.yml", TestContext.Current.CancellationToken);
+            var output = await File.ReadAllTextAsync(options.Output.FullName, TestContext.Current.CancellationToken);
             Assert.NotEmpty(output);
         }
 
@@ -290,6 +292,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
+                Output = new($"{nameof(TransformToPowerShellCompliantOpenApiAsync)}.yaml"),
                 CleanOutput = true,
                 Version = "3.0",
                 OpenApiFormat = OpenApiConstants.Yaml,
@@ -301,7 +304,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             // create a dummy ILogger instance for testing
             await OpenApiService.TransformOpenApiDocumentAsync(options, _logger, TestContext.Current.CancellationToken);
 
-            var output = await File.ReadAllTextAsync("output.yaml", TestContext.Current.CancellationToken);
+            var output = await File.ReadAllTextAsync(options.Output.FullName, TestContext.Current.CancellationToken);
             Assert.NotEmpty(output);
         }
 
@@ -310,13 +313,14 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             var rootCommand = Program.CreateRootCommand();
             var openapi = Path.Combine(".", "UtilityFiles", "SampleOpenApi.yml");
-            var args = new[] { "transform", "-d", openapi, "-o", "sample.json", "--co" };
+            var outputPath = $"{nameof(InvokeTransformCommandAsync)}.json";
+            var args = new[] { "transform", "-d", openapi, "-o", outputPath, "--co" };
             var parseResult = rootCommand.Parse(args);
             var handler = Assert.IsType<AsynchronousCommandLineAction>(rootCommand.Subcommands.First(c => c.Name == "transform").Action, exactMatch: false);
 
             await handler.InvokeAsync(parseResult, TestContext.Current.CancellationToken);
 
-            var output = await File.ReadAllTextAsync("sample.json", TestContext.Current.CancellationToken);
+            var output = await File.ReadAllTextAsync(outputPath, TestContext.Current.CancellationToken);
             Assert.NotEmpty(output);
         }
 
@@ -326,13 +330,14 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             var rootCommand = Program.CreateRootCommand();
             var openApi = Path.Combine(".", "UtilityFiles", "SampleOpenApi.yml");
-            var args = new[] { "show", "-d", openApi, "-o", "sample.md" };
+            var outputPath = $"{nameof(InvokeShowCommandAsync)}.md";
+            var args = new[] { "show", "-d", openApi, "-o", outputPath };
             var parseResult = rootCommand.Parse(args);
             var handler = Assert.IsType<AsynchronousCommandLineAction>(rootCommand.Subcommands.First(c => c.Name == "show").Action, exactMatch: false);
 
             await handler.InvokeAsync(parseResult, TestContext.Current.CancellationToken);
 
-            var output = await File.ReadAllTextAsync("sample.md", TestContext.Current.CancellationToken);
+            var output = await File.ReadAllTextAsync(outputPath, TestContext.Current.CancellationToken);
             Assert.Contains("graph LR", output, StringComparison.Ordinal);
         }
 
@@ -341,13 +346,14 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             var rootCommand = Program.CreateRootCommand();
             var manifest = Path.Combine(".", "UtilityFiles", "exampleapimanifest.json");
-            var args = new[] { "plugin", "-m", manifest, "--of", AppDomain.CurrentDomain.BaseDirectory };
+            var outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, nameof(InvokePluginCommandAsync));
+            var args = new[] { "plugin", "-m", manifest, "--of", outputPath };
             var parseResult = rootCommand.Parse(args);
             var handler = Assert.IsType<AsynchronousCommandLineAction>(rootCommand.Subcommands.First(c => c.Name == "plugin").Action, exactMatch: false);
 
             await handler.InvokeAsync(parseResult, TestContext.Current.CancellationToken);
 
-            using var jsDoc = JsonDocument.Parse(await File.ReadAllTextAsync("ai-plugin.json", TestContext.Current.CancellationToken));
+            using var jsDoc = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(outputPath, "ai-plugin.json"), TestContext.Current.CancellationToken));
             var openAiManifest = OpenAIPluginManifest.Load(jsDoc.RootElement);
             
             Assert.NotNull(openAiManifest);
