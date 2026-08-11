@@ -42,7 +42,13 @@ namespace Microsoft.OpenApi.Reader
                 throw new OpenApiReaderException("Cannot create a list from this type of node.", context);
             }
 
-            return jsonArray.OfType<JsonNode>().ToList();
+            var list = new List<JsonNode>(jsonArray.Count);
+            foreach (var element in jsonArray)
+            {
+                list.Add(element ?? JsonNullSentinel.JsonNull);
+            }
+
+            return list;
         }
 
         public static List<T> CreateSimpleList<T>(this JsonNode? node, Func<JsonNode, OpenApiDocument?, T> map, OpenApiDocument? openApiDocument, ParsingContext context)

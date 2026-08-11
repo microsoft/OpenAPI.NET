@@ -961,7 +961,8 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                       "enum": [
                         null
-                      ]
+                      ],
+                      "nullable": true
                     },
                     {
                       "maxLength": 10,
@@ -1005,7 +1006,8 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                       "enum": [
                         null
-                      ]
+                      ],
+                      "nullable": true
                     },
                     {
                       "type": "string"
@@ -1057,7 +1059,8 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                       "enum": [
                         null
-                      ]
+                      ],
+                      "nullable": true
                     },
                     {
                       "type": "object",
@@ -1104,7 +1107,8 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                       "enum": [
                         null
-                      ]
+                      ],
+                      "nullable": true
                     },
                     {
                       "minLength": 1,
@@ -1149,7 +1153,8 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                       "enum": [
                         null
-                      ]
+                      ],
+                      "nullable": true
                     }
                   ]
                 }
@@ -1252,7 +1257,8 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                       "enum": [
                         null
-                      ]
+                      ],
+                      "nullable": true
                     },
                     {
                       "$ref": "#/components/schemas/Pet"
@@ -2043,7 +2049,8 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                       "enum": [
                         null
-                      ]
+                      ],
+                      "nullable": true
                     },
                     {
                       "enum": [
@@ -2091,7 +2098,8 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                   "enum": [
                     null
-                  ]
+                  ],
+                  "nullable": true
                 }
                 """;
 

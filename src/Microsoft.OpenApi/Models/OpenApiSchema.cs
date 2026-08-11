@@ -545,7 +545,7 @@ namespace Microsoft.OpenApi
             }
 
             // type
-            var serializedTypeProperty = TrySerializeTypeProperty(writer, version);
+            SerializeTypeProperty(writer, version);
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, callback);
@@ -590,13 +590,13 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // nullable
-            if (version == OpenApiSpecVersion.OpenApi3_0 && serializedTypeProperty)
+            if (version == OpenApiSpecVersion.OpenApi3_0)
             {
                 // https://spec.openapis.org/oas/v3.0.4.html#fixed-fields-20
                 // This keyword only takes effect if type is explicitly defined within the same Schema Object.
                 //
-                // If the user explicitly set IsNullable to true, we serialize it even if redundant.
-                // But if **we** are inferring it (from oneOf/anyOf), we don't serialize it when it's redundant.
+                // We don't care to avoid an unnecessary serialization.
+                // So, we attempt to serialize it regardless of whether or not a type property was serialized.
                 SerializeNullable(writer, version);
             }
 
@@ -833,7 +833,7 @@ namespace Microsoft.OpenApi
             writer.WriteStartObject();
 
             // type
-            TrySerializeTypeProperty(writer, OpenApiSpecVersion.OpenApi2_0);
+            SerializeTypeProperty(writer, OpenApiSpecVersion.OpenApi2_0);
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -1001,14 +1001,13 @@ namespace Microsoft.OpenApi
             writer.WriteEndObject();
         }
 
-        private bool TrySerializeTypeProperty(IOpenApiWriter writer, OpenApiSpecVersion version, JsonSchemaType? inferredType = null)
+        private void SerializeTypeProperty(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
-            // Use original type or inferred type when the explicit type is not set
-            var typeToUse = Type ?? inferredType;
+            var typeToUse = Type;
 
             if (typeToUse is null)
             {
-                return false;
+                return;
             }
 
             switch (version)
@@ -1018,15 +1017,15 @@ namespace Microsoft.OpenApi
                     if (typeWithoutNull != 0 && !HasMultipleTypes(typeWithoutNull))
                     {
                         writer.WriteProperty(OpenApiConstants.Type, typeWithoutNull.ToFirstIdentifier());
-                        return true;
+                        return;
                     }
                     break;
                 default:
                     WriteUnifiedSchemaType(typeToUse.Value, writer);
-                    return true;
+                    return;
             }
 
-            return false;
+            return;
         }
 
         private JsonNode? GetCompatibilityExample()
