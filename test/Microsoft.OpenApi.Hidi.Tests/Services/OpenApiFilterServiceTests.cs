@@ -298,7 +298,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             using var stream = File.OpenRead(filePath);
             var settings = new OpenApiReaderSettings();
             settings.AddYamlReader();
-            var doc = (await OpenApiDocument.LoadAsync(stream, "yaml", settings)).Document;
+            var doc = (await OpenApiDocument.LoadAsync(stream, "yaml", settings, TestContext.Current.CancellationToken)).Document;
 
             // validated the tags are read as references
             var openApiOperationTags = doc?.Paths["/items"].Operations?[HttpMethod.Get].Tags?.ToArray();
@@ -344,7 +344,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                     }
                 };
                 subsetOpenApiDocument.SerializeAsV3(writer);
-                await writer.FlushAsync();
+                await writer.FlushAsync(TestContext.Current.CancellationToken);
                 var result = outputStringWriter.ToString();
                 Assert.NotEmpty(result);
             }            

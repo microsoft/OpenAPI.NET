@@ -17,7 +17,7 @@ public class OpenApiPathItemDeserializerTests
     public async Task ExtraneousOperationsAreParsedAsExtensionsIn30()
     {
         // Arrange & Act
-        var result = await OpenApiDocument.LoadAsync($"{SampleFolderPath}pathItemWithQueryAndAdditionalOperations.yaml", SettingsFixture.ReaderSettings);
+        var result = await OpenApiDocument.LoadAsync($"{SampleFolderPath}pathItemWithQueryAndAdditionalOperations.yaml", SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
         var pathItem = result.Document.Paths["/pets"];
 
         // Assert

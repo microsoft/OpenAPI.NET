@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedHeader.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             OpenApiHeaderReference.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedHeader.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedHeader.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             OpenApiHeaderReference.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedHeader.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);

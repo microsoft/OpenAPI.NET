@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
             var settings = new OpenApiReaderSettings { LeaveStreamOpen = false };
             settings.AddYamlReader();
-            (_, var diagnostic) = await OpenApiDocument.LoadAsync(stream, settings: settings);
+            (_, var diagnostic) = await OpenApiDocument.LoadAsync(stream, settings: settings, cancellationToken: TestContext.Current.CancellationToken);
             Assert.False(stream.CanRead);
             Assert.Equal(OpenApiConstants.Yaml, diagnostic.Format);
         }
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
             var settings = new OpenApiReaderSettings { LeaveStreamOpen = true };
             settings.AddYamlReader();
-            _ = await OpenApiDocument.LoadAsync(stream, settings: settings);
+            _ = await OpenApiDocument.LoadAsync(stream, settings: settings, cancellationToken: TestContext.Current.CancellationToken);
             Assert.True(stream.CanRead);
         }
 
@@ -41,13 +41,13 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             var memoryStream = new MemoryStream();
             using var fileStream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
 
-            await fileStream.CopyToAsync(memoryStream);
+            await fileStream.CopyToAsync(memoryStream, TestContext.Current.CancellationToken);
             memoryStream.Position = 0;
             var stream = memoryStream;
 
             var settings = new OpenApiReaderSettings { LeaveStreamOpen = true };
             settings.AddYamlReader();
-            _ = await OpenApiDocument.LoadAsync(stream, settings: settings);
+            _ = await OpenApiDocument.LoadAsync(stream, settings: settings, cancellationToken: TestContext.Current.CancellationToken);
             stream.Seek(0, SeekOrigin.Begin); // does not throw an object disposed exception
             Assert.True(stream.CanRead);
         }
@@ -60,12 +60,12 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
                 BaseAddress = new Uri("https://raw.githubusercontent.com/OAI/OpenAPI-Specification/")
             };
 
-            var stream = await httpClient.GetStreamAsync("20fe7a7b720a0e48e5842d002ac418b12a8201df/tests/v3.0/pass/petstore.yaml");
+            var stream = await httpClient.GetStreamAsync("20fe7a7b720a0e48e5842d002ac418b12a8201df/tests/v3.0/pass/petstore.yaml", TestContext.Current.CancellationToken);
 
             // Read V3 as YAML
             var settings = new OpenApiReaderSettings();
             settings.AddYamlReader();
-            var result = await OpenApiDocument.LoadAsync(stream, settings: settings);
+            var result = await OpenApiDocument.LoadAsync(stream, settings: settings, cancellationToken: TestContext.Current.CancellationToken);
             Assert.NotNull(result.Document);
         }
     }

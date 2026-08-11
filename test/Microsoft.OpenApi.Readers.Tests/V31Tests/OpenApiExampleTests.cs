@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 Path.Combine(SampleFolderPath, "exampleWithDataValue.yaml"), 
                 OpenApiSpecVersion.OpenApi3_1, 
                 new(), 
-                SettingsFixture.ReaderSettings);
+                SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.NotNull(example);
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 Path.Combine(SampleFolderPath, "exampleWithSerializedValue.yaml"), 
                 OpenApiSpecVersion.OpenApi3_1, 
                 new(), 
-                SettingsFixture.ReaderSettings);
+                SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.NotNull(example);

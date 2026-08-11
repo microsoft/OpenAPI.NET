@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public async Task ResponseWithReferencedHeaderShouldReferenceComponent()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "responseWithHeaderReference.yaml"), SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "responseWithHeaderReference.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var response = result.Document.Components.Responses["Test"];
             var expected = response.Headers.First().Value;
@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public async Task ResponseWithSummaryV32ShouldDeserializeCorrectly()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "responseWithSummary.yaml"), SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "responseWithSummary.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var response = result.Document.Components.Responses["SuccessResponse"] as OpenApiResponse;
             
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public async Task ResponseWithSummaryExtensionV31ShouldDeserializeCorrectly()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "responseWithSummaryExtension.yaml"), SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "responseWithSummaryExtension.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var response = result.Document.Components.Responses["SuccessResponse"] as OpenApiResponse;
             

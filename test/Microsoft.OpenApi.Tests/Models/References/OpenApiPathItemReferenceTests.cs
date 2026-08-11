@@ -126,7 +126,7 @@ components:
 
             // Act
             _localPathItemReference.SerializeAsV31(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput, inlineLocalReferences);

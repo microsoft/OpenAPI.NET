@@ -293,7 +293,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await _basicOperation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await _basicOperation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -365,7 +365,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await _operationWithBody.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await _operationWithBody.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
@@ -447,7 +447,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await _advancedOperationWithTagsAndSecurity.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await _advancedOperationWithTagsAndSecurity.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
@@ -465,7 +465,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await _basicOperation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await _basicOperation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
@@ -542,7 +542,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await _operationWithFormData.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await _operationWithFormData.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
@@ -596,7 +596,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await _operationWithFormData.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await _operationWithFormData.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
@@ -663,7 +663,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await _operationWithBody.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await _operationWithBody.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
@@ -742,7 +742,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await _advancedOperationWithTagsAndSecurity.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await _advancedOperationWithTagsAndSecurity.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
@@ -765,7 +765,7 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Act
-            var actual = await operation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await operation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
@@ -826,9 +826,9 @@ namespace Microsoft.OpenApi.Tests.Models
             foreach (var operation in operations)
             {
                 // Act
-                var expected = await operation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+                var expected = await operation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
                 var openApiOperation = new OpenApiOperation(operation);
-                var actual = await openApiOperation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+                var actual = await openApiOperation.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
                 // Assert
                 Assert.Equal(expected, actual);

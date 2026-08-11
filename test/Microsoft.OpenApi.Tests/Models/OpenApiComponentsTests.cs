@@ -267,7 +267,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"{ }";
 
             // Act
-            var actual = await BasicComponents.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BasicComponents.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -282,7 +282,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"{ }";
 
             // Act
-            var actual = await BasicComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BasicComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -334,7 +334,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvancedComponents.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedComponents.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -392,7 +392,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvancedComponentsWithReference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedComponentsWithReference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -431,7 +431,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvancedComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -473,7 +473,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvancedComponentsWithReference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedComponentsWithReference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -510,7 +510,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await BrokenComponents.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BrokenComponents.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -540,7 +540,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await BrokenComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BrokenComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -566,7 +566,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await TopLevelReferencingComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await TopLevelReferencingComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -591,7 +591,7 @@ namespace Microsoft.OpenApi.Tests.Models
         type: string";
 
             // Act
-            var actual = await TopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await TopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -646,7 +646,7 @@ namespace Microsoft.OpenApi.Tests.Models
   }
 }";
             // Act
-            var actual = await ComponentsWithPathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await ComponentsWithPathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -683,7 +683,7 @@ schemas:
         type: integer";
 
             // Act
-            var actual = await ComponentsWithPathItem.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await ComponentsWithPathItem.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

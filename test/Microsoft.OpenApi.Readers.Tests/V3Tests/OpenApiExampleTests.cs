@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public async Task ParseAdvancedExampleShouldSucceed()
         {
-            var example = await OpenApiModelFactory.LoadAsync<OpenApiExample>(Path.Combine(SampleFolderPath, "advancedExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var example = await OpenApiModelFactory.LoadAsync<OpenApiExample>(Path.Combine(SampleFolderPath, "advancedExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             var expected = new OpenApiExample
             {
                 Value = new JsonObject
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public async Task ParseExampleForcedStringSucceed()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "explicitString.yaml"), SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "explicitString.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             Assert.Empty(result.Diagnostic.Errors);
         }
 
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 Path.Combine(SampleFolderPath, "exampleWithDataValue.yaml"), 
                 OpenApiSpecVersion.OpenApi3_0, 
                 new(), 
-                SettingsFixture.ReaderSettings);
+                SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.NotNull(example);
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 Path.Combine(SampleFolderPath, "exampleWithSerializedValue.yaml"), 
                 OpenApiSpecVersion.OpenApi3_0, 
                 new(), 
-                SettingsFixture.ReaderSettings);
+                SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.NotNull(example);

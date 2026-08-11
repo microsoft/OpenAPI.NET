@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         {
             // Arrange
             var filePath = Path.Combine(SampleFolderPath, "docWith32properties.json");
-            var (doc, _) = await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings);
+            var (doc, _) = await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Act: Serialize using System.Text.Json
             var options = new JsonSerializerOptions

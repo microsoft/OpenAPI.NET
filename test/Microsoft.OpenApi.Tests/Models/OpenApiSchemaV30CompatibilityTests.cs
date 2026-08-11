@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ]
             };
 
-            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             var expected =
                 """
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             var schema = new OpenApiSchema { Type = JsonSchemaType.Null };
 
-            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             var expected =
                 """
@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             var schema = new OpenApiSchema { Type = JsonSchemaType.String | JsonSchemaType.Null };
 
-            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             var expected =
                 """
@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             var schema = new OpenApiSchema { Type = JsonSchemaType.String | JsonSchemaType.Integer };
 
-            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             var expected = """
                 {
@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = JsonSchemaType.String | JsonSchemaType.Integer | JsonSchemaType.Null
             };
 
-            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             var expected = """
                 {
@@ -221,7 +221,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             var schema = new OpenApiSchema { Type = JsonSchemaType.String, Const = "foo" };
 
-            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             var node = JsonNode.Parse(actual)!.AsObject();
             Assert.False(node.ContainsKey("const"));
@@ -245,7 +245,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ExclusiveMaximum = "5"
             };
 
-            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             var expected =
                 """
@@ -272,7 +272,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ExclusiveMinimum = "1"
             };
 
-            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             var expected =
                 """
