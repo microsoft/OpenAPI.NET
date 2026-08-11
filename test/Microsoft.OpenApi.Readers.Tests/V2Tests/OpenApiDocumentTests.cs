@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public async Task ShouldParseProducesInAnyOrder()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "twoResponses.json"), token: TestContext.Current.CancellationToken);
+            var result = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "twoResponses.json"), token: TestContext.Current.CancellationToken);
 
             var okSchema = new OpenApiSchema
             {
@@ -226,7 +226,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public async Task ShouldAssignSchemaToAllResponses()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleProduces.json"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "multipleProduces.json"));
             var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Json, cancellationToken: TestContext.Current.CancellationToken);
 
             Assert.Equal(OpenApiSpecVersion.OpenApi2_0, result.Diagnostic.SpecificationVersion);
@@ -257,7 +257,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public async Task ShouldAllowComponentsThatJustContainAReference()
         {
             // Act
-            var actual = (await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "ComponentRootReference.json"), token: TestContext.Current.CancellationToken)).Document;
+            var actual = (await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "ComponentRootReference.json"), token: TestContext.Current.CancellationToken)).Document;
             var schema1 = actual.Components.Schemas["AllPets"];
             var schema1Reference = Assert.IsType<OpenApiSchemaReference>(schema1);
             Assert.False(schema1Reference.UnresolvedReference);
@@ -279,7 +279,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             };
             settings.AddYamlReader();
 
-            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"), settings, token: TestContext.Current.CancellationToken);
+            var actual = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "docWithEmptyProduces.yaml"), settings, token: TestContext.Current.CancellationToken);
             var mediaType = actual.Document.Paths["/example"].Operations[HttpMethod.Get].Responses["200"].Content;
             Assert.Contains("application/json", mediaType);
         }
