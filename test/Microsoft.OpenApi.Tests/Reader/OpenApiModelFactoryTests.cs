@@ -1,4 +1,4 @@
-using Xunit;
+﻿using Xunit;
 using Microsoft.OpenApi.Reader;
 using System.Threading.Tasks;
 using System.IO;
@@ -12,7 +12,7 @@ public class OpenApiModelFactoryTests
     [Fact]
     public async Task LoadDocumentWithCircularSchemaPropertyReferencesShouldSucceed()
     {
-        var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.json");
+        var filePath = Path.Join(Path.GetTempPath(), $"{Guid.NewGuid():N}.json");
         await File.WriteAllTextAsync(filePath, """
 {
     "openapi": "3.0.0",
@@ -62,7 +62,7 @@ public class OpenApiModelFactoryTests
     [Fact]
     public async Task LoadDocumentWithCircularRootSchemaReferencesShouldReturnDiagnosticWarning()
     {
-        var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.json");
+        var filePath = Path.Join(Path.GetTempPath(), $"{Guid.NewGuid():N}.json");
         await File.WriteAllTextAsync(filePath, """
 {
     "openapi": "3.0.0",
@@ -102,7 +102,7 @@ public class OpenApiModelFactoryTests
     [Fact]
     public async Task UsesSettingsBaseUrl()
     {
-        var tempFilePathReferee = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+        var tempFilePathReferee = Path.GetTempFileName();
         await File.WriteAllTextAsync(tempFilePathReferee,
 """
 {
@@ -148,7 +148,7 @@ public class OpenApiModelFactoryTests
     }
 }
 """, TestContext.Current.CancellationToken);
-        var tempFilePathReferrer = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+        var tempFilePathReferrer = Path.GetTempFileName();
         await File.WriteAllTextAsync(tempFilePathReferrer,
 $$$"""
 {

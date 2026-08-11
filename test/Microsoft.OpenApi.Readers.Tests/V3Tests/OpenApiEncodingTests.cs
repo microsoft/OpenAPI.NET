@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseBasicEncodingShouldSucceed()
         {
             // Act
-            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Combine(SampleFolderPath, "basicEncoding.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
+            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Join(SampleFolderPath, "basicEncoding.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public async Task ParseAdvancedEncodingShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedEncoding.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "advancedEncoding.yaml"));
 
             // Act
             var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(stream, OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseEncodingWithAllowReservedShouldSucceed()
         {
             // Act
-            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Combine(SampleFolderPath, "encodingWithAllowReserved.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
+            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Join(SampleFolderPath, "encodingWithAllowReserved.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(

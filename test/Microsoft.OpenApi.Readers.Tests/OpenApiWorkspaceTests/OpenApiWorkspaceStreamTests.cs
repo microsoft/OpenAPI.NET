@@ -87,9 +87,9 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             var workspace = result.Document.Workspace;
 
             // Assert
-            Assert.True(workspace.Contains($"{Path.Combine(referenceBaseUri, "Directory", "PetsPage.yaml")}#/components/schemas/PetsPage"));
-            Assert.True(workspace.Contains($"{Path.Combine(referenceBaseUri, "Directory", "Pets.yaml")}#/components/schemas/Pets"));
-            Assert.True(workspace.Contains($"{Path.Combine(referenceBaseUri, "Directory", "Pets.yaml")}#/components/schemas/Pet"));
+            Assert.True(workspace.Contains($"{Path.Join(referenceBaseUri, "Directory", "PetsPage.yaml")}#/components/schemas/PetsPage"));
+            Assert.True(workspace.Contains($"{Path.Join(referenceBaseUri, "Directory", "Pets.yaml")}#/components/schemas/Pets"));
+            Assert.True(workspace.Contains($"{Path.Join(referenceBaseUri, "Directory", "Pets.yaml")}#/components/schemas/Pet"));
 
             var operationResponseSchema = document.Paths["/pets"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
             Assert.IsType<OpenApiSchemaReference>(operationResponseSchema);

@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "bodyParameter.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "bodyParameter.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathParameter.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "pathParameter.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameter.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "queryParameter.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNullLocation.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "parameterWithNullLocation.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -134,7 +134,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNoLocation.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "parameterWithNoLocation.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNoSchema.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "parameterWithNoSchema.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -188,7 +188,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithUnknownLocation.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "parameterWithUnknownLocation.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -217,7 +217,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithDefault.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "parameterWithDefault.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -247,7 +247,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithEnum.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "parameterWithEnum.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -290,7 +290,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
   ""format"": ""binary""
 }";
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "formDataParameter.json")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "formDataParameter.json")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
