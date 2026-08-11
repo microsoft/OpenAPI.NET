@@ -250,7 +250,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseBasicPathItemWithFormDataShouldSucceed()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicPathItemWithFormData.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "basicPathItemWithFormData.yaml"));
             var node = TestHelper.CreateYamlJsonNode(stream);
 
             // Act
@@ -265,7 +265,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathItemWithFormDataPathParameter.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "pathItemWithFormDataPathParameter.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -284,7 +284,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathItemWithBodyPathParameter.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "pathItemWithBodyPathParameter.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }

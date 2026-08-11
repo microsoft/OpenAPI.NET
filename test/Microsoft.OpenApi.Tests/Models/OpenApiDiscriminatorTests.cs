@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Act
-            var actual = JsonNode.Parse(await discriminator.SerializeAsJsonAsync(specVersion));
+            var actual = JsonNode.Parse(await discriminator.SerializeAsJsonAsync(specVersion, TestContext.Current.CancellationToken));
 
             // Assert
             Assert.NotNull(actual);
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Act
-            var actual = JsonNode.Parse(await discriminator.SerializeAsJsonAsync(specVersion));
+            var actual = JsonNode.Parse(await discriminator.SerializeAsJsonAsync(specVersion, TestContext.Current.CancellationToken));
 
             // Assert
             Assert.NotNull(actual);

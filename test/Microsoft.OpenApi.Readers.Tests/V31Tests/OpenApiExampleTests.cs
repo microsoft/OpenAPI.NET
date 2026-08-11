@@ -19,10 +19,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         {
             // Arrange & Act
             var example = await OpenApiModelFactory.LoadAsync<OpenApiExample>(
-                Path.Combine(SampleFolderPath, "exampleWithDataValue.yaml"), 
+                Path.Join(SampleFolderPath, "exampleWithDataValue.yaml"), 
                 OpenApiSpecVersion.OpenApi3_1, 
                 new(), 
-                SettingsFixture.ReaderSettings);
+                SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.NotNull(example);
@@ -37,10 +37,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         {
             // Arrange & Act
             var example = await OpenApiModelFactory.LoadAsync<OpenApiExample>(
-                Path.Combine(SampleFolderPath, "exampleWithSerializedValue.yaml"), 
+                Path.Join(SampleFolderPath, "exampleWithSerializedValue.yaml"), 
                 OpenApiSpecVersion.OpenApi3_1, 
                 new(), 
-                SettingsFixture.ReaderSettings);
+                SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.NotNull(example);

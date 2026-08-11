@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         [Fact]
         public void ParseLicenseWithSpdxIdentifierShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "licenseWithSpdxIdentifier.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "licenseWithSpdxIdentifier.yaml"));
             var yamlStream = new YamlStream();
             yamlStream.Load(new StreamReader(stream));
             var yamlNode = yamlStream.Documents[0].RootNode;

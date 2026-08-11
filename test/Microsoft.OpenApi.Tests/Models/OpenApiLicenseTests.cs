@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await BasicLicense.SerializeAsJsonAsync(version);
+            var actual = await BasicLicense.SerializeAsJsonAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = "name: Apache 2.0";
 
             // Act
-            var actual = await BasicLicense.SerializeAsYamlAsync(version);
+            var actual = await BasicLicense.SerializeAsYamlAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvanceLicense.SerializeAsJsonAsync(version);
+            var actual = await AdvanceLicense.SerializeAsJsonAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvanceLicense.SerializeAsYamlAsync(version);
+            var actual = await AdvanceLicense.SerializeAsYamlAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -142,7 +142,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = await LicenseWithIdentifier.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await LicenseWithIdentifier.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = await LicenseWithIdentifier.SerializeAsJsonAsync(version);
+            var actual = await LicenseWithIdentifier.SerializeAsJsonAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
@@ -175,7 +175,7 @@ namespace Microsoft.OpenApi.Tests.Models
 identifier: Apache-2.0";
 
             // Act
-            var actual = await LicenseWithIdentifier.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await LicenseWithIdentifier.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
@@ -191,7 +191,7 @@ identifier: Apache-2.0";
 x-oai-license-identifier: Apache-2.0";
 
             // Act
-            var actual = await LicenseWithIdentifier.SerializeAsYamlAsync(version);
+            var actual = await LicenseWithIdentifier.SerializeAsYamlAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());

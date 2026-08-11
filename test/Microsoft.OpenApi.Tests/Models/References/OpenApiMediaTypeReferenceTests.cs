@@ -253,7 +253,7 @@ public class OpenApiMediaTypeReferenceTests
 
         // Act
         document.SerializeAsV32(writer);
-        await writer.FlushAsync();
+        await writer.FlushAsync(TestContext.Current.CancellationToken);
 
         // Assert
         await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput, inlineLocalReferences);
@@ -318,7 +318,7 @@ public class OpenApiMediaTypeReferenceTests
 
         // Act
         document.SerializeAsV31(writer);
-        await writer.FlushAsync();
+        await writer.FlushAsync(TestContext.Current.CancellationToken);
 
         // Assert
         await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput, inlineLocalReferences);
@@ -383,7 +383,7 @@ public class OpenApiMediaTypeReferenceTests
 
         // Act
         document.SerializeAsV3(writer);
-        await writer.FlushAsync();
+        await writer.FlushAsync(TestContext.Current.CancellationToken);
 
         // Assert
         await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput, inlineLocalReferences);

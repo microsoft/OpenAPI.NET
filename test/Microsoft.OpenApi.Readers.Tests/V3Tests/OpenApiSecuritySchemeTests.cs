@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseHttpSecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "httpSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Join(SampleFolderPath, "httpSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseApiKeySecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Join(SampleFolderPath, "apiKeySecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseBearerSecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "bearerSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Join(SampleFolderPath, "bearerSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseOAuth2SecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "oauth2SecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Join(SampleFolderPath, "oauth2SecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(
@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseOpenIdConnectSecuritySchemeShouldSucceed()
         {
             // Act
-            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Combine(SampleFolderPath, "openIdConnectSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(Path.Join(SampleFolderPath, "openIdConnectSecurityScheme.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(
@@ -109,10 +109,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             // Act
             var securityScheme = await OpenApiModelFactory.LoadAsync<OpenApiSecurityScheme>(
-                Path.Combine(SampleFolderPath, "oauth2SecuritySchemeWithDeviceUrl.yaml"),
+                Path.Join(SampleFolderPath, "oauth2SecuritySchemeWithDeviceUrl.yaml"),
                 OpenApiSpecVersion.OpenApi3_0,
                 new(),
-                SettingsFixture.ReaderSettings);
+                SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.NotNull(securityScheme);

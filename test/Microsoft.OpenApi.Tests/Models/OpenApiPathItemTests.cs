@@ -130,7 +130,7 @@ public class OpenApiPathItemTests
 
         var parsedExpectedJson = JsonNode.Parse(expectedJson);
         // When
-        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
         var parsedActualJson = JsonNode.Parse(actualJson);
 
         // Then
@@ -262,7 +262,7 @@ public class OpenApiPathItemTests
 
         var parsedExpectedJson = JsonNode.Parse(expectedJson);
         // When
-        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
         var parsedActualJson = JsonNode.Parse(actualJson);
 
         // Then
@@ -394,7 +394,7 @@ public class OpenApiPathItemTests
 
         var parsedExpectedJson = JsonNode.Parse(expectedJson);
         // When
-        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
         var parsedActualJson = JsonNode.Parse(actualJson);
 
         // Then
@@ -517,7 +517,7 @@ public class OpenApiPathItemTests
 
         var parsedExpectedJson = JsonNode.Parse(expectedJson);
         // When
-        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2, TestContext.Current.CancellationToken);
         var parsedActualJson = JsonNode.Parse(actualJson);
 
         // Then
@@ -574,7 +574,7 @@ public class OpenApiPathItemTests
         };
 
         // When
-        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
         var parsedActualJson = Assert.IsType<JsonObject>(JsonNode.Parse(actualJson));
 
         // Then - should contain x-oai- prefixed extensions in the operation
@@ -633,7 +633,7 @@ public class OpenApiPathItemTests
         };
 
         // When
-        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
         var parsedActualJson = Assert.IsType<JsonObject>(JsonNode.Parse(actualJson));
 
         // Then - should contain x-oai- prefixed extensions in the operation
@@ -692,7 +692,7 @@ public class OpenApiPathItemTests
         };
 
         // When
-        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
         var parsedActualJson = Assert.IsType<JsonObject>(JsonNode.Parse(actualJson));
 
         // Then - should contain x-oai- prefixed extensions in the operation
@@ -790,7 +790,7 @@ public class OpenApiPathItemTests
         };
 
         // Act
-        var yaml = await pathItem.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
+        var yaml = await pathItem.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Contains("Query:", yaml);
@@ -839,7 +839,7 @@ public class OpenApiPathItemTests
         };
 
         // Act
-        var yaml = await pathItem.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+        var yaml = await pathItem.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Contains("Query:", yaml);

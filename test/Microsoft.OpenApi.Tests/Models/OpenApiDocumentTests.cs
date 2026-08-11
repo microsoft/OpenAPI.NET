@@ -1334,7 +1334,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocument.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -1351,7 +1351,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocumentWithReference.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -1368,7 +1368,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocumentWithServerVariable.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -1385,7 +1385,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocument.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -1402,7 +1402,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             DuplicateExtensions.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -1419,7 +1419,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             DuplicateExtensions.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -1436,7 +1436,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocumentWithReference.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -1460,7 +1460,7 @@ definitions:
         type: string";
 
             // Act
-            var actual = await SimpleDocumentWithTopLevelReferencingComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await SimpleDocumentWithTopLevelReferencingComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1479,7 +1479,7 @@ definitions:
   schema1: { }";
 
             // Act
-            var actual = await SimpleDocumentWithTopLevelSelfReferencingComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await SimpleDocumentWithTopLevelSelfReferencingComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1507,7 +1507,7 @@ definitions:
         type: string";
 
             // Act
-            var actual = await SimpleDocumentWithTopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await SimpleDocumentWithTopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1553,7 +1553,7 @@ definitions:
             ((OpenApiMediaType)document.Paths["/"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"]).Schema = new OpenApiSchemaReference("test", document);
 
             // Act
-            var actual = await document.SerializeAsync(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json);
+            var actual = await document.SerializeAsync(OpenApiSpecVersion.OpenApi2_0, OpenApiConstants.Json, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.NotEmpty(actual);
@@ -1581,7 +1581,7 @@ paths: { }";
             };
 
             // Act
-            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1611,7 +1611,7 @@ paths: { }";
             };
 
             // Act
-            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1640,7 +1640,7 @@ paths: { }";
             };
 
             // Act
-            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1653,18 +1653,18 @@ paths: { }";
             // Arrange
             var sampleFolderPath = "Models/Samples/";
 
-            var doc1 = await ParseInputFileAsync(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
-            var doc2 = await ParseInputFileAsync(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
-            var doc3 = await ParseInputFileAsync(Path.Combine(sampleFolderPath, "sampleDocumentWithWhiteSpaces.yaml"));
+            var doc1 = await ParseInputFileAsync(Path.Join(sampleFolderPath, "sampleDocument.yaml"));
+            var doc2 = await ParseInputFileAsync(Path.Join(sampleFolderPath, "sampleDocument.yaml"));
+            var doc3 = await ParseInputFileAsync(Path.Join(sampleFolderPath, "sampleDocumentWithWhiteSpaces.yaml"));
 
             // Act && Assert
             /*
                 Test whether reading in two similar documents yield the same hash code,
                 And reading in similar documents(one has a whitespace) yields the same hash code as the result is terse
             */
-            var doc1HashCode = await doc1.GetHashCodeAsync();
-            var doc2HashCode = await doc2.GetHashCodeAsync();
-            var doc3HashCode = await doc3.GetHashCodeAsync();
+            var doc1HashCode = await doc1.GetHashCodeAsync(TestContext.Current.CancellationToken);
+            var doc2HashCode = await doc2.GetHashCodeAsync(TestContext.Current.CancellationToken);
+            var doc3HashCode = await doc3.GetHashCodeAsync(TestContext.Current.CancellationToken);
             Assert.NotNull(doc1HashCode);
             Assert.NotNull(doc2HashCode);
             Assert.NotNull(doc3HashCode);
@@ -1725,7 +1725,7 @@ paths:
             };
 
             // Act
-            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1813,7 +1813,7 @@ paths:
             };
 
             // Act
-            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1885,7 +1885,7 @@ paths:
 
             // Act
             DocumentWithWebhooks.SerializeAsV31(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -1929,7 +1929,7 @@ webhooks:
           description: Return a 200 status to indicate that the data was received successfully";
 
             // Act
-            var actual = await DocumentWithWebhooks.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await DocumentWithWebhooks.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -1959,7 +1959,7 @@ info:
 paths: { }";
 
             // Act
-            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
@@ -1980,7 +1980,7 @@ responses:
           items:
             type: object";
 
-            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithReusableWebhooks.yaml", SettingsFixture.ReaderSettings)).Document;
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithReusableWebhooks.yaml", SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
           
             var stringWriter = new StringWriter();
             var writer = new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true });
@@ -2034,8 +2034,8 @@ components:
         radius:
           type: number
 ";
-            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithDollarId.yaml", SettingsFixture.ReaderSettings)).Document;
-            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithDollarId.yaml", SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
 
@@ -2089,7 +2089,7 @@ components:
                 }
             };
 
-            var actual = await doc.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await doc.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
         [Fact]
@@ -2236,7 +2236,7 @@ components:
 
             // Act
             AdvancedDocument.SerializeAs(version, writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(version);
@@ -2294,7 +2294,7 @@ components:
           scopes:
             api://a2a7226d-e8d1-4ded-8c53-dd4c136ff456/repairs_read: Read repair records";
 
-            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithSecurityScheme.yaml", SettingsFixture.ReaderSettings)).Document;
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithSecurityScheme.yaml", SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
             var stringWriter = new StringWriter();
             doc.SerializeAsV3(new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true }));
             var actual = stringWriter.ToString();
@@ -2326,7 +2326,7 @@ components:
                                            type: object
                            """;
 
-            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithoutOperationSecurity.yaml", SettingsFixture.ReaderSettings)).Document;
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithoutOperationSecurity.yaml", SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
             var stringWriter = new StringWriter();
             doc!.SerializeAsV3(new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true }));
             var actual = stringWriter.ToString();
@@ -2361,7 +2361,7 @@ components:
                                  security: [ ]
                            """;
 
-            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithEmptyOperationSecurity.yaml", SettingsFixture.ReaderSettings)).Document;
+            var doc = (await OpenApiDocument.LoadAsync("Models/Samples/docWithEmptyOperationSecurity.yaml", SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
             var stringWriter = new StringWriter();
             doc!.SerializeAsV3(new OpenApiYamlWriter(stringWriter, new OpenApiWriterSettings { InlineLocalReferences = true }));
             var actual = stringWriter.ToString();
@@ -2393,7 +2393,7 @@ info:
 paths: { }";
 
             // Act
-            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_2);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_2, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
@@ -2441,7 +2441,7 @@ paths: { }";
                 """;
 
             // Act
-            var actual = await doc.SerializeAsJsonAsync(openApiSpecVersion);
+            var actual = await doc.SerializeAsJsonAsync(openApiSpecVersion, TestContext.Current.CancellationToken);
 
             // Assert
             var actualSecurity = JsonNode.Parse(actual)?["security"];
@@ -2471,7 +2471,7 @@ paths: { }
 x-oai-$self: https://example.org/api/openapi.json";
 
             // Act
-            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
@@ -2499,7 +2499,7 @@ paths: { }
 x-oai-$self: https://example.org/api/openapi.json";
 
             // Act
-            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await doc.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());

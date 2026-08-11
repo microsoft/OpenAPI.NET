@@ -314,7 +314,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
 
             // Act
             reference.SerializeAsV31(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -346,7 +346,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
 
             // Act
             reference.SerializeAsV32(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -378,7 +378,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
 
             // Act
             reference.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -410,7 +410,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
 
             // Act
             reference.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -581,7 +581,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
 
             // Act
             reference.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
             var output = outputStringWriter.ToString();
 
             // Assert: In v3.0, ONLY $ref should appear - no description, no extensions
@@ -606,7 +606,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
 
             // Act
             reference.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
             var output = outputStringWriter.ToString();
 
             // Assert: In v2, ONLY $ref should appear - no description, no extensions

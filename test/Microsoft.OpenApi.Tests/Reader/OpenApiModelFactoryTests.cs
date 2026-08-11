@@ -12,7 +12,7 @@ public class OpenApiModelFactoryTests
     [Fact]
     public async Task LoadDocumentWithCircularSchemaPropertyReferencesShouldSucceed()
     {
-        var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.json");
+        var filePath = Path.Join(Path.GetTempPath(), $"{Guid.NewGuid():N}.json");
         await File.WriteAllTextAsync(filePath, """
 {
     "openapi": "3.0.0",
@@ -40,11 +40,11 @@ public class OpenApiModelFactoryTests
         }
     }
 }
-""");
+""", TestContext.Current.CancellationToken);
 
         try
         {
-            var result = await OpenApiDocument.LoadAsync(filePath);
+            var result = await OpenApiDocument.LoadAsync(filePath, token: TestContext.Current.CancellationToken);
 
             Assert.NotNull(result.Document);
             Assert.Empty(result.Diagnostic.Errors);
@@ -62,7 +62,7 @@ public class OpenApiModelFactoryTests
     [Fact]
     public async Task LoadDocumentWithCircularRootSchemaReferencesShouldReturnDiagnosticWarning()
     {
-        var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.json");
+        var filePath = Path.Join(Path.GetTempPath(), $"{Guid.NewGuid():N}.json");
         await File.WriteAllTextAsync(filePath, """
 {
     "openapi": "3.0.0",
@@ -82,11 +82,11 @@ public class OpenApiModelFactoryTests
         }
     }
 }
-""");
+""", TestContext.Current.CancellationToken);
 
         try
         {
-            var result = await OpenApiDocument.LoadAsync(filePath);
+            var result = await OpenApiDocument.LoadAsync(filePath, token: TestContext.Current.CancellationToken);
 
             Assert.NotNull(result.Document);
             Assert.Empty(result.Diagnostic.Errors);
@@ -102,7 +102,7 @@ public class OpenApiModelFactoryTests
     [Fact]
     public async Task UsesSettingsBaseUrl()
     {
-        var tempFilePathReferee = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+        var tempFilePathReferee = Path.GetTempFileName();
         await File.WriteAllTextAsync(tempFilePathReferee,
 """
 {
@@ -147,8 +147,8 @@ public class OpenApiModelFactoryTests
         }
     }
 }
-""");
-        var tempFilePathReferrer = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+""", TestContext.Current.CancellationToken);
+        var tempFilePathReferrer = Path.GetTempFileName();
         await File.WriteAllTextAsync(tempFilePathReferrer,
 $$$"""
 {
@@ -193,18 +193,18 @@ $$$"""
         }
     }
 }
-""");
+""", TestContext.Current.CancellationToken);
         // read referrer document to a memory stream
         using var stream = new MemoryStream();
         using var reader = new StreamReader(tempFilePathReferrer);
-        await reader.BaseStream.CopyToAsync(stream);
+        await reader.BaseStream.CopyToAsync(stream, TestContext.Current.CancellationToken);
         stream.Position = 0;
         var baseUri = new Uri(tempFilePathReferrer);
         var settings = new OpenApiReaderSettings
         {
             BaseUrl = baseUri, 
         };
-        var readResult = await OpenApiDocument.LoadAsync(stream, settings: settings);
+        var readResult = await OpenApiDocument.LoadAsync(stream, settings: settings, cancellationToken: TestContext.Current.CancellationToken);
         Assert.Equal(OpenApiConstants.Json, readResult.Diagnostic.Format);
         Assert.NotNull(readResult.Document);
         Assert.NotNull(readResult.Document.Components);
@@ -237,7 +237,7 @@ paths: {}
         using var nonSeekableStream = new NonSeekableStream(memoryStream);
     
         // When
-        var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream);
+        var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream, cancellationToken: TestContext.Current.CancellationToken);
     
         // Then
         Assert.NotNull(document);
@@ -254,7 +254,7 @@ paths: {}
         settings.AddYamlReader();
     
         // When
-        var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream, settings: settings);
+        var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream, settings: settings, cancellationToken: TestContext.Current.CancellationToken);
     
         // Then
         Assert.NotNull(document);
@@ -269,7 +269,7 @@ paths: {}
         await using var nonSeekableStream = new AsyncOnlyStream(memoryStream);
     
         // When
-        var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream);
+        var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream, cancellationToken: TestContext.Current.CancellationToken);
     
         // Then
         Assert.NotNull(document);
@@ -286,7 +286,7 @@ paths: {}
         settings.AddYamlReader();
     
         // When
-        var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream, settings: settings);
+        var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream, settings: settings, cancellationToken: TestContext.Current.CancellationToken);
     
         // Then
         Assert.NotNull(document);
@@ -301,7 +301,7 @@ paths: {}
         using var nonSeekableStream = new NonSeekableStream(memoryStream);
     
         // When
-        var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream);
+        var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream, cancellationToken: TestContext.Current.CancellationToken);
     
         // Then
         Assert.NotNull(document);

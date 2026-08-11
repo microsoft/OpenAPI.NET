@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         [Fact]
         public void ParseBasicInfoShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicInfo.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "basicInfo.yaml"));
             var yamlStream = new YamlStream();
             yamlStream.Load(new StreamReader(stream));
             var yamlNode = yamlStream.Documents[0].RootNode;

@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Tests.Models
             string expected)
         {
             // Arrange & Act
-            var actual = await BasicContact.SerializeAsync(version, format);
+            var actual = await BasicContact.SerializeAsync(version, format, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvanceContact.SerializeAsJsonAsync(version);
+            var actual = await AdvanceContact.SerializeAsJsonAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvanceContact.SerializeAsYamlAsync(version);
+            var actual = await AdvanceContact.SerializeAsYamlAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

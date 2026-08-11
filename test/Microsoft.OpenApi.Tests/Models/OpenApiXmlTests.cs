@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Tests.Models
             string format)
         {
             // Act
-            var actual = await BasicXml.SerializeAsync(version, format);
+            var actual = await BasicXml.SerializeAsync(version, format, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvancedXml.SerializeAsJsonAsync(version);
+            var actual = await AdvancedXml.SerializeAsJsonAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
@@ -103,7 +103,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvancedXml.SerializeAsYamlAsync(version);
+            var actual = await AdvancedXml.SerializeAsYamlAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -127,7 +127,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await XmlWithNodeType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var actual = await XmlWithNodeType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await XmlWithNodeType.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_2);
+            var actual = await XmlWithNodeType.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_2, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -168,7 +168,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await XmlWithAttributeNodeType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var actual = await XmlWithAttributeNodeType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await XmlWithNodeType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await XmlWithNodeType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
@@ -209,7 +209,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await XmlWithAttributeNodeType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await XmlWithAttributeNodeType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
