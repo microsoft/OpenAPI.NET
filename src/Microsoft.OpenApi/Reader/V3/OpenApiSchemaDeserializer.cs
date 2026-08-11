@@ -420,7 +420,113 @@ namespace Microsoft.OpenApi.Reader.V3
                 schema.Type = JsonSchemaType.Null;
             }
 
+            if (schema.Type is null)
+            {
+                if (schema.AnyOf is not null &&
+                    schema.AnyOf.All(s => s is OpenApiSchema child && DoesSchemaRepresentSingleType(child)))
+                {
+                    JsonSchemaType types = GetAllTypes(schema.AnyOf);
+                    schema.AnyOf = null;
+                    schema.Type = types;
+                }
+                else if (schema.OneOf is not null &&
+                    schema.OneOf.All(s => s is OpenApiSchema child && DoesSchemaRepresentSingleType(child)))
+                {
+                    JsonSchemaType types = GetAllTypes(schema.OneOf);
+                    schema.OneOf = null;
+                    schema.Type = types;
+                }
+            }
+
             return schema;
+        }
+
+        private static JsonSchemaType GetAllTypes(IList<IOpenApiSchema> schemas)
+        {
+            JsonSchemaType types = 0;
+            foreach (var schema in schemas)
+            {
+                types |= schema.Type!.Value;
+            }
+
+            return types;
+        }
+
+        private static bool DoesSchemaRepresentSingleType(OpenApiSchema schema)
+        {
+            if (schema.Type is not (JsonSchemaType.Null or
+                JsonSchemaType.Boolean or
+                JsonSchemaType.Integer or
+                JsonSchemaType.Number or
+                JsonSchemaType.String or
+                JsonSchemaType.Object or
+                JsonSchemaType.Array))
+            {
+                return false;
+            }
+
+            // Folding anyOf/oneOf back into a single "type" is only safe when the child
+            // schema carries nothing but its type. Otherwise any additional keywords
+            // (format, bounds, enum, nested schemas, etc.) would be silently dropped.
+            // Metadata is intentionally ignored as it only holds internal bookkeeping.
+            return schema.Title is null &&
+                schema.Schema is null &&
+                schema.Id is null &&
+                schema.Comment is null &&
+                schema.Vocabulary is null &&
+                schema.DynamicRef is null &&
+                schema.DynamicAnchor is null &&
+                schema.Definitions is null &&
+                schema.Anchor is null &&
+                schema.Format is null &&
+                schema.Description is null &&
+                schema.Maximum is null &&
+                schema.Minimum is null &&
+                schema.ExclusiveMaximum is null &&
+                schema.ExclusiveMinimum is null &&
+                schema.MaxLength is null &&
+                schema.MinLength is null &&
+                schema.Pattern is null &&
+                schema.MultipleOf is null &&
+                schema.Default is null &&
+                !schema.ReadOnly &&
+                !schema.WriteOnly &&
+                schema.AllOf is null &&
+                schema.OneOf is null &&
+                schema.AnyOf is null &&
+                schema.Not is null &&
+                schema.Required is null &&
+                schema.Items is null &&
+                schema.MaxItems is null &&
+                schema.MinItems is null &&
+                schema.UniqueItems is null &&
+                schema.Contains is null &&
+                schema.MaxContains is null &&
+                schema.MinContains is null &&
+                schema.Properties is null &&
+                schema.PatternProperties is null &&
+                schema.MaxProperties is null &&
+                schema.MinProperties is null &&
+                schema.AdditionalPropertiesAllowed &&
+                schema.AdditionalProperties is null &&
+                schema.Discriminator is null &&
+                schema.Enum is null &&
+                schema.UnevaluatedProperties &&
+                schema.UnevaluatedPropertiesSchema is null &&
+                schema.ContentEncoding is null &&
+                schema.ContentMediaType is null &&
+                schema.ContentSchema is null &&
+                schema.PropertyNames is null &&
+                schema.DependentSchemas is null &&
+                schema.DependentRequired is null &&
+                schema.If is null &&
+                schema.Then is null &&
+                schema.Else is null &&
+                schema.ExternalDocs is null &&
+                !schema.Deprecated &&
+                schema.Xml is null &&
+                schema.Extensions is null &&
+                schema.UnrecognizedKeywords is null;
         }
     }
 }
