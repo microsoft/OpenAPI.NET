@@ -1023,11 +1023,7 @@ namespace Microsoft.OpenApi
         {
             // TODO: Handle "file" type for 2.0.
             // Spec https://spec.openapis.org/oas/v2.0.html#data-types
-            var typeToUse = Type;
-            if (version < OpenApiSpecVersion.OpenApi3_1)
-            {
-                typeToUse ??= GetKnownTypeAndFormatPreOpenApi31()?.Type;
-            }
+            var typeToUse = Type ?? GetKnownTypeAndFormatPreOpenApi31()?.Type;
 
             if (typeToUse is not { } type || type == JsonSchemaType.Null)
             {
