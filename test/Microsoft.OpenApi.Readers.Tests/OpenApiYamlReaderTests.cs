@@ -75,6 +75,32 @@ public class OpenApiYamlReaderTests
         Assert.Throws<ArgumentNullException>(() => reader.Read(stream, DocumentLocation, null!));
     }
 
+    [Fact]
+    public void ReadReturnsDiagnosticErrorForExponentialAliasExpansion()
+    {
+        // A "billion laughs" YAML bomb must surface as a diagnostic error with no document,
+        // rather than throwing or exhausting memory.
+        var reader = new OpenApiYamlReader();
+        using var stream = CreateStream(
+            """
+            a: &a ["x","x","x","x","x","x","x","x","x"]
+            b: &b [*a,*a,*a,*a,*a,*a,*a,*a,*a]
+            c: &c [*b,*b,*b,*b,*b,*b,*b,*b,*b]
+            d: &d [*c,*c,*c,*c,*c,*c,*c,*c,*c]
+            e: &e [*d,*d,*d,*d,*d,*d,*d,*d,*d]
+            f: &f [*e,*e,*e,*e,*e,*e,*e,*e,*e]
+            g: &g [*f,*f,*f,*f,*f,*f,*f,*f,*f]
+            h: &h [*g,*g,*g,*g,*g,*g,*g,*g,*g]
+            i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
+            """);
+
+        var result = reader.Read(stream, DocumentLocation, SettingsFixture.ReaderSettings);
+
+        Assert.Null(result.Document);
+        Assert.NotEmpty(result.Diagnostic.Errors);
+        Assert.Equal(OpenApiConstants.Yaml, result.Diagnostic.Format);
+    }
+
     private static MemoryStream CreateStream(string yaml)
     {
         return new MemoryStream(Encoding.UTF8.GetBytes(yaml));

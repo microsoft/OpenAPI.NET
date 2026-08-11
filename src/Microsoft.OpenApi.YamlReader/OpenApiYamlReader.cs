@@ -74,6 +74,17 @@ namespace Microsoft.OpenApi.YamlReader
                     Diagnostic = diagnostic,
                 };
             }
+            catch (OpenApiReaderException ex)
+            {
+                var diagnostic = new OpenApiDiagnostic();
+                diagnostic.Errors.Add(new(ex));
+                diagnostic.Format = OpenApiConstants.Yaml;
+                return new()
+                {
+                    Document = null,
+                    Diagnostic = diagnostic,
+                };
+            }
 
             return UpdateFormat(Read(jsonNode, location, settings));
         }
