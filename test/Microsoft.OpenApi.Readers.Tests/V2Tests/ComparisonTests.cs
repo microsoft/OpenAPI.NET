@@ -22,10 +22,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             var settings = new OpenApiReaderSettings();
             settings.AddYamlReader();
-            using var streamV2 = Resources.GetStream(Path.Combine(SampleFolderPath, $"{fileName}.v2.yaml"));
-            using var streamV3 = Resources.GetStream(Path.Combine(SampleFolderPath, $"{fileName}.v3.yaml"));
-            var result1 = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, $"{fileName}.v2.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
-            var result2 = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, $"{fileName}.v3.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
+            using var streamV2 = Resources.GetStream(Path.Join(SampleFolderPath, $"{fileName}.v2.yaml"));
+            using var streamV3 = Resources.GetStream(Path.Join(SampleFolderPath, $"{fileName}.v3.yaml"));
+            var result1 = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, $"{fileName}.v2.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
+            var result2 = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, $"{fileName}.v3.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             result2.Document.Should().BeEquivalentTo(result1.Document,
                 options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
