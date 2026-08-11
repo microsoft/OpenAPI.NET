@@ -219,7 +219,7 @@ x-nullable: true";
         [Fact]
         public void ParseSchemaWithBinaryFormatNormalizesToContentMediaType()
         {
-            var schema = LoadV2Schema($$"""{ "type": "string", "format": "byte" }""");
+            var schema = LoadV2Schema("""{ "type": "string", "format": "binary" }""");
 
             Assert.Null(schema.Type);
             Assert.Equal("application/octet-stream", schema.ContentMediaType);

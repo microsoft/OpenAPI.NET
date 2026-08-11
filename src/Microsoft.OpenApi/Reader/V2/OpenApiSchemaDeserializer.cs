@@ -326,7 +326,7 @@ namespace Microsoft.OpenApi.Reader.V2
             // transform it in the object model to the latest thing.
             if (schema.Type.HasValue && schema.Type.Value.HasFlag(JsonSchemaType.String) &&
                 schema.Format == "byte" &&
-                schema.ContentEncoding is null)
+                schema.ContentEncoding is null or "base64")
             {
                 schema.ContentEncoding = "base64";
                 schema.Format = null;

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
@@ -287,6 +288,72 @@ schema:
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
+        }
+
+        // A v2 non-body parameter serializes its schema inline rather than as a nested "schema"
+        // object, so the pre-3.1 binary description has to be reconstructed there as well.
+        // https://spec.openapis.org/oas/v3.2.0.html#migrating-binary-descriptions-from-oas-3-0
+        [Fact]
+        public async Task SerializeParameterWithContentEncodingAsV2JsonReconstructsByteFormat()
+        {
+            // Arrange
+            var parameter = new OpenApiParameter
+            {
+                Name = "token",
+                In = ParameterLocation.Query,
+                Schema = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String,
+                    ContentEncoding = "base64"
+                }
+            };
+
+            var expected =
+                """
+                {
+                  "in": "query",
+                  "name": "token",
+                  "type": "string",
+                  "format": "byte"
+                }
+                """;
+
+            // Act
+            var actual = await parameter.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public async Task SerializeParameterWithContentMediaTypeAsV2JsonReconstructsBinaryFormat()
+        {
+            // Arrange
+            var parameter = new OpenApiParameter
+            {
+                Name = "upload",
+                In = ParameterLocation.Query,
+                Schema = new OpenApiSchema
+                {
+                    ContentMediaType = "image/png"
+                }
+            };
+
+            var expected =
+                """
+                {
+                  "in": "query",
+                  "name": "upload",
+                  "type": "string",
+                  "format": "binary"
+                }
+                """;
+
+            // Act
+            var actual = await parameter.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
 
         [Theory]

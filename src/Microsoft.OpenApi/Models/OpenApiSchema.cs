@@ -762,7 +762,8 @@ namespace Microsoft.OpenApi
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
         {
             // type
-            writer.WriteProperty(OpenApiConstants.Type, (Type & ~JsonSchemaType.Null)?.ToFirstIdentifier());
+            var typeToUse = Type ?? GetKnownTypeAndFormatPreOpenApi31()?.Type;
+            writer.WriteProperty(OpenApiConstants.Type, (typeToUse & ~JsonSchemaType.Null)?.ToFirstIdentifier());
 
             // format
             WriteFormatProperty(writer);
@@ -819,7 +820,8 @@ namespace Microsoft.OpenApi
             var formatToWrite = Format;
             if (string.IsNullOrEmpty(formatToWrite))
             {
-                formatToWrite = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                formatToWrite = GetKnownTypeAndFormatPreOpenApi31()?.Format ??
+                    AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
                     AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
                     OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
             }
@@ -850,14 +852,7 @@ namespace Microsoft.OpenApi
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // format
-            if (Format is null && GetKnownTypeAndFormatPreOpenApi31() is { } typeAndFormat)
-            {
-                writer.WriteProperty(OpenApiConstants.Format, typeAndFormat.Format);
-            }
-            else
-            {
-                WriteFormatProperty(writer);
-            }
+            WriteFormatProperty(writer);
 
             // title
             writer.WriteProperty(OpenApiConstants.Title, Title);
@@ -1183,9 +1178,9 @@ namespace Microsoft.OpenApi
         private (JsonSchemaType Type, string Format)? GetKnownTypeAndFormatPreOpenApi31()
         {
             // https://spec.openapis.org/oas/v3.2.0.html#migrating-binary-descriptions-from-oas-3-0
-            if (Type == JsonSchemaType.String && ContentEncoding == "base64")
+            if (Type is JsonSchemaType.String or (JsonSchemaType.String | JsonSchemaType.Null) && ContentEncoding == "base64")
             {
-                return (JsonSchemaType.String, "byte");
+                return (Type.Value, "byte");
             }
 
             if (Type is null && ContentEncoding is null && !string.IsNullOrEmpty(ContentMediaType))
