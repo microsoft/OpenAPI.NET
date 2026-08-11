@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseDocumentWithWebhooksShouldSucceed()
         {
             // Arrange and Act
-            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
+            var actual = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "documentWithWebhooks.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             var petSchema = new OpenApiSchemaReference("petSchema", actual.Document);
 
             var newPetSchema = new OpenApiSchemaReference("newPetSchema", actual.Document);
@@ -461,7 +461,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = false });
 
             // Act
-            var actual = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithExample.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
+            var actual = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "docWithExample.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             actual.Document.SerializeAsV31(writer);
 
             // Assert
@@ -472,7 +472,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseDocumentWithPatternPropertiesInSchemaWorks()
         {
             // Arrange and Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithPatternPropertiesInSchema.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
+            var result = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "docWithPatternPropertiesInSchema.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             var actualSchema = result.Document.Paths["/example"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
 
             var expectedSchema = new OpenApiSchema
@@ -529,7 +529,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseDocumentWithReferenceByIdGetsResolved()
         {
             // Arrange and Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "docWithReferenceById.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
+            var result = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "docWithReferenceById.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var responseSchema = result.Document.Paths["/resource"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
             var requestBodySchema = result.Document.Paths["/resource"].Operations[HttpMethod.Post].RequestBody.Content["application/json"].Schema;
@@ -546,7 +546,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         {
             // Arrange
             var documentName = "externalRefByJsonPointer.yaml";
-            var path = Path.Combine(Directory.GetCurrentDirectory(), SampleFolderPath, documentName);
+            var path = Path.Join(Directory.GetCurrentDirectory(), SampleFolderPath, documentName);
 
             var settings = new OpenApiReaderSettings
             {
@@ -556,13 +556,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             settings.AddYamlReader();
 
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, documentName), settings, token: TestContext.Current.CancellationToken);
+            var result = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, documentName), settings, token: TestContext.Current.CancellationToken);
             var responseSchema = result.Document.Paths["/resource"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
 
             // Assert
             var externalResourceUri = new Uri(
                 "file://" + 
-                Path.Combine(Path.GetFullPath(SampleFolderPath), 
+                Path.Join(Path.GetFullPath(SampleFolderPath), 
                 "externalResource.yaml#/components/schemas/todo")).AbsoluteUri;
 
             Assert.True(result.Document.Workspace.Contains(externalResourceUri));
@@ -573,7 +573,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseExternalDocumentDereferenceToOpenApiDocumentByIdWorks()
         {
             // Arrange
-            var path = Path.Combine(Directory.GetCurrentDirectory(), SampleFolderPath);
+            var path = Path.Join(Directory.GetCurrentDirectory(), SampleFolderPath);
 
             var settings = new OpenApiReaderSettings
             {
@@ -583,8 +583,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             settings.AddYamlReader();
 
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalRefById.yaml"), settings, token: TestContext.Current.CancellationToken);
-            var doc2 = (await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalResource.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
+            var result = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "externalRefById.yaml"), settings, token: TestContext.Current.CancellationToken);
+            var doc2 = (await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "externalResource.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
 
             var requestBodySchema = result.Document.Paths["/resource"].Operations[HttpMethod.Get].Parameters[0].Schema;
             result.Document.Workspace.RegisterComponents(doc2);
@@ -596,7 +596,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         [Fact]
         public async Task ParseDocumentWith31PropertiesWorks()
         {
-            var path = Path.Combine(SampleFolderPath, "documentWith31Properties.yaml");
+            var path = Path.Join(SampleFolderPath, "documentWith31Properties.yaml");
             var doc = (await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
             var outputStringWriter = new StringWriter();
             doc.SerializeAsV31(new OpenApiYamlWriter(outputStringWriter));
@@ -610,7 +610,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         [Fact]
         public async Task ParseDocumentWithEmptyTagsWorks()
         {
-            var path = Path.Combine(SampleFolderPath, "documentWithEmptyTags.json");
+            var path = Path.Join(SampleFolderPath, "documentWithEmptyTags.json");
             var doc = (await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
 
             doc.Paths["/groups"].Operations[HttpMethod.Get].Tags.Should().BeNull("Empty tags are ignored, so we should not have any tags");
@@ -618,7 +618,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         [Fact]
         public async Task DocumentWithSchemaResultsInWarning()
         {
-            var path = Path.Combine(SampleFolderPath, "documentWithSchema.json");
+            var path = Path.Join(SampleFolderPath, "documentWithSchema.json");
             var (doc, diag) = await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             Assert.NotNull(doc);
             Assert.NotNull(diag);
@@ -637,7 +637,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ValidateReferencedExampleInSchemaWorks()
         {
             // Arrange && Act
-            var path = Path.Combine(SampleFolderPath, "docWithReferencedExampleInSchemaWorks.yaml");
+            var path = Path.Join(SampleFolderPath, "docWithReferencedExampleInSchemaWorks.yaml");
             var result = await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             var actualSchemaExample = result.Document.Components.Schemas["DiffCreatedEvent"].Properties["updatedAt"].Example;
             var targetSchemaExample = result.Document.Components.Schemas["Timestamp"].Example;
@@ -652,7 +652,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseDocumentWithSelfExtensionWorks()
         {
             // Arrange && Act
-            var path = Path.Combine(SampleFolderPath, "documentWithSelfExtension.yaml");
+            var path = Path.Join(SampleFolderPath, "documentWithSelfExtension.yaml");
             var result = await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert

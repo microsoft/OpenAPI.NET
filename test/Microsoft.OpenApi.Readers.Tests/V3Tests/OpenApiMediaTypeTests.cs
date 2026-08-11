@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseMediaTypeWithExampleShouldSucceed()
         {
             // Act
-            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Join(SampleFolderPath, "mediaTypeWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             mediaType.Should().BeEquivalentTo(
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseMediaTypeWithExamplesShouldSucceed()
         {
             // Act
-            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Join(SampleFolderPath, "mediaTypeWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             mediaType.Should().BeEquivalentTo(
@@ -103,7 +103,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 }
 ";
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "examplesWithEmptyArray.json")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "examplesWithEmptyArray.json")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             // Act
             var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(
-                Path.Combine(SampleFolderPath, "mediaTypeWithXOaiItemEncoding.yaml"),
+                Path.Join(SampleFolderPath, "mediaTypeWithXOaiItemEncoding.yaml"),
                 OpenApiSpecVersion.OpenApi3_0,
                 new(),
                 SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             // Act
             var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(
-                Path.Combine(SampleFolderPath, "mediaTypeWithXOaiPrefixEncoding.yaml"),
+                Path.Join(SampleFolderPath, "mediaTypeWithXOaiPrefixEncoding.yaml"),
                 OpenApiSpecVersion.OpenApi3_0,
                 new(),
                 SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);

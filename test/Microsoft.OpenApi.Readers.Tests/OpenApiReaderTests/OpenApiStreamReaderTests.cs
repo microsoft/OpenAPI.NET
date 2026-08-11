@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         [Fact]
         public async Task StreamShouldCloseIfLeaveStreamOpenSettingEqualsFalse()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "petStore.yaml"));
             var settings = new OpenApiReaderSettings { LeaveStreamOpen = false };
             settings.AddYamlReader();
             (_, var diagnostic) = await OpenApiDocument.LoadAsync(stream, settings: settings, cancellationToken: TestContext.Current.CancellationToken);
@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         [Fact]
         public async Task StreamShouldNotCloseIfLeaveStreamOpenSettingEqualsTrue()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "petStore.yaml"));
             var settings = new OpenApiReaderSettings { LeaveStreamOpen = true };
             settings.AddYamlReader();
             _ = await OpenApiDocument.LoadAsync(stream, settings: settings, cancellationToken: TestContext.Current.CancellationToken);
@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         public async Task StreamShouldNotBeDisposedIfLeaveStreamOpenSettingIsTrueAsync()
         {
             var memoryStream = new MemoryStream();
-            using var fileStream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml"));
+            using var fileStream = Resources.GetStream(Path.Join(SampleFolderPath, "petStore.yaml"));
 
             await fileStream.CopyToAsync(memoryStream, TestContext.Current.CancellationToken);
             memoryStream.Position = 0;

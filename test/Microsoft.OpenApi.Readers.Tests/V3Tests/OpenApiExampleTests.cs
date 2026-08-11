@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public async Task ParseAdvancedExampleShouldSucceed()
         {
-            var example = await OpenApiModelFactory.LoadAsync<OpenApiExample>(Path.Combine(SampleFolderPath, "advancedExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
+            var example = await OpenApiModelFactory.LoadAsync<OpenApiExample>(Path.Join(SampleFolderPath, "advancedExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             var expected = new OpenApiExample
             {
                 Value = new JsonObject
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public async Task ParseExampleForcedStringSucceed()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "explicitString.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
+            var result = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "explicitString.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             Assert.Empty(result.Diagnostic.Errors);
         }
 
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             // Arrange & Act
             var example = await OpenApiModelFactory.LoadAsync<OpenApiExample>(
-                Path.Combine(SampleFolderPath, "exampleWithDataValue.yaml"), 
+                Path.Join(SampleFolderPath, "exampleWithDataValue.yaml"), 
                 OpenApiSpecVersion.OpenApi3_0, 
                 new(), 
                 SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             // Arrange & Act
             var example = await OpenApiModelFactory.LoadAsync<OpenApiExample>(
-                Path.Combine(SampleFolderPath, "exampleWithSerializedValue.yaml"), 
+                Path.Join(SampleFolderPath, "exampleWithSerializedValue.yaml"), 
                 OpenApiSpecVersion.OpenApi3_0, 
                 new(), 
                 SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);

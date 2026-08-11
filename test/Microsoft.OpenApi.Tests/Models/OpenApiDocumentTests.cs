@@ -1653,9 +1653,9 @@ paths: { }";
             // Arrange
             var sampleFolderPath = "Models/Samples/";
 
-            var doc1 = await ParseInputFileAsync(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
-            var doc2 = await ParseInputFileAsync(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
-            var doc3 = await ParseInputFileAsync(Path.Combine(sampleFolderPath, "sampleDocumentWithWhiteSpaces.yaml"));
+            var doc1 = await ParseInputFileAsync(Path.Join(sampleFolderPath, "sampleDocument.yaml"));
+            var doc2 = await ParseInputFileAsync(Path.Join(sampleFolderPath, "sampleDocument.yaml"));
+            var doc3 = await ParseInputFileAsync(Path.Join(sampleFolderPath, "sampleDocumentWithWhiteSpaces.yaml"));
 
             // Act && Assert
             /*

@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerWithDefault.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "headerWithDefault.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerWithEnum.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "headerWithEnum.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }

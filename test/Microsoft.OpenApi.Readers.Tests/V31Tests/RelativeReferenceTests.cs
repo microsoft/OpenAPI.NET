@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseInlineLocalReferenceWorks()
         {
             // Arrange
-            var filePath = Path.Combine(SampleFolderPath, "inlineLocalReference.yaml");
+            var filePath = Path.Join(SampleFolderPath, "inlineLocalReference.yaml");
 
             // Act
             var actual = (await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 }
             };
 
-            var path = Path.Combine(Directory.GetCurrentDirectory(), SampleFolderPath);
+            var path = Path.Join(Directory.GetCurrentDirectory(), SampleFolderPath);
 
             var settings = new OpenApiReaderSettings
             {
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             settings.AddYamlReader();
 
             // Act
-            var actual = (await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "inlineExternalReference.yaml"), settings, token: TestContext.Current.CancellationToken)).Document;
+            var actual = (await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "inlineExternalReference.yaml"), settings, token: TestContext.Current.CancellationToken)).Document;
             var exampleValue = actual.Paths["/items"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Examples["item-list"].Value;
 
             // Assert
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseComponentExternalReferenceWorks()
         {
             // Arrange
-            var path = Path.Combine(Directory.GetCurrentDirectory(), SampleFolderPath);
+            var path = Path.Join(Directory.GetCurrentDirectory(), SampleFolderPath);
             var settings = new OpenApiReaderSettings
             {
                 LoadExternalRefs = true,
@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             settings.AddYamlReader();
 
             // Act
-            var actual = (await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "componentExternalReference.yaml"), settings, token: TestContext.Current.CancellationToken)).Document;
+            var actual = (await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "componentExternalReference.yaml"), settings, token: TestContext.Current.CancellationToken)).Document;
             var securitySchemeValue = actual.Components.SecuritySchemes["customapikey"];
 
             // Assert
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseRootInlineJsonSchemaReferenceWorks()
         {
             // Arrange
-            var filePath = Path.Combine(SampleFolderPath, "rootInlineSchemaReference.yaml");
+            var filePath = Path.Join(SampleFolderPath, "rootInlineSchemaReference.yaml");
 
             // Act
             var actual = (await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseSubschemaInlineJsonSchemaReferenceWorks()
         {
             // Arrange
-            var filePath = Path.Combine(SampleFolderPath, "subschemaInlineSchemaReference.yaml");
+            var filePath = Path.Join(SampleFolderPath, "subschemaInlineSchemaReference.yaml");
 
             // Act
             var actual = (await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseRootComponentJsonSchemaReferenceWorks()
         {
             // Arrange
-            var filePath = Path.Combine(SampleFolderPath, "rootComponentSchemaReference.yaml");
+            var filePath = Path.Join(SampleFolderPath, "rootComponentSchemaReference.yaml");
 
             // Act
             var actual = (await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseSubschemaComponentJsonSchemaReferenceWorks()
         {
             // Arrange
-            var filePath = Path.Combine(SampleFolderPath, "subschemaComponentSchemaReference.yaml");
+            var filePath = Path.Join(SampleFolderPath, "subschemaComponentSchemaReference.yaml");
 
             // Act
             var actual = (await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseInternalComponentSubschemaJsonSchemaReferenceWorks()
         {
             // Arrange
-            var filePath = Path.Combine(SampleFolderPath, "internalComponentsSubschemaReference.yaml");
+            var filePath = Path.Join(SampleFolderPath, "internalComponentsSubschemaReference.yaml");
 
             // Act
             var actual = (await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
@@ -156,7 +156,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseExternalComponentSubschemaJsonSchemaReferenceWorks()
         {
             // Arrange
-            var path = Path.Combine(Directory.GetCurrentDirectory(), SampleFolderPath);
+            var path = Path.Join(Directory.GetCurrentDirectory(), SampleFolderPath);
             var settings = new OpenApiReaderSettings
             {
                 LoadExternalRefs = true,
@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             settings.AddYamlReader();
 
             // Act
-            var actual = (await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalComponentSubschemaReference.yaml"), settings, token: TestContext.Current.CancellationToken)).Document;
+            var actual = (await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "externalComponentSubschemaReference.yaml"), settings, token: TestContext.Current.CancellationToken)).Document;
             var schema = actual.Paths["/person/{id}"].Operations[HttpMethod.Get].Responses["200"].Content["application/json"].Schema;
 
             // Assert
@@ -293,7 +293,7 @@ person:
         public async Task ParseReferenceToInternalComponentUsingDollarIdWorks()
         {
             // Arrange
-            var filePath = Path.Combine(SampleFolderPath, "internalComponentReferenceUsingId.yaml");
+            var filePath = Path.Join(SampleFolderPath, "internalComponentReferenceUsingId.yaml");
 
             // Act
             var actual = (await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
@@ -358,7 +358,7 @@ components:
         public async Task ParseLocalReferenceToJsonSchemaResourceWorks()
         {
             // Arrange
-            var filePath = Path.Combine(SampleFolderPath, "localReferenceToJsonSchemaResource.yaml");
+            var filePath = Path.Join(SampleFolderPath, "localReferenceToJsonSchemaResource.yaml");
             var stringWriter = new StringWriter();
             var writer = new OpenApiYamlWriter(stringWriter);
 
@@ -521,7 +521,7 @@ components:
         public async Task ShouldResolveRelativeSubReference()
         {
             // Arrange
-            var filePath = Path.Combine(SampleFolderPath, "relativeSubschemaReference.json");
+            var filePath = Path.Join(SampleFolderPath, "relativeSubschemaReference.json");
 
             // Act
             var (actual, _) = await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
@@ -538,7 +538,7 @@ components:
         public async Task ShouldResolveRelativeSubReferenceUsingParsingContext()
         {
             // Arrange
-            var filePath = Path.Combine(SampleFolderPath, "relativeSubschemaReference.json");
+            var filePath = Path.Join(SampleFolderPath, "relativeSubschemaReference.json");
             using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             var jsonNode = await JsonNode.ParseAsync(fs, cancellationToken: TestContext.Current.CancellationToken);
             var schemaJsonNode = jsonNode["components"]?["schemas"]?["Foo"];
@@ -631,7 +631,7 @@ components:
         public async Task ShouldResolveRecursiveRelativeSubReference()
         {
             // Arrange
-            var filePath = Path.Combine(SampleFolderPath, "recursiveRelativeSubschemaReference.json");
+            var filePath = Path.Join(SampleFolderPath, "recursiveRelativeSubschemaReference.json");
 
             // Act
             var (actual, _) = await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
@@ -652,7 +652,7 @@ components:
         [Fact]
         public async Task ShouldResolveReferencesInSchemasFromSystemTextJson()
         {
-            var filePath = Path.Combine(SampleFolderPath, "STJSchema.json");
+            var filePath = Path.Join(SampleFolderPath, "STJSchema.json");
             using var fs = File.OpenRead(filePath);
             var jsonNode = await JsonNode.ParseAsync(fs, cancellationToken: TestContext.Current.CancellationToken);
 

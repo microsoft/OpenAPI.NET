@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
 
         public static MemoryStream GetMemoryStream(string fileName)
         {
-            var filePath = Path.Combine(SampleFolderPath, fileName);
+            var filePath = Path.Join(SampleFolderPath, fileName);
             var fileBytes = File.ReadAllBytes(filePath);
             return new MemoryStream(fileBytes);
         }
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(
-                Path.Combine(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
+                Path.Join(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(expectedObject, schema);
@@ -191,7 +191,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         [Fact]
         public async Task ParseV32SchemaShouldSucceed()
         {
-            var path = Path.Combine(SampleFolderPath, "schema.yaml");
+            var path = Path.Join(SampleFolderPath, "schema.yaml");
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
@@ -216,7 +216,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         public async Task ParseAdvancedV32SchemaShouldSucceed()
         {
             // Arrange and Act
-            var path = Path.Combine(SampleFolderPath, "advancedSchema.yaml");
+            var path = Path.Join(SampleFolderPath, "advancedSchema.yaml");
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var expectedSchema = new OpenApiSchema
@@ -344,7 +344,7 @@ examples:
             var expected = @"type: string
 nullable: true";
 
-            var path = Path.Combine(SampleFolderPath, "schemaWithTypeArray.yaml");
+            var path = Path.Join(SampleFolderPath, "schemaWithTypeArray.yaml");
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
@@ -363,7 +363,7 @@ nullable: true";
             var expected = @"type: string
 x-nullable: true";
 
-            var path = Path.Combine(SampleFolderPath, "schemaWithTypeArray.yaml");
+            var path = Path.Join(SampleFolderPath, "schemaWithTypeArray.yaml");
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
@@ -383,7 +383,7 @@ x-nullable: true";
   - 'null'
   - string";
 
-            var path = Path.Combine(SampleFolderPath, "schemaWithNullable.yaml");
+            var path = Path.Join(SampleFolderPath, "schemaWithNullable.yaml");
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
@@ -403,7 +403,7 @@ x-nullable: true";
   - 'null'
   - string";
 
-            var path = Path.Combine(SampleFolderPath, "schemaWithNullableExtension.yaml");
+            var path = Path.Join(SampleFolderPath, "schemaWithNullableExtension.yaml");
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi2_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
@@ -443,7 +443,7 @@ nullable: true";
             // and "x-nullable" is only for 2.0.
 
             // Arrange
-            var path = Path.Combine(SampleFolderPath, filePath);
+            var path = Path.Join(SampleFolderPath, filePath);
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
@@ -483,7 +483,7 @@ properties:
     $dynamicRef: '#addressDef'
 description: Schema for a person object
 ";
-            var path = Path.Combine(SampleFolderPath, "schemaWithJsonSchemaKeywords.yaml");
+            var path = Path.Join(SampleFolderPath, "schemaWithJsonSchemaKeywords.yaml");
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
@@ -527,7 +527,7 @@ description: Schema for a person object
   }
 }";
 
-            var path = Path.Combine(SampleFolderPath, "schemaWithConst.json");
+            var path = Path.Join(SampleFolderPath, "schemaWithConst.json");
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
@@ -570,7 +570,7 @@ description: Schema for a person object
   }
 }";
 
-            var path = Path.Combine(SampleFolderPath, "schemaWithConstNull.json");
+            var path = Path.Join(SampleFolderPath, "schemaWithConstNull.json");
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);

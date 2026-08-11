@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         public async Task ParseBasicDiscriminatorShouldSucceed()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDiscriminator.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "basicDiscriminator.yaml"));
             // Copy stream to MemoryStream
             using var memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream, TestContext.Current.CancellationToken);
