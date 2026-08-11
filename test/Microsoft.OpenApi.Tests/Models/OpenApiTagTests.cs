@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             BasicTag.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             BasicTag.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             BasicTag.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedTag.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedTag.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -164,7 +164,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedTag.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedTag.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -203,7 +203,7 @@ x-tag-extension: null";
 
             // Act
             AdvancedTag.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -228,7 +228,7 @@ x-tag-extension: null";
 
             // Act
             AdvancedTag.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -248,7 +248,7 @@ x-tag-extension: null";
 
             // Act
             ReferencedTag.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -265,7 +265,7 @@ x-tag-extension: null";
 
             // Act
             ReferencedTag.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -282,7 +282,7 @@ x-tag-extension: null";
 
             // Act
             ReferencedTag.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -302,7 +302,7 @@ x-tag-extension: null";
 
             // Act
             ReferencedTag.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert

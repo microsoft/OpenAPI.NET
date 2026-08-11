@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"{ }";
 
             // Act
-            var actual = await BasicSecurityRequirement.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BasicSecurityRequirement.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             SecurityRequirementWithReferencedSecurityScheme.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await SecurityRequirementWithReferencedSecurityScheme.SerializeAsJsonAsync(openApiSpecVersion);
+            var actual = await SecurityRequirementWithReferencedSecurityScheme.SerializeAsJsonAsync(openApiSpecVersion, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
@@ -178,7 +178,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJsonAsync(openApiSpecVersion);
+            var actual = await SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJsonAsync(openApiSpecVersion, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));

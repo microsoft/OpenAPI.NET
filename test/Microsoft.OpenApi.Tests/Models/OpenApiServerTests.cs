@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await BasicServer.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BasicServer.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvancedServer.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedServer.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

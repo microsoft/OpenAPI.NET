@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicHeader.yaml"));
 
             // Act
-            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings);
+            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerWithContent.yaml"));
 
             // Act
-            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings);
+            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerWithMultipleContentTypes.yaml"));
 
             // Act
-            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings);
+            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(
@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerWithStyleAndContent.yaml"));
 
             // Act
-            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings);
+            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             // Both content and style can be present, content takes precedence for serialization behavior

@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseAdvancedInfoShouldSucceed()
         {
             // Act
-            var openApiInfo = await OpenApiModelFactory.LoadAsync<OpenApiInfo>(Path.Combine(SampleFolderPath, "advancedInfo.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var openApiInfo = await OpenApiModelFactory.LoadAsync<OpenApiInfo>(Path.Combine(SampleFolderPath, "advancedInfo.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             openApiInfo.Should().BeEquivalentTo(
@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseBasicInfoShouldSucceed()
         {
             // Act
-            var openApiInfo = await OpenApiModelFactory.LoadAsync<OpenApiInfo>(Path.Combine(SampleFolderPath, "basicInfo.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var openApiInfo = await OpenApiModelFactory.LoadAsync<OpenApiInfo>(Path.Combine(SampleFolderPath, "basicInfo.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalInfo.yaml"));
 
             // Act
-            var openApiInfo = await OpenApiModelFactory.LoadAsync<OpenApiInfo>(stream, OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings);
+            var openApiInfo = await OpenApiModelFactory.LoadAsync<OpenApiInfo>(stream, OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(

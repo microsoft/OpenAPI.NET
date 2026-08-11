@@ -1,4 +1,4 @@
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseMediaTypeWithExampleShouldSucceed()
         {
             // Act
-            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExample.yaml"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExample.yaml"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             mediaType.Should().BeEquivalentTo(
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseMediaTypeWithExamplesShouldSucceed()
         {
             // Act
-            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
+            var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Combine(SampleFolderPath, "mediaTypeWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             mediaType.Should().BeEquivalentTo(
@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Act
             var mediaType = OpenApiV31Deserializer.LoadMediaType(node, new(), new ParsingContext(new()));
-            var serialized = await mediaType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+            var serialized = await mediaType.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), serialized.MakeLineBreaksEnvironmentNeutral());

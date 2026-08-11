@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseEncodingWithAllowReservedShouldSucceed()
         {
             // Act
-            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Combine(SampleFolderPath, "encodingWithAllowReserved.yaml"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
+            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Combine(SampleFolderPath, "encodingWithAllowReserved.yaml"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(

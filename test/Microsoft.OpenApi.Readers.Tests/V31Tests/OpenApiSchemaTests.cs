@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Act
             var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(
-                Path.Combine(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
+                Path.Combine(SampleFolderPath, "jsonSchema.json"), OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(expectedObject, schema);
@@ -195,7 +195,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var path = Path.Combine(SampleFolderPath, "schema.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             var expectedSchema = new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
@@ -218,7 +218,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         {
             // Arrange and Act
             var path = Path.Combine(SampleFolderPath, "advancedSchema.yaml");
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var expectedSchema = new OpenApiSchema
             {
@@ -445,7 +445,7 @@ nullable: true";
             var path = Path.Combine(SampleFolderPath, "schemaWithTypeArray.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var writer = new StringWriter();
             schema.SerializeAsV3(new OpenApiYamlWriter(writer));
@@ -464,7 +464,7 @@ x-nullable: true";
             var path = Path.Combine(SampleFolderPath, "schemaWithTypeArray.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var writer = new StringWriter();
             schema.SerializeAsV2(new OpenApiYamlWriter(writer));
@@ -484,7 +484,7 @@ x-nullable: true";
             var path = Path.Combine(SampleFolderPath, "schemaWithNullable.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var writer = new StringWriter();
             schema.SerializeAsV31(new OpenApiYamlWriter(writer));
@@ -504,7 +504,7 @@ x-nullable: true";
             var path = Path.Combine(SampleFolderPath, "schemaWithNullableExtension.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi2_0, new(), SettingsFixture.ReaderSettings);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi2_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var writer = new StringWriter();
             schema.SerializeAsV31(new OpenApiYamlWriter(writer));
@@ -543,7 +543,7 @@ nullable: true";
             var path = Path.Combine(SampleFolderPath, filePath);
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(JsonSchemaType.String, schema.Type);
@@ -583,7 +583,7 @@ description: Schema for a person object
             var path = Path.Combine(SampleFolderPath, "schemaWithJsonSchemaKeywords.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // serialization
             var writer = new StringWriter();
@@ -627,7 +627,7 @@ description: Schema for a person object
             var path = Path.Combine(SampleFolderPath, "schemaWithConst.json");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             Assert.Equal("active", schema.Properties["status"].Const);
             Assert.Equal("admin", schema.Properties["user"].Properties["role"].Const);
 
@@ -670,7 +670,7 @@ description: Schema for a person object
             var path = Path.Combine(SampleFolderPath, "schemaWithConstNull.json");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_1, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var statusSchema = Assert.IsType<OpenApiSchema>(schema.Properties["status"]);
             Assert.Null(statusSchema.Const);
@@ -1020,7 +1020,7 @@ description: Schema for a person object
 
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
-            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
             Assert.NotNull(result.Document.Components);
             Assert.NotNull(result.Document.Components.Schemas);
             var referencing = result.Document.Components.Schemas["Referencing"];
@@ -1062,14 +1062,14 @@ description: Schema for a person object
 
             // Act — parse then serialize back
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
-            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
             var writer = new StringWriter();
             result.Document.SerializeAsV31(new OpenApiYamlWriter(writer));
             var output = writer.ToString();
 
             // Assert — round-trip preserves $dynamicAnchor and $defs alongside $ref
             using var roundTripStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(output));
-            var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings);
+            var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
             Assert.NotNull(roundTripResult.Document.Components);
             Assert.NotNull(roundTripResult.Document.Components.Schemas);
             var referencing = roundTripResult.Document.Components.Schemas["Referencing"];
@@ -1106,7 +1106,7 @@ description: Schema for a person object
 
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
-            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
             Assert.NotNull(result.Document.Components);
             Assert.NotNull(result.Document.Components.Schemas);
             var referencing = result.Document.Components.Schemas["Referencing"];
@@ -1145,14 +1145,14 @@ description: Schema for a person object
 
             // Act — parse then serialize back
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
-            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
             var writer = new StringWriter();
             result.Document.SerializeAsV31(new OpenApiYamlWriter(writer));
             var output = writer.ToString();
 
             // Assert — round-trip preserves scalar siblings alongside $ref
             using var roundTripStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(output));
-            var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings);
+            var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
             Assert.NotNull(roundTripResult.Document.Components);
             Assert.NotNull(roundTripResult.Document.Components.Schemas);
             var referencing = roundTripResult.Document.Components.Schemas["Referencing"];
@@ -1188,7 +1188,7 @@ description: Schema for a person object
 
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
-            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
             Assert.NotNull(result.Document.Components);
             Assert.NotNull(result.Document.Components.Schemas);
             var referencing = result.Document.Components.Schemas["Referencing"];
@@ -1237,7 +1237,7 @@ description: Schema for a person object
 
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
-            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
             Assert.NotNull(result.Document.Components);
             Assert.NotNull(result.Document.Components.Schemas);
             var assetPaged = result.Document.Components.Schemas["AssetPaged"];
@@ -1284,7 +1284,7 @@ description: Schema for a person object
 
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
-            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
             Assert.NotNull(result.Document.Components);
             Assert.NotNull(result.Document.Components.Schemas);
             var referencing = result.Document.Components.Schemas["Referencing"];
@@ -1326,7 +1326,7 @@ description: Schema for a person object
 
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
-            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
             Assert.NotNull(result.Document.Components);
             Assert.NotNull(result.Document.Components.Schemas);
             var referencing = result.Document.Components.Schemas["Referencing"];
@@ -1360,14 +1360,14 @@ description: Schema for a person object
 
             // Act — parse then serialize back
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
-            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
             var writer = new StringWriter();
             result.Document.SerializeAsV31(new OpenApiYamlWriter(writer));
             var output = writer.ToString();
 
             // Assert — round-trip preserves $vocabulary alongside $ref
             using var roundTripStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(output));
-            var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings);
+            var roundTripResult = await OpenApiDocument.LoadAsync(roundTripStream, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
             Assert.NotNull(roundTripResult.Document.Components);
             Assert.NotNull(roundTripResult.Document.Components.Schemas);
             var referencing = roundTripResult.Document.Components.Schemas["Referencing"];
@@ -1404,7 +1404,7 @@ description: Schema for a person object
 
             // Act
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(yaml));
-            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(stream, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
             Assert.NotNull(result.Document.Components);
             Assert.NotNull(result.Document.Components.Schemas);
             var referencing = result.Document.Components.Schemas["Referencing"];

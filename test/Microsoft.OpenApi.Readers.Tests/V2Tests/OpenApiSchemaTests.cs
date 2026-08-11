@@ -163,7 +163,7 @@ x-nullable: true";
             var path = Path.Combine(SampleFolderPath, "schemaWithNullableExtension.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi2_0, new(), SettingsFixture.ReaderSettings);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi2_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var writer = new StringWriter();
             schema.SerializeAsV2(new OpenApiYamlWriter(writer));
@@ -183,7 +183,7 @@ x-nullable: true";
             var path = Path.Combine(SampleFolderPath, "schemaWithOnlyNullableExtension.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi2_0, new(), SettingsFixture.ReaderSettings);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi2_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var writer = new StringWriter();
             schema.SerializeAsV2(new OpenApiYamlWriter(writer));

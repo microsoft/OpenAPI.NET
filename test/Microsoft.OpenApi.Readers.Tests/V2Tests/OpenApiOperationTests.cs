@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             // Arrange
             JsonNode node;
             using (var stream = new MemoryStream(
-                Encoding.Default.GetBytes(await _basicOperation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0))))
+                Encoding.Default.GetBytes(await _basicOperation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken))))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -174,7 +174,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             // Arrange
             JsonNode node;
             using (var stream = new MemoryStream(
-                Encoding.Default.GetBytes(await _operationWithBody.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0))))
+                Encoding.Default.GetBytes(await _operationWithBody.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken))))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -315,7 +315,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Act
             var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
-            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             var expected = @"summary: Get all pets
@@ -365,7 +365,7 @@ responses:
 
             // Act
             var operation = OpenApiV3Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
-            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             var expected = @"summary: Get all pets
@@ -415,7 +415,7 @@ responses:
 
             // Act
             var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
-            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             var expected = @"summary: Get all pets
@@ -466,7 +466,7 @@ responses: { }";
 
             // Act
             var operation = OpenApiV3Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
-            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             var expected = @"summary: Get all pets
@@ -551,7 +551,7 @@ responses: { }";
                 }
             });
 
-            var actual = await openApiDocument.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await openApiDocument.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
             var expected =
 """
 {

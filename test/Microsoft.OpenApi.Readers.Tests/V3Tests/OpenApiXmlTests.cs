@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public async Task ParseBasicXmlShouldSucceed()
         {
             // Act
-            var xml = await OpenApiModelFactory.LoadAsync<OpenApiXml>(Resources.GetStream(Path.Combine(SampleFolderPath, "basicXml.yaml")), OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings);
+            var xml = await OpenApiModelFactory.LoadAsync<OpenApiXml>(Resources.GetStream(Path.Combine(SampleFolderPath, "basicXml.yaml")), OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(

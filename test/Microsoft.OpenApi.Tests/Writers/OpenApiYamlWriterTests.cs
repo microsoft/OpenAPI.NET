@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             }
 
             writer.WriteEndArray();
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             var actualYaml = outputString.GetStringBuilder()
                 .ToString()

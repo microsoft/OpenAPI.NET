@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual = actual.MakeLineBreaksEnvironmentNeutral();
 
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual = actual.MakeLineBreaksEnvironmentNeutral();
 
@@ -142,7 +142,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"$ref: '#/components/schemas/Pet'";
 
             // Act
-            var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected, actual);
@@ -166,7 +166,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """.MakeLineBreaksEnvironmentNeutral();
 
             // Act
-            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected, actual.MakeLineBreaksEnvironmentNeutral());
@@ -184,7 +184,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"$ref: '#/definitions/Pet'";
 
             // Act
-            var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected, actual);
@@ -209,7 +209,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual = actual.MakeLineBreaksEnvironmentNeutral();
 
@@ -230,7 +230,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"$ref: main.json#/definitions/Pets";
 
             // Act
-            var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected, actual);
@@ -250,7 +250,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await reference.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual = actual.MakeLineBreaksEnvironmentNeutral();
 
@@ -266,7 +266,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"$ref: main.json#/components/schemas/Pets";
 
             // Act
-            var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await reference.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected, actual);

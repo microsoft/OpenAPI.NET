@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Tests.Models
             string format)
         {
             // Act
-            var actual = await BasicXml.SerializeAsync(version, format);
+            var actual = await BasicXml.SerializeAsync(version, format, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvancedXml.SerializeAsJsonAsync(version);
+            var actual = await AdvancedXml.SerializeAsJsonAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvancedXml.SerializeAsYamlAsync(version);
+            var actual = await AdvancedXml.SerializeAsYamlAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
