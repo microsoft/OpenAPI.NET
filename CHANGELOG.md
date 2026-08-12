@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.10.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.9.0...v3.10.0) (2026-08-11)
+
+
+### Features
+
+* do not ignore multiple types when serializing to 3.0 ([#2960](https://github.com/microsoft/OpenAPI.NET/issues/2960)) ([ebaf27a](https://github.com/microsoft/OpenAPI.NET/commit/ebaf27ac46f8820e7b817cc33e693632c2fc908a))
+
+
+### Bug Fixes
+
+* bound YAML anchor/alias expansion to prevent OOM (billion laughs) ([#3000](https://github.com/microsoft/OpenAPI.NET/issues/3000)) ([2179326](https://github.com/microsoft/OpenAPI.NET/commit/21793261d6860fb6e607b71fd95c0bd320724764))
+
 ## [3.9.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.8.0...v3.9.0) (2026-07-15)
 
 
