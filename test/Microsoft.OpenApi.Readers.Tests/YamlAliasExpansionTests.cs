@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -92,26 +92,32 @@ namespace Microsoft.OpenApi.Tests
         [Fact]
         public void ConversionLimitsDefaultToDocumentedValues()
         {
-            Assert.Equal(64u, OpenApiReaderLimits.DefaultMaxDepth);
-            Assert.Equal(5_000_000u, OpenApiReaderLimits.DefaultMaxNodeCount);
-            Assert.Equal(OpenApiReaderLimits.DefaultMaxDepth, OpenApiReaderLimits.MaxDepth);
-            Assert.Equal(OpenApiReaderLimits.DefaultMaxNodeCount, OpenApiReaderLimits.MaxNodeCount);
+            var settings = new OpenApiReaderSettings();
+
+            Assert.Equal(64u, OpenApiReaderSettings.DefaultMaxDepth);
+            Assert.Equal(5_000_000u, OpenApiReaderSettings.DefaultMaxNodeCount);
+            Assert.Equal(OpenApiReaderSettings.DefaultMaxDepth, settings.MaxDepth);
+            Assert.Equal(OpenApiReaderSettings.DefaultMaxNodeCount, settings.MaxNodeCount);
         }
 
         [Fact]
         public void SettingMaxDepthToZeroThrows()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => OpenApiReaderLimits.MaxDepth = 0);
+            var settings = new OpenApiReaderSettings();
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => settings.MaxDepth = 0);
             // The invalid assignment must not have changed the effective limit.
-            Assert.Equal(OpenApiReaderLimits.DefaultMaxDepth, OpenApiReaderLimits.MaxDepth);
+            Assert.Equal(OpenApiReaderSettings.DefaultMaxDepth, settings.MaxDepth);
         }
 
         [Fact]
         public void SettingMaxNodeCountToZeroThrows()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => OpenApiReaderLimits.MaxNodeCount = 0);
+            var settings = new OpenApiReaderSettings();
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => settings.MaxNodeCount = 0);
             // The invalid assignment must not have changed the effective limit.
-            Assert.Equal(OpenApiReaderLimits.DefaultMaxNodeCount, OpenApiReaderLimits.MaxNodeCount);
+            Assert.Equal(OpenApiReaderSettings.DefaultMaxNodeCount, settings.MaxNodeCount);
         }
 
         [Fact]
@@ -122,16 +128,10 @@ namespace Microsoft.OpenApi.Tests
             const int depth = 70;
             var deeplyNested = new string('[', depth) + new string(']', depth);
 
-            try
-            {
-                OpenApiReaderLimits.MaxDepth = (uint)(depth + 10);
-                var node = ParseNode.Create(new(new()), YamlHelper.ParseYamlString(deeplyNested));
-                Assert.IsType<OpenApiArray>(node.CreateAny());
-            }
-            finally
-            {
-                OpenApiReaderLimits.MaxDepth = OpenApiReaderLimits.DefaultMaxDepth;
-            }
+            var context = new ParsingContext(new()) { MaxDepth = depth + 10 };
+            var node = ParseNode.Create(context, YamlHelper.ParseYamlString(deeplyNested));
+
+            Assert.IsType<OpenApiArray>(node.CreateAny());
         }
 
         private static string YamlBombIndented()

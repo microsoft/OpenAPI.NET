@@ -47,7 +47,9 @@ namespace Microsoft.OpenApi.Readers
             {
                 ExtensionParsers = _settings.ExtensionParsers,
                 BaseUrl = _settings.BaseUrl,
-                DefaultContentType = _settings.DefaultContentType
+                DefaultContentType = _settings.DefaultContentType,
+                MaxDepth = _settings.MaxDepth,
+                MaxNodeCount = _settings.MaxNodeCount
             };
 
             OpenApiDocument document = null;
@@ -91,7 +93,9 @@ namespace Microsoft.OpenApi.Readers
             var context = new ParsingContext(diagnostic)
             {
                 ExtensionParsers = _settings.ExtensionParsers,
-                BaseUrl = _settings.BaseUrl
+                BaseUrl = _settings.BaseUrl,
+                MaxDepth = _settings.MaxDepth,
+                MaxNodeCount = _settings.MaxNodeCount
             };
 
             OpenApiDocument document = null;
@@ -184,7 +188,9 @@ namespace Microsoft.OpenApi.Readers
             diagnostic = new();
             var context = new ParsingContext(diagnostic)
             {
-                ExtensionParsers = _settings.ExtensionParsers
+                ExtensionParsers = _settings.ExtensionParsers,
+                MaxDepth = _settings.MaxDepth,
+                MaxNodeCount = _settings.MaxNodeCount
             };
 
             IOpenApiElement element = null;

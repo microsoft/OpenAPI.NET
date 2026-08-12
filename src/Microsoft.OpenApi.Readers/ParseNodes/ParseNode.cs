@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// <summary>
         /// Materializes the node, and everything below it, into an <see cref="IOpenApiAny"/>.
         /// </summary>
-        /// <param name="depth">Nesting depth of the current node, bounded by <see cref="OpenApiReaderLimits.MaxDepth"/>.</param>
+        /// <param name="depth">Nesting depth of the current node, bounded by <see cref="OpenApiReaderSettings.MaxDepth"/>.</param>
         internal virtual IOpenApiAny CreateAny(uint depth)
         {
             throw new OpenApiReaderException("Cannot create an Any object this type of node.", Context);
@@ -94,9 +94,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// </summary>
         protected void EnsureDepthWithinLimit(uint depth)
         {
-            if (depth > OpenApiReaderLimits.MaxDepth)
+            var maxDepth = Context?.MaxDepth ?? OpenApiReaderSettings.DefaultMaxDepth;
+            if (depth > maxDepth)
             {
-                throw new OpenApiReaderException($"The document exceeds the maximum supported nesting depth of {OpenApiReaderLimits.MaxDepth}.", Context);
+                throw new OpenApiReaderException($"The document exceeds the maximum supported nesting depth of {maxDepth}.", Context);
             }
         }
 
