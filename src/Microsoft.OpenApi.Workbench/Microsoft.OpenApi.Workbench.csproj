@@ -1,4 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  
+  <!-- Windows-specific configuration -->
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
     <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
@@ -26,22 +28,38 @@
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.10" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.10" />
   </ItemGroup>
-  <ItemGroup>
+  
+  <!-- Windows-specific resources -->
+  <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
     <Resource Include="Themes\Metro\HowToApplyTheme.txt" />
   </ItemGroup>
+  
+  <!-- Project references (available on all platforms) -->
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.OpenApi.YamlReader\Microsoft.OpenApi.YamlReader.csproj" />
     <ProjectReference Include="..\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  
+  <!-- Exclude WPF-specific files on non-Windows platforms -->
+  <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
+    <Compile Remove="**/*.xaml.cs" />
+    <Compile Remove="App.xaml.cs" />
+    <Compile Remove="MainWindow.xaml.cs" />
+    <Compile Remove="EnumBindingSourceExtension.cs" />
+    <Compile Remove="MainModel.cs" />
+    <Compile Remove="StatsVisitor.cs" />
+    <Compile Remove="Properties/**" />
+    <None Remove="**/*.xaml" />
+    <Page Remove="**/*.xaml" />
   </ItemGroup>
-  <ItemGroup>
+  
+  <!-- Windows-specific XAML excludes -->
+  <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
     <Page Remove="Themes\Metro\Metro.MSControls.Core.Implicit.xaml" />
     <Page Remove="Themes\Metro\Metro.MSControls.Toolkit.Implicit.xaml" />
     <Page Remove="Themes\Metro\Styles.Shared.xaml" />
     <Page Remove="Themes\Metro\Styles.WPF.xaml" />
     <Page Remove="Themes\Metro\Theme.Colors.xaml" />
+    <Compile Remove="NonWindowsPlatformPlaceholder.cs" />
   </ItemGroup>
 </Project>
