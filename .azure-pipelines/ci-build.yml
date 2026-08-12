@@ -388,6 +388,9 @@ extends:
                     scriptLocation: inlineScript
                     inlineScript: |
                       az acr login --name $(REGISTRY)
+
+                - task: NuGetAuthenticate@1
+                  displayName: 'Authenticate Docker build to Azure Artifacts'
               
                 - pwsh: |
                     $content = [XML](Get-Content $(Pipeline.Workspace)/Directory.Build.props)
@@ -473,27 +476,49 @@ extends:
                 - bash: |
                     echo "Building Docker image..."
                     echo "Using build date: ${BUILDDATE}"
+                    if [ -z "${VSS_NUGET_ACCESSTOKEN:-}" ]; then
+                      echo "##vso[task.logissue type=error]VSS_NUGET_ACCESSTOKEN is not available. Ensure NuGetAuthenticate@1 ran successfully before docker build."
+                      exit 1
+                    fi
                     # Using quotes around tags to prevent flag interpretation
                     docker buildx build \
                       --platform linux/amd64,linux/arm64/v8 \
                       --push \
+                      --build-arg VSS_NUGET_EXTERNAL_FEED_ENDPOINTS \
+                      --build-arg VSS_NUGET_URI_PREFIXES \
+                      --secret id=vss_nuget_accesstoken,env=VSS_NUGET_ACCESSTOKEN \
                       -t "$(REGISTRY)/$(IMAGE_NAME):nightly" \
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
                       "$(Pipeline.Workspace)"
 
                   displayName: 'Build and Push Nightly Image'
                   condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
+                  env:
+                    VSS_NUGET_ACCESSTOKEN: $(VSS_NUGET_ACCESSTOKEN)
+                    VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: $(VSS_NUGET_EXTERNAL_FEED_ENDPOINTS)
+                    VSS_NUGET_URI_PREFIXES: $(VSS_NUGET_URI_PREFIXES)
                 
                 - bash: |
                     echo "Building Docker image for release..."
-                    docker buildx build\
+                    if [ -z "${VSS_NUGET_ACCESSTOKEN:-}" ]; then
+                      echo "##vso[task.logissue type=error]VSS_NUGET_ACCESSTOKEN is not available. Ensure NuGetAuthenticate@1 ran successfully before docker build."
+                      exit 1
+                    fi
+                    docker buildx build \
                       --platform linux/amd64,linux/arm64/v8 \
                       --push \
+                      --build-arg VSS_NUGET_EXTERNAL_FEED_ENDPOINTS \
+                      --build-arg VSS_NUGET_URI_PREFIXES \
+                      --secret id=vss_nuget_accesstoken,env=VSS_NUGET_ACCESSTOKEN \
                       -t "$(REGISTRY)/$(IMAGE_NAME):latest" \
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}" \
                       "$(Pipeline.Workspace)"
                   displayName: 'Build and Push Release Image'
                   condition: contains(variables['Build.SourceBranch'], 'refs/tags/v')
+                  env:
+                    VSS_NUGET_ACCESSTOKEN: $(VSS_NUGET_ACCESSTOKEN)
+                    VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: $(VSS_NUGET_EXTERNAL_FEED_ENDPOINTS)
+                    VSS_NUGET_URI_PREFIXES: $(VSS_NUGET_URI_PREFIXES)
 
 # once the nuget has been released, fill this form to get the public documentation updated.
 # https://dev.azure.com/msft-skilling/Content/_workitems/create/User%20Story?templateId=39fb91e3-64a2-4c8a-83db-b2bdf3603dd3&ownerId=c4a28f90-17ae-4384-b514-7273392b082b
