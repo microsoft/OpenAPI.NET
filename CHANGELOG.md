@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.12.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.11.0...v2.12.0) (2026-08-12)
+
+
+### Features
+
+* adds deserialization of the example extension ([095ae3b](https://github.com/microsoft/OpenAPI.NET/commit/095ae3bbdf3c248ba18db17278889cf5a8faf01c))
+* serialize license identifier as extension for earlier versions ([d5cdce8](https://github.com/microsoft/OpenAPI.NET/commit/d5cdce83cfc210806afbd8850bb5ebe14eef5116))
+* serialize license identifier as extension for earlier versions ([fde38d8](https://github.com/microsoft/OpenAPI.NET/commit/fde38d8bec7af0304b0f522683ccda2d245cd860))
+
+
+### Bug Fixes
+
+* better nullability round-tripping ([7a25659](https://github.com/microsoft/OpenAPI.NET/commit/7a25659a1cdd544f6b4bcc8bf1ed9797882b5ced))
+* bound YAML anchor/alias expansion to prevent OOM (billion laughs) ([#3000](https://github.com/microsoft/OpenAPI.NET/issues/3000)) ([a361360](https://github.com/microsoft/OpenAPI.NET/commit/a3613606a90d86d3e22454890c694fbb854f4bc9))
+* bound YAML anchor/alias expansion to prevent OOM (billion laughs) ([#3000](https://github.com/microsoft/OpenAPI.NET/issues/3000)) ([4db9af0](https://github.com/microsoft/OpenAPI.NET/commit/4db9af07d112cdf45170b7a946f956ffe74fa14e))
+* **library:** serialize multiple schema types as anyOf/oneOf for OpenAPI 3.0 ([6568896](https://github.com/microsoft/OpenAPI.NET/commit/6568896ccf14380e234bae481a83be2d58d7c0cb))
+* marks deprecated properties from the specification as obsolete ([26aba69](https://github.com/microsoft/OpenAPI.NET/commit/26aba69cd9c7ab1ecb8b1c61dd0094d291980af4))
+* marks deprecated properties from the specification as obsolete ([abc5301](https://github.com/microsoft/OpenAPI.NET/commit/abc5301a82cb913fea696aa1248a2e17b317ce10))
+* **schema:** serialize compatibility examples from examples list ([be57a7c](https://github.com/microsoft/OpenAPI.NET/commit/be57a7c4cf1e4ae2025b987520316420c897cb46))
+* serialize examples as extension in v2/v3 ([d27141b](https://github.com/microsoft/OpenAPI.NET/commit/d27141b5203e5895f0fb812b913dd7621274e6a3))
+
 ## [2.11.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.10.0...v2.11.0) (2026-07-15)
 
 
