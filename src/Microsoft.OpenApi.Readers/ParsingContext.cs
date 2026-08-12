@@ -26,6 +26,8 @@ namespace Microsoft.OpenApi.Readers
         private readonly Dictionary<object, Dictionary<string, object>> _scopedTempStorage = new();
         private readonly Dictionary<string, Stack<string>> _loopStacks = new();
         private uint _nodeCount;
+        internal uint MaxDepth { get; set; } = OpenApiReaderSettings.DefaultMaxDepth;
+        internal uint MaxNodeCount { get; set; } = OpenApiReaderSettings.DefaultMaxNodeCount;
         internal Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new();
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new();
@@ -201,15 +203,15 @@ namespace Microsoft.OpenApi.Readers
 
         /// <summary>
         /// Counts a node materialized while parsing the current document and fails fast when the
-        /// document expands beyond <see cref="OpenApiReaderLimits.MaxNodeCount"/>. YAML anchors and
+        /// document expands beyond <see cref="OpenApiReaderSettings.MaxNodeCount"/>. YAML anchors and
         /// aliases share a single node in the source graph, so a tiny document can expand
         /// exponentially ("billion laughs") when it is materialized into an independent tree.
         /// </summary>
         internal void CountNode()
         {
-            if (++_nodeCount > OpenApiReaderLimits.MaxNodeCount)
+            if (++_nodeCount > MaxNodeCount)
             {
-                throw new OpenApiReaderException($"The document expands to more than the maximum supported number of nodes ({OpenApiReaderLimits.MaxNodeCount}). This may indicate a YAML anchor/alias expansion (billion laughs) attack.");
+                throw new OpenApiReaderException($"The document expands to more than the maximum supported number of nodes ({MaxNodeCount}). This may indicate a YAML anchor/alias expansion (billion laughs) attack.");
             }
         }
 
