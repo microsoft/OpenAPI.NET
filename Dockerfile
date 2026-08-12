@@ -6,13 +6,17 @@ ARG VSS_NUGET_EXTERNAL_FEED_ENDPOINTS
 
 COPY ./src ./hidi/src
 COPY ./Directory.Build.props ./hidi/Directory.Build.props
-COPY ./nuget.config ./hidi/nuget.config
 COPY ./README.md ./hidi/README.md
 WORKDIR /app/hidi
-RUN wget -qO- https://aka.ms/install-artifacts-credprovider.sh | bash
-RUN --mount=type=secret,id=vss_nuget_accesstoken,target=/run/secrets/vss_nuget_accesstoken \
-    VSS_NUGET_ACCESSTOKEN="$(cat /run/secrets/vss_nuget_accesstoken)" \
-    dotnet publish ./src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -c Release -p:RestoreConfigFile=/app/hidi/nuget.config
+RUN --mount=type=secret,id=vss_nuget_accesstoken,target=/run/secrets/vss_nuget_accesstoken,required=false \
+    --mount=type=secret,id=nuget_config,target=/run/secrets/nuget_config,required=false \
+    if [ -f /run/secrets/nuget_config ]; then \
+      wget -qO- https://aka.ms/install-artifacts-credprovider.sh | bash && \
+      VSS_NUGET_ACCESSTOKEN="$(cat /run/secrets/vss_nuget_accesstoken)" \
+      dotnet publish ./src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -c Release -p:RestoreConfigFile=/run/secrets/nuget_config; \
+    else \
+      dotnet publish ./src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -c Release; \
+    fi
 
 FROM mcr.microsoft.com/dotnet/runtime:8.0-jammy-chiseled AS runtime
 WORKDIR /app
