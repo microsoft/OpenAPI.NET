@@ -213,12 +213,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// Create a <see cref="OpenApiObject"/>
         /// </summary>
         /// <returns>The created Any object.</returns>
-        public override IOpenApiAny CreateAny()
+        internal override IOpenApiAny CreateAny(uint depth)
         {
+            EnsureDepthWithinLimit(depth);
             var apiObject = new OpenApiObject();
             foreach (var node in this)
             {
-                apiObject.Add(node.Name, node.Value.CreateAny());
+                apiObject.Add(node.Name, node.Value.CreateAny(depth + 1));
             }
 
             return apiObject;

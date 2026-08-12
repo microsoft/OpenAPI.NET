@@ -16,6 +16,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         protected ParseNode(ParsingContext parsingContext)
         {
             Context = parsingContext;
+            Context?.CountNode();
         }
 
         public ParsingContext Context { get; }
@@ -73,9 +74,30 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             throw new OpenApiReaderException("Cannot create simple map from this type of node.", Context);
         }
 
-        public virtual IOpenApiAny CreateAny()
+        public IOpenApiAny CreateAny()
+        {
+            return CreateAny(0);
+        }
+
+        /// <summary>
+        /// Materializes the node, and everything below it, into an <see cref="IOpenApiAny"/>.
+        /// </summary>
+        /// <param name="depth">Nesting depth of the current node, bounded by <see cref="OpenApiReaderLimits.MaxDepth"/>.</param>
+        internal virtual IOpenApiAny CreateAny(uint depth)
         {
             throw new OpenApiReaderException("Cannot create an Any object this type of node.", Context);
+        }
+
+        /// <summary>
+        /// Fails fast when the node graph is nested more deeply than the reader supports,
+        /// protecting the recursive readers from stack exhaustion.
+        /// </summary>
+        protected void EnsureDepthWithinLimit(uint depth)
+        {
+            if (depth > OpenApiReaderLimits.MaxDepth)
+            {
+                throw new OpenApiReaderException($"The document exceeds the maximum supported nesting depth of {OpenApiReaderLimits.MaxDepth}.", Context);
+            }
         }
 
         public virtual string GetRaw()
