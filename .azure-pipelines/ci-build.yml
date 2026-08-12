@@ -39,6 +39,9 @@ extends:
       name: Azure-Pipelines-1ESPT-ExDShared
       image: windows-2022
       os: windows
+    settings:
+      # Direct NuGet.org publishing is blocked by CFSClean. Keep later CFS policies enabled.
+      networkIsolationPolicy: Permissive, CFSClean2, CFSClean3
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
