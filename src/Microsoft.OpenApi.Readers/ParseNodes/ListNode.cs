@@ -64,12 +64,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// Create a <see cref="OpenApiArray"/>
         /// </summary>
         /// <returns>The created Any object.</returns>
-        public override IOpenApiAny CreateAny()
+        internal override IOpenApiAny CreateAny(uint depth)
         {
+            EnsureDepthWithinLimit(depth);
             var array = new OpenApiArray();
             foreach (var node in this)
             {
-                array.Add(node.CreateAny());
+                array.Add(node.CreateAny(depth + 1));
             }
 
             return array;
