@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.2
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build-env
 WORKDIR /app
 ARG VSS_NUGET_URI_PREFIXES
 ARG VSS_NUGET_EXTERNAL_FEED_ENDPOINTS
