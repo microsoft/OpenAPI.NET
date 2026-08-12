@@ -71,33 +71,23 @@ extends:
           inputs:
             useGlobalJson: true
         
-        # Install the nuget tool.
-        - task: NuGetToolInstaller@1
-          displayName: 'Use NuGet >=6.11.0'
-          inputs:
-            versionSpec: '>=6.11.0'
-            checkLatest: true
-
         # Build the Product project
         - task: NuGetAuthenticate@1
           displayName: 'Authenticate to Azure Artifacts'
 
-        - pwsh: |
-            @"
-            <?xml version="1.0" encoding="utf-8"?>
-            <configuration>
-              <packageSources>
-                <clear />
-                <add key="GraphDeveloperExperiences_Public" value="https://microsoftgraph.pkgs.visualstudio.com/0985d294-5762-4bc2-a565-161ef349ca3e/_packaging/GraphDeveloperExperiences_Public/nuget/v3/index.json" />
-              </packageSources>
-            </configuration>
-            "@ | Set-Content -Path "$(Build.SourcesDirectory)/nuget.config" -Encoding UTF8
-          displayName: 'Create nuget.config (central feed)'
+        - task: DotNetCoreCLI@2
+          displayName: 'restore'
+          inputs:
+            command: restore
+            projects: '$(Build.SourcesDirectory)\Microsoft.OpenApi.slnx'
+            feedsToUse: config
+            nugetConfigPath: '$(Build.SourcesDirectory)\nuget.config'
+
         - task: DotNetCoreCLI@2
           displayName: 'build'
           inputs:
             projects: '$(Build.SourcesDirectory)\Microsoft.OpenApi.slnx'
-            arguments: '--configuration $(BuildConfiguration) --no-incremental'
+            arguments: '--configuration $(BuildConfiguration) --no-incremental --no-restore'
 
         # Run the Unit test
         - task: DotNetCoreCLI@2
@@ -162,15 +152,15 @@ extends:
             PendingAnalysisWaitTimeoutMinutes: '5'
 
         # Pack core lib
-        - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi/Microsoft.OpenApi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
+        - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi/Microsoft.OpenApi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --no-restore --include-symbols --include-source /p:SymbolPackageFormat=snupkg
           displayName: 'pack OpenAPI'
 
         # Pack YamlReader
-        - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.YamlReader/Microsoft.OpenApi.YamlReader.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
+        - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.YamlReader/Microsoft.OpenApi.YamlReader.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --no-restore --include-symbols --include-source /p:SymbolPackageFormat=snupkg
           displayName: 'pack YamlReader'
 
         # Pack hidi
-        - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
+        - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --no-restore --include-symbols --include-source /p:SymbolPackageFormat=snupkg
           displayName: 'pack Hidi'
          
         - task: EsrpCodeSigning@5
@@ -212,7 +202,7 @@ extends:
           displayName: publish Hidi as executable
           inputs:
             command: 'publish'
-            arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi
+            arguments: -c Release --runtime win-x64 -p:RestoreConfigFile=$(Build.SourcesDirectory)\nuget.config /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi
             projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
             publishWebProjects: False
             zipAfterPublish: false
@@ -252,7 +242,7 @@ extends:
           inputs:
           - input: pipelineArtifact
             artifactName: Nugets
-            targetPath: '$(Pipeline.Workspace)'
+            targetPath: '$(Pipeline.Workspace)/Nugets'
         dependsOn: []
         environment: nuget-org
         strategy:
@@ -264,10 +254,14 @@ extends:
               - task: 1ES.PublishNuget@1
                 displayName: 'NuGet push'
                 inputs:
-                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg'
-                  packageParentPath: '$(Pipeline.Workspace)'
+                  useDotNetTask: true
+                  packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Hidi.*.nupkg'
+                  packageParentPath: '$(Pipeline.Workspace)/Nugets'
                   nuGetFeedType: external
                   publishFeedCredentials: 'OpenAPI Nuget Connection'
+                  publishPackageMetadata: true
+                  requestTimeout: 600000
+                  retryCountOnTaskFailure: 2
 
       - deployment: deploy_lib
         condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
@@ -277,7 +271,7 @@ extends:
           inputs:
           - input: pipelineArtifact
             artifactName: Nugets
-            targetPath: '$(Pipeline.Workspace)'
+            targetPath: '$(Pipeline.Workspace)/Nugets'
         dependsOn: []
         environment: nuget-org
         strategy:
@@ -287,7 +281,7 @@ extends:
                 vmImage: ubuntu-latest
               steps:
               - pwsh: |
-                  $fileNames = "$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.Workbench.*.nupkg"
+                  $fileNames = "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.YamlReader.*.nupkg", "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Workbench.*.nupkg"
                   foreach($fileName in $fileNames) {
                     if(Test-Path $fileName) {
                       Remove-Item $fileName -Verbose
@@ -297,10 +291,14 @@ extends:
               - task: 1ES.PublishNuget@1
                 displayName: 'NuGet push'
                 inputs:
-                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.*.nupkg'
-                  packageParentPath: '$(Pipeline.Workspace)'
+                  useDotNetTask: true
+                  packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.*.nupkg'
+                  packageParentPath: '$(Pipeline.Workspace)/Nugets'
                   nuGetFeedType: external
                   publishFeedCredentials: 'OpenAPI Nuget Connection'
+                  publishPackageMetadata: true
+                  requestTimeout: 600000
+                  retryCountOnTaskFailure: 2
 
       - deployment: deploy_yaml_reader
         condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
@@ -310,7 +308,7 @@ extends:
           inputs:
           - input: pipelineArtifact
             artifactName: Nugets
-            targetPath: '$(Pipeline.Workspace)'
+            targetPath: '$(Pipeline.Workspace)/Nugets'
         dependsOn: deploy_lib
         environment: nuget-org
         strategy:
@@ -322,10 +320,14 @@ extends:
               - task: 1ES.PublishNuget@1
                 displayName: 'NuGet push'
                 inputs:
-                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg'
-                  packageParentPath: '$(Pipeline.Workspace)'
+                  useDotNetTask: true
+                  packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.YamlReader.*.nupkg'
+                  packageParentPath: '$(Pipeline.Workspace)/Nugets'
                   nuGetFeedType: external
                   publishFeedCredentials: 'OpenAPI Nuget Connection'
+                  publishPackageMetadata: true
+                  requestTimeout: 600000
+                  retryCountOnTaskFailure: 2
 
       - deployment: create_github_release
         condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
