@@ -173,13 +173,10 @@ namespace Microsoft.OpenApi.Tests.Writers
             Assert.Equal(expectedJson, json);
         }
 
-        public static IEnumerable<object[]> BooleanInputs
-        {
-            get =>
-                from input in new[] { true, false }
-                from shouldBeTerse in shouldProduceTerseOutputValues
-                select new object[] { input, shouldBeTerse };
-        }
+        public static IEnumerable<object[]> BooleanInputs { get; } =
+            from input in new[] { true, false }
+            from shouldBeTerse in shouldProduceTerseOutputValues
+            select new object[] { input, shouldBeTerse };
 
         [Theory]
         [MemberData(nameof(BooleanInputs))]

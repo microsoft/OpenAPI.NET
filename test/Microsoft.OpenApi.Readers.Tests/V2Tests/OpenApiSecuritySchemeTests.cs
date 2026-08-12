@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseHttpSecuritySchemeShouldSucceed()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSecurityScheme.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "basicSecurityScheme.yaml"));
             var document = LoadYamlDocument(stream);
 
             var diagnostic = new OpenApiDiagnostic();
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseApiKeySecuritySchemeShouldSucceed()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "apiKeySecurityScheme.yaml"));
             var document = LoadYamlDocument(stream);
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseOAuth2ImplicitSecuritySchemeShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2ImplicitSecurityScheme.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "oauth2ImplicitSecurityScheme.yaml"));
             var document = LoadYamlDocument(stream);
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseOAuth2PasswordSecuritySchemeShouldSucceed()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2PasswordSecurityScheme.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "oauth2PasswordSecurityScheme.yaml"));
             var document = LoadYamlDocument(stream);
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
@@ -142,7 +142,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseOAuth2ApplicationSecuritySchemeShouldSucceed()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2ApplicationSecurityScheme.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "oauth2ApplicationSecurityScheme.yaml"));
             var document = LoadYamlDocument(stream);
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseOAuth2AccessCodeSecuritySchemeShouldSucceed()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2AccessCodeSecurityScheme.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "oauth2AccessCodeSecurityScheme.yaml"));
             var document = LoadYamlDocument(stream);
 
             var diagnostic = new OpenApiDiagnostic();

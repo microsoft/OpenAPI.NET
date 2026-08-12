@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }" : @"description: null";
 
             // Act
-            var actual = await BasicResponse.SerializeAsync(version, format);
+            var actual = await BasicResponse.SerializeAsync(version, format, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -224,7 +224,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = await AdvancedV3Response.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedV3Response.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -257,7 +257,7 @@ content:
     myextension: myextensionvalue";
 
             // Act
-            var actual = await AdvancedV3Response.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedV3Response.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -294,7 +294,7 @@ content:
 }";
 
             // Act
-            var actual = await AdvancedV2Response.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await AdvancedV2Response.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -324,7 +324,7 @@ headers:
     type: integer";
 
             // Act
-            var actual = await AdvancedV2Response.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await AdvancedV2Response.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -343,7 +343,7 @@ headers:
 
             // Act
             V3OpenApiResponseReference.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -360,7 +360,7 @@ headers:
 
             // Act
             ReferencedV3Response.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -377,7 +377,7 @@ headers:
 
             // Act
             V2OpenApiResponseReference.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -394,7 +394,7 @@ headers:
 
             // Act
             ReferencedV2Response.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);

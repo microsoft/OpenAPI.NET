@@ -95,7 +95,7 @@ tags:
 
         // Act
         _openApiTagReference.SerializeAsV3(writer);
-        await writer.FlushAsync();
+        await writer.FlushAsync(TestContext.Current.CancellationToken);
 
         // Assert            
         await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -112,7 +112,7 @@ tags:
 
         // Act
         _openApiTagReference.SerializeAsV31(writer);
-        await writer.FlushAsync();
+        await writer.FlushAsync(TestContext.Current.CancellationToken);
 
         // Assert
         await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -129,7 +129,7 @@ tags:
 
         // Act
         _openApiTagReference2.SerializeAsV3(writer);
-        await writer.FlushAsync();
+        await writer.FlushAsync(TestContext.Current.CancellationToken);
 
         // Assert 
         Assert.Equal("\"users.user\"", outputStringWriter.ToString());
@@ -146,7 +146,7 @@ tags:
 
         // Act
         _openApiTagReference2.SerializeAsV31(writer);
-        await writer.FlushAsync();
+        await writer.FlushAsync(TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Equal("\"users.user\"", outputStringWriter.ToString());
@@ -193,7 +193,7 @@ tags:
                 document.SerializeAsV31(writer);
                 break;
         }
-        await writer.FlushAsync();
+        await writer.FlushAsync(TestContext.Current.CancellationToken);
 
         var expected = version switch
         {

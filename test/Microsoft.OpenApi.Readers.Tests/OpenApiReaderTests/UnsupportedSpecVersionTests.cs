@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         {
             try
             {
-                _ = await OpenApiDocument.LoadAsync("OpenApiReaderTests/Samples/unsupported.v1.yaml", SettingsFixture.ReaderSettings);
+                _ = await OpenApiDocument.LoadAsync("OpenApiReaderTests/Samples/unsupported.v1.yaml", SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             }
             catch (OpenApiUnsupportedSpecVersionException exception)
             {

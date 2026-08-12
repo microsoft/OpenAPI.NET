@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -130,7 +130,7 @@ public class OpenApiPathItemTests
 
         var parsedExpectedJson = JsonNode.Parse(expectedJson);
         // When
-        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
         var parsedActualJson = JsonNode.Parse(actualJson);
 
         // Then
@@ -262,7 +262,7 @@ public class OpenApiPathItemTests
 
         var parsedExpectedJson = JsonNode.Parse(expectedJson);
         // When
-        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
         var parsedActualJson = JsonNode.Parse(actualJson);
 
         // Then
@@ -394,7 +394,7 @@ public class OpenApiPathItemTests
 
         var parsedExpectedJson = JsonNode.Parse(expectedJson);
         // When
-        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+        var actualJson = await pathItem.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
         var parsedActualJson = JsonNode.Parse(actualJson);
 
         // Then

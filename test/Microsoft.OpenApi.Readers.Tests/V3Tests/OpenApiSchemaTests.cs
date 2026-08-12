@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParsePrimitiveSchemaShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "primitiveSchema.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "primitiveSchema.yaml"));
             var yamlStream = new YamlStream();
             yamlStream.Load(new StreamReader(stream));
             var yamlNode = yamlStream.Documents[0].RootNode;
@@ -150,7 +150,7 @@ get:
         [Fact]
         public void ParseDictionarySchemaShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "dictionarySchema.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "dictionarySchema.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -237,7 +237,7 @@ get:
         [Fact]
         public void ParseBasicSchemaWithExampleShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSchemaWithExample.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "basicSchemaWithExample.yaml"));
             var yamlStream = new YamlStream();
             yamlStream.Load(new StreamReader(stream));
             var yamlNode = yamlStream.Documents[0].RootNode;
@@ -291,7 +291,7 @@ get:
         public async Task ParseBasicSchemaWithReferenceShouldSucceed()
         {
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml"), SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "basicSchemaWithReference.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             var components = result.Document.Components;
@@ -358,7 +358,7 @@ get:
         public async Task ParseAdvancedSchemaWithReferenceShouldSucceed()
         {
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml"), SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "advancedSchemaWithReference.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var expectedComponents = new OpenApiComponents
             {
@@ -444,8 +444,8 @@ get:
             };
 
             // We serialize so that we can get rid of the schema BaseUri properties which show up as diffs
-            var actual = await result.Document.Components.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
-            var expected = await expectedComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await result.Document.Components.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
+            var expected = await expectedComponents.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected, actual);
@@ -455,7 +455,7 @@ get:
         public async Task ParseExternalReferenceSchemaShouldSucceed()
         {
             // Act
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "externalReferencesSchema.yaml"), SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "externalReferencesSchema.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             var components = result.Document.Components;
@@ -519,10 +519,10 @@ get:
             var expected = @"type: string
 nullable: true";
 
-            var path = Path.Combine(SampleFolderPath, "schemaWithNullable.yaml");
+            var path = Path.Join(SampleFolderPath, "schemaWithNullable.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var writer = new StringWriter();
             schema.SerializeAsV3(new OpenApiYamlWriter(writer));
@@ -538,10 +538,10 @@ nullable: true";
             // Arrange
             var expected = @"{ }";
 
-            var path = Path.Combine(SampleFolderPath, "schemaWithOnlyNullable.yaml");
+            var path = Path.Join(SampleFolderPath, "schemaWithOnlyNullable.yaml");
 
             // Act
-            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings);
+            var schema = await OpenApiModelFactory.LoadAsync<OpenApiSchema>(path, OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var writer = new StringWriter();
             schema.SerializeAsV3(new OpenApiYamlWriter(writer));

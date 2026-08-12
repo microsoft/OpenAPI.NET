@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeBasicEncodingAsV3Works(string format, string expected)
         {
             // Arrange & Act
-            var actual = await BasicEncoding.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, format);
+            var actual = await BasicEncoding.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, format, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvanceEncoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvanceEncoding.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvanceEncoding.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvanceEncoding.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
 
             // Act
-            var actual = await parameter.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await parameter.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

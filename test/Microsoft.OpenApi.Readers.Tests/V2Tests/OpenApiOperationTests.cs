@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicOperation.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "basicOperation.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             // Arrange
             JsonNode node;
             using (var stream = new MemoryStream(
-                Encoding.Default.GetBytes(await _basicOperation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0))))
+                Encoding.Default.GetBytes(await _basicOperation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken))))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -156,7 +156,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithBody.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "operationWithBody.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -174,7 +174,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             // Arrange
             JsonNode node;
             using (var stream = new MemoryStream(
-                Encoding.Default.GetBytes(await _operationWithBody.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0))))
+                Encoding.Default.GetBytes(await _operationWithBody.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken))))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -191,7 +191,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithResponseExamples.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "operationWithResponseExamples.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
@@ -257,7 +257,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithEmptyProducesArrayInResponse.json"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "operationWithEmptyProducesArrayInResponse.json"));
             node = TestHelper.CreateYamlJsonNode(stream);
 
             // Act
@@ -293,7 +293,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             JsonNode node;
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithBodyAndEmptyConsumes.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "operationWithBodyAndEmptyConsumes.yaml"));
             node = TestHelper.CreateYamlJsonNode(stream);
 
             // Act
@@ -308,14 +308,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {            
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "opWithResponseExamplesExtension.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "opWithResponseExamplesExtension.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
             var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
-            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             var expected = @"summary: Get all pets
@@ -358,14 +358,14 @@ responses:
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "v3OperationWithResponseExamples.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "v3OperationWithResponseExamples.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
             var operation = OpenApiV3Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
-            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             var expected = @"summary: Get all pets
@@ -408,14 +408,14 @@ responses:
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "opWithBodyParameterExamples.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "opWithBodyParameterExamples.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
             var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
-            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             var expected = @"summary: Get all pets
@@ -459,14 +459,14 @@ responses: { }";
         {
             // Arrange
             JsonNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "v3OperationWithBodyParameterExamples.yaml")))
+            using (var stream = Resources.GetStream(Path.Join(SampleFolderPath, "v3OperationWithBodyParameterExamples.yaml")))
             {
                 node = TestHelper.CreateYamlJsonNode(stream);
             }
 
             // Act
             var operation = OpenApiV3Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
-            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await operation.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             var expected = @"summary: Get all pets
@@ -551,7 +551,7 @@ responses: { }";
                 }
             });
 
-            var actual = await openApiDocument.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await openApiDocument.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
             var expected =
 """
 {

@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedLink.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             LinkReference.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedLink.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);

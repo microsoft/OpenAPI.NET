@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeBasicServerVariableAsV3Works(string format, string expected)
         {
             // Arrange & Act
-            var actual = await BasicServerVariable.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, format);
+            var actual = await BasicServerVariable.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, format, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvancedServerVariable.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedServerVariable.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await AdvancedServerVariable.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedServerVariable.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

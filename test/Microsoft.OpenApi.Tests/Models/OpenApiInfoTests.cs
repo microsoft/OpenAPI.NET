@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeBasicInfoAsJsonWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
-            var actual = await BasicInfo.SerializeAsJsonAsync(version);
+            var actual = await BasicInfo.SerializeAsJsonAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeBasicInfoAsYamlWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
-            var actual = await BasicInfo.SerializeAsYamlAsync(version);
+            var actual = await BasicInfo.SerializeAsYamlAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeAdvanceInfoAsJsonWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
-            var actual = await AdvanceInfo.SerializeAsJsonAsync(version);
+            var actual = await AdvanceInfo.SerializeAsJsonAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -176,7 +176,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public async Task SerializeAdvanceInfoAsYamlWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
-            var actual = await AdvanceInfo.SerializeAsYamlAsync(version);
+            var actual = await AdvanceInfo.SerializeAsYamlAsync(version, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -201,7 +201,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await info.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml);
+            var actual = await info.SerializeAsync(OpenApiSpecVersion.OpenApi3_0, OpenApiConstants.Yaml, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -219,7 +219,7 @@ version: '1.1.1'
 summary: This is a sample server for a pet store.";
 
             // Act
-            var actual = await InfoWithSummary.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await InfoWithSummary.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -239,7 +239,7 @@ summary: This is a sample server for a pet store.";
 }";
 
             // Act
-            var actual = await InfoWithSummary.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await InfoWithSummary.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

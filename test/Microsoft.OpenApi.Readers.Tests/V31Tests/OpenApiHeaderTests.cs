@@ -19,10 +19,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseBasicHeaderShouldSucceed()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicHeader.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "basicHeader.yaml"));
 
             // Act
-            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings);
+            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(
@@ -40,10 +40,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseHeaderWithContentShouldSucceed()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerWithContent.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "headerWithContent.yaml"));
 
             // Act
-            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings);
+            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(
@@ -79,10 +79,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseHeaderWithMultipleContentTypesShouldSucceed()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerWithMultipleContentTypes.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "headerWithMultipleContentTypes.yaml"));
 
             // Act
-            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings);
+            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(
@@ -120,10 +120,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task ParseHeaderWithStyleAndContentShouldPreferContent()
         {
             // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerWithStyleAndContent.yaml"));
+            using var stream = Resources.GetStream(Path.Join(SampleFolderPath, "headerWithStyleAndContent.yaml"));
 
             // Act
-            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings);
+            var header = await OpenApiModelFactory.LoadAsync<OpenApiHeader>(stream, OpenApiSpecVersion.OpenApi3_1, new(), settings: SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             // Both content and style can be present, content takes precedence for serialization behavior
