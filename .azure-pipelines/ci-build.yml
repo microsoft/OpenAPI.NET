@@ -107,7 +107,7 @@ extends:
             projects: '$(Build.SourcesDirectory)\Microsoft.OpenApi.slnx'
             arguments: '--configuration $(BuildConfiguration) --no-build'
 
-        - task: EsrpCodeSigning@5
+        - task: EsrpCodeSigning@6
           displayName: 'ESRP CodeSigning binaries'
           inputs:
             ConnectedServiceName: 'Federated DevX ESRP Managed Identity Connection'
@@ -173,7 +173,7 @@ extends:
         - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
           displayName: 'pack Hidi'
          
-        - task: EsrpCodeSigning@5
+        - task: EsrpCodeSigning@6
           displayName: 'ESRP CodeSigning Nuget Packages'
           inputs:
             ConnectedServiceName: 'Federated DevX ESRP Managed Identity Connection'
@@ -212,7 +212,7 @@ extends:
           displayName: publish Hidi as executable
           inputs:
             command: 'publish'
-            arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi
+            arguments: -c Release --runtime win-x64 -p:RestoreConfigFile=$(Build.SourcesDirectory)\nuget.config /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi
             projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
             publishWebProjects: False
             zipAfterPublish: false
