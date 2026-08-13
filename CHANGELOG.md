@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.30](https://github.com/microsoft/OpenAPI.NET/compare/v1.6.29...v1.6.30) (2026-08-13)
+
+
+### Bug Fixes
+
+* **readers:** bound YAML anchor/alias expansion to prevent OOM (billion laughs) ([1f9aea9](https://github.com/microsoft/OpenAPI.NET/commit/1f9aea9bdcbf4066b59ce33b3bd8f97ed9cb4766))
+
 ## [1.6.29](https://github.com/microsoft/OpenAPI.NET/compare/v1.6.28...v1.6.29) (2026-04-14)
 
 
