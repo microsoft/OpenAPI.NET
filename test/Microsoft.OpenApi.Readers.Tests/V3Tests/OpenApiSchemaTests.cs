@@ -419,6 +419,78 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
+        public void ParseSchemaWithCircularPropertyReferencesShouldSucceed()
+        {
+            var openApiDoc = new OpenApiStringReader().Read("""
+                                                            {
+                                                                "openapi": "3.0.0",
+                                                                "info": {
+                                                                    "title": "Test",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "paths": {},
+                                                                "components": {
+                                                                    "schemas": {
+                                                                        "A": {
+                                                                            "properties": {
+                                                                                "b": {
+                                                                                    "$ref": "#/components/schemas/B"
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        "B": {
+                                                                            "properties": {
+                                                                                "a": {
+                                                                                    "$ref": "#/components/schemas/A"
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            """, out var diagnostic);
+
+            diagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+
+            var schemaA = openApiDoc.Components.Schemas["A"];
+            var schemaB = openApiDoc.Components.Schemas["B"];
+
+            schemaA.Properties["b"].Should().BeSameAs(schemaB);
+            schemaB.Properties["a"].Should().BeSameAs(schemaA);
+        }
+
+        [Fact]
+        public void ParseSchemaWithCircularRootReferencesShouldSucceed()
+        {
+            var openApiDoc = new OpenApiStringReader().Read("""
+                                                            {
+                                                                "openapi": "3.0.0",
+                                                                "info": {
+                                                                    "title": "Test",
+                                                                    "version": "0.0.1"
+                                                                },
+                                                                "paths": {},
+                                                                "components": {
+                                                                    "schemas": {
+                                                                        "A": {
+                                                                            "$ref": "#/components/schemas/B"
+                                                                        },
+                                                                        "B": {
+                                                                            "$ref": "#/components/schemas/A"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            """, out var diagnostic);
+
+            diagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+
+            openApiDoc.Components.Schemas["A"].Should().BeSameAs(openApiDoc.Components.Schemas["B"]);
+        }
+
+        [Fact]
         public void ParseAdvancedSchemaWithReferenceShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml"));
