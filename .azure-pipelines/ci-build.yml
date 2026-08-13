@@ -65,6 +65,11 @@ extends:
           displayName: 'Use .NET 8'
           inputs:
             version: 8.x
+
+        - task: UseDotNet@2
+          displayName: 'Use .NET 10'
+          inputs:
+            useGlobalJson: true
         
         # Install the nuget tool.
         - task: NuGetToolInstaller@1
@@ -74,6 +79,20 @@ extends:
             checkLatest: true
 
         # Build the Product project
+        - task: NuGetAuthenticate@1
+          displayName: 'Authenticate to Azure Artifacts'
+
+        - pwsh: |
+            @"
+            <?xml version="1.0" encoding="utf-8"?>
+            <configuration>
+              <packageSources>
+                <clear />
+                <add key="GraphDeveloperExperiences_Public" value="https://microsoftgraph.pkgs.visualstudio.com/0985d294-5762-4bc2-a565-161ef349ca3e/_packaging/GraphDeveloperExperiences_Public/nuget/v3/index.json" />
+              </packageSources>
+            </configuration>
+            "@ | Set-Content -Path "$(Build.SourcesDirectory)/nuget.config" -Encoding UTF8
+          displayName: 'Create nuget.config (central feed)'
         - task: DotNetCoreCLI@2
           displayName: 'build'
           inputs:
@@ -88,7 +107,7 @@ extends:
             projects: '$(Build.SourcesDirectory)\Microsoft.OpenApi.sln'
             arguments: '--configuration $(BuildConfiguration) --no-build'
 
-        - task: EsrpCodeSigning@5
+        - task: EsrpCodeSigning@6
           displayName: 'ESRP CodeSigning binaries'
           inputs:
             ConnectedServiceName: 'Federated DevX ESRP Managed Identity Connection'
@@ -154,7 +173,7 @@ extends:
         - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
           displayName: 'pack Hidi'
          
-        - task: EsrpCodeSigning@5
+        - task: EsrpCodeSigning@6
           displayName: 'ESRP CodeSigning Nuget Packages'
           inputs:
             ConnectedServiceName: 'Federated DevX ESRP Managed Identity Connection'
@@ -193,7 +212,7 @@ extends:
           displayName: publish Hidi as executable
           inputs:
             command: 'publish'
-            arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi
+            arguments: -c Release --runtime win-x64 -p:RestoreConfigFile=$(Build.SourcesDirectory)\nuget.config /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi
             projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
             publishWebProjects: False
             zipAfterPublish: false
@@ -473,3 +492,7 @@ extends:
                       "$(Pipeline.Workspace)"
                   displayName: 'Build and Push Release Image'
                   condition: contains(variables['Build.SourceBranch'], 'refs/tags/v')
+
+# once the nuget has been released, fill this form to get the public documentation updated.
+# https://dev.azure.com/msft-skilling/Content/_workitems/create/User%20Story?templateId=39fb91e3-64a2-4c8a-83db-b2bdf3603dd3&ownerId=c4a28f90-17ae-4384-b514-7273392b082b
+# https://learn.microsoft.com/en-us/dotnet/api/microsoft.openapi
