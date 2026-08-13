@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             }
         }
 
-        public override IOpenApiAny CreateAny()
+        internal override IOpenApiAny CreateAny(uint depth)
         {
             throw new NotImplementedException();
         }

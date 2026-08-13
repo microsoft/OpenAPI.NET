@@ -31,8 +31,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// Create a <see cref="IOpenApiPrimitive"/>
         /// </summary>
         /// <returns>The created Any object.</returns>
-        public override IOpenApiAny CreateAny()
+        internal override IOpenApiAny CreateAny(uint depth)
         {
+            EnsureDepthWithinLimit(depth);
             var value = GetScalarValue();
             return new OpenApiString(value, this._node.Style is ScalarStyle.SingleQuoted or ScalarStyle.DoubleQuoted or ScalarStyle.Literal or ScalarStyle.Folded);
         }
