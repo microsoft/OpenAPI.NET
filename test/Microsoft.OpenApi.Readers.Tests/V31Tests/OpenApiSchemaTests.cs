@@ -372,6 +372,28 @@ examples:
             Assert.Empty(resultingArray);
         }
 
+        // The pre-3.1 binary description is only normalized when reading v2/v3.0 documents.
+        // From 3.1 onwards "format" is a plain annotation and must be preserved verbatim.
+        [Theory]
+        [InlineData("binary")]
+        [InlineData("byte")]
+        public void BinaryFormatIsNotNormalizedInV31(string format)
+        {
+            var serializedSchema = $$"""
+            {
+                "type": "string",
+                "format": "{{format}}"
+            }
+            """;
+
+            var schema = OpenApiModelFactory.Parse<OpenApiSchema>(serializedSchema, OpenApiSpecVersion.OpenApi3_1, new(), out _, "json", SettingsFixture.ReaderSettings);
+
+            Assert.Equal(JsonSchemaType.String, schema.Type);
+            Assert.Equal(format, schema.Format);
+            Assert.Null(schema.ContentEncoding);
+            Assert.Null(schema.ContentMediaType);
+        }
+
         [Fact]
         public void DefaultNullIsLossyDuringRoundTripJson()
         {

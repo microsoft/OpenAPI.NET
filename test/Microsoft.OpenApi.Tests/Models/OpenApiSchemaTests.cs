@@ -763,6 +763,7 @@ namespace Microsoft.OpenApi.Tests.Models
             """;
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
         }
+
         [Fact]
         public async Task SerializeConstAsEnumV30()
         {
