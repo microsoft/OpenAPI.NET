@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await CookieParameter.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var actual = await CookieParameter.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await CookieParameterWithDefault.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var actual = await CookieParameterWithDefault.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
@@ -155,9 +155,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange & Act
             string actual = version switch
             {
-                OpenApiSpecVersion.OpenApi2_0 => await CookieParameterWithDefault.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0),
-                OpenApiSpecVersion.OpenApi3_0 => await CookieParameterWithDefault.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0),
-                OpenApiSpecVersion.OpenApi3_1 => await CookieParameterWithDefault.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1),
+                OpenApiSpecVersion.OpenApi2_0 => await CookieParameterWithDefault.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken),
+                OpenApiSpecVersion.OpenApi3_0 => await CookieParameterWithDefault.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken),
+                OpenApiSpecVersion.OpenApi3_1 => await CookieParameterWithDefault.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken),
                 _ => throw new ArgumentOutOfRangeException()
             };
 
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             CookieParameter.SerializeAsV32(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -221,7 +221,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await CookieParameter.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_2);
+            var actual = await CookieParameter.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_2, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());

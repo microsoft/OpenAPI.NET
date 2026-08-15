@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await BasicOAuthFlow.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BasicOAuthFlow.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 @"scopes: { }";
 
             // Act
-            var actual = await BasicOAuthFlow.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BasicOAuthFlow.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await PartialOAuthFlow.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await PartialOAuthFlow.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await CompleteOAuthFlow.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await CompleteOAuthFlow.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await OAuthFlowWithDeviceAuthorizationUrl.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var actual = await OAuthFlowWithDeviceAuthorizationUrl.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
@@ -178,7 +178,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await OAuthFlowWithDeviceAuthorizationUrl.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1);
+            var actual = await OAuthFlowWithDeviceAuthorizationUrl.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_1, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));
@@ -203,7 +203,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
 
             // Act
-            var actual = await OAuthFlowWithDeviceAuthorizationUrl.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await OAuthFlowWithDeviceAuthorizationUrl.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(actual), JsonNode.Parse(expected)));

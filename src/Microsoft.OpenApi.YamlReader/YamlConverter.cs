@@ -15,6 +15,94 @@ namespace Microsoft.OpenApi.YamlReader
     public static class YamlConverter
     {
         /// <summary>
+        /// Default maximum nesting depth allowed when converting a YAML node graph into JSON nodes.
+        /// Mirrors the default System.Text.Json depth limit (64) that already bounds the JSON reader path,
+        /// protecting the recursive conversion from stack exhaustion on deeply nested documents.
+        /// </summary>
+        public const uint DefaultMaxDepth = 64;
+
+        /// <summary>
+        /// Default maximum number of JSON nodes that may be materialized from a single YAML document.
+        /// Guards against YAML anchor/alias expansion ("billion laughs") attacks, where a tiny document
+        /// expands exponentially when its shared node graph is materialized into an independent JSON tree.
+        /// </summary>
+        public const uint DefaultMaxNodeCount = 5_000_000;
+
+        private static uint _maxDepth = DefaultMaxDepth;
+        private static uint _maxNodeCount = DefaultMaxNodeCount;
+
+        /// <summary>
+        /// Gets or sets the maximum nesting depth allowed when converting a YAML node graph into JSON nodes.
+        /// Defaults to <see cref="DefaultMaxDepth"/>. Raise this if legitimate deeply nested documents are
+        /// being rejected, or lower it to fail faster when only shallow documents are expected.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when set to zero.</exception>
+        public static uint MaxDepth
+        {
+            get => _maxDepth;
+            set
+            {
+                if (value == 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value), "MaxDepth must be greater than zero.");
+                }
+
+                _maxDepth = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum number of JSON nodes that may be materialized from a single YAML document.
+        /// Defaults to <see cref="DefaultMaxNodeCount"/>, guarding against YAML anchor/alias expansion
+        /// ("billion laughs") attacks. Raise this if legitimate large documents are being rejected, or lower
+        /// it to fail faster when only small documents are expected.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when set to zero.</exception>
+        public static uint MaxNodeCount
+        {
+            get => _maxNodeCount;
+            set
+            {
+                if (value == 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value), "MaxNodeCount must be greater than zero.");
+                }
+
+                _maxNodeCount = value;
+            }
+        }
+
+        /// <summary>
+        /// Tracks and enforces resource limits while converting a YAML node graph into JSON nodes,
+        /// failing fast when a hostile document would otherwise exhaust memory or the stack.
+        /// </summary>
+        private sealed class YamlConversionBudget
+        {
+            private readonly uint _maxDepth;
+            private readonly uint _maxNodeCount;
+            private uint _nodeCount;
+
+            public YamlConversionBudget(uint maxDepth, uint maxNodeCount)
+            {
+                _maxDepth = maxDepth;
+                _maxNodeCount = maxNodeCount;
+            }
+
+            public void EnterNode(uint depth)
+            {
+                if (depth > _maxDepth)
+                {
+                    throw new OpenApiReaderException($"The YAML document exceeds the maximum supported nesting depth of {_maxDepth}.");
+                }
+
+                if (++_nodeCount > _maxNodeCount)
+                {
+                    throw new OpenApiReaderException($"The YAML document expands to more than the maximum supported number of nodes ({_maxNodeCount}). This may indicate a YAML anchor/alias expansion (billion laughs) attack.");
+                }
+            }
+        }
+
+        /// <summary>
         /// Converts all of the documents in a YAML stream to <see cref="JsonNode"/>s.
         /// </summary>
         /// <param name="yaml">The YAML stream.</param>
@@ -42,10 +130,16 @@ namespace Microsoft.OpenApi.YamlReader
         /// <exception cref="NotSupportedException">Thrown for YAML that is not compatible with JSON.</exception>
         public static JsonNode ToJsonNode(this YamlNode yaml)
         {
+            return yaml.ToJsonNode(new YamlConversionBudget(MaxDepth, MaxNodeCount), 0);
+        }
+
+        private static JsonNode ToJsonNode(this YamlNode yaml, YamlConversionBudget budget, uint depth)
+        {
+            budget.EnterNode(depth);
             return yaml switch
             {
-                YamlMappingNode map => map.ToJsonObject(),
-                YamlSequenceNode seq => seq.ToJsonArray(),
+                YamlMappingNode map => map.ToJsonObject(budget, depth),
+                YamlSequenceNode seq => seq.ToJsonArray(budget, depth),
                 YamlScalarNode scalar => scalar.ToJsonValue(),
                 _ => throw new NotSupportedException("This yaml isn't convertible to JSON")
             };
@@ -79,11 +173,16 @@ namespace Microsoft.OpenApi.YamlReader
         /// <returns></returns>
         public static JsonObject ToJsonObject(this YamlMappingNode yaml)
         {
+            return yaml.ToJsonObject(new YamlConversionBudget(MaxDepth, MaxNodeCount), 0);
+        }
+
+        private static JsonObject ToJsonObject(this YamlMappingNode yaml, YamlConversionBudget budget, uint depth)
+        {
             var node = new JsonObject();
             foreach (var keyValuePair in yaml)
             {
                 var key = ((YamlScalarNode)keyValuePair.Key).Value!;
-                node[key] = keyValuePair.Value.ToJsonNode();
+                node[key] = keyValuePair.Value.ToJsonNode(budget, depth + 1);
             }
 
             return node;
@@ -104,10 +203,15 @@ namespace Microsoft.OpenApi.YamlReader
         /// <returns></returns>
         public static JsonArray ToJsonArray(this YamlSequenceNode yaml)
         {
+            return yaml.ToJsonArray(new YamlConversionBudget(MaxDepth, MaxNodeCount), 0);
+        }
+
+        private static JsonArray ToJsonArray(this YamlSequenceNode yaml, YamlConversionBudget budget, uint depth)
+        {
             var node = new JsonArray();
             foreach (var value in yaml)
             {
-                node.Add(value.ToJsonNode());
+                node.Add(value.ToJsonNode(budget, depth + 1));
             }
 
             return node;

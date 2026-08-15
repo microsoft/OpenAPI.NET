@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public void ReturnFilteredOpenApiDocumentBasedOnPostmanCollection()
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver2.json");
+            var filePath = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver2.json");
             var fileInput = new FileInfo(filePath);
             var stream = fileInput.OpenRead();
 
@@ -158,7 +158,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public void ShouldParseNestedPostmanCollection()
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver3.json");
+            var filePath = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver3.json");
             var fileInput = new FileInfo(filePath);
             var stream = fileInput.OpenRead();
 
@@ -175,7 +175,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public void ThrowsExceptionWhenUrlsInCollectionAreMissingFromSourceDocument()
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver1.json");
+            var filePath = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver1.json");
             var fileInput = new FileInfo(filePath);
             var stream = fileInput.OpenRead();
 
@@ -192,7 +192,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public void ContinueProcessingWhenUrlsInCollectionAreMissingFromSourceDocument()
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver4.json");
+            var filePath = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver4.json");
             var fileInput = new FileInfo(filePath);
             var stream = fileInput.OpenRead();
 
@@ -291,14 +291,14 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public async Task CopiesOverAllReferencedComponentsToTheSubsetDocumentCorrectly()
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "docWithReusableHeadersAndExamples.yaml");
+            var filePath = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "docWithReusableHeadersAndExamples.yaml");
             var operationIds = "getItems";
 
             // Act
             using var stream = File.OpenRead(filePath);
             var settings = new OpenApiReaderSettings();
             settings.AddYamlReader();
-            var doc = (await OpenApiDocument.LoadAsync(stream, "yaml", settings)).Document;
+            var doc = (await OpenApiDocument.LoadAsync(stream, "yaml", settings, TestContext.Current.CancellationToken)).Document;
 
             // validated the tags are read as references
             var openApiOperationTags = doc?.Paths["/items"].Operations?[HttpMethod.Get].Tags?.ToArray();
@@ -344,7 +344,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                     }
                 };
                 subsetOpenApiDocument.SerializeAsV3(writer);
-                await writer.FlushAsync();
+                await writer.FlushAsync(TestContext.Current.CancellationToken);
                 var result = outputStringWriter.ToString();
                 Assert.NotEmpty(result);
             }            

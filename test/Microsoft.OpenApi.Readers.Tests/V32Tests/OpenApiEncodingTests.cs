@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         public async Task ParseEncodingWithAllowReservedShouldSucceed()
         {
             // Act
-            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Combine(SampleFolderPath, "encodingWithAllowReserved.yaml"), OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings);
+            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Join(SampleFolderPath, "encodingWithAllowReserved.yaml"), OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equivalent(
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         public async Task ParseEncodingWithNestedEncodingShouldSucceed()
         {
             // Act
-            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Combine(SampleFolderPath, "encodingWithNestedEncoding.yaml"), OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings);
+            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Join(SampleFolderPath, "encodingWithNestedEncoding.yaml"), OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.NotNull(encoding);
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         public async Task ParseEncodingWithItemAndPrefixEncodingShouldSucceed()
         {
             // Act
-            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Combine(SampleFolderPath, "encodingWithItemAndPrefixEncoding.yaml"), OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings);
+            var encoding = await OpenApiModelFactory.LoadAsync<OpenApiEncoding>(Path.Join(SampleFolderPath, "encodingWithItemAndPrefixEncoding.yaml"), OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
             Assert.NotNull(encoding);

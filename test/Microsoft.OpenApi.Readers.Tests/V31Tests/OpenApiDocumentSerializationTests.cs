@@ -21,8 +21,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         public async Task Serialize_DoesNotMutateDom(OpenApiSpecVersion version)
         {
             // Arrange
-            var filePath = Path.Combine(SampleFolderPath, "docWith31properties.json");
-            var (doc, _) = await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings);
+            var filePath = Path.Join(SampleFolderPath, "docWith31properties.json");
+            var (doc, _) = await OpenApiDocument.LoadAsync(filePath, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Act: Serialize using System.Text.Json
             var options = new JsonSerializerOptions

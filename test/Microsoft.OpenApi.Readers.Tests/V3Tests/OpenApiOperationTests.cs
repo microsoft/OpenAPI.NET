@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public async Task OperationWithSecurityRequirementShouldReferenceSecurityScheme()
         {
-            var result = await OpenApiDocument.LoadAsync(Path.Combine(SampleFolderPath, "securedOperation.yaml"), SettingsFixture.ReaderSettings);
+            var result = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "securedOperation.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             var securityScheme = result.Document.Paths["/"].Operations[HttpMethod.Get].Security[0].Keys.First();
             Assert.Equivalent(result.Document.Components.SecuritySchemes.First().Value, securityScheme);
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 Tags = new HashSet<OpenApiTag> { new() { Name = "user" } }
             };
             // Act
-            var operation = await OpenApiModelFactory.LoadAsync<OpenApiOperation>(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0, openApiDocument, SettingsFixture.ReaderSettings);
+            var operation = await OpenApiModelFactory.LoadAsync<OpenApiOperation>(Path.Join(SampleFolderPath, "operationWithParameterWithNoLocation.json"), OpenApiSpecVersion.OpenApi3_0, openApiDocument, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             var expectedOp = new OpenApiOperation
             {
                 Tags = new HashSet<OpenApiTagReference>()

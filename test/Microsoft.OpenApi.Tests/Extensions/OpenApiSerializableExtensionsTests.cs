@@ -28,11 +28,11 @@ public class OpenApiSerializableExtensionsTests
         };
 
         using var stream = new MemoryStream();
-        await parameter.SerializeAsync(stream, OpenApiSpecVersion.OpenApi3_1, OpenApiConstants.Json, settings);
+        await parameter.SerializeAsync(stream, OpenApiSpecVersion.OpenApi3_1, OpenApiConstants.Json, settings, TestContext.Current.CancellationToken);
 
         stream.Position = 0;
         using var reader = new StreamReader(stream);
-        var output = await reader.ReadToEndAsync();
+        var output = await reader.ReadToEndAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal("{\"name\":\"param1\",\"in\":\"query\",\"description\":\"A sample parameter\",\"schema\":{\"type\":\"string\"}}", output);
     }
@@ -58,11 +58,11 @@ public class OpenApiSerializableExtensionsTests
         };
 
         using var stream = new MemoryStream();
-        await parameter.SerializeAsync(stream, OpenApiSpecVersion.OpenApi3_1, OpenApiConstants.Json, settings);
+        await parameter.SerializeAsync(stream, OpenApiSpecVersion.OpenApi3_1, OpenApiConstants.Json, settings, TestContext.Current.CancellationToken);
 
         stream.Position = 0;
         using var reader = new StreamReader(stream);
-        var output = await reader.ReadToEndAsync();
+        var output = await reader.ReadToEndAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal("{\n  \"name\": \"param1\",\n  \"in\": \"query\",\n  \"description\": \"A sample parameter\",\n  \"schema\": {\n    \"type\": \"string\"\n  }\n}", output);
     }
@@ -83,11 +83,11 @@ public class OpenApiSerializableExtensionsTests
         };
 
         using var stream = new MemoryStream();
-        await parameter.SerializeAsync(stream, OpenApiSpecVersion.OpenApi3_1, OpenApiConstants.Json, null);
+        await parameter.SerializeAsync(stream, OpenApiSpecVersion.OpenApi3_1, OpenApiConstants.Json, null, TestContext.Current.CancellationToken);
 
         stream.Position = 0;
         using var reader = new StreamReader(stream);
-        var output = await reader.ReadToEndAsync();
+        var output = await reader.ReadToEndAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal("{\n  \"name\": \"param1\",\n  \"in\": \"query\",\n  \"description\": \"A sample parameter\",\n  \"schema\": {\n    \"type\": \"string\"\n  }\n}", output);
     }

@@ -117,7 +117,7 @@ components:
 
             // Act
             _localParameterReference.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput, inlineLocalReferences);
@@ -136,7 +136,7 @@ components:
 
             // Act
             _localParameterReference.SerializeAsV31(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput, inlineLocalReferences);
@@ -155,7 +155,7 @@ components:
 
             // Act
             _localParameterReference.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput, inlineLocalReferences);

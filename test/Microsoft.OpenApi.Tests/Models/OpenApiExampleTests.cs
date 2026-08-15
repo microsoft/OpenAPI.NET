@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedExample.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             OpenApiExampleReference.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -138,7 +138,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedExample.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -164,7 +164,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             example.SerializeAsV32(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             example.SerializeAsV31(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -212,7 +212,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             example.SerializeAsV32(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -234,7 +234,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             example.SerializeAsV31(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);

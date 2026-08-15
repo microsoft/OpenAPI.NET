@@ -172,7 +172,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act & Assert
             parameter.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             Assert.Equal(expectedStyle, parameter.Style);
         }
@@ -189,7 +189,7 @@ schema:
     type: integer";
 
             // Act
-            var actual = await QueryParameterWithMissingStyle.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await QueryParameterWithMissingStyle.SerializeAsYamlAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
@@ -208,7 +208,7 @@ schema:
                 """;
 
             // Act
-            var actual = await BasicParameter.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await BasicParameter.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -251,7 +251,7 @@ schema:
                 """;
 
             // Act
-            var actual = await AdvancedPathParameterWithSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+            var actual = await AdvancedPathParameterWithSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -281,7 +281,7 @@ schema:
                 """;
 
             // Act
-            var actual = await AdvancedPathParameterWithSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
+            var actual = await AdvancedPathParameterWithSchema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0, TestContext.Current.CancellationToken);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -300,7 +300,7 @@ schema:
 
             // Act
             OpenApiParameterReference.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -317,7 +317,7 @@ schema:
 
             // Act
             ReferencedParameter.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -334,7 +334,7 @@ schema:
 
             // Act
             OpenApiParameterReference.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -351,7 +351,7 @@ schema:
 
             // Act
             ReferencedParameter.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -368,7 +368,7 @@ schema:
 
             // Act
             AdvancedHeaderParameterWithSchemaTypeObject.SerializeAsV2(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -385,7 +385,7 @@ schema:
 
             // Act
             ParameterWithFormStyleAndExplodeFalse.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -402,7 +402,7 @@ schema:
 
             // Act
             ParameterWithFormStyleAndExplodeTrue.SerializeAsV3(writer);
-            await writer.FlushAsync();
+            await writer.FlushAsync(TestContext.Current.CancellationToken);
 
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
@@ -451,7 +451,7 @@ schema:
                 Schema = null,
                 // Explode must be false (default) and not set
             };
-            var json = await parameter.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var json = await parameter.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2, TestContext.Current.CancellationToken);
             Assert.Contains("querystring", json);
         }
     }

@@ -165,8 +165,8 @@ public class OpenApiDynamicRefTests
 
         using var streamA = new MemoryStream(Encoding.UTF8.GetBytes(yamlA));
         using var streamB = new MemoryStream(Encoding.UTF8.GetBytes(yamlB));
-        var resultA = await OpenApiDocument.LoadAsync(streamA, "yaml", SettingsFixture.ReaderSettings);
-        var resultB = await OpenApiDocument.LoadAsync(streamB, "yaml", SettingsFixture.ReaderSettings);
+        var resultA = await OpenApiDocument.LoadAsync(streamA, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
+        var resultB = await OpenApiDocument.LoadAsync(streamB, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
 
         var docA = resultA.Document;
         var docB = resultB.Document;
@@ -1488,8 +1488,8 @@ public class OpenApiDynamicRefTests
 
         using var streamA = new MemoryStream(Encoding.UTF8.GetBytes(yamlA));
         using var streamB = new MemoryStream(Encoding.UTF8.GetBytes(yamlB));
-        var resultA = await OpenApiDocument.LoadAsync(streamA, "yaml", SettingsFixture.ReaderSettings);
-        var resultB = await OpenApiDocument.LoadAsync(streamB, "yaml", SettingsFixture.ReaderSettings);
+        var resultA = await OpenApiDocument.LoadAsync(streamA, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
+        var resultB = await OpenApiDocument.LoadAsync(streamB, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
 
         var docA = resultA.Document;
         var docB = resultB.Document;
@@ -1840,8 +1840,8 @@ public class OpenApiDynamicRefTests
 
         using var streamA = new MemoryStream(Encoding.UTF8.GetBytes(yamlA));
         using var streamB = new MemoryStream(Encoding.UTF8.GetBytes(yamlB));
-        var resultA = await OpenApiDocument.LoadAsync(streamA, "yaml", SettingsFixture.ReaderSettings);
-        var resultB = await OpenApiDocument.LoadAsync(streamB, "yaml", SettingsFixture.ReaderSettings);
+        var resultA = await OpenApiDocument.LoadAsync(streamA, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
+        var resultB = await OpenApiDocument.LoadAsync(streamB, "yaml", SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
 
         var docA = resultA.Document;
         var docB = resultB.Document;

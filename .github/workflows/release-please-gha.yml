@@ -34,7 +34,7 @@ jobs:
     if: needs.check-secret.outputs.has-token == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Validate PublicAPI.Unshipped.txt files are empty
         shell: pwsh
@@ -62,13 +62,13 @@ jobs:
 
       - name: Generate GitHub App token
         id: app-token
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
           client-id: ${{ vars.RELEASE_PLEASE_TOKEN_PROVIDER_APP_ID }}
           private-key: ${{ secrets.RELEASE_PLEASE_TOKEN_PROVIDER_PEM }}
 
       - name: Release Please
-        uses: googleapis/release-please-action@v5
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         with:
           token: ${{ steps.app-token.outputs.token }}
           config-file: release-please-config.json

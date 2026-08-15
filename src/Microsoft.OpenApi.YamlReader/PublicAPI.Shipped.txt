@@ -15,3 +15,9 @@ static Microsoft.OpenApi.YamlReader.YamlConverter.ToJsonNode(this SharpYaml.Seri
 static Microsoft.OpenApi.YamlReader.YamlConverter.ToJsonNode(this SharpYaml.Serialization.YamlStream! yaml) -> System.Collections.Generic.IEnumerable<System.Text.Json.Nodes.JsonNode!>!
 static Microsoft.OpenApi.YamlReader.YamlConverter.ToJsonObject(this SharpYaml.Serialization.YamlMappingNode! yaml) -> System.Text.Json.Nodes.JsonObject!
 static Microsoft.OpenApi.YamlReader.YamlConverter.ToYamlNode(this System.Text.Json.Nodes.JsonNode! json) -> SharpYaml.Serialization.YamlNode!
+const Microsoft.OpenApi.YamlReader.YamlConverter.DefaultMaxDepth = 64 -> uint
+const Microsoft.OpenApi.YamlReader.YamlConverter.DefaultMaxNodeCount = 5000000 -> uint
+static Microsoft.OpenApi.YamlReader.YamlConverter.MaxDepth.get -> uint
+static Microsoft.OpenApi.YamlReader.YamlConverter.MaxDepth.set -> void
+static Microsoft.OpenApi.YamlReader.YamlConverter.MaxNodeCount.get -> uint
+static Microsoft.OpenApi.YamlReader.YamlConverter.MaxNodeCount.set -> void

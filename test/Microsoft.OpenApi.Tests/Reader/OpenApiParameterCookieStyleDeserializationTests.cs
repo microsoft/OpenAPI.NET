@@ -179,7 +179,7 @@ namespace Microsoft.OpenApi.Tests.Reader
             };
 
             // Act
-            var json = await document.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2);
+            var json = await document.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_2, TestContext.Current.CancellationToken);
             var result = OpenApiDocument.Parse(json, "json", SettingsFixture.ReaderSettings);
 
             // Assert
