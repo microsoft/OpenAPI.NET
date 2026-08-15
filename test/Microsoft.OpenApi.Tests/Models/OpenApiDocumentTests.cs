@@ -2504,5 +2504,198 @@ x-oai-$self: https://example.org/api/openapi.json";
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
+
+        [Fact]
+        public void GetOperationById_ReturnsMatchingOperation()
+        {
+            var operation = new OpenApiOperation { OperationId = "getUser" };
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test", Version = "1.0" },
+                Paths = new OpenApiPaths
+                {
+                    ["/users/{id}"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        {
+                            [HttpMethod.Get] = operation
+                        }
+                    }
+                }
+            };
+
+            var result = doc.GetOperationById("getUser");
+
+            Assert.Same(operation, result);
+        }
+
+        [Fact]
+        public void GetOperationById_ReturnsNullWhenNotFound()
+        {
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test", Version = "1.0" },
+                Paths = new OpenApiPaths
+                {
+                    ["/users"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        {
+                            [HttpMethod.Get] = new OpenApiOperation { OperationId = "listUsers" }
+                        }
+                    }
+                }
+            };
+
+            var result = doc.GetOperationById("nonExistentId");
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetOperationById_SearchesWebhooks()
+        {
+            var webhookOperation = new OpenApiOperation { OperationId = "onUserCreated" };
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test", Version = "1.0" },
+                Paths = [],
+                Webhooks = new Dictionary<string, IOpenApiPathItem>
+                {
+                    ["userCreated"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        {
+                            [HttpMethod.Post] = webhookOperation
+                        }
+                    }
+                }
+            };
+
+            var result = doc.GetOperationById("onUserCreated");
+
+            Assert.Same(webhookOperation, result);
+        }
+
+        [Fact]
+        public void GetOperationById_IsCaseSensitive()
+        {
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test", Version = "1.0" },
+                Paths = new OpenApiPaths
+                {
+                    ["/users"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        {
+                            [HttpMethod.Get] = new OpenApiOperation { OperationId = "getUser" }
+                        }
+                    }
+                }
+            };
+
+            Assert.NotNull(doc.GetOperationById("getUser"));
+            Assert.Null(doc.GetOperationById("GetUser"));
+            Assert.Null(doc.GetOperationById("GETUSER"));
+        }
+
+        [Fact]
+        public void GetOperationById_ResolvesOperationThroughPathItemReference()
+        {
+            const string yaml = """
+                openapi: '3.1.0'
+                info:
+                  title: Test
+                  version: 1.0.0
+                paths:
+                  /users:
+                    $ref: '#/components/pathItems/userPathItem'
+                components:
+                  pathItems:
+                    userPathItem:
+                      get:
+                        operationId: listUsers
+                        responses:
+                          '200':
+                            description: OK
+                """;
+
+            var doc = OpenApiDocument.Parse(yaml, OpenApiConstants.Yaml, SettingsFixture.ReaderSettings).Document;
+            doc.Workspace.RegisterComponents(doc);
+
+            var result = doc.GetOperationById("listUsers");
+
+            Assert.NotNull(result);
+            Assert.Equal("listUsers", result.OperationId);
+        }
+
+        [Fact]
+        public void GetOperationById_DuplicateIdReturnsFirstMatch()
+        {
+            // operationId must be unique per spec, but if not, Paths takes priority over Webhooks
+            var pathsOperation = new OpenApiOperation { OperationId = "duplicateId" };
+            var webhooksOperation = new OpenApiOperation { OperationId = "duplicateId" };
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test", Version = "1.0" },
+                Paths = new OpenApiPaths
+                {
+                    ["/users"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        {
+                            [HttpMethod.Get] = pathsOperation
+                        }
+                    }
+                },
+                Webhooks = new Dictionary<string, IOpenApiPathItem>
+                {
+                    ["userEvent"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        {
+                            [HttpMethod.Post] = webhooksOperation
+                        }
+                    }
+                }
+            };
+
+            var result = doc.GetOperationById("duplicateId");
+
+            Assert.Same(pathsOperation, result);
+        }
+
+        [Fact]
+        public void GetOperationById_UnresolvedPathItemReferenceIsSkipped()
+        {
+            // An unresolved $ref has Target = null, so Operations = null — should be skipped gracefully
+            var unresolvedRef = new OpenApiPathItemReference("nonExistentPathItem", null);
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test", Version = "1.0" },
+                Paths = new OpenApiPaths
+                {
+                    ["/users"] = unresolvedRef
+                }
+            };
+
+            var result = doc.GetOperationById("anyId");
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetOperationById_ThrowsOnNullOrEmptyId()
+        {
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test", Version = "1.0" },
+                Paths = []
+            };
+
+            Assert.Throws<ArgumentNullException>(() => doc.GetOperationById(null!));
+            Assert.Throws<ArgumentNullException>(() => doc.GetOperationById(string.Empty));
+        }
     }
 }
