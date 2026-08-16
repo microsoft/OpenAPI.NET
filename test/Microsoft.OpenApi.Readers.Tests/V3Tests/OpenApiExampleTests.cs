@@ -90,6 +90,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             Assert.NotNull(example.DataValue);
             Assert.Equal("Alice Johnson", example.DataValue["name"].GetValue<string>());
             Assert.Equal(28, example.DataValue["age"].GetValue<decimal>());
+            Assert.Equal(28, example.DataValue["age"].GetValue<int>());
+            Assert.Equal(28u, example.DataValue["age"].GetValue<uint>());
+            Assert.Equal((byte)28, example.DataValue["age"].GetValue<byte>());
+
         }
 
         [Fact]

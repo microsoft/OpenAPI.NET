@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Text.Json.Nodes;
@@ -23,44 +23,28 @@ namespace Microsoft.OpenApi.Reader.V3
                 "required",
                 (o, n, _, _) =>
                 {
-                    var required = n.GetScalarValue();
-                    if (required != null)
-                    {
-                        o.Required = bool.Parse(required);
-                    }
+                    o.Required = n.GetScalarBoolValue();
                 }
             },
             {
                 "deprecated",
                 (o, n, _, _) =>
                 {
-                    var deprecated = n.GetScalarValue();
-                    if (deprecated != null)
-                    {
-                        o.Deprecated = bool.Parse(deprecated);
-                    }
+                    o.Deprecated = n.GetScalarBoolValue();
                 }
             },
             {
                 "allowEmptyValue",
                 (o, n, _, _) =>
                 {
-                    var allowEmptyVal = n.GetScalarValue();
-                    if (allowEmptyVal != null)
-                    {
-                        o.AllowEmptyValue = bool.Parse(allowEmptyVal);
-                    }
+                    o.AllowEmptyValue = n.GetScalarBoolValue();
                 }
             },
             {
                 "allowReserved",
                 (o, n, _, _) =>
                 {
-                    var allowReserved = n.GetScalarValue();
-                    if (allowReserved != null)
-                    {
-                        o.AllowReserved = bool.Parse(allowReserved);
-                    }
+                    o.AllowReserved = n.GetScalarBoolValue();
                 }
             },
             {
@@ -78,11 +62,7 @@ namespace Microsoft.OpenApi.Reader.V3
                 "explode",
                 (o, n, _, _) =>
                 {
-                    var explode = n.GetScalarValue();
-                    if (explode != null)
-                    {
-                        o.Explode = bool.Parse(explode);
-                    }
+                    o.Explode = n.GetScalarBoolValue();
                 }
             },
             {

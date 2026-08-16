@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Reader.V31;
@@ -35,21 +35,13 @@ internal static partial class OpenApiV31Deserializer
         {
             "explode", (o, n, _, _) =>
             {
-                var explode = n.GetScalarValue();
-                if (explode is not null)
-                {
-                    o.Explode = bool.Parse(explode);
-                }                    
+                o.Explode = n.GetScalarBoolValue();
             }
         },
         {
             "allowReserved", (o, n, _, _) =>
             {
-                var allowReserved = n.GetScalarValue();
-                if (allowReserved is not null)
-                {
-                    o.AllowReserved = bool.Parse(allowReserved);
-                }
+                o.AllowReserved = n.GetScalarBoolValue();
             }
         },
     };

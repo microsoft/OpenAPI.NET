@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.IO;
@@ -30,6 +30,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             Assert.NotNull(example.DataValue);
             Assert.Equal("Jane Smith", example.DataValue["name"].GetValue<string>());
             Assert.Equal(25, example.DataValue["age"].GetValue<decimal>());
+            Assert.Equal(25, example.DataValue["age"].GetValue<int>());
+            Assert.Equal(25u, example.DataValue["age"].GetValue<uint>());
+            Assert.Equal((byte)25, example.DataValue["age"].GetValue<byte>());
         }
 
         [Fact]

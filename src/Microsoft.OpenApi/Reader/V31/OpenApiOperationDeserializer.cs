@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
@@ -85,11 +85,7 @@ namespace Microsoft.OpenApi.Reader.V31
                     "deprecated",
                     (o, n, _, _) =>
                     {
-                        var deprecated = n.GetScalarValue();
-                        if (deprecated != null)
-                        {
-                            o.Deprecated = bool.Parse(deprecated);
-                        }
+                        o.Deprecated = n.GetScalarBoolValue();
                     }
                 },
                 {
