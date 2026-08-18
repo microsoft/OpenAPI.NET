@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Nodes;
@@ -180,7 +180,7 @@ internal sealed class YamlJsonParser
                 frame.NodeCount = checked(frame.NodeCount + materialized.NodeCount);
                 frame.MaxChildHeight = Math.Max(frame.MaxChildHeight, materialized.Height);
                 break;
-            case JsonObject map when frame.PendingKey is null:
+            case JsonObject when frame.PendingKey is null:
                 frame.PendingKey = materialized.MappingKey
                     ?? throw new OpenApiReaderException("YAML mapping keys must be scalar values.");
                 break;
