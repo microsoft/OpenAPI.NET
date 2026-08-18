@@ -20,19 +20,27 @@ internal sealed class YamlJsonParser
     private readonly HashSet<string> _activeAnchors = new(StringComparer.Ordinal);
     private readonly Stack<ContainerFrame> _containers = new();
     private readonly uint _maxScalarLength;
+    private readonly uint _maxDepth;
     private JsonNode? _root;
 
     public YamlJsonParser(OpenApiYamlReaderSettings settings)
     {
         _budget = new(settings.MaxDepth, settings.MaxNodeCount, settings.MaxAliasExpansionNodeCount);
         _maxScalarLength = settings.MaxScalarLength;
+        _maxDepth = settings.MaxDepth;
     }
 
     public JsonNode Parse(TextReader input, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         var cancellationReader = new CancellationTokenTextReader(input, cancellationToken);
-        var parser = new Parser<LookAheadBuffer>(new LookAheadBuffer(cancellationReader, LookAheadBufferCapacity));
+
+        // SharpYaml applies its own nesting limit, defaulting to 64. Passing the configured limit
+        // keeps the two enforcement points in agreement; leaving it unset would silently cap every
+        // reader at 64 regardless of MaxDepth, making values above the default a no-op.
+        var parser = new Parser<LookAheadBuffer>(
+            new LookAheadBuffer(cancellationReader, LookAheadBufferCapacity),
+            (int)_maxDepth);
         var documentStarted = false;
 
         while (true)
@@ -104,6 +112,7 @@ internal sealed class YamlJsonParser
         var materialized = new MaterializedNode(
             YamlConverter.ToJsonValue(scalar.Value, scalar.Style),
             1,
+            1,
             scalar.Value);
 
         RegisterCompletedAnchor(scalar.Anchor, materialized);
@@ -122,9 +131,9 @@ internal sealed class YamlJsonParser
             throw new OpenApiReaderException($"The YAML alias '*{alias.Value}' refers to an unknown anchor.");
         }
 
-        _budget.EnterAlias((uint)_containers.Count, anchor.NodeCount);
+        _budget.EnterAlias((uint)_containers.Count, anchor.NodeCount, anchor.Height);
         cancellationToken.ThrowIfCancellationRequested();
-        AddNode(new(anchor.Node.DeepClone(), anchor.NodeCount, anchor.MappingKey));
+        AddNode(new(anchor.Node.DeepClone(), anchor.NodeCount, anchor.Height, anchor.MappingKey));
     }
 
     private void EndContainer()
@@ -140,7 +149,7 @@ internal sealed class YamlJsonParser
             throw new OpenApiReaderException("The YAML mapping contains a key without a value.");
         }
 
-        var materialized = new MaterializedNode(frame.Container, frame.NodeCount, null);
+        var materialized = new MaterializedNode(frame.Container, frame.NodeCount, frame.MaxChildHeight + 1, null);
         if (frame.Anchor is not null)
         {
             _activeAnchors.Remove(frame.Anchor);
@@ -169,6 +178,7 @@ internal sealed class YamlJsonParser
             case JsonArray array:
                 array.Add(materialized.Node);
                 frame.NodeCount = checked(frame.NodeCount + materialized.NodeCount);
+                frame.MaxChildHeight = Math.Max(frame.MaxChildHeight, materialized.Height);
                 break;
             case JsonObject map when frame.PendingKey is null:
                 frame.PendingKey = materialized.MappingKey
@@ -183,6 +193,7 @@ internal sealed class YamlJsonParser
                 map.Add(frame.PendingKey, materialized.Node);
                 frame.PendingKey = null;
                 frame.NodeCount = checked(frame.NodeCount + materialized.NodeCount);
+                frame.MaxChildHeight = Math.Max(frame.MaxChildHeight, materialized.Height);
                 break;
         }
     }
@@ -221,19 +232,27 @@ internal sealed class YamlJsonParser
         public string? Anchor { get; } = anchor;
         public string? PendingKey { get; set; }
         public uint NodeCount { get; set; } = 1;
+
+        /// <summary>Height of the tallest child added so far; 0 while the container is empty.</summary>
+        public uint MaxChildHeight { get; set; }
     }
 
     private sealed class MaterializedNode
     {
-        public MaterializedNode(JsonNode node, uint nodeCount, string? mappingKey)
+        public MaterializedNode(JsonNode node, uint nodeCount, uint height, string? mappingKey)
         {
             Node = node;
             NodeCount = nodeCount;
+            Height = height;
             MappingKey = mappingKey;
         }
 
         public JsonNode Node { get; }
         public uint NodeCount { get; }
+
+        /// <summary>Number of levels in this subtree, where a scalar has height 1.</summary>
+        public uint Height { get; }
+
         public string? MappingKey { get; }
     }
 
