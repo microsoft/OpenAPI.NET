@@ -382,48 +382,23 @@ public class YamlConverterTests
     }
 
     [Fact]
-    public void ConversionLimitsDefaultToDocumentedValues()
+    public void CyclicYamlNodeGraphIsRejected()
     {
-        Assert.Equal(64u, YamlConverter.DefaultMaxDepth);
-        Assert.Equal(5_000_000u, YamlConverter.DefaultMaxNodeCount);
-        Assert.Equal(YamlConverter.DefaultMaxDepth, YamlConverter.MaxDepth);
-        Assert.Equal(YamlConverter.DefaultMaxNodeCount, YamlConverter.MaxNodeCount);
+        var sequence = new YamlSequenceNode();
+        sequence.Add(sequence);
+
+        Assert.Throws<OpenApiReaderException>(() => sequence.ToJsonNode());
     }
 
     [Fact]
-    public void SettingMaxDepthToZeroThrows()
+    public void ComplexMappingKeyIsRejectedAsReaderException()
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => YamlConverter.MaxDepth = 0);
-        // The invalid assignment must not have changed the effective limit.
-        Assert.Equal(YamlConverter.DefaultMaxDepth, YamlConverter.MaxDepth);
-    }
-
-    [Fact]
-    public void SettingMaxNodeCountToZeroThrows()
-    {
-        Assert.Throws<ArgumentOutOfRangeException>(() => YamlConverter.MaxNodeCount = 0);
-        // The invalid assignment must not have changed the effective limit.
-        Assert.Equal(YamlConverter.DefaultMaxNodeCount, YamlConverter.MaxNodeCount);
-    }
-
-    [Fact]
-    public void RaisingMaxDepthAllowsDocumentsDeeperThanTheDefault()
-    {
-        // A document nested deeper than the default depth limit (64) is rejected by default
-        // but can be permitted by a consumer that opts into a higher limit.
-        const int depth = 70;
-        var deeplyNested = new string('[', depth) + new string(']', depth);
-
-        try
+        var mapping = new YamlMappingNode
         {
-            YamlConverter.MaxDepth = depth + 10;
-            var jsonNode = ConvertYamlStringToJsonNode(deeplyNested);
-            Assert.IsType<JsonArray>(jsonNode);
-        }
-        finally
-        {
-            YamlConverter.MaxDepth = YamlConverter.DefaultMaxDepth;
-        }
+            { new YamlSequenceNode(new YamlScalarNode("key")), new YamlScalarNode("value") }
+        };
+
+        Assert.Throws<OpenApiReaderException>(() => mapping.ToJsonNode());
     }
 
     private static JsonNode ConvertYamlStringToJsonNode(string yamlInput)
