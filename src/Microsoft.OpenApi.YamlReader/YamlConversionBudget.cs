@@ -43,33 +43,39 @@ internal sealed class YamlConversionBudget
     /// <summary>
     /// Charges one node at the supplied depth.
     /// </summary>
-    /// <param name="depth">Nesting depth of the node being materialized.</param>
+    /// <param name="depth">Zero-based nesting depth of the node being materialized.</param>
     /// <exception cref="OpenApiReaderException">The depth or total node limit would be exceeded.</exception>
     public void EnterNode(uint depth)
     {
-        if (depth > _maxDepth)
-        {
-            throw new OpenApiReaderException($"The YAML document exceeds the maximum supported nesting depth of {_maxDepth}.");
-        }
-
+        ValidateDepth(depth);
         AddNodes(1);
     }
 
     /// <summary>
     /// Charges the full cost of expanding an alias, against both the alias budget and the total budget.
     /// </summary>
-    /// <param name="depth">Nesting depth at which the alias appears.</param>
+    /// <param name="depth">Zero-based nesting depth at which the alias appears.</param>
     /// <param name="expandedNodeCount">Number of nodes the alias will materialize when cloned.</param>
+    /// <param name="expandedHeight">
+    /// Height of the subtree the alias will materialize, where a scalar has height 1.
+    /// </param>
     /// <exception cref="OpenApiReaderException">The depth, alias, or total node limit would be exceeded.</exception>
     /// <remarks>
     /// Must be called before the clone is taken. Charging afterwards would allow the very allocation
     /// this limit exists to prevent.
     /// </remarks>
-    public void EnterAlias(uint depth, uint expandedNodeCount)
+    public void EnterAlias(uint depth, uint expandedNodeCount, uint expandedHeight)
     {
-        if (depth > _maxDepth)
+        ValidateDepth(depth);
+
+        // The alias site clears the depth check on its own, but expanding it grafts an entire
+        // subtree at this position. Without charging the grafted height, an anchor defined at a
+        // legal depth can be replayed from another legal depth to produce a tree deeper than the
+        // limit. The underlying YAML parser cannot catch this either, because it sees an alias as
+        // a single event and never re-walks the anchored content.
+        if (expandedHeight > _maxDepth - depth)
         {
-            throw new OpenApiReaderException($"The YAML document exceeds the maximum supported nesting depth of {_maxDepth}.");
+            throw new OpenApiReaderException($"The YAML document expands an alias to more than the maximum supported nesting depth of {_maxDepth}.");
         }
 
         if (expandedNodeCount > _maxAliasExpansionNodeCount - _aliasExpansionNodeCount)
@@ -79,6 +85,23 @@ internal sealed class YamlConversionBudget
 
         _aliasExpansionNodeCount += expandedNodeCount;
         AddNodes(expandedNodeCount);
+    }
+
+    /// <summary>
+    /// Validates that a node at <paramref name="depth"/> is within the depth limit.
+    /// </summary>
+    /// <remarks>
+    /// <paramref name="depth"/> is zero-based, so a node at that depth occupies level
+    /// <c>depth + 1</c>. Rejecting <c>depth &gt;= _maxDepth</c> therefore admits exactly
+    /// <c>_maxDepth</c> levels, matching the limit enforced by the underlying YAML parser.
+    /// The comparison avoids arithmetic so it cannot overflow.
+    /// </remarks>
+    private void ValidateDepth(uint depth)
+    {
+        if (depth >= _maxDepth)
+        {
+            throw new OpenApiReaderException($"The YAML document exceeds the maximum supported nesting depth of {_maxDepth}.");
+        }
     }
 
     /// <summary>

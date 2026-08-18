@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -201,7 +201,55 @@ public class OpenApiYamlReaderTests
         var result = reader.Read(stream, DocumentLocation, SettingsFixture.ReaderSettings);
 
         Assert.Null(result.Document);
-        Assert.Contains(result.Diagnostic.Errors, error => error.Message.Contains("maximum supported nesting depth", StringComparison.Ordinal));
+        Assert.Contains(result.Diagnostic.Errors, error => error.Message.Contains("maximum nesting depth", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ReadHonoursMaxDepthAboveTheUnderlyingParserDefault()
+    {
+        // SharpYaml applies its own nesting limit, defaulting to 64. Unless the reader forwards
+        // MaxDepth to it, every configured value above that default silently has no effect.
+        const int depth = 100;
+        var yaml = new string('[', depth) + new string(']', depth);
+        var reader = new OpenApiYamlReader(new OpenApiYamlReaderSettings { MaxDepth = 200 });
+        using var stream = CreateStream(yaml);
+
+        var result = reader.Read(stream, DocumentLocation, SettingsFixture.ReaderSettings);
+
+        Assert.DoesNotContain(result.Diagnostic.Errors, error => error.Message.Contains("nesting depth", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ReadHonoursMaxDepthBelowTheUnderlyingParserDefault()
+    {
+        const int depth = 40;
+        var yaml = new string('[', depth) + new string(']', depth);
+        var reader = new OpenApiYamlReader(new OpenApiYamlReaderSettings { MaxDepth = 32 });
+        using var stream = CreateStream(yaml);
+
+        var result = reader.Read(stream, DocumentLocation, SettingsFixture.ReaderSettings);
+
+        Assert.Null(result.Document);
+        Assert.Contains(result.Diagnostic.Errors, error => error.Message.Contains("nesting depth of 32", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ReadRejectsAliasExpansionThatExceedsMaxDepth()
+    {
+        // The anchor and the alias each sit within the depth limit, but expanding the alias grafts
+        // the anchored subtree onto an equally deep position, producing a tree twice as deep. The
+        // YAML parser cannot catch this because it sees the alias as a single event.
+        const int half = 50;
+        var yaml =
+            $"a: &d {new string('[', half)}{new string(']', half)}\n" +
+            $"b: {new string('[', half)}*d{new string(']', half)}\n";
+        var reader = new OpenApiYamlReader();
+        using var stream = CreateStream(yaml);
+
+        var result = reader.Read(stream, DocumentLocation, SettingsFixture.ReaderSettings);
+
+        Assert.Null(result.Document);
+        Assert.Contains(result.Diagnostic.Errors, error => error.Message.Contains("expands an alias", StringComparison.Ordinal));
     }
 
     [Fact]

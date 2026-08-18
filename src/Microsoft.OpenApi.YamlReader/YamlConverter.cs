@@ -266,8 +266,8 @@ namespace Microsoft.OpenApi.YamlReader
 
                 if (_completed.TryGetValue(yaml, out var completed))
                 {
-                    _budget.EnterAlias(depth, completed.NodeCount);
-                    return new(completed.Node.DeepClone(), completed.NodeCount);
+                    _budget.EnterAlias(depth, completed.NodeCount, completed.Height);
+                    return new(completed.Node.DeepClone(), completed.NodeCount, completed.Height);
                 }
 
                 _budget.EnterNode(depth);
@@ -278,7 +278,7 @@ namespace Microsoft.OpenApi.YamlReader
                     {
                         YamlMappingNode map => ConvertMapping(map, depth),
                         YamlSequenceNode sequence => ConvertSequence(sequence, depth),
-                        YamlScalarNode scalar => new MaterializedNode(ToJsonValue(scalar.Value, scalar.Style), 1),
+                        YamlScalarNode scalar => new MaterializedNode(ToJsonValue(scalar.Value, scalar.Style), 1, 1),
                         _ => throw new NotSupportedException("This yaml isn't convertible to JSON")
                     };
                     _completed.Add(yaml, materialized);
@@ -294,6 +294,7 @@ namespace Microsoft.OpenApi.YamlReader
             {
                 var node = new JsonObject();
                 uint nodeCount = 1;
+                uint maxChildHeight = 0;
                 foreach (var keyValuePair in yaml)
                 {
                     if (keyValuePair.Key is not YamlScalarNode scalarKey || scalarKey.Value is null)
@@ -309,36 +310,43 @@ namespace Microsoft.OpenApi.YamlReader
                     var child = Convert(keyValuePair.Value, depth + 1);
                     node.Add(scalarKey.Value, child.Node);
                     nodeCount = checked(nodeCount + child.NodeCount);
+                    maxChildHeight = Math.Max(maxChildHeight, child.Height);
                 }
 
-                return new(node, nodeCount);
+                return new(node, nodeCount, maxChildHeight + 1);
             }
 
             private MaterializedNode ConvertSequence(YamlSequenceNode yaml, uint depth)
             {
                 var node = new JsonArray();
                 uint nodeCount = 1;
+                uint maxChildHeight = 0;
                 foreach (var value in yaml)
                 {
                     var child = Convert(value, depth + 1);
                     node.Add(child.Node);
                     nodeCount = checked(nodeCount + child.NodeCount);
+                    maxChildHeight = Math.Max(maxChildHeight, child.Height);
                 }
 
-                return new(node, nodeCount);
+                return new(node, nodeCount, maxChildHeight + 1);
             }
         }
 
         private sealed class MaterializedNode
         {
-            public MaterializedNode(JsonNode node, uint nodeCount)
+            public MaterializedNode(JsonNode node, uint nodeCount, uint height)
             {
                 Node = node;
                 NodeCount = nodeCount;
+                Height = height;
             }
 
             public JsonNode Node { get; }
             public uint NodeCount { get; }
+
+            /// <summary>Number of levels in this subtree, where a scalar has height 1.</summary>
+            public uint Height { get; }
         }
 
         private sealed class ReferenceEqualityComparer<T> : IEqualityComparer<T> where T : class

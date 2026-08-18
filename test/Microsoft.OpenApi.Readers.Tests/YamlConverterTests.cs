@@ -363,7 +363,7 @@ public class YamlConverterTests
         const int depth = 70;
         var deeplyNested = new string('[', depth) + new string(']', depth);
 
-        Assert.Throws<OpenApiReaderException>(() => ConvertYamlStringToJsonNode(deeplyNested));
+        Assert.Throws<YamlException>(() => ConvertYamlStringToJsonNode(deeplyNested));
     }
 
     [Fact]
@@ -399,6 +399,33 @@ public class YamlConverterTests
         };
 
         Assert.Throws<OpenApiReaderException>(() => mapping.ToJsonNode());
+    }
+
+    [Fact]
+    public void SharedSubtreeGraftedTooDeepIsRejected()
+    {
+        // The converter memoizes each YamlNode it has already materialized, then deep-clones the
+        // result when the same instance reappears. The shared subtree clears the depth check where
+        // it is first seen, so without charging its height at the reuse site it can be replayed
+        // from a deeper position to build a tree past the limit.
+        YamlNode shared = new YamlScalarNode("value");
+        for (var index = 0; index < 40; index++)
+        {
+            shared = new YamlSequenceNode(shared);
+        }
+
+        var grafted = shared;
+        for (var index = 0; index < 30; index++)
+        {
+            grafted = new YamlSequenceNode(grafted);
+        }
+
+        // The shallow element is converted first and memoizes the shared subtree; the deep element
+        // then reuses it 31 levels down, which would materialize 72 levels against a limit of 64.
+        var root = new YamlSequenceNode(shared, grafted);
+
+        var exception = Assert.Throws<OpenApiReaderException>(() => root.ToJsonNode());
+        Assert.Contains("expands an alias", exception.Message, StringComparison.Ordinal);
     }
 
     private static JsonNode ConvertYamlStringToJsonNode(string yamlInput)
