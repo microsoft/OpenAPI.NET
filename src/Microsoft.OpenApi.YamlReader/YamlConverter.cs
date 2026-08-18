@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using SharpYaml;
@@ -12,6 +13,10 @@ namespace Microsoft.OpenApi.YamlReader
     /// <summary>
     /// Provides extensions to convert YAML models to JSON models.
     /// </summary>
+    /// <remarks>
+    /// These limits apply after a SharpYaml model exists. Use <see cref="OpenApiYamlReader"/>
+    /// for untrusted input so limits are enforced before SharpYaml model loading.
+    /// </remarks>
     public static class YamlConverter
     {
         /// <summary>
@@ -28,25 +33,38 @@ namespace Microsoft.OpenApi.YamlReader
         /// </summary>
         public const uint DefaultMaxNodeCount = 5_000_000;
 
+        /// <summary>
+        /// Default maximum number of JSON nodes that may be materialized from YAML aliases.
+        /// </summary>
+        public const uint DefaultMaxAliasExpansionNodeCount = 5_000;
+
+        /// <summary>
+        /// Maximum configurable YAML nesting depth.
+        /// </summary>
+        public const uint MaximumAllowedDepth = 256;
+
+        /// <summary>
+        /// Maximum configurable number of JSON nodes that may be materialized from a single YAML document.
+        /// Bounds the running node totals so they cannot overflow while accumulating, which would surface as an
+        /// <see cref="OverflowException"/> instead of a reportable diagnostic.
+        /// </summary>
+        public const uint MaximumAllowedNodeCount = 10_000_000;
+
         private static uint _maxDepth = DefaultMaxDepth;
         private static uint _maxNodeCount = DefaultMaxNodeCount;
+        private static uint _maxAliasExpansionNodeCount = DefaultMaxAliasExpansionNodeCount;
 
         /// <summary>
         /// Gets or sets the maximum nesting depth allowed when converting a YAML node graph into JSON nodes.
-        /// Defaults to <see cref="DefaultMaxDepth"/>. Raise this if legitimate deeply nested documents are
-        /// being rejected, or lower it to fail faster when only shallow documents are expected.
+        /// Defaults to <see cref="DefaultMaxDepth"/> and cannot exceed the library's safe depth ceiling.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when set to zero.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when set outside the supported range.</exception>
         public static uint MaxDepth
         {
             get => _maxDepth;
             set
             {
-                if (value == 0)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(value), "MaxDepth must be greater than zero.");
-                }
-
+                ValidateMaxDepth(value, nameof(value));
                 _maxDepth = value;
             }
         }
@@ -55,50 +73,51 @@ namespace Microsoft.OpenApi.YamlReader
         /// Gets or sets the maximum number of JSON nodes that may be materialized from a single YAML document.
         /// Defaults to <see cref="DefaultMaxNodeCount"/>, guarding against YAML anchor/alias expansion
         /// ("billion laughs") attacks. Raise this if legitimate large documents are being rejected, or lower
-        /// it to fail faster when only small documents are expected.
+        /// it to fail faster when only small documents are expected. Cannot exceed
+        /// <see cref="MaximumAllowedNodeCount"/>.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when set to zero.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when set outside the supported range.</exception>
         public static uint MaxNodeCount
         {
             get => _maxNodeCount;
             set
             {
-                if (value == 0)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(value), "MaxNodeCount must be greater than zero.");
-                }
-
+                ValidateMaxNodeCount(value, nameof(value));
                 _maxNodeCount = value;
             }
         }
 
         /// <summary>
-        /// Tracks and enforces resource limits while converting a YAML node graph into JSON nodes,
-        /// failing fast when a hostile document would otherwise exhaust memory or the stack.
+        /// Gets or sets the maximum number of JSON nodes that may be materialized from YAML aliases.
         /// </summary>
-        private sealed class YamlConversionBudget
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when set to zero.</exception>
+        public static uint MaxAliasExpansionNodeCount
         {
-            private readonly uint _maxDepth;
-            private readonly uint _maxNodeCount;
-            private uint _nodeCount;
-
-            public YamlConversionBudget(uint maxDepth, uint maxNodeCount)
+            get => _maxAliasExpansionNodeCount;
+            set
             {
-                _maxDepth = maxDepth;
-                _maxNodeCount = maxNodeCount;
+                if (value == 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value), "MaxAliasExpansionNodeCount must be greater than zero.");
+                }
+
+                _maxAliasExpansionNodeCount = value;
             }
+        }
 
-            public void EnterNode(uint depth)
+        internal static void ValidateMaxDepth(uint value, string parameterName)
+        {
+            if (value == 0 || value > MaximumAllowedDepth)
             {
-                if (depth > _maxDepth)
-                {
-                    throw new OpenApiReaderException($"The YAML document exceeds the maximum supported nesting depth of {_maxDepth}.");
-                }
+                throw new ArgumentOutOfRangeException(parameterName, $"MaxDepth must be between 1 and {MaximumAllowedDepth}.");
+            }
+        }
 
-                if (++_nodeCount > _maxNodeCount)
-                {
-                    throw new OpenApiReaderException($"The YAML document expands to more than the maximum supported number of nodes ({_maxNodeCount}). This may indicate a YAML anchor/alias expansion (billion laughs) attack.");
-                }
+        internal static void ValidateMaxNodeCount(uint value, string parameterName)
+        {
+            if (value == 0 || value > MaximumAllowedNodeCount)
+            {
+                throw new ArgumentOutOfRangeException(parameterName, $"MaxNodeCount must be between 1 and {MaximumAllowedNodeCount}.");
             }
         }
 
@@ -130,19 +149,7 @@ namespace Microsoft.OpenApi.YamlReader
         /// <exception cref="NotSupportedException">Thrown for YAML that is not compatible with JSON.</exception>
         public static JsonNode ToJsonNode(this YamlNode yaml)
         {
-            return yaml.ToJsonNode(new YamlConversionBudget(MaxDepth, MaxNodeCount), 0);
-        }
-
-        private static JsonNode ToJsonNode(this YamlNode yaml, YamlConversionBudget budget, uint depth)
-        {
-            budget.EnterNode(depth);
-            return yaml switch
-            {
-                YamlMappingNode map => map.ToJsonObject(budget, depth),
-                YamlSequenceNode seq => seq.ToJsonArray(budget, depth),
-                YamlScalarNode scalar => scalar.ToJsonValue(),
-                _ => throw new NotSupportedException("This yaml isn't convertible to JSON")
-            };
+            return CreateConversionContext().Convert(yaml, 0).Node;
         }
 
         /// <summary>
@@ -173,19 +180,7 @@ namespace Microsoft.OpenApi.YamlReader
         /// <returns></returns>
         public static JsonObject ToJsonObject(this YamlMappingNode yaml)
         {
-            return yaml.ToJsonObject(new YamlConversionBudget(MaxDepth, MaxNodeCount), 0);
-        }
-
-        private static JsonObject ToJsonObject(this YamlMappingNode yaml, YamlConversionBudget budget, uint depth)
-        {
-            var node = new JsonObject();
-            foreach (var keyValuePair in yaml)
-            {
-                var key = ((YamlScalarNode)keyValuePair.Key).Value!;
-                node[key] = keyValuePair.Value.ToJsonNode(budget, depth + 1);
-            }
-
-            return node;
+            return (JsonObject)CreateConversionContext().Convert(yaml, 0).Node;
         }
 
         private static YamlMappingNode ToYamlMapping(this JsonObject obj)
@@ -203,18 +198,7 @@ namespace Microsoft.OpenApi.YamlReader
         /// <returns></returns>
         public static JsonArray ToJsonArray(this YamlSequenceNode yaml)
         {
-            return yaml.ToJsonArray(new YamlConversionBudget(MaxDepth, MaxNodeCount), 0);
-        }
-
-        private static JsonArray ToJsonArray(this YamlSequenceNode yaml, YamlConversionBudget budget, uint depth)
-        {
-            var node = new JsonArray();
-            foreach (var value in yaml)
-            {
-                node.Add(value.ToJsonNode(budget, depth + 1));
-            }
-
-            return node;
+            return (JsonArray)CreateConversionContext().Convert(yaml, 0).Node;
         }
 
         private static YamlSequenceNode ToYamlSequence(this JsonArray arr)
@@ -230,17 +214,140 @@ namespace Microsoft.OpenApi.YamlReader
             "NULL"
         };
 
-        private static JsonValue ToJsonValue(this YamlScalarNode yaml)
+        private static YamlConversionContext CreateConversionContext()
         {
-            return yaml.Style switch
+            var maxDepth = MaxDepth;
+            var maxNodeCount = MaxNodeCount;
+            var maxAliasExpansionNodeCount = MaxAliasExpansionNodeCount;
+            ValidateMaxDepth(maxDepth, nameof(MaxDepth));
+            return new(
+                new YamlConversionBudget(maxDepth, maxNodeCount, maxAliasExpansionNodeCount));
+        }
+
+        internal static JsonValue ToJsonValue(string? value, ScalarStyle style)
+        {
+            return style switch
             {
-                ScalarStyle.Plain when decimal.TryParse(yaml.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var d) => JsonValue.Create(d),
-                ScalarStyle.Plain when bool.TryParse(yaml.Value, out var b) => JsonValue.Create(b),
-                ScalarStyle.Plain when YamlNullRepresentations.Contains(yaml.Value) => (JsonValue)JsonNullSentinel.JsonNull.DeepClone(),
-                ScalarStyle.Plain => JsonValue.Create(yaml.Value),
-                ScalarStyle.SingleQuoted or ScalarStyle.DoubleQuoted or ScalarStyle.Literal or ScalarStyle.Folded or ScalarStyle.Any => JsonValue.Create(yaml.Value),
-                _ => throw new ArgumentOutOfRangeException(nameof(yaml)),
+                ScalarStyle.Plain when decimal.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var d) => JsonValue.Create(d),
+                ScalarStyle.Plain when bool.TryParse(value, out var b) => JsonValue.Create(b),
+                ScalarStyle.Plain when value is not null && YamlNullRepresentations.Contains(value) => (JsonValue)JsonNullSentinel.JsonNull.DeepClone(),
+                ScalarStyle.Plain => JsonValue.Create(value ?? string.Empty),
+                ScalarStyle.SingleQuoted or ScalarStyle.DoubleQuoted or ScalarStyle.Literal or ScalarStyle.Folded or ScalarStyle.Any => JsonValue.Create(value ?? string.Empty),
+                _ => throw new ArgumentOutOfRangeException(nameof(style)),
             };
+        }
+
+        private sealed class YamlConversionContext
+        {
+            private readonly YamlConversionBudget _budget;
+            private readonly Dictionary<YamlNode, MaterializedNode> _completed = new(ReferenceEqualityComparer<YamlNode>.Instance);
+            private readonly HashSet<YamlNode> _active = new(ReferenceEqualityComparer<YamlNode>.Instance);
+
+            public YamlConversionContext(YamlConversionBudget budget)
+            {
+                _budget = budget;
+            }
+
+            public MaterializedNode Convert(YamlNode yaml, uint depth)
+            {
+                try
+                {
+                    RuntimeHelpers.EnsureSufficientExecutionStack();
+                }
+                catch (InsufficientExecutionStackException ex)
+                {
+                    throw new OpenApiReaderException("The YAML node graph is too deeply nested to convert safely.", ex);
+                }
+
+                if (_active.Contains(yaml))
+                {
+                    throw new OpenApiReaderException("The YAML node graph contains a cycle.");
+                }
+
+                if (_completed.TryGetValue(yaml, out var completed))
+                {
+                    _budget.EnterAlias(depth, completed.NodeCount);
+                    return new(completed.Node.DeepClone(), completed.NodeCount);
+                }
+
+                _budget.EnterNode(depth);
+                _active.Add(yaml);
+                try
+                {
+                    var materialized = yaml switch
+                    {
+                        YamlMappingNode map => ConvertMapping(map, depth),
+                        YamlSequenceNode sequence => ConvertSequence(sequence, depth),
+                        YamlScalarNode scalar => new MaterializedNode(ToJsonValue(scalar.Value, scalar.Style), 1),
+                        _ => throw new NotSupportedException("This yaml isn't convertible to JSON")
+                    };
+                    _completed.Add(yaml, materialized);
+                    return materialized;
+                }
+                finally
+                {
+                    _active.Remove(yaml);
+                }
+            }
+
+            private MaterializedNode ConvertMapping(YamlMappingNode yaml, uint depth)
+            {
+                var node = new JsonObject();
+                uint nodeCount = 1;
+                foreach (var keyValuePair in yaml)
+                {
+                    if (keyValuePair.Key is not YamlScalarNode scalarKey || scalarKey.Value is null)
+                    {
+                        throw new OpenApiReaderException("YAML mapping keys must be scalar values.");
+                    }
+
+                    if (node.ContainsKey(scalarKey.Value))
+                    {
+                        throw new OpenApiReaderException($"The YAML mapping contains the duplicate key '{scalarKey.Value}'.");
+                    }
+
+                    var child = Convert(keyValuePair.Value, depth + 1);
+                    node.Add(scalarKey.Value, child.Node);
+                    nodeCount = checked(nodeCount + child.NodeCount);
+                }
+
+                return new(node, nodeCount);
+            }
+
+            private MaterializedNode ConvertSequence(YamlSequenceNode yaml, uint depth)
+            {
+                var node = new JsonArray();
+                uint nodeCount = 1;
+                foreach (var value in yaml)
+                {
+                    var child = Convert(value, depth + 1);
+                    node.Add(child.Node);
+                    nodeCount = checked(nodeCount + child.NodeCount);
+                }
+
+                return new(node, nodeCount);
+            }
+        }
+
+        private sealed class MaterializedNode
+        {
+            public MaterializedNode(JsonNode node, uint nodeCount)
+            {
+                Node = node;
+                NodeCount = nodeCount;
+            }
+
+            public JsonNode Node { get; }
+            public uint NodeCount { get; }
+        }
+
+        private sealed class ReferenceEqualityComparer<T> : IEqualityComparer<T> where T : class
+        {
+            public static ReferenceEqualityComparer<T> Instance { get; } = new();
+
+            public bool Equals(T? x, T? y) => ReferenceEquals(x, y);
+
+            public int GetHashCode(T obj) => RuntimeHelpers.GetHashCode(obj);
         }
 
         private static bool NeedsQuoting(string value) =>

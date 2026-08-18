@@ -8,6 +8,7 @@ namespace Microsoft.OpenApi
     using System;
     using System.ComponentModel;
     using System.Linq;
+    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// The validation rules for <see cref="OpenApiSchema"/>.
@@ -73,32 +74,17 @@ namespace Microsoft.OpenApi
         [Browsable(false)]
         public static bool ValidateChildSchemaAgainstDiscriminator(IOpenApiSchema schema, string? discriminatorName)
         {
-            if (discriminatorName is not null)
+            if (discriminatorName is null)
             {
-                if (schema.Required is null || !schema.Required.Contains(discriminatorName))
-                {
-                    // recursively check nested schema.OneOf, schema.AnyOf or schema.AllOf and their required fields for the discriminator
-                    if (schema.OneOf is { Count: > 0})
-                    {
-                        return TraverseSchemaElements(discriminatorName, schema.OneOf);
-                    }
-                    if (schema.AnyOf is { Count: > 0})
-                    {
-                        return TraverseSchemaElements(discriminatorName, schema.AnyOf);
-                    }
-                    if (schema.AllOf is { Count: > 0})
-                    {
-                        return TraverseSchemaElements(discriminatorName, schema.AllOf);
-                    }
-                }
-                else
-                {
-                    return true;
-                }
                 return false;
-            }           
+            }
 
-            return false;
+            if (schema.Required?.Contains(discriminatorName) == true)
+            {
+                return true;
+            }
+
+            return TraverseSchemaElementsIterative(discriminatorName, GetSchemaCombinators(schema));
         }
 
         /// <summary>
@@ -111,24 +97,87 @@ namespace Microsoft.OpenApi
         [Obsolete("This method will be made private in future versions.")]
         [Browsable(false)]
         public static bool TraverseSchemaElements(string discriminatorName, IList<IOpenApiSchema>? childSchema)
+            => TraverseSchemaElementsIterative(discriminatorName, childSchema);
+
+        private static bool TraverseSchemaElementsIterative(string discriminatorName, IEnumerable<IOpenApiSchema>? childSchemas)
         {
-            if (childSchema is null)
+            if (childSchemas is null)
             {
                 return false;
             }
-            foreach (var childItem in childSchema)
+
+            var schemasToVisit = new Queue<IOpenApiSchema>();
+            var visitedSchemas = new HashSet<IOpenApiSchema>(SchemaReferenceEqualityComparer.Instance);
+
+            EnqueueSchemas(schemasToVisit, childSchemas);
+
+            while (schemasToVisit.Count > 0)
             {
-                if ((!childItem.Properties?.ContainsKey(discriminatorName) ?? false) &&
-                                    (!childItem.Required?.Contains(discriminatorName) ?? false))
+                var childItem = schemasToVisit.Dequeue();
+                if (!visitedSchemas.Add(childItem))
                 {
-                    return ValidateChildSchemaAgainstDiscriminator(childItem, discriminatorName);
+                    continue;
                 }
-                else
+
+                if (childItem.Properties?.ContainsKey(discriminatorName) == true ||
+                    childItem.Required?.Contains(discriminatorName) == true)
                 {
                     return true;
                 }
+
+                EnqueueSchemas(schemasToVisit, GetSchemaCombinators(childItem));
             }
+
             return false;
+        }
+
+        private static IEnumerable<IOpenApiSchema> GetSchemaCombinators(IOpenApiSchema schema)
+        {
+            if (schema.OneOf is { Count: > 0 } oneOf)
+            {
+                foreach (var childSchema in oneOf)
+                {
+                    yield return childSchema;
+                }
+            }
+
+            if (schema.AnyOf is { Count: > 0 } anyOf)
+            {
+                foreach (var childSchema in anyOf)
+                {
+                    yield return childSchema;
+                }
+            }
+
+            if (schema.AllOf is { Count: > 0 } allOf)
+            {
+                foreach (var childSchema in allOf)
+                {
+                    yield return childSchema;
+                }
+            }
+        }
+
+        private static void EnqueueSchemas(Queue<IOpenApiSchema> schemasToVisit, IEnumerable<IOpenApiSchema> childSchemas)
+        {
+            foreach (var childSchema in childSchemas)
+            {
+                if (childSchema is not null)
+                {
+                    schemasToVisit.Enqueue(childSchema);
+                }
+            }
+        }
+
+        private sealed class SchemaReferenceEqualityComparer : IEqualityComparer<IOpenApiSchema>
+        {
+            internal static SchemaReferenceEqualityComparer Instance { get; } = new();
+
+            public bool Equals(IOpenApiSchema? x, IOpenApiSchema? y)
+                => ReferenceEquals(x, y);
+
+            public int GetHashCode(IOpenApiSchema obj)
+                => RuntimeHelpers.GetHashCode(obj);
         }
     }
 }
