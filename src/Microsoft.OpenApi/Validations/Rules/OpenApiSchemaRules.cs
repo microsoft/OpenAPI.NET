@@ -160,12 +160,9 @@ namespace Microsoft.OpenApi
 
         private static void EnqueueSchemas(Queue<IOpenApiSchema> schemasToVisit, IEnumerable<IOpenApiSchema> childSchemas)
         {
-            foreach (var childSchema in childSchemas)
+            foreach (var childSchema in childSchemas.Where(childSchema => childSchema is not null))
             {
-                if (childSchema is not null)
-                {
-                    schemasToVisit.Enqueue(childSchema);
-                }
+                schemasToVisit.Enqueue(childSchema);
             }
         }
 
