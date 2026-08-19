@@ -49,7 +49,9 @@ namespace Microsoft.OpenApi.Readers
                 BaseUrl = _settings.BaseUrl,
                 DefaultContentType = _settings.DefaultContentType,
                 MaxDepth = _settings.MaxDepth,
-                MaxNodeCount = _settings.MaxNodeCount
+                MaxNodeCount = _settings.MaxNodeCount,
+                MaxAliasExpansionNodeCount = _settings.MaxAliasExpansionNodeCount,
+                MaxScalarLength = _settings.MaxScalarLength
             };
 
             OpenApiDocument document = null;
@@ -71,7 +73,7 @@ namespace Microsoft.OpenApi.Readers
             }
 
             // Validate the document
-            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
+            if (document != null && _settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
             {
                 var openApiErrors = document.Validate(_settings.RuleSet);
                 foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
@@ -95,7 +97,9 @@ namespace Microsoft.OpenApi.Readers
                 ExtensionParsers = _settings.ExtensionParsers,
                 BaseUrl = _settings.BaseUrl,
                 MaxDepth = _settings.MaxDepth,
-                MaxNodeCount = _settings.MaxNodeCount
+                MaxNodeCount = _settings.MaxNodeCount,
+                MaxAliasExpansionNodeCount = _settings.MaxAliasExpansionNodeCount,
+                MaxScalarLength = _settings.MaxScalarLength
             };
 
             OpenApiDocument document = null;
@@ -123,7 +127,7 @@ namespace Microsoft.OpenApi.Readers
             }
 
             // Validate the document
-            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
+            if (document != null && _settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
             {
                 var openApiErrors = document.Validate(_settings.RuleSet);
                 foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
@@ -190,7 +194,9 @@ namespace Microsoft.OpenApi.Readers
             {
                 ExtensionParsers = _settings.ExtensionParsers,
                 MaxDepth = _settings.MaxDepth,
-                MaxNodeCount = _settings.MaxNodeCount
+                MaxNodeCount = _settings.MaxNodeCount,
+                MaxAliasExpansionNodeCount = _settings.MaxAliasExpansionNodeCount,
+                MaxScalarLength = _settings.MaxScalarLength
             };
 
             IOpenApiElement element = null;
@@ -205,7 +211,7 @@ namespace Microsoft.OpenApi.Readers
             }
 
             // Validate the element
-            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
+            if (element != null && _settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
             {
                 var errors = element.Validate(_settings.RuleSet);
                 foreach (var item in errors)

@@ -1,18 +1,18 @@
 ```
 
-BenchmarkDotNet v0.14.0, Windows 11 (10.0.26100.3476)
-11th Gen Intel Core i7-1185G7 3.00GHz, 1 CPU, 8 logical and 4 physical cores
-.NET SDK 9.0.202
-  [Host]   : .NET 8.0.14 (8.0.1425.11118), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
-  ShortRun : .NET 8.0.14 (8.0.1425.11118), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26200.9106) (Hyper-V)
+AMD EPYC 7763, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 10.0.303
+  [Host]   : .NET 8.0.30 (8.0.3026.36720), X64 RyuJIT AVX2
+  ShortRun : .NET 8.0.30 (8.0.3026.36720), X64 RyuJIT AVX2
 
 Job=ShortRun  IterationCount=3  LaunchCount=1  
 WarmupCount=3  
 
 ```
-| Method       | Mean           | Error        | StdDev       | Gen0       | Gen1       | Gen2      | Allocated    |
-|------------- |---------------:|-------------:|-------------:|-----------:|-----------:|----------:|-------------:|
-| PetStoreYaml |       448.7 μs |     326.6 μs |     17.90 μs |    58.5938 |    11.7188 |         - |    381.79 KB |
-| PetStoreJson |       484.8 μs |     156.9 μs |      8.60 μs |    62.5000 |    15.6250 |         - |    389.28 KB |
-| GHESYaml     | 1,008,349.6 μs | 565,392.0 μs | 30,991.04 μs | 66000.0000 | 23000.0000 | 4000.0000 |    382785 KB |
-| GHESJson     | 1,039,447.0 μs | 267,501.0 μs | 14,662.63 μs | 67000.0000 | 23000.0000 | 4000.0000 | 389970.77 KB |
+| Method       | Mean           | Error          | StdDev        | Gen0       | Gen1       | Gen2      | Allocated    |
+|------------- |---------------:|---------------:|--------------:|-----------:|-----------:|----------:|-------------:|
+| PetStoreYaml |       941.6 μs |     1,888.8 μs |     103.53 μs |    23.4375 |     7.8125 |         - |    440.21 KB |
+| PetStoreJson |       984.8 μs |       281.3 μs |      15.42 μs |    25.3906 |     1.9531 |         - |    446.38 KB |
+| GHESYaml     | 2,171,893.7 μs |   478,607.6 μs |  26,234.09 μs | 30000.0000 | 23000.0000 | 4000.0000 |    438630 KB |
+| GHESJson     | 3,011,015.9 μs | 7,499,811.5 μs | 411,089.98 μs | 30000.0000 | 23000.0000 | 4000.0000 | 445811.67 KB |

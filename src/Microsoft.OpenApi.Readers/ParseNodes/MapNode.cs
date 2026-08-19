@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         private readonly List<PropertyNode> _nodes;
 
         public MapNode(ParsingContext context, string yamlString) :
-            this(context, (YamlMappingNode)YamlHelper.ParseYamlString(yamlString))
+            this(context, (YamlMappingNode)YamlHelper.ParseYamlString(yamlString, context))
         {
         }
 
@@ -38,7 +38,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             this._node = mapNode;
 
             _nodes = this._node.Children
-                .Select(kvp => new PropertyNode(Context, kvp.Key.GetScalarValue(), kvp.Value))
+                .Select(kvp => new PropertyNode(
+                    Context,
+                    kvp.Key.GetScalarValue(Context.MaxScalarLength),
+                    kvp.Value))
                 .Cast<PropertyNode>()
                 .ToList();
         }
@@ -67,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var nodes = yamlMap.Select(
                 n =>
                 {
-                    var key = n.Key.GetScalarValue();
+                    var key = n.Key.GetScalarValue(Context.MaxScalarLength);
                     T value;
                     try
                     {
@@ -103,7 +106,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var nodes = yamlMap.Select(
                 n =>
                 {
-                    var key = n.Key.GetScalarValue();
+                    var key = n.Key.GetScalarValue(Context.MaxScalarLength);
                     (string key, T value) entry;
                     try
                     {
@@ -147,7 +150,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var nodes = yamlMap.Select(
                 n =>
                 {
-                    var key = n.Key.GetScalarValue();
+                    var key = n.Key.GetScalarValue(Context.MaxScalarLength);
                     try
                     {
                         Context.StartObject(key);
@@ -203,7 +206,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             if (_node.Children[new YamlScalarNode(key.GetScalarValue())] is not YamlScalarNode scalarNode)
             {
-                throw new OpenApiReaderException($"Expected scalar at line {_node.Start.Line} for key {key.GetScalarValue()}", Context);
+                throw new OpenApiReaderException(
+                    $"Expected scalar at line {YamlNodeLocationRegistry.GetLine(_node)} for key {key.GetScalarValue()}",
+                    Context);
             }
 
             return scalarNode.Value;
