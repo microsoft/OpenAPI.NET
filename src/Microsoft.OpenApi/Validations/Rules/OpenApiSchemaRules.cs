@@ -4,6 +4,7 @@
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Microsoft.OpenApi.Validations.Rules
@@ -178,12 +179,9 @@ namespace Microsoft.OpenApi.Validations.Rules
             Queue<OpenApiSchema> schemasToVisit,
             IEnumerable<OpenApiSchema> childSchemas)
         {
-            foreach (var childSchema in childSchemas)
+            foreach (var childSchema in childSchemas.Where(childSchema => childSchema != null))
             {
-                if (childSchema != null)
-                {
-                    schemasToVisit.Enqueue(childSchema);
-                }
+                schemasToVisit.Enqueue(childSchema);
             }
         }
 

@@ -387,6 +387,30 @@ namespace Microsoft.OpenApi.Validations.Tests
         }
 
         [Fact]
+        public void TraverseSchemaElementsIgnoresNullChildAndFindsValidLaterChild()
+        {
+            // Arrange
+            var validChild = new OpenApiSchema
+            {
+                Properties =
+                {
+                    ["type"] = new OpenApiSchema()
+                }
+            };
+            var children = new List<OpenApiSchema>
+            {
+                null,
+                validChild
+            };
+
+            // Act
+            var result = OpenApiSchemaRules.TraverseSchemaElements("type", children);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
         public void ValidateChildSchemaAgainstDiscriminatorReturnsTrueForDeepAcyclicTraversal()
         {
             // Arrange
