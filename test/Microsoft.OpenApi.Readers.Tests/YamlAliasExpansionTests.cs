@@ -33,9 +33,9 @@ namespace Microsoft.OpenApi.Tests
         [Fact]
         public void ExponentialAliasExpansionIsRejected()
         {
-            var node = ParseNode.Create(new(new()), YamlHelper.ParseYamlString(YamlBomb));
+            var context = new ParsingContext(new());
 
-            Assert.Throws<OpenApiReaderException>(() => node.CreateAny());
+            Assert.Throws<OpenApiReaderException>(() => YamlHelper.ParseYamlString(YamlBomb, context));
         }
 
         [Fact]
@@ -45,10 +45,9 @@ namespace Microsoft.OpenApi.Tests
             // converter from stack exhaustion.
             const int depth = 70;
             var deeplyNested = new string('[', depth) + new string(']', depth);
+            var context = new ParsingContext(new());
 
-            var node = ParseNode.Create(new(new()), YamlHelper.ParseYamlString(deeplyNested));
-
-            Assert.Throws<OpenApiReaderException>(() => node.CreateAny());
+            Assert.Throws<SharpYaml.YamlException>(() => YamlHelper.ParseYamlString(deeplyNested, context));
         }
 
         [Fact]
@@ -81,8 +80,9 @@ namespace Microsoft.OpenApi.Tests
                 a: &val hello
                 b: *val
                 """;
+            var context = new ParsingContext(new());
 
-            var node = ParseNode.Create(new(new()), YamlHelper.ParseYamlString(input));
+            var node = ParseNode.Create(context, YamlHelper.ParseYamlString(input, context));
 
             var anyObject = Assert.IsType<OpenApiObject>(node.CreateAny());
             Assert.Equal("hello", ((OpenApiString)anyObject["a"]).Value);
@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Tests
             var deeplyNested = new string('[', depth) + new string(']', depth);
 
             var context = new ParsingContext(new()) { MaxDepth = depth + 10 };
-            var node = ParseNode.Create(context, YamlHelper.ParseYamlString(deeplyNested));
+            var node = ParseNode.Create(context, YamlHelper.ParseYamlString(deeplyNested, context));
 
             Assert.IsType<OpenApiArray>(node.CreateAny());
         }

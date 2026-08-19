@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
+using Microsoft.OpenApi.Readers.Exceptions;
 using SharpYaml;
 using SharpYaml.Serialization;
 
@@ -50,6 +51,12 @@ namespace Microsoft.OpenApi.Readers
                 diagnostic.Errors.Add(new($"#line={ex.Start.Line}", ex.Message));
                 return new();
             }
+            catch (OpenApiReaderException ex)
+            {
+                diagnostic = new();
+                diagnostic.Errors.Add(new(ex));
+                return new();
+            }
 
             return new OpenApiYamlDocumentReader(this._settings).Read(yamlDocument, out diagnostic);
         }
@@ -67,12 +74,22 @@ namespace Microsoft.OpenApi.Readers
             // Parse the YAML/JSON text in the TextReader into the YamlDocument
             try
             {
-                yamlDocument = LoadYamlDocument(input);
+                yamlDocument = LoadYamlDocument(input, cancellationToken);
             }
             catch (YamlException ex)
             {
                 var diagnostic = new OpenApiDiagnostic();
                 diagnostic.Errors.Add(new($"#line={ex.Start.Line}", ex.Message));
+                return new()
+                {
+                    OpenApiDocument = null,
+                    OpenApiDiagnostic = diagnostic
+                };
+            }
+            catch (OpenApiReaderException ex)
+            {
+                var diagnostic = new OpenApiDiagnostic();
+                diagnostic.Errors.Add(new(ex));
                 return new()
                 {
                     OpenApiDocument = null,
@@ -105,6 +122,12 @@ namespace Microsoft.OpenApi.Readers
                 diagnostic.Errors.Add(new($"#line={ex.Start.Line}", ex.Message));
                 return default;
             }
+            catch (OpenApiReaderException ex)
+            {
+                diagnostic = new();
+                diagnostic.Errors.Add(new(ex));
+                return default;
+            }
 
             return new OpenApiYamlDocumentReader(this._settings).ReadFragment<T>(yamlDocument, version, out diagnostic);
         }
@@ -113,12 +136,16 @@ namespace Microsoft.OpenApi.Readers
         /// Helper method to turn streams into YamlDocument
         /// </summary>
         /// <param name="input">Stream containing YAML formatted text</param>
+        /// <param name="cancellationToken">Propagates notification that parsing should be cancelled.</param>
         /// <returns>Instance of a YamlDocument</returns>
-        static YamlDocument LoadYamlDocument(TextReader input)
+        private YamlDocument LoadYamlDocument(
+            TextReader input,
+            CancellationToken cancellationToken = default)
         {
-            var yamlStream = new YamlStream();
-            yamlStream.Load(input);
-            return yamlStream.Documents.First();
+            return new BoundedYamlDocumentParser(_settings).Parse(
+                input,
+                _settings.MaxInputByteCount,
+                cancellationToken);
         }
     }
 }

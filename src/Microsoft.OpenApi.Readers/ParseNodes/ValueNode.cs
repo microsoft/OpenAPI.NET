@@ -19,6 +19,14 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             {
                 throw new OpenApiReaderException("Expected a value.", node);
             }
+
+            if (scalarNode.Value != null && scalarNode.Value.Length > Context.MaxScalarLength)
+            {
+                throw new OpenApiReaderException(
+                    $"The YAML scalar exceeds the maximum supported length of {Context.MaxScalarLength} characters.",
+                    scalarNode);
+            }
+
             _node = scalarNode;
         }
 

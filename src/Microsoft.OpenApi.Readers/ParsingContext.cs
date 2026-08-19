@@ -28,6 +28,9 @@ namespace Microsoft.OpenApi.Readers
         private uint _nodeCount;
         internal uint MaxDepth { get; set; } = OpenApiReaderSettings.DefaultMaxDepth;
         internal uint MaxNodeCount { get; set; } = OpenApiReaderSettings.DefaultMaxNodeCount;
+        internal uint MaxAliasExpansionNodeCount { get; set; } = OpenApiReaderSettings.DefaultMaxAliasExpansionNodeCount;
+        internal uint MaxInputByteCount { get; set; } = OpenApiReaderSettings.DefaultMaxInputByteCount;
+        internal uint MaxScalarLength { get; set; } = OpenApiReaderSettings.DefaultMaxScalarLength;
         internal Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new();
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new();
@@ -209,10 +212,12 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         internal void CountNode()
         {
-            if (++_nodeCount > MaxNodeCount)
+            if (_nodeCount >= MaxNodeCount)
             {
                 throw new OpenApiReaderException($"The document expands to more than the maximum supported number of nodes ({MaxNodeCount}). This may indicate a YAML anchor/alias expansion (billion laughs) attack.");
             }
+
+            _nodeCount++;
         }
 
         /// <summary>

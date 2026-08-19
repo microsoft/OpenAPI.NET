@@ -42,7 +42,11 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument.</returns>
         public OpenApiDocument Read(Stream input, out OpenApiDiagnostic diagnostic)
         {
-            using var reader = new StreamReader(input, Encoding.UTF8, true, 4096, _settings.LeaveStreamOpen);
+            using var limitedStream = new InputLimitStream(
+                input,
+                _settings.MaxInputByteCount,
+                _settings.LeaveStreamOpen);
+            using var reader = new StreamReader(limitedStream, Encoding.UTF8, true, 4096, false);
             return new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
         }
 
@@ -54,23 +58,39 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance result containing newly created OpenApiDocument and diagnostics object from the process</returns>
         public async Task<ReadResult> ReadAsync(Stream input, CancellationToken cancellationToken = default)
         {
-            MemoryStream bufferedStream;
-            int bufferSize = 4096;
+            const int bufferSize = 81920;
             if (input is MemoryStream stream)
             {
-                bufferedStream = stream;
-            }
-            else
-            {
-                // Buffer stream so that OpenApiTextReaderReader can process it synchronously
-                // YamlDocument doesn't support async reading.
-                bufferedStream = new();
-                bufferSize = 81920;
-                await input.CopyToAsync(bufferedStream, bufferSize, cancellationToken);
-                bufferedStream.Position = 0;
+                using var limitedStream = new InputLimitStream(
+                    stream,
+                    _settings.MaxInputByteCount,
+                    _settings.LeaveStreamOpen);
+                using var memoryStreamReader = new StreamReader(limitedStream, Encoding.UTF8, true, 4096, false);
+                return await new OpenApiTextReaderReader(_settings).ReadAsync(memoryStreamReader, cancellationToken);
             }
 
-            using var reader = new StreamReader(bufferedStream, Encoding.UTF8, true, bufferSize, _settings.LeaveStreamOpen);
+            using var bufferedStream = new MemoryStream();
+            try
+            {
+                using var limitedStream = new InputLimitStream(
+                    input,
+                    _settings.MaxInputByteCount,
+                    _settings.LeaveStreamOpen);
+                await limitedStream.CopyToAsync(bufferedStream, bufferSize, cancellationToken);
+            }
+            catch (Exceptions.OpenApiReaderException ex)
+            {
+                var diagnostic = new OpenApiDiagnostic();
+                diagnostic.Errors.Add(new(ex));
+                return new()
+                {
+                    OpenApiDocument = null,
+                    OpenApiDiagnostic = diagnostic
+                };
+            }
+
+            bufferedStream.Position = 0;
+            using var reader = new StreamReader(bufferedStream, Encoding.UTF8, true, bufferSize, false);
             return await new OpenApiTextReaderReader(_settings).ReadAsync(reader, cancellationToken);
         }
 
@@ -83,7 +103,11 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument</returns>
         public T ReadFragment<T>(Stream input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiReferenceable
         {
-            using var reader = new StreamReader(input, Encoding.UTF8, true, 4096, _settings.LeaveStreamOpen);
+            using var limitedStream = new InputLimitStream(
+                input,
+                _settings.MaxInputByteCount,
+                _settings.LeaveStreamOpen);
+            using var reader = new StreamReader(limitedStream, Encoding.UTF8, true, 4096, false);
             return new OpenApiTextReaderReader(_settings).ReadFragment<T>(reader, version, out diagnostic);
         }
     }

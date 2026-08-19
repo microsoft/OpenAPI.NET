@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         protected void EnsureDepthWithinLimit(uint depth)
         {
             var maxDepth = Context?.MaxDepth ?? OpenApiReaderSettings.DefaultMaxDepth;
-            if (depth > maxDepth)
+            if (depth >= maxDepth)
             {
                 throw new OpenApiReaderException($"The document exceeds the maximum supported nesting depth of {maxDepth}.", Context);
             }
