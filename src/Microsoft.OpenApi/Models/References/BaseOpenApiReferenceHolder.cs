@@ -40,7 +40,7 @@ public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHol
     private protected TResult GetFromTarget<TResult>(Func<U, TResult> selector)
     {
         Utils.CheckArgumentNull(selector);
-        return ExecuteWithReferenceGuard(ref t_activeReferenceAccesses, () =>
+        return ExecuteWithReferenceAccessGuard(this, () =>
         {
             return Target is { } target ? selector(target) : default!;
         });
@@ -53,7 +53,7 @@ public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHol
     private protected void ApplyToTarget(Action<U> action)
     {
         Utils.CheckArgumentNull(action);
-        ExecuteWithReferenceGuard<object?>(ref t_activeTargetActions, () =>
+        ExecuteWithTargetActionGuard<object?>(this, () =>
         {
             if (Target is { } target)
             {
@@ -63,14 +63,29 @@ public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHol
         });
     }
 
-    private TResult ExecuteWithReferenceGuard<TResult>(
+    private static TResult ExecuteWithReferenceAccessGuard<TResult>(
+        BaseOpenApiReferenceHolder<T, U, V> holder,
+        Func<TResult> action)
+    {
+        return ExecuteWithReferenceGuard(ref t_activeReferenceAccesses, holder, action);
+    }
+
+    private static TResult ExecuteWithTargetActionGuard<TResult>(
+        BaseOpenApiReferenceHolder<T, U, V> holder,
+        Func<TResult> action)
+    {
+        return ExecuteWithReferenceGuard(ref t_activeTargetActions, holder, action);
+    }
+
+    private static TResult ExecuteWithReferenceGuard<TResult>(
         ref HashSet<BaseOpenApiReferenceHolder<T, U, V>>? activeReferences,
+        BaseOpenApiReferenceHolder<T, U, V> holder,
         Func<TResult> action)
     {
         activeReferences ??= new HashSet<BaseOpenApiReferenceHolder<T, U, V>>(ReferenceHolderComparer.Instance);
-        if (!activeReferences.Add(this))
+        if (!activeReferences.Add(holder))
         {
-            throw new InvalidOperationException($"Circular reference detected while resolving reference: {Reference.ReferenceV3}");
+            throw new InvalidOperationException($"Circular reference detected while resolving reference: {holder.Reference.ReferenceV3}");
         }
 
         try
@@ -81,12 +96,12 @@ public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHol
         catch (InsufficientExecutionStackException ex)
         {
             throw new InvalidOperationException(
-                $"The chain of references starting at {Reference.ReferenceV3} is nested too deeply to resolve.",
+                $"The chain of references starting at {holder.Reference.ReferenceV3} is nested too deeply to resolve.",
                 ex);
         }
         finally
         {
-            activeReferences.Remove(this);
+            activeReferences.Remove(holder);
             if (activeReferences.Count == 0)
             {
                 activeReferences = null;

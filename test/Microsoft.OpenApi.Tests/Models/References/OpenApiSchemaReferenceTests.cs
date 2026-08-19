@@ -856,7 +856,8 @@ namespace Microsoft.OpenApi.Tests.Models.References
             var filtered = OpenApiFilterService.CreateFilteredDocument(readResult.Document, predicate);
 
             // Assert
-            Assert.NotNull(filtered.Components?.Schemas);
+            Assert.NotNull(filtered.Components);
+            Assert.NotNull(filtered.Components.Schemas);
             Assert.Contains("A", filtered.Components.Schemas.Keys);
             Assert.Contains("B", filtered.Components.Schemas.Keys);
         }
