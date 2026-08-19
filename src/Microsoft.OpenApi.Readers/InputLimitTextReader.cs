@@ -11,6 +11,13 @@ namespace Microsoft.OpenApi.Readers
     /// </summary>
     internal sealed class InputLimitTextReader : TextReader
     {
+        private const char MaxOneByteUtf8Value = '\u007F';
+        private const char MaxTwoByteUtf8Value = '\u07FF';
+        private const uint OneByteUtf8Length = 1;
+        private const uint TwoByteUtf8Length = 2;
+        private const uint ThreeByteUtf8Length = 3;
+        private const uint SurrogatePairUtf8Length = 4;
+
         private readonly TextReader _inner;
         private readonly uint _maxByteCount;
         private ulong _byteCount;
@@ -58,18 +65,23 @@ namespace Microsoft.OpenApi.Readers
             return charsRead;
         }
 
+        /// <summary>
+        /// Charges the UTF-8 encoded length of one UTF-16 code unit. Valid surrogate pairs are
+        /// charged as one four-byte code point; unpaired surrogates use the three-byte UTF-8
+        /// replacement-character length used by the default .NET encoder fallback.
+        /// </summary>
         private void Charge(char value)
         {
             if (_hasPendingHighSurrogate)
             {
                 if (char.IsLowSurrogate(value))
                 {
-                    AddBytes(4);
+                    AddBytes(SurrogatePairUtf8Length);
                     _hasPendingHighSurrogate = false;
                     return;
                 }
 
-                AddBytes(3);
+                AddBytes(ThreeByteUtf8Length);
                 _hasPendingHighSurrogate = false;
             }
 
@@ -79,19 +91,19 @@ namespace Microsoft.OpenApi.Readers
             }
             else if (char.IsLowSurrogate(value))
             {
-                AddBytes(3);
+                AddBytes(ThreeByteUtf8Length);
             }
-            else if (value <= 0x7F)
+            else if (value <= MaxOneByteUtf8Value)
             {
-                AddBytes(1);
+                AddBytes(OneByteUtf8Length);
             }
-            else if (value <= 0x7FF)
+            else if (value <= MaxTwoByteUtf8Value)
             {
-                AddBytes(2);
+                AddBytes(TwoByteUtf8Length);
             }
             else
             {
-                AddBytes(3);
+                AddBytes(ThreeByteUtf8Length);
             }
         }
 
@@ -105,7 +117,7 @@ namespace Microsoft.OpenApi.Readers
             _endCharged = true;
             if (_hasPendingHighSurrogate)
             {
-                AddBytes(3);
+                AddBytes(ThreeByteUtf8Length);
                 _hasPendingHighSurrogate = false;
             }
         }

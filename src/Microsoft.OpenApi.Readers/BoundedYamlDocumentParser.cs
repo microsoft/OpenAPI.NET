@@ -28,13 +28,35 @@ namespace Microsoft.OpenApi.Readers
         private YamlNode _root;
 
         public BoundedYamlDocumentParser(OpenApiReaderSettings settings)
-        {
-            _budget = new(
+            : this(
                 settings.MaxDepth,
                 settings.MaxNodeCount,
-                settings.MaxAliasExpansionNodeCount);
-            _maxScalarLength = settings.MaxScalarLength;
-            _maxDepth = settings.MaxDepth;
+                settings.MaxAliasExpansionNodeCount,
+                settings.MaxScalarLength)
+        {
+        }
+
+        public BoundedYamlDocumentParser(ParsingContext context)
+            : this(
+                context.MaxDepth,
+                context.MaxNodeCount,
+                context.MaxAliasExpansionNodeCount,
+                context.MaxScalarLength)
+        {
+        }
+
+        private BoundedYamlDocumentParser(
+            uint maxDepth,
+            uint maxNodeCount,
+            uint maxAliasExpansionNodeCount,
+            uint maxScalarLength)
+        {
+            _budget = new(
+                maxDepth,
+                maxNodeCount,
+                maxAliasExpansionNodeCount);
+            _maxScalarLength = maxScalarLength;
+            _maxDepth = maxDepth;
         }
 
         public YamlDocument Parse(

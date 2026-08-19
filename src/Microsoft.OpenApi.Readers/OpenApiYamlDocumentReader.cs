@@ -51,6 +51,7 @@ namespace Microsoft.OpenApi.Readers
                 MaxDepth = _settings.MaxDepth,
                 MaxNodeCount = _settings.MaxNodeCount,
                 MaxAliasExpansionNodeCount = _settings.MaxAliasExpansionNodeCount,
+                MaxInputByteCount = _settings.MaxInputByteCount,
                 MaxScalarLength = _settings.MaxScalarLength
             };
 
@@ -99,6 +100,7 @@ namespace Microsoft.OpenApi.Readers
                 MaxDepth = _settings.MaxDepth,
                 MaxNodeCount = _settings.MaxNodeCount,
                 MaxAliasExpansionNodeCount = _settings.MaxAliasExpansionNodeCount,
+                MaxInputByteCount = _settings.MaxInputByteCount,
                 MaxScalarLength = _settings.MaxScalarLength
             };
 
@@ -196,6 +198,7 @@ namespace Microsoft.OpenApi.Readers
                 MaxDepth = _settings.MaxDepth,
                 MaxNodeCount = _settings.MaxNodeCount,
                 MaxAliasExpansionNodeCount = _settings.MaxAliasExpansionNodeCount,
+                MaxInputByteCount = _settings.MaxInputByteCount,
                 MaxScalarLength = _settings.MaxScalarLength
             };
 

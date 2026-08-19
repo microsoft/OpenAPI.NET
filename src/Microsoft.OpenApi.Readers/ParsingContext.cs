@@ -29,6 +29,7 @@ namespace Microsoft.OpenApi.Readers
         internal uint MaxDepth { get; set; } = OpenApiReaderSettings.DefaultMaxDepth;
         internal uint MaxNodeCount { get; set; } = OpenApiReaderSettings.DefaultMaxNodeCount;
         internal uint MaxAliasExpansionNodeCount { get; set; } = OpenApiReaderSettings.DefaultMaxAliasExpansionNodeCount;
+        internal uint MaxInputByteCount { get; set; } = OpenApiReaderSettings.DefaultMaxInputByteCount;
         internal uint MaxScalarLength { get; set; } = OpenApiReaderSettings.DefaultMaxScalarLength;
         internal Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new();
         internal RootNode RootNode { get; set; }

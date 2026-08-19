@@ -31,20 +31,11 @@ namespace Microsoft.OpenApi.Readers
 
         public static YamlNode ParseYamlString(
             string yamlString,
-            ParsingContext context = null)
+            ParsingContext context)
         {
-            var settings = new OpenApiReaderSettings();
-            if (context != null)
-            {
-                settings.MaxDepth = context.MaxDepth;
-                settings.MaxNodeCount = context.MaxNodeCount;
-                settings.MaxAliasExpansionNodeCount = context.MaxAliasExpansionNodeCount;
-                settings.MaxScalarLength = context.MaxScalarLength;
-            }
-
             using var reader = new StringReader(yamlString);
-            return new BoundedYamlDocumentParser(settings)
-                .Parse(reader, settings.MaxInputByteCount, CancellationToken.None)
+            return new BoundedYamlDocumentParser(context)
+                .Parse(reader, context.MaxInputByteCount, CancellationToken.None)
                 .RootNode;
         }
     }
