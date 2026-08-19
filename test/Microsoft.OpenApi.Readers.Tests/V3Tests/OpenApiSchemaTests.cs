@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
+using Microsoft.OpenApi.Writers;
 using SharpYaml.Serialization;
 using Xunit;
 
@@ -18,6 +19,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     public class OpenApiSchemaTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiSchema/";
+
+        private const string CircularSchemaReferencePairJson =
+            """
+            {
+              "openapi": "3.0.0",
+              "info": { "title": "Test", "version": "0.0.1" },
+              "paths": {},
+              "components": {
+                "schemas": {
+                  "A": { "$ref": "#/components/schemas/B" },
+                  "B": { "$ref": "#/components/schemas/A" }
+                }
+              }
+            }
+            """;
 
         [Fact]
         public void ParsePrimitiveSchemaShouldSucceed()
@@ -488,6 +504,38 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
             openApiDoc.Components.Schemas["A"].Should().BeSameAs(openApiDoc.Components.Schemas["B"]);
+        }
+
+        [Fact]
+        public void CircularSchemaReferencePairDoesNotStackOverflowWhenReadingAllOf()
+        {
+            // Arrange
+            // v1 equivalent of the v2/v3 "CircularSchemaReferencePairThrowsWhenReadingAllOf" regression.
+            // v1 stores AllOf/OneOf/AnyOf and resolves references directly instead of lazily delegating
+            // through a reference Target, so a circular $ref pair is traversed safely rather than throwing
+            // an InvalidOperationException. This test locks in that no-unbounded-recursion behavior.
+            var openApiDoc = new OpenApiStringReader().Read(CircularSchemaReferencePairJson, out var diagnostic);
+
+            diagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+
+            var schemaA = openApiDoc.Components.Schemas["A"];
+
+            // Act
+            // Reading composition keywords, resolving the effective schema, and inline-serializing the
+            // circular pair must all complete without a StackOverflowException.
+            var allOf = schemaA.AllOf;
+            var effective = schemaA.GetEffective(openApiDoc);
+
+            using var textWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(textWriter, new OpenApiWriterSettings { InlineLocalReferences = true });
+            openApiDoc.SerializeAsV3(writer);
+            writer.Flush();
+
+            // Assert
+            allOf.Should().NotBeNull();
+            effective.Should().NotBeNull();
+            textWriter.ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]

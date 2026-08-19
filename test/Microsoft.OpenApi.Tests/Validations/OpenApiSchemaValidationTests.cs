@@ -323,5 +323,196 @@ namespace Microsoft.OpenApi.Validations.Tests
             //Assert
             errors.Should().BeEmpty();
         }
+
+        [Fact]
+        public void ValidateSchemaDiscriminatorWithSelfReferencingOneOfDoesNotStackOverflow()
+        {
+            // Arrange
+            var pet = new OpenApiSchema
+            {
+                Type = "object",
+                Discriminator = new() { PropertyName = "petType" },
+                Reference = new() { Type = ReferenceType.Schema, Id = "Pet" }
+            };
+            pet.OneOf.Add(pet); // circular self-reference
+            var components = new OpenApiComponents { Schemas = { { "Pet", pet } } };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(components);
+
+            var discriminatorErrors = validator.Errors
+                .OfType<OpenApiValidatorError>()
+                .Where(e => e.RuleName == nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator))
+                .ToList();
+
+            // Assert
+            discriminatorErrors.Should().ContainSingle();
+        }
+
+        [Fact]
+        public void ValidateSchemaDiscriminatorWithSelfReferencingAnyOfDoesNotStackOverflow()
+        {
+            // Arrange
+            var pet = new OpenApiSchema
+            {
+                Type = "object",
+                Discriminator = new() { PropertyName = "petType" },
+                Reference = new() { Type = ReferenceType.Schema, Id = "Pet" }
+            };
+            pet.AnyOf.Add(pet); // circular self-reference
+            var components = new OpenApiComponents { Schemas = { { "Pet", pet } } };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(components);
+
+            var discriminatorErrors = validator.Errors
+                .OfType<OpenApiValidatorError>()
+                .Where(e => e.RuleName == nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator))
+                .ToList();
+
+            // Assert
+            discriminatorErrors.Should().ContainSingle();
+        }
+
+        [Fact]
+        public void ValidateSchemaDiscriminatorWithSelfReferencingAllOfDoesNotStackOverflow()
+        {
+            // Arrange
+            var pet = new OpenApiSchema
+            {
+                Type = "object",
+                Discriminator = new() { PropertyName = "petType" },
+                Reference = new() { Type = ReferenceType.Schema, Id = "Pet" }
+            };
+            pet.AllOf.Add(pet); // circular self-reference
+            var components = new OpenApiComponents { Schemas = { { "Pet", pet } } };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(components);
+
+            var discriminatorErrors = validator.Errors
+                .OfType<OpenApiValidatorError>()
+                .Where(e => e.RuleName == nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator))
+                .ToList();
+
+            // Assert
+            discriminatorErrors.Should().ContainSingle();
+        }
+
+        [Fact]
+        public void ValidateSchemaDiscriminatorWithMultiNodeCycleDoesNotStackOverflow()
+        {
+            // Arrange
+            var pet = new OpenApiSchema
+            {
+                Type = "object",
+                Discriminator = new() { PropertyName = "petType" },
+                Reference = new() { Type = ReferenceType.Schema, Id = "Pet" }
+            };
+            var cat = new OpenApiSchema
+            {
+                Type = "object",
+                Discriminator = new() { PropertyName = "petType" },
+                Reference = new() { Type = ReferenceType.Schema, Id = "Cat" }
+            };
+            pet.OneOf.Add(cat);
+            cat.OneOf.Add(pet); // two-node cycle
+
+            var components = new OpenApiComponents
+            {
+                Schemas =
+                {
+                    { "Pet", pet },
+                    { "Cat", cat }
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(components);
+
+            var discriminatorErrors = validator.Errors
+                .OfType<OpenApiValidatorError>()
+                .Where(e => e.RuleName == nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator))
+                .ToList();
+
+            // Assert
+            discriminatorErrors.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void ValidateSchemaDiscriminatorFindsPropertyInDeepAcyclicChain()
+        {
+            // Arrange
+            var leaf = new OpenApiSchema
+            {
+                Type = "object",
+                Required = new HashSet<string> { "petType" }
+            };
+            var mid = new OpenApiSchema { Type = "object" };
+            mid.OneOf.Add(leaf);
+            var parent = new OpenApiSchema
+            {
+                Type = "object",
+                Discriminator = new() { PropertyName = "petType" },
+                Reference = new() { Type = ReferenceType.Schema, Id = "Parent" }
+            };
+            parent.OneOf.Add(mid);
+            var components = new OpenApiComponents { Schemas = { { "Parent", parent } } };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(components);
+
+            var discriminatorErrors = validator.Errors
+                .OfType<OpenApiValidatorError>()
+                .Where(e => e.RuleName == nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator))
+                .ToList();
+
+            // Assert
+            discriminatorErrors.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ValidateSchemaDiscriminatorSearchesLaterSiblingsAfterInvalidChild()
+        {
+            // Arrange
+            var badChild = new OpenApiSchema { Type = "object" };
+            var goodChild = new OpenApiSchema
+            {
+                Type = "object",
+                Required = new HashSet<string> { "petType" }
+            };
+            var parent = new OpenApiSchema
+            {
+                Type = "object",
+                Discriminator = new() { PropertyName = "petType" },
+                Reference = new() { Type = ReferenceType.Schema, Id = "Parent" }
+            };
+            parent.OneOf.Add(badChild);
+            parent.OneOf.Add(goodChild);
+            var components = new OpenApiComponents { Schemas = { { "Parent", parent } } };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(components);
+
+            var discriminatorErrors = validator.Errors
+                .OfType<OpenApiValidatorError>()
+                .Where(e => e.RuleName == nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator))
+                .ToList();
+
+            // Assert
+            discriminatorErrors.Should().BeEmpty();
+        }
     }
 }
