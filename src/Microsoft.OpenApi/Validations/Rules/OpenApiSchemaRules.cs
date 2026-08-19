@@ -182,7 +182,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
         private static void EnqueueSchemas(Queue<OpenApiSchema> schemasToVisit, IEnumerable<OpenApiSchema> childSchemas)
         {
-            foreach (var childSchema in childSchemas.Where(s => is not null))
+            foreach (var childSchema in childSchemas.Where(s => s is not null))
             {
                 schemasToVisit.Enqueue(childSchema);
             }
