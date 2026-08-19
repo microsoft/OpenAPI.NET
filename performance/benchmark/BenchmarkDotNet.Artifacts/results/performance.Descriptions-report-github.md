@@ -1,18 +1,18 @@
 ```
 
 BenchmarkDotNet v0.14.0, Ubuntu 24.04.4 LTS (Noble Numbat)
-AMD EPYC 9V74, 1 CPU, 4 logical and 2 physical cores
-.NET SDK 10.0.302
-  [Host]   : .NET 8.0.30 (8.0.3026.36720), X64 RyuJIT AVX2
-  ShortRun : .NET 8.0.30 (8.0.3026.36720), X64 RyuJIT AVX2
+Intel Xeon 6973P-C, 1 CPU, 4 logical and 2 physical cores
+.NET SDK 10.0.303
+  [Host]   : .NET 8.0.30 (8.0.3026.36720), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+  ShortRun : .NET 8.0.30 (8.0.3026.36720), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
 
 Job=ShortRun  IterationCount=3  LaunchCount=1  
 WarmupCount=3  
 
 ```
-| Method       | Mean           | Error         | StdDev       | Gen0       | Gen1       | Gen2      | Allocated    |
-|------------- |---------------:|--------------:|-------------:|-----------:|-----------:|----------:|-------------:|
-| PetStoreYaml |       676.6 μs |      54.31 μs |      2.98 μs |    23.4375 |     3.9063 |         - |    438.94 KB |
-| PetStoreJson |       784.0 μs |     176.52 μs |      9.68 μs |    25.3906 |     1.9531 |         - |    446.38 KB |
-| GHESYaml     | 1,828,295.9 μs | 199,328.43 μs | 10,925.86 μs | 30000.0000 | 23000.0000 | 4000.0000 | 438627.23 KB |
-| GHESJson     | 1,983,974.4 μs | 338,736.59 μs | 18,567.30 μs | 30000.0000 | 23000.0000 | 4000.0000 | 445808.38 KB |
+| Method       | Mean           | Error         | StdDev       | Gen0      | Gen1      | Gen2      | Allocated    |
+|------------- |---------------:|--------------:|-------------:|----------:|----------:|----------:|-------------:|
+| PetStoreYaml |       450.4 μs |      70.34 μs |      3.86 μs |    3.9063 |         - |         - |    440.12 KB |
+| PetStoreJson |       520.7 μs |      89.40 μs |      4.90 μs |    3.9063 |         - |         - |     447.6 KB |
+| GHESYaml     | 1,265,574.2 μs | 396,012.10 μs | 21,706.76 μs | 6000.0000 | 5000.0000 | 1000.0000 | 438608.88 KB |
+| GHESJson     | 1,329,832.7 μs | 375,414.26 μs | 20,577.72 μs | 6000.0000 | 5000.0000 | 1000.0000 | 445794.13 KB |
