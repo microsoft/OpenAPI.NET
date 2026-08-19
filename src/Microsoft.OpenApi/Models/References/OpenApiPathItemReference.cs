@@ -38,28 +38,28 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public string? Summary
         {
-            get => string.IsNullOrEmpty(Reference.Summary) ? Target?.Summary : Reference.Summary;
+            get => string.IsNullOrEmpty(Reference.Summary) ? GetFromTarget(static target => target.Summary) : Reference.Summary;
             set => Reference.Summary = value;
         }
 
         /// <inheritdoc/>
         public string? Description
         {
-            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            get => string.IsNullOrEmpty(Reference.Description) ? GetFromTarget(static target => target.Description) : Reference.Description;
             set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
-        public Dictionary<HttpMethod, OpenApiOperation>? Operations { get => Target?.Operations; }
+        public Dictionary<HttpMethod, OpenApiOperation>? Operations { get => GetFromTarget(static target => target.Operations); }
 
         /// <inheritdoc/>
-        public IList<OpenApiServer>? Servers { get => Target?.Servers; }
+        public IList<OpenApiServer>? Servers { get => GetFromTarget(static target => target.Servers); }
 
         /// <inheritdoc/>
-        public IList<IOpenApiParameter>? Parameters { get => Target?.Parameters; }
+        public IList<IOpenApiParameter>? Parameters { get => GetFromTarget(static target => target.Parameters); }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => GetFromTarget(static target => target.Extensions); }
 
         /// <inheritdoc/>
         public override IOpenApiPathItem CopyReferenceAsTargetElementWithOverrides(IOpenApiPathItem source)

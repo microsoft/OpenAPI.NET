@@ -36,42 +36,42 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public string? Description
         {
-            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            get => string.IsNullOrEmpty(Reference.Description) ? GetFromTarget(static target => target.Description) : Reference.Description;
             set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
-        public bool Required { get => Target?.Required ?? default; }
+        public bool Required { get => GetFromTarget(static target => target.Required); }
 
         /// <inheritdoc/>
-        public bool Deprecated { get => Target?.Deprecated ?? default; }
+        public bool Deprecated { get => GetFromTarget(static target => target.Deprecated); }
 
         /// <inheritdoc/>
-        public bool AllowEmptyValue { get => Target?.AllowEmptyValue ?? default; }
+        public bool AllowEmptyValue { get => GetFromTarget(static target => target.AllowEmptyValue); }
 
         /// <inheritdoc/>
-        public IOpenApiSchema? Schema { get => Target?.Schema; }
+        public IOpenApiSchema? Schema { get => GetFromTarget(static target => target.Schema); }
 
         /// <inheritdoc/>
-        public ParameterStyle? Style { get => Target?.Style; }
+        public ParameterStyle? Style { get => GetFromTarget(static target => target.Style); }
 
         /// <inheritdoc/>
-        public bool Explode { get => Target?.Explode ?? default; }
+        public bool Explode { get => GetFromTarget(static target => target.Explode); }
 
         /// <inheritdoc/>
-        public bool AllowReserved { get => Target?.AllowReserved ?? default; }
+        public bool AllowReserved { get => GetFromTarget(static target => target.AllowReserved); }
 
         /// <inheritdoc/>
-        public JsonNode? Example { get => Target?.Example; }
+        public JsonNode? Example { get => GetFromTarget(static target => target.Example); }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExample>? Examples { get => Target?.Examples; }
+        public IDictionary<string, IOpenApiExample>? Examples { get => GetFromTarget(static target => target.Examples); }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiMediaType>? Content { get => Target?.Content; }
+        public IDictionary<string, IOpenApiMediaType>? Content { get => GetFromTarget(static target => target.Content); }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => GetFromTarget(static target => target.Extensions); }
 
         /// <inheritdoc/>
         public override IOpenApiHeader CopyReferenceAsTargetElementWithOverrides(IOpenApiHeader source)

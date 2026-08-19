@@ -32,39 +32,39 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public string? Description
         {
-            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            get => string.IsNullOrEmpty(Reference.Description) ? GetFromTarget(static target => target.Description) : Reference.Description;
             set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
-        public string? Name { get => Target?.Name; }
+        public string? Name { get => GetFromTarget(static target => target.Name); }
 
         /// <inheritdoc/>
-        public ParameterLocation? In { get => Target?.In; }
+        public ParameterLocation? In { get => GetFromTarget(static target => target.In); }
 
         /// <inheritdoc/>
-        public string? Scheme { get => Target?.Scheme; }
+        public string? Scheme { get => GetFromTarget(static target => target.Scheme); }
 
         /// <inheritdoc/>
-        public string? BearerFormat { get => Target?.BearerFormat; }
+        public string? BearerFormat { get => GetFromTarget(static target => target.BearerFormat); }
 
         /// <inheritdoc/>
-        public OpenApiOAuthFlows? Flows { get => Target?.Flows; }
+        public OpenApiOAuthFlows? Flows { get => GetFromTarget(static target => target.Flows); }
 
         /// <inheritdoc/>
-        public Uri? OpenIdConnectUrl { get => Target?.OpenIdConnectUrl; }
+        public Uri? OpenIdConnectUrl { get => GetFromTarget(static target => target.OpenIdConnectUrl); }
 
         /// <inheritdoc/>
-        public Uri? OAuth2MetadataUrl { get => Target is IOAuth2MetadataProvider oauth2MetadataProvider ? oauth2MetadataProvider.OAuth2MetadataUrl : null; }
+        public Uri? OAuth2MetadataUrl { get => GetFromTarget(static target => target is IOAuth2MetadataProvider provider ? provider.OAuth2MetadataUrl : null); }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => GetFromTarget(static target => target.Extensions); }
 
         /// <inheritdoc/>
-        public SecuritySchemeType? Type { get => Target?.Type; }
+        public SecuritySchemeType? Type { get => GetFromTarget(static target => target.Type); }
 
         /// <inheritdoc/>
-        public bool Deprecated { get => Target?.Deprecated ?? default; }
+        public bool Deprecated { get => GetFromTarget(static target => target.Deprecated); }
 
         /// <inheritdoc/>
         public override IOpenApiSecurityScheme CopyReferenceAsTargetElementWithOverrides(IOpenApiSecurityScheme source)
