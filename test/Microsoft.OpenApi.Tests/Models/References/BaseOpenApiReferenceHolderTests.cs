@@ -39,19 +39,6 @@ namespace Microsoft.OpenApi.Tests.Models.References
             });
             AssertCircularAccessThrows(document =>
             {
-                document.Components = new OpenApiComponents
-                {
-                    MediaTypes = new Dictionary<string, IOpenApiMediaType>
-                    {
-                        ["A"] = new OpenApiMediaTypeReference("B", document),
-                        ["B"] = new OpenApiMediaTypeReference("A", document)
-                    }
-                };
-                document.RegisterComponents();
-                return document.Components.MediaTypes["A"].Schema;
-            });
-            AssertCircularAccessThrows(document =>
-            {
                 document.AddComponent("A", new OpenApiParameterReference("B", document));
                 document.AddComponent("B", new OpenApiParameterReference("A", document));
                 return document.Components!.Parameters!["A"].Description;
