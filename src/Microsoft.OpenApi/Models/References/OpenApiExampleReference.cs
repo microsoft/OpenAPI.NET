@@ -35,25 +35,25 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public string? Description
         {
-            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            get => string.IsNullOrEmpty(Reference.Description) ? GetFromTarget(static target => target.Description) : Reference.Description;
             set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
         public string? Summary
         {
-            get => string.IsNullOrEmpty(Reference.Summary) ? Target?.Summary : Reference.Summary;
+            get => string.IsNullOrEmpty(Reference.Summary) ? GetFromTarget(static target => target.Summary) : Reference.Summary;
             set => Reference.Summary = value;
         }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => GetFromTarget(static target => target.Extensions); }
 
         /// <inheritdoc/>
-        public string? ExternalValue { get => Target?.ExternalValue; }
+        public string? ExternalValue { get => GetFromTarget(static target => target.ExternalValue); }
 
         /// <inheritdoc/>
-        public JsonNode? Value { get => Target?.Value; }
+        public JsonNode? Value { get => GetFromTarget(static target => target.Value); }
 
         /// <inheritdoc/>
         public override IOpenApiExample CopyReferenceAsTargetElementWithOverrides(IOpenApiExample source)

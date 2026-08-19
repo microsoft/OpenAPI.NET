@@ -35,21 +35,21 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public string? Description
         {
-            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            get => string.IsNullOrEmpty(Reference.Description) ? GetFromTarget(static target => target.Description) : Reference.Description;
             set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiMediaType>? Content { get => Target?.Content; }
+        public IDictionary<string, OpenApiMediaType>? Content { get => GetFromTarget(static target => target.Content); }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiHeader>? Headers { get => Target?.Headers; }
+        public IDictionary<string, IOpenApiHeader>? Headers { get => GetFromTarget(static target => target.Headers); }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiLink>? Links { get => Target?.Links; }
+        public IDictionary<string, IOpenApiLink>? Links { get => GetFromTarget(static target => target.Links); }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => GetFromTarget(static target => target.Extensions); }
 
         /// <inheritdoc/>
         public override IOpenApiResponse CopyReferenceAsTargetElementWithOverrides(IOpenApiResponse source)
