@@ -27,7 +27,7 @@
         <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="5.6.0" PrivateAssets="all" />
 
         <!-- We don't need the package reference under .NET 8. We get STJ from the BCL. -->
-        <PackageReference Include="System.Text.Json" Version="[8.0.5,)" Condition="'$(TargetFramework)' != 'net8.0'" />
+        <PackageReference Include="System.Text.Json" Version="[8.0.5,)" Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))"  />
     </ItemGroup>
 
     <ItemGroup>
