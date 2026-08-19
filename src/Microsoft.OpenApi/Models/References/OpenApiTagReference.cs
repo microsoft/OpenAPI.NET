@@ -48,37 +48,40 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public string? Description
         {
-            get => Target?.Description;
+            get => GetFromTarget(static target => target.Description);
         }
 
         /// <inheritdoc/>
-        public OpenApiExternalDocs? ExternalDocs { get => Target?.ExternalDocs; }
+        public OpenApiExternalDocs? ExternalDocs { get => GetFromTarget(static target => target.ExternalDocs); }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => GetFromTarget(static target => target.Extensions); }
 
         /// <inheritdoc/>
-        public string? Name { get => Target?.Name ?? Reference?.Id; }
+        public string? Name { get => GetFromTarget(static target => target.Name) ?? Reference?.Id; }
 
         /// <inheritdoc/>
-        public string? Summary => Target?.Summary;
+        public string? Summary => GetFromTarget(static target => target.Summary);
 
         /// <inheritdoc/>
         public OpenApiTagReference? Parent 
         { 
             get 
             {
-                if (Target is OpenApiTagReference targetRef && (Reference.Id?.Equals(targetRef.Reference.Id, StringComparison.Ordinal) ?? false))
+                return GetFromTarget(target =>
                 {
-                    return null;
-                }
+                    if (target is OpenApiTagReference targetRef && (Reference.Id?.Equals(targetRef.Reference.Id, StringComparison.Ordinal) ?? false))
+                    {
+                        return null;
+                    }
 
-                return Target?.Parent;
+                    return target.Parent;
+                });
             }
         }
 
         /// <inheritdoc/>
-        public string? Kind => Target?.Kind;
+        public string? Kind => GetFromTarget(static target => target.Kind);
 
         /// <inheritdoc/>
         public override IOpenApiTag CopyReferenceAsTargetElementWithOverrides(IOpenApiTag source)
