@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
 <meta charset='utf-8' />
-<title>performance.Descriptions-20260819-165955</title>
+<title>performance.Descriptions-20260819-175616</title>
 
 <style type="text/css">
 	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
@@ -14,8 +14,8 @@
 <body>
 <pre><code>
 BenchmarkDotNet v0.14.0, Ubuntu 24.04.4 LTS (Noble Numbat)
-AMD EPYC 9V74, 1 CPU, 4 logical and 2 physical cores
-.NET SDK 10.0.303
+AMD EPYC 7763, 1 CPU, 4 logical and 2 physical cores
+.NET SDK 10.0.302
   [Host]   : .NET 8.0.30 (8.0.3026.36720), X64 RyuJIT AVX2
   ShortRun : .NET 8.0.30 (8.0.3026.36720), X64 RyuJIT AVX2
 </code></pre>
@@ -26,10 +26,10 @@ WarmupCount=3
 <table>
 <thead><tr><th>Method</th><th>Mean    </th><th>Error </th><th>StdDev</th><th>Gen0</th><th>Gen1</th><th>Gen2</th><th>Allocated</th>
 </tr>
-</thead><tbody><tr><td>PetStoreYaml</td><td>663.6 &mu;s</td><td>146.8 &mu;s</td><td>8.05 &mu;s</td><td>23.4375</td><td>3.9063</td><td>-</td><td>438.94 KB</td>
-</tr><tr><td>PetStoreJson</td><td>832.4 &mu;s</td><td>607.9 &mu;s</td><td>33.32 &mu;s</td><td>23.4375</td><td>7.8125</td><td>-</td><td>447.69 KB</td>
-</tr><tr><td>GHESYaml</td><td>1,621,961.7 &mu;s</td><td>451,664.6 &mu;s</td><td>24,757.26 &mu;s</td><td>30000.0000</td><td>23000.0000</td><td>4000.0000</td><td>438632.07 KB</td>
-</tr><tr><td>GHESJson</td><td>1,809,092.3 &mu;s</td><td>187,494.5 &mu;s</td><td>10,277.20 &mu;s</td><td>30000.0000</td><td>23000.0000</td><td>4000.0000</td><td>445806.78 KB</td>
+</thead><tbody><tr><td>PetStoreYaml</td><td>750.3 &mu;s</td><td>320.4 &mu;s</td><td>17.56 &mu;s</td><td>23.4375</td><td>3.9063</td><td>-</td><td>438.94 KB</td>
+</tr><tr><td>PetStoreJson</td><td>875.7 &mu;s</td><td>167.0 &mu;s</td><td>9.15 &mu;s</td><td>25.3906</td><td>1.9531</td><td>-</td><td>446.38 KB</td>
+</tr><tr><td>GHESYaml</td><td>1,775,302.8 &mu;s</td><td>137,608.1 &mu;s</td><td>7,542.76 &mu;s</td><td>30000.0000</td><td>23000.0000</td><td>4000.0000</td><td>438624.06 KB</td>
+</tr><tr><td>GHESJson</td><td>1,924,124.8 &mu;s</td><td>514,004.3 &mu;s</td><td>28,174.31 &mu;s</td><td>30000.0000</td><td>23000.0000</td><td>4000.0000</td><td>445806.12 KB</td>
 </tr></tbody></table>
 </body>
 </html>
