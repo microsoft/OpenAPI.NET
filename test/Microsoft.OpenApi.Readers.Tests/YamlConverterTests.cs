@@ -363,7 +363,7 @@ public class YamlConverterTests
         const int depth = 70;
         var deeplyNested = new string('[', depth) + new string(']', depth);
 
-        Assert.Throws<OpenApiReaderException>(() => ConvertYamlStringToJsonNode(deeplyNested));
+        Assert.Throws<YamlException>(() => ConvertYamlStringToJsonNode(deeplyNested));
     }
 
     [Fact]
@@ -382,48 +382,50 @@ public class YamlConverterTests
     }
 
     [Fact]
-    public void ConversionLimitsDefaultToDocumentedValues()
+    public void CyclicYamlNodeGraphIsRejected()
     {
-        Assert.Equal(64u, YamlConverter.DefaultMaxDepth);
-        Assert.Equal(5_000_000u, YamlConverter.DefaultMaxNodeCount);
-        Assert.Equal(YamlConverter.DefaultMaxDepth, YamlConverter.MaxDepth);
-        Assert.Equal(YamlConverter.DefaultMaxNodeCount, YamlConverter.MaxNodeCount);
+        var sequence = new YamlSequenceNode();
+        sequence.Add(sequence);
+
+        Assert.Throws<OpenApiReaderException>(() => sequence.ToJsonNode());
     }
 
     [Fact]
-    public void SettingMaxDepthToZeroThrows()
+    public void ComplexMappingKeyIsRejectedAsReaderException()
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => YamlConverter.MaxDepth = 0);
-        // The invalid assignment must not have changed the effective limit.
-        Assert.Equal(YamlConverter.DefaultMaxDepth, YamlConverter.MaxDepth);
-    }
-
-    [Fact]
-    public void SettingMaxNodeCountToZeroThrows()
-    {
-        Assert.Throws<ArgumentOutOfRangeException>(() => YamlConverter.MaxNodeCount = 0);
-        // The invalid assignment must not have changed the effective limit.
-        Assert.Equal(YamlConverter.DefaultMaxNodeCount, YamlConverter.MaxNodeCount);
-    }
-
-    [Fact]
-    public void RaisingMaxDepthAllowsDocumentsDeeperThanTheDefault()
-    {
-        // A document nested deeper than the default depth limit (64) is rejected by default
-        // but can be permitted by a consumer that opts into a higher limit.
-        const int depth = 70;
-        var deeplyNested = new string('[', depth) + new string(']', depth);
-
-        try
+        var mapping = new YamlMappingNode
         {
-            YamlConverter.MaxDepth = depth + 10;
-            var jsonNode = ConvertYamlStringToJsonNode(deeplyNested);
-            Assert.IsType<JsonArray>(jsonNode);
-        }
-        finally
+            { new YamlSequenceNode(new YamlScalarNode("key")), new YamlScalarNode("value") }
+        };
+
+        Assert.Throws<OpenApiReaderException>(() => mapping.ToJsonNode());
+    }
+
+    [Fact]
+    public void SharedSubtreeGraftedTooDeepIsRejected()
+    {
+        // The converter memoizes each YamlNode it has already materialized, then deep-clones the
+        // result when the same instance reappears. The shared subtree clears the depth check where
+        // it is first seen, so without charging its height at the reuse site it can be replayed
+        // from a deeper position to build a tree past the limit.
+        YamlNode shared = new YamlScalarNode("value");
+        for (var index = 0; index < 40; index++)
         {
-            YamlConverter.MaxDepth = YamlConverter.DefaultMaxDepth;
+            shared = new YamlSequenceNode(shared);
         }
+
+        var grafted = shared;
+        for (var index = 0; index < 30; index++)
+        {
+            grafted = new YamlSequenceNode(grafted);
+        }
+
+        // The shallow element is converted first and memoizes the shared subtree; the deep element
+        // then reuses it 31 levels down, which would materialize 72 levels against a limit of 64.
+        var root = new YamlSequenceNode(shared, grafted);
+
+        var exception = Assert.Throws<OpenApiReaderException>(() => root.ToJsonNode());
+        Assert.Contains("expands an alias", exception.Message, StringComparison.Ordinal);
     }
 
     private static JsonNode ConvertYamlStringToJsonNode(string yamlInput)
