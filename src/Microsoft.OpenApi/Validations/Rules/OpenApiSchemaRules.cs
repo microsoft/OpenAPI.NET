@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// between other schemas which may satisfy the payload description.</param>
         public static bool ValidateChildSchemaAgainstDiscriminator(OpenApiSchema schema, string discriminatorName)
         {
-            if (discriminatorName == null)
+            if (string.IsNullOrEmpty(discriminatorName))
             {
                 return false;
             }
