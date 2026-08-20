@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.31](https://github.com/microsoft/OpenAPI.NET/compare/v1.6.30...v1.6.31) (2026-08-20)
+
+
+### Bug Fixes
+
+* circular ref guard ([#3042](https://github.com/microsoft/OpenAPI.NET/issues/3042)) ([02369d0](https://github.com/microsoft/OpenAPI.NET/commit/02369d09cc8044020e415874a85e89c5dff17f67))
+* harden yaml parsing (v1 port) ([#3040](https://github.com/microsoft/OpenAPI.NET/issues/3040)) ([838c847](https://github.com/microsoft/OpenAPI.NET/commit/838c8470efdd46d1cd050db8650cbc9347067f6b))
+
 ## [1.6.30](https://github.com/microsoft/OpenAPI.NET/compare/v1.6.29...v1.6.30) (2026-08-13)
 
 
