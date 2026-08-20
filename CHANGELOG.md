@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.10.2](https://github.com/microsoft/OpenAPI.NET/compare/v3.10.1...v3.10.2) (2026-08-20)
+
+
+### Bug Fixes
+
+* duplicate schema example when serializing to v2 ([#3045](https://github.com/microsoft/OpenAPI.NET/issues/3045)) ([50f5a2b](https://github.com/microsoft/OpenAPI.NET/commit/50f5a2bb119089bb48987494d906cb1a95cddbd1))
+
 ## [3.10.1](https://github.com/microsoft/OpenAPI.NET/compare/v3.10.0...v3.10.1) (2026-08-19)
 
 
