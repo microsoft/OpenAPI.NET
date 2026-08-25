@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Globalization;
@@ -21,9 +21,7 @@ namespace Microsoft.OpenApi
         /// <param name="stream">The output stream.</param>
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-#pragma warning disable RS0027 // The settings overload below has the same parameter count but different types; no ambiguity exists.
         public static Task SerializeAsJsonAsync<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, CancellationToken cancellationToken = default)
-#pragma warning restore RS0027
             where T : IOpenApiSerializable
         {
             return element.SerializeAsync(stream, specVersion, OpenApiConstants.Json, cancellationToken);
@@ -70,14 +68,12 @@ namespace Microsoft.OpenApi
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="format">The output format (JSON or YAML).</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-#pragma warning disable RS0027 // The settings overload below has the same parameter count but different types; no ambiguity exists.
         public static Task SerializeAsync<T>(
             this T element,
             Stream stream,
             OpenApiSpecVersion specVersion,
             string format,
             CancellationToken cancellationToken = default)
-#pragma warning restore RS0027
             where T : IOpenApiSerializable
         {
             return element.SerializeAsync(stream, specVersion, format, null, cancellationToken);
@@ -125,9 +121,7 @@ namespace Microsoft.OpenApi
         /// <param name="writer">The output writer.</param>
         /// <param name="specVersion">Version of the specification the output should conform to</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-#pragma warning disable RS0027 // The settings-bearing SerializeAsync overloads below have the same parameter count but different types; no ambiguity exists.
         public static Task SerializeAsync<T>(this T element, IOpenApiWriter writer, OpenApiSpecVersion specVersion, CancellationToken cancellationToken = default)
-#pragma warning restore RS0027
             where T : IOpenApiSerializable
         {
             Utils.CheckArgumentNull(element);
@@ -165,12 +159,10 @@ namespace Microsoft.OpenApi
         /// <param name="element">The Open API element.</param>
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-#pragma warning disable RS0027 // The settings overload below has the same parameter count but different types; no ambiguity exists.
         public static Task<string> SerializeAsJsonAsync<T>(
             this T element,
             OpenApiSpecVersion specVersion,
             CancellationToken cancellationToken = default)
-#pragma warning restore RS0027
             where T : IOpenApiSerializable
         {
             return element.SerializeAsync(specVersion, OpenApiConstants.Json, cancellationToken);
@@ -220,13 +212,11 @@ namespace Microsoft.OpenApi
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="format">Open API document format.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-#pragma warning disable RS0027 // The settings overload below has the same parameter count but different types; no ambiguity exists.
         public static async Task<string> SerializeAsync<T>(
             this T element,
             OpenApiSpecVersion specVersion,
             string format,
             CancellationToken cancellationToken = default)
-#pragma warning restore RS0027
             where T : IOpenApiSerializable
         {
             Utils.CheckArgumentNull(element);
