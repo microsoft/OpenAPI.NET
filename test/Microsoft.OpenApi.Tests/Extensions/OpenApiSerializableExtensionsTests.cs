@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -109,7 +109,7 @@ public class OpenApiSerializableExtensionsTests
 
         stream.Position = 0;
         using var reader = new StreamReader(stream);
-        var output = await reader.ReadToEndAsync();
+        var output = await reader.ReadToEndAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal("{\"name\":\"param1\",\"in\":\"query\",\"schema\":{\"type\":\"string\"}}", output);
     }
