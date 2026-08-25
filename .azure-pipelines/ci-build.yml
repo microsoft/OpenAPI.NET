@@ -100,12 +100,32 @@ extends:
             arguments: '--configuration $(BuildConfiguration) --no-incremental'
 
         # Run the Unit test
-        - task: DotNetCoreCLI@2
+        - pwsh: |
+            $testResultsDirectory = "$(Agent.TempDirectory)\TestResults"
+            New-Item -ItemType Directory -Force -Path $testResultsDirectory | Out-Null
+
+            $testApplications = @(
+              @{ Name = "Microsoft.OpenApi.Hidi.Tests"; Path = "$(Build.SourcesDirectory)\test\Microsoft.OpenApi.Hidi.Tests\bin\$(BuildConfiguration)\net10.0\Microsoft.OpenApi.Hidi.Tests.exe" },
+              @{ Name = "Microsoft.OpenApi.Readers.Tests"; Path = "$(Build.SourcesDirectory)\test\Microsoft.OpenApi.Readers.Tests\bin\$(BuildConfiguration)\net10.0\Microsoft.OpenApi.Readers.Tests.exe" },
+              @{ Name = "Microsoft.OpenApi.Tests"; Path = "$(Build.SourcesDirectory)\test\Microsoft.OpenApi.Tests\bin\$(BuildConfiguration)\net10.0\Microsoft.OpenApi.Tests.exe" }
+            )
+
+            foreach ($testApplication in $testApplications) {
+              & $testApplication.Path --report-xunit-trx --report-xunit-trx-filename "$($testApplication.Name).trx" --results-directory $testResultsDirectory --minimum-expected-tests 1
+              if ($LASTEXITCODE -ne 0) {
+                exit $LASTEXITCODE
+              }
+            }
           displayName: 'test'
+
+        - task: PublishTestResults@2
+          displayName: 'Publish test results'
+          condition: succeededOrFailed()
           inputs:
-            command: test
-            projects: '$(Build.SourcesDirectory)\Microsoft.OpenApi.slnx'
-            arguments: '--configuration $(BuildConfiguration) --no-build'
+            testResultsFormat: VSTest
+            testResultsFiles: '$(Agent.TempDirectory)\TestResults\*.trx'
+            failTaskOnMissingResultsFile: true
+            failTaskOnFailedTests: true
 
         - task: EsrpCodeSigning@6
           displayName: 'ESRP CodeSigning binaries'
