@@ -4,6 +4,7 @@
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
+        <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     </PropertyGroup>
     <ItemGroup>
         <EmbeddedResource Include="**\*.yaml" Exclude="**\bin\**;**\obj\**">
@@ -15,12 +16,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector" Version="10.0.1" PrivateAssets="all" />
-        <PackageReference Include="coverlet.msbuild" Version="10.0.1" PrivateAssets="all" />
+        <PackageReference Include="coverlet.MTP" Version="10.0.1" PrivateAssets="all" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
         <PackageReference Include="FluentAssertions" Version="7.2.2" />
         <PackageReference Include="xunit.v3" Version="4.0.0" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>

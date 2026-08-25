@@ -5,17 +5,16 @@
     <SignAssembly>true</SignAssembly>
     <OutputType>Library</OutputType>
     <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="10.0.1" PrivateAssets="all" />
-    <PackageReference Include="coverlet.msbuild" Version="10.0.1" PrivateAssets="all" />
+    <PackageReference Include="coverlet.MTP" Version="10.0.1" PrivateAssets="all" />
     <PackageReference Include="FluentAssertions" Version="7.2.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="Verify.XunitV3" Version="31.28.0" />
     <PackageReference Include="xunit.v3" Version="4.0.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
