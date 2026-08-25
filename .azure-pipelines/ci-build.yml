@@ -124,6 +124,7 @@ extends:
                 --results-directory $testResultsDirectory `
                 --minimum-expected-tests 1
               if ($LASTEXITCODE -ne 0) {
+                Write-Error "$($testExecutable.Name) failed with exit code $LASTEXITCODE"
                 if ($exitCode -eq 0) {
                   $exitCode = $LASTEXITCODE
                 }
