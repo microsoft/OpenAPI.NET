@@ -118,7 +118,11 @@ extends:
             $exitCode = 0
             foreach ($testExecutable in $testExecutables | Sort-Object FullName) {
               $targetFramework = Split-Path -Path $testExecutable.DirectoryName -Leaf
-              & $testExecutable.FullName --report-xunit-trx --report-xunit-trx-filename "$($testExecutable.BaseName)-$targetFramework.trx" --results-directory $testResultsDirectory --minimum-expected-tests 1
+              & $testExecutable.FullName `
+                --report-xunit-trx `
+                --report-xunit-trx-filename "$($testExecutable.BaseName)-$targetFramework.trx" `
+                --results-directory $testResultsDirectory `
+                --minimum-expected-tests 1
               if ($LASTEXITCODE -ne 0) {
                 $exitCode = 1
               }
