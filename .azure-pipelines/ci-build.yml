@@ -108,7 +108,7 @@ extends:
               $_.Directory.Parent.Name -eq "$(BuildConfiguration)" -and
               $_.BaseName -eq $_.Directory.Parent.Parent.Parent.Name -and
               # xUnit v3 MTP test apps copy the runner assembly next to the generated executable.
-              (Test-Path (Join-Path $_.DirectoryName "xunit.v3.mtp*.dll"))
+              @(Get-ChildItem -Path $_.DirectoryName -Filter "xunit.v3.mtp*.dll").Count -gt 0
             })
             if ($testExecutables.Count -eq 0) {
               Write-Error "No xUnit MTP test executable found"
@@ -124,7 +124,9 @@ extends:
                 --results-directory $testResultsDirectory `
                 --minimum-expected-tests 1
               if ($LASTEXITCODE -ne 0) {
-                $exitCode = 1
+                if ($exitCode -eq 0) {
+                  $exitCode = $LASTEXITCODE
+                }
               }
             }
 
