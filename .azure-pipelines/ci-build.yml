@@ -102,12 +102,13 @@ extends:
         # Run the Unit test
         - pwsh: |
             $testResultsDirectory = "$(Agent.TempDirectory)\TestResults"
+            $targetFramework = "net10.0"
             New-Item -ItemType Directory -Force -Path $testResultsDirectory | Out-Null
 
             $testApplications = @(
-              @{ Name = "Microsoft.OpenApi.Hidi.Tests"; Path = "$(Build.SourcesDirectory)\test\Microsoft.OpenApi.Hidi.Tests\bin\$(BuildConfiguration)\net10.0\Microsoft.OpenApi.Hidi.Tests.exe" },
-              @{ Name = "Microsoft.OpenApi.Readers.Tests"; Path = "$(Build.SourcesDirectory)\test\Microsoft.OpenApi.Readers.Tests\bin\$(BuildConfiguration)\net10.0\Microsoft.OpenApi.Readers.Tests.exe" },
-              @{ Name = "Microsoft.OpenApi.Tests"; Path = "$(Build.SourcesDirectory)\test\Microsoft.OpenApi.Tests\bin\$(BuildConfiguration)\net10.0\Microsoft.OpenApi.Tests.exe" }
+              @{ Name = "Microsoft.OpenApi.Hidi.Tests"; Path = "$(Build.SourcesDirectory)\test\Microsoft.OpenApi.Hidi.Tests\bin\$(BuildConfiguration)\$targetFramework\Microsoft.OpenApi.Hidi.Tests.exe" },
+              @{ Name = "Microsoft.OpenApi.Readers.Tests"; Path = "$(Build.SourcesDirectory)\test\Microsoft.OpenApi.Readers.Tests\bin\$(BuildConfiguration)\$targetFramework\Microsoft.OpenApi.Readers.Tests.exe" },
+              @{ Name = "Microsoft.OpenApi.Tests"; Path = "$(Build.SourcesDirectory)\test\Microsoft.OpenApi.Tests\bin\$(BuildConfiguration)\$targetFramework\Microsoft.OpenApi.Tests.exe" }
             )
 
             foreach ($testApplication in $testApplications) {
