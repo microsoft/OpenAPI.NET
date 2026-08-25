@@ -21,6 +21,7 @@ pr:
 variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  # Keep in sync with the test project TargetFramework values.
   testTargetFramework: 'net10.0'
   ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
   REGISTRY: 'msgraphprodregistry.azurecr.io'
@@ -112,12 +113,15 @@ extends:
               @{ Name = "Microsoft.OpenApi.Tests"; Path = "$(Build.SourcesDirectory)\test\Microsoft.OpenApi.Tests\bin\$(BuildConfiguration)\$targetFramework\Microsoft.OpenApi.Tests.exe" }
             )
 
+            $exitCode = 0
             foreach ($testApplication in $testApplications) {
               & $testApplication.Path --report-xunit-trx --report-xunit-trx-filename "$($testApplication.Name).trx" --results-directory $testResultsDirectory --minimum-expected-tests 1
               if ($LASTEXITCODE -ne 0) {
-                exit $LASTEXITCODE
+                $exitCode = $LASTEXITCODE
               }
             }
+
+            exit $exitCode
           displayName: 'test'
 
         - task: PublishTestResults@2
