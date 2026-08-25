@@ -107,8 +107,8 @@ extends:
             $testExecutables = @(Get-ChildItem -Path "$(Build.SourcesDirectory)\test" -Recurse -Filter "*.Tests.exe" | Where-Object {
               $_.Directory.Parent.Name -eq "$(BuildConfiguration)" -and
               $_.BaseName -eq $_.Directory.Parent.Parent.Parent.Name -and
-              # xUnit v3 MTP test apps copy this runner assembly next to the generated executable.
-              (Test-Path (Join-Path $_.DirectoryName "xunit.v3.mtp-v2.dll"))
+              # xUnit v3 MTP test apps copy the runner assembly next to the generated executable.
+              (Test-Path (Join-Path $_.DirectoryName "xunit.v3.mtp*.dll"))
             })
             if ($testExecutables.Count -eq 0) {
               Write-Error "No xUnit MTP test executable found"
