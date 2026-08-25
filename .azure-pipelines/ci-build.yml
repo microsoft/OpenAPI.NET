@@ -101,43 +101,13 @@ extends:
 
         # Run the Unit test
         - pwsh: |
-            $testResultsDirectory = "$(Agent.TempDirectory)\TestResults"
-            New-Item -ItemType Directory -Force -Path $testResultsDirectory | Out-Null
-
-            $testExecutableCandidates = @(Get-ChildItem -Path "$(Build.SourcesDirectory)\test" -Recurse -Filter "*.Tests.exe")
-            Write-Host "Discovered $($testExecutableCandidates.Count) test executable candidate(s):"
-            $testExecutableCandidates | ForEach-Object { Write-Host "  $($_.FullName)" }
-
-            $testExecutables = @($testExecutableCandidates | Where-Object {
-              # Match the app produced by its own project output: test\<ProjectName>\bin\<Configuration>\<TFM>\<ProjectName>.exe.
-              $_.Directory.Parent.Name -eq "$(BuildConfiguration)" -and
-              $_.Directory.Parent.Parent.Name -eq "bin" -and
-              $_.BaseName -eq $_.Directory.Parent.Parent.Parent.Name -and
-              # xUnit v3 MTP test apps copy the runner assembly next to the generated executable.
-              @(Get-ChildItem -Path $_.DirectoryName -Filter "xunit.v3.mtp*.dll").Count -gt 0
-            })
-            if ($testExecutables.Count -eq 0) {
-              Write-Error "No xUnit MTP test executable found"
-              exit 1
-            }
-
-            $exitCode = 0
-            foreach ($testExecutable in $testExecutables | Sort-Object FullName) {
-              $targetFramework = Split-Path -Path $testExecutable.DirectoryName -Leaf
-              & $testExecutable.FullName `
-                --report-xunit-trx `
-                --report-xunit-trx-filename "$($testExecutable.BaseName)-$targetFramework.trx" `
-                --results-directory $testResultsDirectory `
-                --minimum-expected-tests 1
-              if ($LASTEXITCODE -ne 0) {
-                Write-Error "$($testExecutable.Name) failed with exit code $LASTEXITCODE"
-                if ($exitCode -eq 0) {
-                  $exitCode = $LASTEXITCODE
-                }
-              }
-            }
-
-            exit $exitCode
+            dotnet test "$(Build.SourcesDirectory)\Microsoft.OpenApi.slnx" `
+              --configuration $(BuildConfiguration) `
+              --no-build `
+              -- `
+              --report-xunit-trx `
+              --results-directory "$(Agent.TempDirectory)\TestResults" `
+              --minimum-expected-tests 1
           displayName: 'test'
 
         - task: PublishTestResults@2
