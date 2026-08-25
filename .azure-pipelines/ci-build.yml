@@ -105,6 +105,7 @@ extends:
             New-Item -ItemType Directory -Force -Path $testResultsDirectory | Out-Null
 
             $testExecutables = @(Get-ChildItem -Path "$(Build.SourcesDirectory)\test" -Recurse -Filter "*.Tests.exe" | Where-Object {
+              # Match the app produced by its own project output: test\<ProjectName>\bin\<Configuration>\<TFM>\<ProjectName>.exe.
               $_.Directory.Parent.Name -eq "$(BuildConfiguration)" -and
               $_.BaseName -eq $_.Directory.Parent.Parent.Parent.Name -and
               # xUnit v3 MTP test apps copy the runner assembly next to the generated executable.
