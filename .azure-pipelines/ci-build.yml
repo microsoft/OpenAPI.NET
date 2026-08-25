@@ -104,27 +104,22 @@ extends:
             $testResultsDirectory = "$(Agent.TempDirectory)\TestResults"
             New-Item -ItemType Directory -Force -Path $testResultsDirectory | Out-Null
 
-            $testApplications = @(
-              @{ Name = "Microsoft.OpenApi.Hidi.Tests"; Pattern = "$(Build.SourcesDirectory)\test\Microsoft.OpenApi.Hidi.Tests\bin\$(BuildConfiguration)\*\Microsoft.OpenApi.Hidi.Tests.exe" },
-              @{ Name = "Microsoft.OpenApi.Readers.Tests"; Pattern = "$(Build.SourcesDirectory)\test\Microsoft.OpenApi.Readers.Tests\bin\$(BuildConfiguration)\*\Microsoft.OpenApi.Readers.Tests.exe" },
-              @{ Name = "Microsoft.OpenApi.Tests"; Pattern = "$(Build.SourcesDirectory)\test\Microsoft.OpenApi.Tests\bin\$(BuildConfiguration)\*\Microsoft.OpenApi.Tests.exe" }
-            )
+            $testExecutables = @(Get-ChildItem -Path "$(Build.SourcesDirectory)\test" -Recurse -Filter "*.Tests.exe" | Where-Object {
+              $_.Directory.Parent.Name -eq "$(BuildConfiguration)" -and
+              $_.BaseName -eq $_.Directory.Parent.Parent.Parent.Name -and
+              (Test-Path (Join-Path $_.DirectoryName "xunit.v3.mtp-v2.dll"))
+            })
+            if ($testExecutables.Count -eq 0) {
+              Write-Error "No xUnit MTP test executable found"
+              exit 1
+            }
 
             $exitCode = 0
-            foreach ($testApplication in $testApplications) {
-              $testExecutables = @(Get-Item -Path $testApplication.Pattern -ErrorAction SilentlyContinue)
-              if ($testExecutables.Count -eq 0) {
-                Write-Error "No test executable found for $($testApplication.Name)"
+            foreach ($testExecutable in $testExecutables | Sort-Object FullName) {
+              $targetFramework = Split-Path -Path $testExecutable.DirectoryName -Leaf
+              & $testExecutable.FullName --report-xunit-trx --report-xunit-trx-filename "$($testExecutable.BaseName)-$targetFramework.trx" --results-directory $testResultsDirectory --minimum-expected-tests 1
+              if ($LASTEXITCODE -ne 0) {
                 $exitCode = 1
-                continue
-              }
-
-              foreach ($testExecutable in $testExecutables) {
-                $targetFramework = Split-Path -Path $testExecutable.DirectoryName -Leaf
-                & $testExecutable.FullName --report-xunit-trx --report-xunit-trx-filename "$($testApplication.Name)-$targetFramework.trx" --results-directory $testResultsDirectory --minimum-expected-tests 1
-                if ($LASTEXITCODE -ne 0) {
-                  $exitCode = 1
-                }
               }
             }
 
