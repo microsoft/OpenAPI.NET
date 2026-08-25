@@ -21,6 +21,7 @@ pr:
 variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  testTargetFramework: 'net10.0'
   ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
   REGISTRY: 'msgraphprodregistry.azurecr.io'
   IMAGE_NAME: 'public/openapi/hidi'
@@ -102,7 +103,7 @@ extends:
         # Run the Unit test
         - pwsh: |
             $testResultsDirectory = "$(Agent.TempDirectory)\TestResults"
-            $targetFramework = "net10.0"
+            $targetFramework = "$(testTargetFramework)"
             New-Item -ItemType Directory -Force -Path $testResultsDirectory | Out-Null
 
             $testApplications = @(
