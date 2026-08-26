@@ -100,12 +100,24 @@ extends:
             arguments: '--configuration $(BuildConfiguration) --no-incremental'
 
         # Run the Unit test
-        - task: DotNetCoreCLI@2
+        - pwsh: |
+            dotnet test "$(Build.SourcesDirectory)\Microsoft.OpenApi.slnx" `
+              --configuration $(BuildConfiguration) `
+              --no-build `
+              -- `
+              --report-xunit-trx `
+              --results-directory "$(Agent.TempDirectory)\TestResults" `
+              --minimum-expected-tests 1
           displayName: 'test'
+
+        - task: PublishTestResults@2
+          displayName: 'Publish test results'
+          condition: succeededOrFailed()
           inputs:
-            command: test
-            projects: '$(Build.SourcesDirectory)\Microsoft.OpenApi.slnx'
-            arguments: '--configuration $(BuildConfiguration) --no-build'
+            testResultsFormat: VSTest
+            testResultsFiles: '$(Agent.TempDirectory)\TestResults\*.trx'
+            failTaskOnMissingResultsFile: true
+            failTaskOnFailedTests: true
 
         - task: EsrpCodeSigning@6
           displayName: 'ESRP CodeSigning binaries'

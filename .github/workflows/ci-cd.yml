@@ -45,7 +45,7 @@ jobs:
         id: run_unit_tests
         shell: pwsh
         run: |
-          dotnet test Microsoft.OpenApi.slnx -c Release --no-build -v n --collect:"XPlat Code Coverage"
+          dotnet test --solution Microsoft.OpenApi.slnx -c Release -v n --coverlet --coverlet-output-format cobertura
 
       - name: Install report generator
         shell: pwsh
@@ -55,7 +55,7 @@ jobs:
       - name: Generate coverage report
         shell: pwsh
         run: |
-          reportgenerator -reports:**/coverage.cobertura.xml -targetdir:./reports/coverage -reporttypes:"Html;MarkdownSummaryGithub;Cobertura"
+          reportgenerator -reports:**/coverage.cobertura*.xml -targetdir:./reports/coverage -reporttypes:"Html;MarkdownSummaryGithub;Cobertura"
 
       - name: Add coverage to job summary
         shell: bash
