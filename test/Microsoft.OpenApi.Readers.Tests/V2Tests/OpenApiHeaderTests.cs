@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 },
                 header,
-                "Parent");
+                nameof(JsonNode.Parent));
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             new JsonNodeExtension(9).Node
                         ]
                     }
-                }, header, "Parent");
+                }, header, nameof(JsonNode.Parent));
         }
     }
 }

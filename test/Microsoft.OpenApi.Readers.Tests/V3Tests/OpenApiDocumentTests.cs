@@ -63,7 +63,7 @@ paths: {}",
                         Version = "0.9.1"
                     },
                     Paths = new OpenApiPaths()
-                }, result.Document, "Workspace", "BaseUri");
+                }, result.Document, nameof(OpenApiDocument.Workspace), nameof(OpenApiDocument.BaseUri));
 
             Assert.Equivalent(
                 new OpenApiDiagnostic()
@@ -117,7 +117,7 @@ paths: {}
                         }
                     ],
                     Paths = new OpenApiPaths()
-                }, result.Document, "Workspace", "BaseUri");
+                }, result.Document, nameof(OpenApiDocument.Workspace), nameof(OpenApiDocument.BaseUri));
         }
         [Fact]
         public async Task ParseBrokenMinimalDocumentShouldYieldExpectedDiagnostic()
@@ -138,7 +138,7 @@ paths: {}
                         Version = "0.9"
                     },
                     Paths = new OpenApiPaths()
-                }, result.Document, "Workspace", "BaseUri");
+                }, result.Document, nameof(OpenApiDocument.Workspace), nameof(OpenApiDocument.BaseUri));
 
             Assert.Equivalent(
                 new OpenApiDiagnostic
@@ -200,7 +200,7 @@ paths: {}
                         Version = "0.9.1"
                     },
                     Paths = new OpenApiPaths()
-                }, result.Document, "Workspace", "BaseUri");
+                }, result.Document, nameof(OpenApiDocument.Workspace), nameof(OpenApiDocument.BaseUri));
 
             Assert.Equivalent(
                 new OpenApiDiagnostic()
@@ -590,7 +590,7 @@ paths: {}
                 Components = components
             };
 
-            OpenApiTestAssert.Equivalent(expectedDoc, actual.Document, "Workspace", "BaseUri");
+            OpenApiTestAssert.Equivalent(expectedDoc, actual.Document, nameof(OpenApiDocument.Workspace), nameof(OpenApiDocument.BaseUri));
 
             Assert.Equivalent(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0, Format = OpenApiConstants.Yaml }, actual.Diagnostic);
@@ -1060,9 +1060,9 @@ paths: {}
             expected.SetReferenceHostDocument();
 
             OpenApiTestAssert.Equivalent(expected, actual.Document, path =>
-                path.MemberName is "Workspace" or "BaseUri"
-                || path.Value.Contains("Paths[/pets].Operations[Get].Tags")
-                || path.Value.Contains("Paths[/pets].Operations[Post].Tags"));
+                path.MemberName is nameof(OpenApiDocument.Workspace) or nameof(OpenApiDocument.BaseUri)
+                || path.Value.Contains($"{nameof(OpenApiDocument.Paths)}[/pets].{nameof(OpenApiPathItem.Operations)}[{HttpMethod.Get}].{nameof(OpenApiOperation.Tags)}")
+                || path.Value.Contains($"{nameof(OpenApiDocument.Paths)}[/pets].{nameof(OpenApiPathItem.Operations)}[{HttpMethod.Post}].{nameof(OpenApiOperation.Tags)}"));
 
             Assert.Equivalent(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0, Format = OpenApiConstants.Yaml }, actual.Diagnostic);
@@ -1112,7 +1112,7 @@ paths: {}
                         Type = JsonSchemaType.String,
                         Format = "uuid"
                     },
-                }, exampleHeader, "Parent");
+                }, exampleHeader, nameof(JsonNode.Parent));
 
             var examplesHeader = result.Document.Components?.Headers?["examples-header"];
             Assert.NotNull(examplesHeader);
@@ -1144,7 +1144,7 @@ paths: {}
                         Type = JsonSchemaType.String,
                         Format = "uuid"
                     },
-                }, examplesHeader, "Parent");
+                }, examplesHeader, nameof(JsonNode.Parent));
         }
 
         [Fact]
@@ -1424,7 +1424,7 @@ components:
             var actualParamReference = Assert.IsType<OpenApiParameterReference>(actualParam);
 
             // Assert
-            OpenApiTestAssert.Equivalent(expectedParamReference, actualParamReference, "Reference", "Target", "RecursiveTarget", "Parent", "Options");
+            OpenApiTestAssert.Equivalent(expectedParamReference, actualParamReference, nameof(OpenApiParameterReference.Reference), nameof(OpenApiParameterReference.Target), nameof(OpenApiParameterReference.RecursiveTarget), nameof(JsonNode.Parent), nameof(JsonNode.Options));
             Assert.Equal(expectedSerializedDoc.MakeLineBreaksEnvironmentNeutral(), outputDoc);
         }
 
@@ -1475,7 +1475,7 @@ components:
                     Format = OpenApiConstants.Yaml
                 }, result.Diagnostic);
 
-            OpenApiTestAssert.Equivalent(expected, result.Document, "BaseUri");
+            OpenApiTestAssert.Equivalent(expected, result.Document, nameof(OpenApiDocument.BaseUri));
         }
 
         [Fact]

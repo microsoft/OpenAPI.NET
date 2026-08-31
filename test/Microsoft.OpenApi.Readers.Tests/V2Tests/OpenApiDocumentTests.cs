@@ -220,7 +220,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ["Error"] = errorSchema
                     }
                 }
-            }, result.Document, "BaseUri");
+            }, result.Document, nameof(OpenApiDocument.BaseUri));
         }
 
         [Fact]

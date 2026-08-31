@@ -242,7 +242,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }}
                     }
-                }, operation, "Parent", "Root");
+                }, operation, nameof(JsonNode.Parent), nameof(JsonNode.Root));
         }
 
         [Fact]

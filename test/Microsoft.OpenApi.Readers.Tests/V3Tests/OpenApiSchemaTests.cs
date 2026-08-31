@@ -277,7 +277,7 @@ get:
                     ["name"] = new JsonNodeExtension("Puma").Node,
                     ["id"] = new JsonNodeExtension(1).Node
                 }
-            }, schema, "Parent", "Root");
+            }, schema, nameof(JsonNode.Parent), nameof(JsonNode.Root));
         }
 
         [Fact]

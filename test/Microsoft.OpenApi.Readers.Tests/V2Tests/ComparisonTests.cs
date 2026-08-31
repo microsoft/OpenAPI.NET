@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var result1 = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, $"{fileName}.v2.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             var result2 = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, $"{fileName}.v3.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
-            OpenApiTestAssert.Equivalent(result1.Document, result2.Document, "Workspace", "BaseUri");
+            OpenApiTestAssert.Equivalent(result1.Document, result2.Document, nameof(OpenApiDocument.Workspace), nameof(OpenApiDocument.BaseUri));
 
             Assert.Equivalent(result2.Diagnostic.Errors, result1.Diagnostic.Errors);
         }
