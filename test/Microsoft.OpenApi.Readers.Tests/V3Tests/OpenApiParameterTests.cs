@@ -3,10 +3,11 @@
 
 using System.Collections.Generic;
 using System.IO;
-using FluentAssertions;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 using Microsoft.OpenApi.Reader.V3;
+using Microsoft.OpenApi.Tests;
 using System.Threading.Tasks;
 using System.Net.Http;
 
@@ -240,7 +241,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Join(SampleFolderPath, "parameterWithExample.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiParameter
                 {
                     In = null,
@@ -253,7 +254,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Type = JsonSchemaType.Number,
                         Format = "float"
                     }
-                }, options => options.IgnoringCyclicReferences().Excluding(p => p.Example.Parent));
+                }, parameter, nameof(JsonNode.Parent));
         }
 
         [Fact]
@@ -263,7 +264,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = await OpenApiModelFactory.LoadAsync<OpenApiParameter>(Path.Join(SampleFolderPath, "parameterWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), settings: SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiParameter
                 {
                     In = null,
@@ -286,9 +287,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Type = JsonSchemaType.Number,
                         Format = "float"
                     }
-                }, options => options.IgnoringCyclicReferences()
-                .Excluding(p => p.Examples["example1"].Value.Parent)
-                .Excluding(p => p.Examples["example2"].Value.Parent));
+                }, parameter, nameof(JsonNode.Parent));
         }
 
         [Fact]

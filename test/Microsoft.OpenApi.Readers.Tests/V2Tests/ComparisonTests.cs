@@ -3,8 +3,8 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Tests;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -27,8 +27,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var result1 = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, $"{fileName}.v2.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
             var result2 = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, $"{fileName}.v3.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
-            result2.Document.Should().BeEquivalentTo(result1.Document,
-                options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
+            OpenApiTestAssert.Equivalent(result1.Document, result2.Document, nameof(OpenApiDocument.Workspace), nameof(OpenApiDocument.BaseUri));
 
             Assert.Equivalent(result2.Diagnostic.Errors, result1.Diagnostic.Errors);
         }

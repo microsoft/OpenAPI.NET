@@ -7,8 +7,8 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Tests;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 Schema = new OpenApiSchemaReference("Error", result.Document)
             };
 
-            result.Document.Should().BeEquivalentTo(new OpenApiDocument
+            OpenApiTestAssert.Equivalent(new OpenApiDocument
             {
                 Info = new()
                 {
@@ -220,7 +220,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         ["Error"] = errorSchema
                     }
                 }
-            }, options => options.Excluding(x => x.BaseUri));
+            }, result.Document, nameof(OpenApiDocument.BaseUri));
         }
 
         [Fact]
