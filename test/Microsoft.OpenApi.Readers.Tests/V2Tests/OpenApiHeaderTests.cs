@@ -3,10 +3,9 @@
 
 using System.Text.Json.Nodes;
 using System.IO;
-using FluentAssertions;
-using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V2;
+using Microsoft.OpenApi.Tests;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -30,7 +29,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var header = OpenApiV2Deserializer.LoadHeader(node, new(), new ParsingContext(new()));
 
             // Assert
-            header.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiHeader
                 {
                     Schema = new OpenApiSchema()
@@ -40,9 +39,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Default = new JsonNodeExtension(5).Node
                     }
                 },
-                options => options
-                .IgnoringCyclicReferences()
-                .Excluding(x => x.Schema.Default.Parent));
+                header,
+                "Parent");
         }
 
         [Fact]
@@ -59,7 +57,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var header = OpenApiV2Deserializer.LoadHeader(node, new(), new ParsingContext(new()));
 
             // Assert
-            header.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiHeader
                 {
                     Schema = new OpenApiSchema()
@@ -73,9 +71,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             new JsonNodeExtension(9).Node
                         ]
                     }
-                }, options => options.IgnoringCyclicReferences()
-                                     .Excluding((IMemberInfo memberInfo) =>
-                                        memberInfo.Path.EndsWith("Parent")));
+                }, header, "Parent");
         }
     }
 }

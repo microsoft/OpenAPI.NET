@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Xunit;
@@ -244,7 +243,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
 
             // Assert            
             Assert.Equivalent(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_2, Format = OpenApiConstants.Yaml }, actual.Diagnostic);
-            actual.Document.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
+            OpenApiTestAssert.Equivalent(expected, actual.Document, "Workspace", "BaseUri");
         }
 
         [Fact]
@@ -446,9 +445,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             };
 
             // Assert
-            actual.Document.Should().BeEquivalentTo(expected, options => options
-            .Excluding(x => x.Workspace)
-            .Excluding(y => y.BaseUri));
+            OpenApiTestAssert.Equivalent(expected, actual.Document, "Workspace", "BaseUri");
             Assert.Equivalent(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_2, Format = OpenApiConstants.Yaml }, actual.Diagnostic);
         }
@@ -613,7 +610,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             var path = Path.Join(SampleFolderPath, "documentWithEmptyTags.json");
             var doc = (await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken)).Document;
 
-            doc.Paths["/groups"].Operations[HttpMethod.Get].Tags.Should().BeNull("Empty tags are ignored, so we should not have any tags");
+            Assert.Null(doc.Paths["/groups"].Operations[HttpMethod.Get].Tags);
         }
         [Fact]
         public async Task DocumentWithSchemaResultsInWarning()

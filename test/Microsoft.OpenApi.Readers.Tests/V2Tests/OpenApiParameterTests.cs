@@ -3,8 +3,6 @@ using System.Text.Json.Nodes;
 // Licensed under the MIT license.
 
 using System.IO;
-using FluentAssertions;
-using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V2;
 using Microsoft.OpenApi.Tests;
@@ -226,7 +224,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node, new(), new ParsingContext(new()));
 
             // Assert
-            parameter.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Path,
@@ -239,7 +237,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Format = "float",
                         Default = new JsonNodeExtension(5).Node
                     }
-                }, options => options.IgnoringCyclicReferences().Excluding(x => x.Schema.Default.Parent));
+                }, parameter, "Parent");
         }
 
         [Fact]
@@ -274,10 +272,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             };
 
             // Assert
-            parameter.Should().BeEquivalentTo(expected, options => options
-                                .IgnoringCyclicReferences()
-                                .Excluding((IMemberInfo memberInfo) =>
-                                    memberInfo.Path.EndsWith("Parent")));
+            OpenApiTestAssert.Equivalent(expected, parameter, "Parent");
         }
 
         [Fact]

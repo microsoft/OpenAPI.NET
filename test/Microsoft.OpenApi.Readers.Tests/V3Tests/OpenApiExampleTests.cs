@@ -4,8 +4,8 @@
 using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Tests;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -56,15 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 }
             };
 
-            example.Should().BeEquivalentTo(expected, options => options.IgnoringCyclicReferences()
-            .Excluding(e => e.Value["versions"][0]["status"].Root)
-            .Excluding(e => e.Value["versions"][0]["id"].Root)
-            .Excluding(e => e.Value["versions"][0]["links"][0]["href"].Root)
-            .Excluding(e => e.Value["versions"][0]["links"][0]["rel"].Root)
-            .Excluding(e => e.Value["versions"][1]["status"].Root)
-            .Excluding(e => e.Value["versions"][1]["id"].Root)
-            .Excluding(e => e.Value["versions"][1]["links"][0]["href"].Root)
-            .Excluding(e => e.Value["versions"][1]["links"][0]["rel"].Root));
+            OpenApiTestAssert.Equivalent(expected, example, "Root");
         }
 
         [Fact]
