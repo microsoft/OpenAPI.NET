@@ -289,7 +289,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             };
 
             // Assert
-            OpenApiTestAssert.Equivalent(expectedSchema, schema, "Parent");
+            OpenApiTestAssert.Equivalent(expectedSchema, schema, nameof(JsonNode.Parent));
         }
 
         [Fact]

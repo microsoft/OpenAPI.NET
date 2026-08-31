@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         Type = JsonSchemaType.Number,
                         Format = "float"
                     }
-                }, mediaType, "Parent");
+                }, mediaType, nameof(JsonNode.Parent));
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                         Type = JsonSchemaType.Number,
                         Format = "float"
                     }
-                }, mediaType, "Parent");
+                }, mediaType, nameof(JsonNode.Parent));
         }
 
         [Fact]

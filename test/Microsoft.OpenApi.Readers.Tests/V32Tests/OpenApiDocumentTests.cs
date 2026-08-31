@@ -243,7 +243,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
 
             // Assert            
             Assert.Equivalent(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_2, Format = OpenApiConstants.Yaml }, actual.Diagnostic);
-            OpenApiTestAssert.Equivalent(expected, actual.Document, "Workspace", "BaseUri");
+            OpenApiTestAssert.Equivalent(expected, actual.Document, nameof(OpenApiDocument.Workspace), nameof(OpenApiDocument.BaseUri));
         }
 
         [Fact]
@@ -445,7 +445,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             };
 
             // Assert
-            OpenApiTestAssert.Equivalent(expected, actual.Document, "Workspace", "BaseUri");
+            OpenApiTestAssert.Equivalent(expected, actual.Document, nameof(OpenApiDocument.Workspace), nameof(OpenApiDocument.BaseUri));
             Assert.Equivalent(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_2, Format = OpenApiConstants.Yaml }, actual.Diagnostic);
         }

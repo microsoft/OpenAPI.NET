@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             };
 
             // Assert
-            OpenApiTestAssert.Equivalent(expectedOp, operation, "Tags");
+            OpenApiTestAssert.Equivalent(expectedOp, operation, nameof(OpenApiOperation.Tags));
         }
         [Fact]
         public void DeduplicatesTagReferences()

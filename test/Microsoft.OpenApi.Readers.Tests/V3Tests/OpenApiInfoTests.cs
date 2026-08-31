@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }),
                             ["x-list"] = new JsonNodeExtension (new JsonArray { "1", "2" })
                     }
-                }, openApiInfo, "Parent", "Root");
+                }, openApiInfo, nameof(JsonNode.Parent), nameof(JsonNode.Root));
         }
 
         [Fact]

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 using Microsoft.OpenApi.Reader.V3;
@@ -253,7 +254,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Type = JsonSchemaType.Number,
                         Format = "float"
                     }
-                }, parameter, "Parent");
+                }, parameter, nameof(JsonNode.Parent));
         }
 
         [Fact]
@@ -286,7 +287,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Type = JsonSchemaType.Number,
                         Format = "float"
                     }
-                }, parameter, "Parent");
+                }, parameter, nameof(JsonNode.Parent));
         }
 
         [Fact]

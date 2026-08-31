@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 }
             };
 
-            OpenApiTestAssert.Equivalent(expected, example, "Root");
+            OpenApiTestAssert.Equivalent(expected, example, nameof(JsonNode.Root));
         }
 
         [Fact]

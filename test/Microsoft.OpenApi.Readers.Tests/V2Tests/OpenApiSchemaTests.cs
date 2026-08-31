@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 Type = JsonSchemaType.Number,
                 Format = "float",
                 Default = 5
-            }, schema, "Parent");
+            }, schema, nameof(JsonNode.Parent));
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Type = JsonSchemaType.Number,
                     Format = "float",
                     Example = 5
-                }, schema, "Parent");
+                }, schema, nameof(JsonNode.Parent));
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 ]
             };
 
-            OpenApiTestAssert.Equivalent(expected, schema, "Parent");
+            OpenApiTestAssert.Equivalent(expected, schema, nameof(JsonNode.Parent));
         }
 
         [Fact]

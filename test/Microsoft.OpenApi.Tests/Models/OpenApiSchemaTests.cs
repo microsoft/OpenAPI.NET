@@ -636,7 +636,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var schemaCopy = schema.CreateShallowCopy();
 
             // Act && Assert
-            OpenApiTestAssert.Equivalent(schemaCopy.Example, schema.Example, "Options");
+            OpenApiTestAssert.Equivalent(schemaCopy.Example, schema.Example, nameof(JsonNode.Options));
         }
 #pragma warning restore CS0618
 

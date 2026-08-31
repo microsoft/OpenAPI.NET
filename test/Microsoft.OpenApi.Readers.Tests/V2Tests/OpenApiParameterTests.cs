@@ -237,7 +237,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Format = "float",
                         Default = new JsonNodeExtension(5).Node
                     }
-                }, parameter, "Parent");
+                }, parameter, nameof(JsonNode.Parent));
         }
 
         [Fact]
@@ -272,7 +272,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             };
 
             // Assert
-            OpenApiTestAssert.Equivalent(expected, parameter, "Parent");
+            OpenApiTestAssert.Equivalent(expected, parameter, nameof(JsonNode.Parent));
         }
 
         [Fact]
