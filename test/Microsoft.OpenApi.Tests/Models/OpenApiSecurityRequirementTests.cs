@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using FluentAssertions;
 using VerifyXunit;
 using Xunit;
 using System.Text.Json.Nodes;
@@ -234,14 +233,15 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Assert.Equal(2, securityRequirement.Count);
 
-            securityRequirement.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiSecurityRequirement
                 {
                     // This should work with any security scheme object
                     // as long as Reference.Id os securityScheme1
                     [new OpenApiSecuritySchemeReference("securityScheme1", null)] = new List<string>(),
                     [new OpenApiSecuritySchemeReference("securityScheme2", null)] = new List<string> { "scope1", "scope2" },
-                });
+                },
+                securityRequirement);
         }
     }
 }

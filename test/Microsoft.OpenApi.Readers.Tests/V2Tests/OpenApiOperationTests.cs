@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V2;
 using Microsoft.OpenApi.Reader.V3;
@@ -165,7 +164,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
+            OpenApiTestAssert.Equivalent(_operationWithBody, operation);
         }
 
         [Fact]
@@ -183,7 +182,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
+            OpenApiTestAssert.Equivalent(_operationWithBody, operation);
         }
 
         [Fact]
@@ -200,7 +199,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
 
             // Assert
-            operation.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiOperation()
                 {
                     Responses = new OpenApiResponses()
@@ -243,13 +242,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }}
                     }
-                }, options => options.IgnoringCyclicReferences()
-                .Excluding(o => o.Responses["200"].Content["application/json"].Example[0].Parent)
-                .Excluding(o => o.Responses["200"].Content["application/json"].Example[0].Root)
-                .Excluding(o => o.Responses["200"].Content["application/json"].Example[1].Parent)
-                .Excluding(o => o.Responses["200"].Content["application/json"].Example[1].Root)
-                .Excluding(o => o.Responses["200"].Content["application/json"].Example[2].Parent)
-                .Excluding(o => o.Responses["200"].Content["application/json"].Example[2].Root));
+                }, operation, "Parent", "Root");
         }
 
         [Fact]
@@ -300,7 +293,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
+            OpenApiTestAssert.Equivalent(_operationWithBody, operation);
         }
 
         [Fact]

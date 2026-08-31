@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using FluentAssertions;
-using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V2;
 using Microsoft.OpenApi.Tests;
@@ -35,12 +33,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var schema = OpenApiV2Deserializer.LoadSchema(node, new(), new ParsingContext(new()));
 
             // Assert
-            schema.Should().BeEquivalentTo(new OpenApiSchema
+            OpenApiTestAssert.Equivalent(new OpenApiSchema
             {
                 Type = JsonSchemaType.Number,
                 Format = "float",
                 Default = 5
-            }, options => options.IgnoringCyclicReferences().Excluding(x => x.Default.Parent));
+            }, schema, "Parent");
         }
 
         [Fact]
@@ -57,13 +55,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var schema = OpenApiV2Deserializer.LoadSchema(node, new(), new ParsingContext(new()));
 
             // Assert
-            schema.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiSchema
                 {
                     Type = JsonSchemaType.Number,
                     Format = "float",
                     Example = 5
-                }, options => options.IgnoringCyclicReferences().Excluding(x => x.Example.Parent));
+                }, schema, "Parent");
         }
 
         [Fact]
@@ -92,10 +90,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 ]
             };
 
-            schema.Should().BeEquivalentTo(expected, options =>
-                       options.IgnoringCyclicReferences()
-                              .Excluding((IMemberInfo memberInfo) =>
-                                    memberInfo.Path.EndsWith("Parent")));
+            OpenApiTestAssert.Equivalent(expected, schema, "Parent");
         }
 
         [Fact]

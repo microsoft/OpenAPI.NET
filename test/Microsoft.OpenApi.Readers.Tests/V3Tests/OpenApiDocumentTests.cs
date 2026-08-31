@@ -13,7 +13,6 @@ using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Moq;
@@ -55,7 +54,7 @@ info:
 paths: {}",
                 OpenApiConstants.Yaml, SettingsFixture.ReaderSettings);
 
-            result.Document.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiDocument
                 {
                     Info = new OpenApiInfo
@@ -64,7 +63,7 @@ paths: {}",
                         Version = "0.9.1"
                     },
                     Paths = new OpenApiPaths()
-                }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
+                }, result.Document, "Workspace", "BaseUri");
 
             Assert.Equivalent(
                 new OpenApiDiagnostic()
@@ -96,7 +95,7 @@ paths: {}
             var result = await OpenApiDocument.LoadAsync(path, SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             Assert.Empty(result.Diagnostic.Errors);
-            result.Document.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiDocument
                 {
                     Info = new OpenApiInfo
@@ -118,7 +117,7 @@ paths: {}
                         }
                     ],
                     Paths = new OpenApiPaths()
-                }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
+                }, result.Document, "Workspace", "BaseUri");
         }
         [Fact]
         public async Task ParseBrokenMinimalDocumentShouldYieldExpectedDiagnostic()
@@ -131,7 +130,7 @@ paths: {}
 
             var result = await OpenApiDocument.LoadAsync(memoryStream, settings: SettingsFixture.ReaderSettings, cancellationToken: TestContext.Current.CancellationToken);
 
-            result.Document.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiDocument
                 {
                     Info = new OpenApiInfo
@@ -139,7 +138,7 @@ paths: {}
                         Version = "0.9"
                     },
                     Paths = new OpenApiPaths()
-                }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
+                }, result.Document, "Workspace", "BaseUri");
 
             Assert.Equivalent(
                 new OpenApiDiagnostic
@@ -192,7 +191,7 @@ paths: {}
         {
             var result = await OpenApiDocument.LoadAsync(Path.Join(SampleFolderPath, "minimalDocument.yaml"), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
-            result.Document.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiDocument
                 {
                     Info = new OpenApiInfo
@@ -201,7 +200,7 @@ paths: {}
                         Version = "0.9.1"
                     },
                     Paths = new OpenApiPaths()
-                }, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
+                }, result.Document, "Workspace", "BaseUri");
 
             Assert.Equivalent(
                 new OpenApiDiagnostic()
@@ -591,7 +590,7 @@ paths: {}
                 Components = components
             };
 
-            actual.Document.Should().BeEquivalentTo(expectedDoc, options => options.Excluding(x => x.Workspace).Excluding(y => y.BaseUri));
+            OpenApiTestAssert.Equivalent(expectedDoc, actual.Document, "Workspace", "BaseUri");
 
             Assert.Equivalent(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0, Format = OpenApiConstants.Yaml }, actual.Diagnostic);
@@ -1060,12 +1059,10 @@ paths: {}
             expected.RegisterComponents();
             expected.SetReferenceHostDocument();
 
-            actual.Document.Should().BeEquivalentTo(expected, options => options
-            .IgnoringCyclicReferences()
-            .Excluding(ctx => ctx.Path.Contains("Paths[\"/pets\"].Operations[HttpMethod.Get].Tags"))
-            .Excluding(ctx => ctx.Path.Contains("Paths[\"/pets\"].Operations[HttpMethod.Post].Tags"))
-            .Excluding(x => x.Workspace)
-            .Excluding(y => y.BaseUri));
+            OpenApiTestAssert.Equivalent(expected, actual.Document, path =>
+                path.MemberName is "Workspace" or "BaseUri"
+                || path.Value.Contains("Paths[/pets].Operations[Get].Tags")
+                || path.Value.Contains("Paths[/pets].Operations[Post].Tags"));
 
             Assert.Equivalent(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0, Format = OpenApiConstants.Yaml }, actual.Diagnostic);
@@ -1099,7 +1096,7 @@ paths: {}
 
             var exampleHeader = result.Document.Components?.Headers?["example-header"];
             Assert.NotNull(exampleHeader);
-            exampleHeader.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiHeader()
                 {
                     Description = "Test header with example",
@@ -1115,12 +1112,11 @@ paths: {}
                         Type = JsonSchemaType.String,
                         Format = "uuid"
                     },
-                }, options => options.IgnoringCyclicReferences()
-                .Excluding(e => e.Example.Parent));
+                }, exampleHeader, "Parent");
 
             var examplesHeader = result.Document.Components?.Headers?["examples-header"];
             Assert.NotNull(examplesHeader);
-            examplesHeader.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiHeader()
                 {
                     Description = "Test header with example",
@@ -1148,9 +1144,7 @@ paths: {}
                         Type = JsonSchemaType.String,
                         Format = "uuid"
                     },
-                }, options => options.IgnoringCyclicReferences()
-                .Excluding(e => e.Examples["uuid1"].Value.Parent)
-                .Excluding(e => e.Examples["uuid2"].Value.Parent));
+                }, examplesHeader, "Parent");
         }
 
         [Fact]
@@ -1430,13 +1424,7 @@ components:
             var actualParamReference = Assert.IsType<OpenApiParameterReference>(actualParam);
 
             // Assert
-            actualParamReference.Should().BeEquivalentTo(expectedParamReference, options => options
-                .Excluding(x => x.Reference)
-                .Excluding(x => x.Target)
-                .Excluding(x => x.RecursiveTarget)
-                .Excluding(x => x.Schema.Default.Parent)
-                .Excluding(x => x.Schema.Default.Options)
-                .IgnoringCyclicReferences());
+            OpenApiTestAssert.Equivalent(expectedParamReference, actualParamReference, "Reference", "Target", "RecursiveTarget", "Parent", "Options");
             Assert.Equal(expectedSerializedDoc.MakeLineBreaksEnvironmentNeutral(), outputDoc);
         }
 
@@ -1487,7 +1475,7 @@ components:
                     Format = OpenApiConstants.Yaml
                 }, result.Diagnostic);
 
-            result.Document.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.BaseUri));
+            OpenApiTestAssert.Equivalent(expected, result.Document, "BaseUri");
         }
 
         [Fact]
