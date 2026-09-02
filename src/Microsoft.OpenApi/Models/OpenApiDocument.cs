@@ -877,16 +877,17 @@ namespace Microsoft.OpenApi
 
         private IEnumerable<OpenApiOperation> GetAllOperations()
         {
-            foreach (var pathItem in Paths.Values)
-            {
-                if (pathItem.Operations is null) continue;
-                foreach (var operation in pathItem.Operations.Values)
+            foreach (var operation in GetOperationsFromPathItems(Paths))
+                yield return operation;
+
+            if (Webhooks is not null)
+                foreach (var operation in GetOperationsFromPathItems(Webhooks))
                     yield return operation;
-            }
+        }
 
-            if (Webhooks is null) yield break;
-
-            foreach (var pathItem in Webhooks.Values)
+        private static IEnumerable<OpenApiOperation> GetOperationsFromPathItems(IDictionary<string, IOpenApiPathItem> pathItems)
+        {
+            foreach (var pathItem in pathItems.Values)
             {
                 if (pathItem.Operations is null) continue;
                 foreach (var operation in pathItem.Operations.Values)
