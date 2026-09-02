@@ -25,8 +25,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.10" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.11" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.11" />
   </ItemGroup>
   
   <!-- Windows-specific resources -->
