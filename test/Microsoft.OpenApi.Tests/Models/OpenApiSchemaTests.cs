@@ -10,7 +10,6 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Schema;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Reader;
 using VerifyXunit;
 using Xunit;
@@ -636,9 +635,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var schemaCopy = schema.CreateShallowCopy();
 
             // Act && Assert
-            schema.Example.Should().BeEquivalentTo(schemaCopy.Example, options => options
-            .IgnoringCyclicReferences()
-            .Excluding(x => x.Options));
+            OpenApiTestAssert.Equivalent(schemaCopy.Example, schema.Example, nameof(JsonNode.Options));
         }
 #pragma warning restore CS0618
 

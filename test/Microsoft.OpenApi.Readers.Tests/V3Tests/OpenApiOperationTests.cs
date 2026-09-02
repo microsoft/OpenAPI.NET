@@ -7,7 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Microsoft.OpenApi.Tests;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 
@@ -71,9 +71,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             };
 
             // Assert
-            expectedOp.Should().BeEquivalentTo(operation, 
-                options => 
-                options.Excluding(x => x.Tags));
+            OpenApiTestAssert.Equivalent(expectedOp, operation, nameof(OpenApiOperation.Tags));
         }
         [Fact]
         public void DeduplicatesTagReferences()
