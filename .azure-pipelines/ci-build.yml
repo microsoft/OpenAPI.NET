@@ -105,19 +105,11 @@ extends:
               --configuration $(BuildConfiguration) `
               --no-build `
               -- `
-              --report-xunit-trx `
-              --results-directory "$(Agent.TempDirectory)\TestResults" `
+              --report-azdo `
+              --publish-azdo-test-results `
+              --results-directory="$(Agent.TempDirectory)\TestResults" `
               --minimum-expected-tests 1
           displayName: 'test'
-
-        - task: PublishTestResults@2
-          displayName: 'Publish test results'
-          condition: succeededOrFailed()
-          inputs:
-            testResultsFormat: VSTest
-            testResultsFiles: '$(Agent.TempDirectory)\TestResults\*.trx'
-            failTaskOnMissingResultsFile: true
-            failTaskOnFailedTests: true
 
         - task: EsrpCodeSigning@6
           displayName: 'ESRP CodeSigning binaries'
