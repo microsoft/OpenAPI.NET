@@ -857,6 +857,34 @@ namespace Microsoft.OpenApi
             // Register only if it was actually added to the collection
             return added && (Workspace?.RegisterComponentForDocument(this, componentToRegister, id) ?? false);
         }
+
+        /// <summary>
+        /// Finds an operation in the document by its operation ID.
+        /// </summary>
+        /// <param name="operationId">The operation ID to search for.</param>
+        /// <returns>The matching <see cref="OpenApiOperation"/>, or <see langword="null"/> if not found.</returns>
+        public OpenApiOperation? GetOperationById(string operationId)
+        {
+            Utils.CheckArgumentNullOrEmpty(operationId);
+
+            return GetOperationByIdFromPathItems(Paths, operationId) ??
+                (Webhooks is not null ?
+                    GetOperationByIdFromPathItems(Webhooks, operationId) : null);
+        }
+
+        private static OpenApiOperation? GetOperationByIdFromPathItems(IDictionary<string, IOpenApiPathItem> pathItems, string operationId)
+        {
+            foreach (var pathItem in pathItems.Values)
+            {
+                if (pathItem.Operations is null) continue;
+                foreach (var operation in pathItem.Operations.Values)
+                {
+                    if (string.Equals(operation.OperationId, operationId, StringComparison.Ordinal))
+                        return operation;
+                }
+            }
+            return null;
+        }
     }
 
     internal class FindSchemaReferences : OpenApiVisitorBase
