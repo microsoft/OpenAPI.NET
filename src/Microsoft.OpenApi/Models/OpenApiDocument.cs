@@ -867,32 +867,23 @@ namespace Microsoft.OpenApi
         {
             Utils.CheckArgumentNullOrEmpty(operationId);
 
-            foreach (var operation in GetAllOperations())
-            {
-                if (string.Equals(operation.OperationId, operationId, StringComparison.Ordinal))
-                    return operation;
-            }
-            return null;
+            return GetOperationByIdFromPathItems(Paths, operationId) ??
+                (Webhooks is not null ?
+                    GetOperationByIdFromPathItems(Webhooks, operationId) : null);
         }
 
-        private IEnumerable<OpenApiOperation> GetAllOperations()
-        {
-            foreach (var operation in GetOperationsFromPathItems(Paths))
-                yield return operation;
-
-            if (Webhooks is not null)
-                foreach (var operation in GetOperationsFromPathItems(Webhooks))
-                    yield return operation;
-        }
-
-        private static IEnumerable<OpenApiOperation> GetOperationsFromPathItems(IDictionary<string, IOpenApiPathItem> pathItems)
+        private static OpenApiOperation? GetOperationByIdFromPathItems(IDictionary<string, IOpenApiPathItem> pathItems, string operationId)
         {
             foreach (var pathItem in pathItems.Values)
             {
                 if (pathItem.Operations is null) continue;
                 foreach (var operation in pathItem.Operations.Values)
-                    yield return operation;
+                {
+                    if (string.Equals(operation.OperationId, operationId, StringComparison.Ordinal))
+                        return operation;
+                }
             }
+            return null;
         }
     }
 
