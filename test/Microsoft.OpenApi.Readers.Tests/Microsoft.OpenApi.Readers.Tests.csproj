@@ -4,6 +4,7 @@
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
+        <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     </PropertyGroup>
     <ItemGroup>
         <EmbeddedResource Include="**\*.yaml" Exclude="**\bin\**;**\obj\**">
