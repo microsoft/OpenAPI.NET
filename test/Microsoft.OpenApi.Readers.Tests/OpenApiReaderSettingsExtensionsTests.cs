@@ -29,4 +29,19 @@ public class OpenApiReaderSettingsExtensionsTests
         var extensionsNS = typeof(OpenApiReaderSettingsExtensions).Namespace;
         Assert.Equal(settingsNS, extensionsNS, StringComparer.Ordinal);
     }
+
+    [Fact]
+    public void AddsYamlReaderWithPerReaderSettings()
+    {
+        var settings = new OpenApiReaderSettings();
+        var yamlSettings = new OpenApiYamlReaderSettings
+        {
+            MaxAliasExpansionNodeCount = 10,
+        };
+
+        settings.AddYamlReader(yamlSettings);
+
+        var yamlReader = Assert.IsType<OpenApiYamlReader>(settings.GetReader(OpenApiConstants.Yaml));
+        Assert.Same(yamlReader, settings.GetReader(OpenApiConstants.Yml));
+    }
 }

@@ -34,28 +34,28 @@ namespace Microsoft.OpenApi
         }
 
         /// <inheritdoc/>
-        public IOpenApiSchema? Schema { get => Target?.Schema; }
+        public IOpenApiSchema? Schema { get => GetFromTarget(static target => target.Schema); }
 
         /// <inheritdoc/>
-        public IOpenApiSchema? ItemSchema { get => Target?.ItemSchema; }
+        public IOpenApiSchema? ItemSchema { get => GetFromTarget(static target => target.ItemSchema); }
 
         /// <inheritdoc/>
-        public JsonNode? Example { get => Target?.Example; }
+        public JsonNode? Example { get => GetFromTarget(static target => target.Example); }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExample>? Examples { get => Target?.Examples; }
+        public IDictionary<string, IOpenApiExample>? Examples { get => GetFromTarget(static target => target.Examples); }
 
         /// <inheritdoc/>
-        public IDictionary<string, OpenApiEncoding>? Encoding { get => Target?.Encoding; }
+        public IDictionary<string, OpenApiEncoding>? Encoding { get => GetFromTarget(static target => target.Encoding); }
 
         /// <inheritdoc/>
-        public OpenApiEncoding? ItemEncoding { get => Target?.ItemEncoding; }
+        public OpenApiEncoding? ItemEncoding { get => GetFromTarget(static target => target.ItemEncoding); }
 
         /// <inheritdoc/>
-        public IList<OpenApiEncoding>? PrefixEncoding { get => Target?.PrefixEncoding; }
+        public IList<OpenApiEncoding>? PrefixEncoding { get => GetFromTarget(static target => target.PrefixEncoding); }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => GetFromTarget(static target => target.Extensions); }
 
         /// <inheritdoc/>
         public override IOpenApiMediaType CopyReferenceAsTargetElementWithOverrides(IOpenApiMediaType source)

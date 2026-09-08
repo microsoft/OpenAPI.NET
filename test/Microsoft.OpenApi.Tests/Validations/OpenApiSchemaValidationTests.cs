@@ -392,5 +392,204 @@ namespace Microsoft.OpenApi.Validations.Tests
             //Assert
             Assert.Empty(errors);
         }
+
+        [Fact]
+        public void ValidateSchemaDiscriminatorReturnsExistingErrorForSelfCycleWithoutValidDiscriminator()
+        {
+            // Arrange
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                Discriminator = new()
+                {
+                    PropertyName = "type"
+                }
+            };
+            schema.OneOf = [schema];
+
+            var components = new OpenApiComponents
+            {
+                Schemas = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["Person"] = schema
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(components);
+
+            // Assert
+            Assert.Equivalent(new List<OpenApiValidatorError>
+            {
+                new(nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator), "#/schemas/Person/discriminator",
+                    string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
+                        string.Empty, "type"))
+            }, validator.Errors);
+        }
+
+        [Fact]
+#pragma warning disable CS0618
+        public void TraverseSchemaElementsReturnsFalseForMultiNodeCycleWithoutDiscriminator()
+        {
+            // Arrange
+            var first = new OpenApiSchema();
+            var second = new OpenApiSchema();
+            var third = new OpenApiSchema();
+
+            first.OneOf = [second];
+            second.AnyOf = [third];
+            third.AllOf = [first];
+
+            // Act
+            var result = OpenApiSchemaRules.TraverseSchemaElements("type", [first]);
+
+            // Assert
+            Assert.False(result);
+        }
+#pragma warning restore CS0618
+
+        [Fact]
+#pragma warning disable CS0618
+        public void ValidateChildSchemaAgainstDiscriminatorReturnsTrueForDeepAcyclicTraversal()
+        {
+            // Arrange
+            const string discriminatorName = "type";
+            var root = CreateSchemaChain(5000, discriminatorName);
+
+            // Act
+            var result = OpenApiSchemaRules.ValidateChildSchemaAgainstDiscriminator(root, discriminatorName);
+
+            // Assert
+            Assert.True(result);
+        }
+#pragma warning restore CS0618
+
+        [Fact]
+        public void ValidateSchemaDiscriminatorCanFindValidLaterOneOfChild()
+        {
+            // Arrange
+            var components = new OpenApiComponents
+            {
+                Schemas = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["Person"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.Object,
+                        Discriminator = new()
+                        {
+                            PropertyName = "type"
+                        },
+                        OneOf =
+                        [
+                            new OpenApiSchema(),
+                            new OpenApiSchema
+                            {
+                                Properties = new Dictionary<string, IOpenApiSchema>
+                                {
+                                    ["type"] = new OpenApiSchema
+                                    {
+                                        Type = JsonSchemaType.String
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(components);
+
+            // Assert
+            Assert.Empty(validator.Errors);
+        }
+
+        [Fact]
+        public void ValidateSchemaDiscriminatorChecksOneOfAnyOfAndAllOf()
+        {
+            // Arrange
+            var components = new OpenApiComponents
+            {
+                Schemas = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["Person"] = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.Object,
+                        Discriminator = new()
+                        {
+                            PropertyName = "type"
+                        },
+                        OneOf =
+                        [
+                            new OpenApiSchema()
+                        ],
+                        AnyOf =
+                        [
+                            new OpenApiSchema()
+                        ],
+                        AllOf =
+                        [
+                            new OpenApiSchema
+                            {
+                                Properties = new Dictionary<string, IOpenApiSchema>
+                                {
+                                    ["type"] = new OpenApiSchema
+                                    {
+                                        Type = JsonSchemaType.String
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(components);
+
+            // Assert
+            Assert.Empty(validator.Errors);
+        }
+
+        private static OpenApiSchema CreateSchemaChain(int depth, string discriminatorName)
+        {
+            var root = new OpenApiSchema();
+            var current = root;
+
+            for (var i = 0; i < depth; i++)
+            {
+                var next = new OpenApiSchema();
+                switch (i % 3)
+                {
+                    case 0:
+                        current.OneOf = [next];
+                        break;
+                    case 1:
+                        current.AnyOf = [next];
+                        break;
+                    default:
+                        current.AllOf = [next];
+                        break;
+                }
+
+                current = next;
+            }
+
+            current.Properties = new Dictionary<string, IOpenApiSchema>
+            {
+                [discriminatorName] = new OpenApiSchema
+                {
+                    Type = JsonSchemaType.String
+                }
+            };
+
+            return root;
+        }
     }
 }

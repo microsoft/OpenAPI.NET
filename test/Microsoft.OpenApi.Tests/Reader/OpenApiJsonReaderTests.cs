@@ -58,6 +58,45 @@ public class OpenApiJsonReaderTests
     }
 
     [Fact]
+    public void ReadReturnsValidationErrorForSelfReferentialDiscriminatorSchema()
+    {
+        var reader = new OpenApiJsonReader();
+        using var stream = CreateStream(
+            """
+            {
+              "openapi": "3.0.1",
+              "info": {
+                "title": "Sample",
+                "version": "1.0.0"
+              },
+              "paths": {},
+              "components": {
+                "schemas": {
+                  "Pet": {
+                    "type": "object",
+                    "discriminator": {
+                      "propertyName": "kind"
+                    },
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/Pet"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+            """);
+
+        var result = reader.Read(stream, DocumentLocation, new OpenApiReaderSettings());
+
+        Assert.NotNull(result.Document);
+        Assert.Contains(result.Diagnostic.Errors, error =>
+            error is OpenApiValidatorError validatorError &&
+            validatorError.RuleName == nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator));
+    }
+
+    [Fact]
     public void ReadReturnsDiagnosticWhenRootNodeCannotBeParsedAsDocument()
     {
         var reader = new OpenApiJsonReader();

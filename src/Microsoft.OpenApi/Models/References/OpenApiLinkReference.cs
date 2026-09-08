@@ -34,27 +34,27 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public string? Description
         {
-            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            get => string.IsNullOrEmpty(Reference.Description) ? GetFromTarget(static target => target.Description) : Reference.Description;
             set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
-        public string? OperationRef { get => Target?.OperationRef; }
+        public string? OperationRef { get => GetFromTarget(static target => target.OperationRef); }
 
         /// <inheritdoc/>
-        public string? OperationId { get => Target?.OperationId; }
+        public string? OperationId { get => GetFromTarget(static target => target.OperationId); }
 
         /// <inheritdoc/>
-        public OpenApiServer? Server { get => Target?.Server; }
+        public OpenApiServer? Server { get => GetFromTarget(static target => target.Server); }
 
         /// <inheritdoc/>
-        public IDictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get => Target?.Parameters; }
+        public IDictionary<string, RuntimeExpressionAnyWrapper>? Parameters { get => GetFromTarget(static target => target.Parameters); }
 
         /// <inheritdoc/>
-        public RuntimeExpressionAnyWrapper? RequestBody { get => Target?.RequestBody; }
+        public RuntimeExpressionAnyWrapper? RequestBody { get => GetFromTarget(static target => target.RequestBody); }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => GetFromTarget(static target => target.Extensions); }
 
         /// <inheritdoc/>
         public override void SerializeAsV2(IOpenApiWriter writer)
