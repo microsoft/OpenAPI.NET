@@ -43,12 +43,6 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "workbench",
-            "type": "shell",
-            "command": "src/Microsoft.OpenApi.WorkBench/bin/Debug/Microsoft.OpenApi.WorkBench.exe",
-            "problemMatcher": []
         }
     ]
 }
