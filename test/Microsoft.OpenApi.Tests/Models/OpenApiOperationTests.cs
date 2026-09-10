@@ -343,7 +343,6 @@ namespace Microsoft.OpenApi.Tests.Models
                       "$ref": "#/components/responses/response1"
                     },
                     "400": {
-                      "description": null,
                       "content": {
                         "application/json": {
                           "schema": {
@@ -416,7 +415,6 @@ namespace Microsoft.OpenApi.Tests.Models
                       "$ref": "#/components/responses/response1"
                     },
                     "400": {
-                      "description": null,
                       "content": {
                         "application/json": {
                           "schema": {
@@ -648,7 +646,6 @@ namespace Microsoft.OpenApi.Tests.Models
                       "$ref": "#/responses/response1"
                     },
                     "400": {
-                      "description": null,
                       "schema": {
                         "type": "number",
                         "maximum": 10,
@@ -718,7 +715,6 @@ namespace Microsoft.OpenApi.Tests.Models
                       "$ref": "#/responses/response1"
                     },
                     "400": {
-                      "description": null,
                       "schema": {
                         "type": "number",
                         "maximum": 10,
