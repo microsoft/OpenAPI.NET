@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
-using System.Text.Json.Nodes;
+using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Reader;
 using SharpYaml;
-using System;
-using System.Text;
 
 namespace Microsoft.OpenApi.YamlReader
 {
@@ -58,6 +58,10 @@ namespace Microsoft.OpenApi.YamlReader
         }
 
         /// <inheritdoc/>
+        /// <remarks>
+        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>. Syntax-level YAML
+        /// errors can throw before a <see cref="ReadResult"/> is created.
+        /// </remarks>
         public async Task<ReadResult> ReadAsync(Stream input,
                                                 Uri location,
                                                 OpenApiReaderSettings settings,
@@ -68,8 +72,8 @@ namespace Microsoft.OpenApi.YamlReader
             if (input is MemoryStream memoryStream)
             {
                 return ReadCore(memoryStream, location, settings, cancellationToken);
-            } 
-            else 
+            }
+            else
             {
                 using var preparedStream = new MemoryStream();
                 try
@@ -95,6 +99,10 @@ namespace Microsoft.OpenApi.YamlReader
         }
 
         /// <inheritdoc/>
+        /// <remarks>
+        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>. Syntax-level YAML
+        /// errors can throw before a <see cref="ReadResult"/> is created.
+        /// </remarks>
         public ReadResult Read(MemoryStream input,
                                Uri location,
                                OpenApiReaderSettings settings)
@@ -118,7 +126,7 @@ namespace Microsoft.OpenApi.YamlReader
 // this represents net core, net5 and up
                 using var stream = new StreamReader(input, default, true, -1, settings.LeaveStreamOpen);
 #else
-// the implementation differs and results in a null reference exception in NETFX
+                // the implementation differs and results in a null reference exception in NETFX
                 using var stream = new StreamReader(input, Encoding.UTF8, true, 4096, settings.LeaveStreamOpen);
 #endif
                 jsonNode = LoadJsonNodesFromYamlDocument(stream, cancellationToken);
@@ -194,6 +202,10 @@ namespace Microsoft.OpenApi.YamlReader
         }
 
         /// <inheritdoc/>
+        /// <remarks>
+        /// OpenAPI semantic errors are returned in the <paramref name="diagnostic"/>. Syntax-level YAML
+        /// errors can throw before a fragment is created.
+        /// </remarks>
         public T? ReadFragment<T>(MemoryStream input,
                                  OpenApiSpecVersion version,
                                  OpenApiDocument openApiDocument,

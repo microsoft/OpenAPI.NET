@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
-using System.Text.Json.Nodes;
+using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
-using System;
 
 namespace Microsoft.OpenApi.Reader
 {
@@ -23,6 +23,10 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="location">Location of where the document that is getting loaded is saved</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <returns></returns>
+        /// <remarks>
+        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>. Syntax-level JSON
+        /// errors can throw before a <see cref="ReadResult"/> is created.
+        /// </remarks>
         public ReadResult Read(MemoryStream input,
                                Uri location,
                                OpenApiReaderSettings settings)
@@ -60,6 +64,10 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="location">Location of where the document that is getting loaded is saved</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <returns></returns>
+        /// <remarks>
+        /// Use this overload when JSON has already been parsed into a <see cref="JsonNode"/>. OpenAPI semantic
+        /// errors are returned in the <see cref="ReadResult.Diagnostic"/>.
+        /// </remarks>
         public ReadResult Read(JsonNode jsonNode,
                                Uri location,
                                OpenApiReaderSettings settings)
@@ -91,7 +99,7 @@ namespace Microsoft.OpenApi.Reader
             if (document is not null && settings.RuleSet is not null && settings.RuleSet.Rules.Any())
             {
                 var openApiErrors = document.Validate(settings.RuleSet);
-                if(openApiErrors is not null)
+                if (openApiErrors is not null)
                 {
                     foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
                     {
@@ -101,7 +109,7 @@ namespace Microsoft.OpenApi.Reader
                     {
                         diagnostic.Warnings.Add(item);
                     }
-                }                
+                }
             }
             diagnostic.Format = OpenApiConstants.Json;
             return new()
@@ -119,6 +127,10 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <param name="cancellationToken">Propagates notifications that operations should be cancelled.</param>
         /// <returns></returns>
+        /// <remarks>
+        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>. Syntax-level JSON
+        /// errors can throw before a <see cref="ReadResult"/> is created.
+        /// </remarks>
         public async Task<ReadResult> ReadAsync(Stream input,
                                                 Uri location,
                                                 OpenApiReaderSettings settings,
@@ -151,6 +163,10 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <inheritdoc/>
+        /// <remarks>
+        /// OpenAPI semantic errors are returned in the <paramref name="diagnostic"/>. Syntax-level JSON
+        /// errors can throw before a fragment is created.
+        /// </remarks>
         public T? ReadFragment<T>(MemoryStream input,
                                  OpenApiSpecVersion version,
                                  OpenApiDocument openApiDocument,
