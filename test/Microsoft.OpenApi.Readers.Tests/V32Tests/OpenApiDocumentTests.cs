@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
-using Xunit;
 using VerifyXunit;
-using System;
-using System.Net.Http;
+using Xunit;
 
 #pragma warning disable CS0618
 
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             {
                 Schemas = new Dictionary<string, IOpenApiSchema>()
                 {
-                    ["petSchema"] =  new OpenApiSchema()
+                    ["petSchema"] = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
                         Required = new HashSet<string>
@@ -558,8 +558,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
 
             // Assert
             var externalResourceUri = new Uri(
-                "file://" + 
-                Path.Join(Path.GetFullPath(SampleFolderPath), 
+                "file://" +
+                Path.Join(Path.GetFullPath(SampleFolderPath),
                 "externalResource.yaml#/components/schemas/todo")).AbsoluteUri;
 
             Assert.True(result.Document.Workspace.Contains(externalResourceUri));
@@ -646,7 +646,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             // Assert
             Assert.Equal(targetSchemaExample, actualSchemaExample);
             Assert.Empty(result.Diagnostic.Errors);
-            Assert.Empty(result.Diagnostic.Warnings);            
+            Assert.Empty(result.Diagnostic.Warnings);
         }
 
         [Fact]
@@ -692,7 +692,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
 
             // Act & Assert - should not throw NullReferenceException
             var exception = Record.Exception(() => OpenApiDocument.Load(ms, format: null, new OpenApiReaderSettings()));
-            
+
             // The parser should handle the boolean schema gracefully
             // Either accepting it or surfacing a structured diagnostic, but not throwing NullReferenceException
             if (exception != null)
