@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using System.Net.Http;
+using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Moq;
 using Xunit;
 
@@ -60,6 +62,25 @@ namespace Microsoft.OpenApi.Tests.Mocks
 
             _linkMock.Verify(l => l.SerializeAsV31(It.IsAny<IOpenApiWriter>()), Times.Never);
             _linkMock.Verify(l => l.SerializeAsV2(It.IsAny<IOpenApiWriter>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        public async Task SerializeResponseWithoutDescriptionAsJsonDoesNotWriteNullDescription(OpenApiSpecVersion specVersion)
+        {
+            // Arrange
+            var response = new OpenApiResponse();
+
+            // Act
+            var actual = await response.SerializeAsJsonAsync(specVersion, TestContext.Current.CancellationToken);
+
+            // Assert
+            var node = JsonNode.Parse(actual);
+            Assert.NotNull(node);
+            var responseObject = Assert.IsType<JsonObject>(node);
+            Assert.False(responseObject.ContainsKey(OpenApiConstants.Description));
         }
     }
 }
