@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -25,10 +25,8 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="format">The OpenAPI format.</param>
         /// <returns>An OpenAPI document instance.</returns>
         /// <remarks>
-        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>.
+        /// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>.
         /// </remarks>
-        /// <exception cref="System.Text.Json.JsonException">Thrown when syntax-level JSON errors are detected before a <see cref="ReadResult"/> is created.</exception>
-        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a <see cref="ReadResult"/> is created.</exception>
         public static ReadResult Load(MemoryStream stream,
                                       string? format = null,
                                       OpenApiReaderSettings? settings = null)
@@ -65,10 +63,8 @@ namespace Microsoft.OpenApi.Reader
         /// <returns>Instance of newly created IOpenApiElement.</returns>
         /// <returns>The OpenAPI element.</returns>
         /// <remarks>
-        /// OpenAPI semantic errors are returned in the <paramref name="diagnostic"/>.
+        /// OpenAPI semantic and parser errors are returned in the <paramref name="diagnostic"/>.
         /// </remarks>
-        /// <exception cref="System.Text.Json.JsonException">Thrown when syntax-level JSON errors are detected before a fragment is created.</exception>
-        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a fragment is created.</exception>
         public static T? Load<T>(MemoryStream input, OpenApiSpecVersion version, string? format, OpenApiDocument openApiDocument, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings? settings = null) where T : IOpenApiElement
         {
             format ??= InspectStreamFormat(input);
@@ -84,10 +80,8 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="token">The cancellation token</param>
         /// <returns></returns>
         /// <remarks>
-        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>.
+        /// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>.
         /// </remarks>
-        /// <exception cref="System.Text.Json.JsonException">Thrown when syntax-level JSON errors are detected before a <see cref="ReadResult"/> is created.</exception>
-        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a <see cref="ReadResult"/> is created.</exception>
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings? settings = null, CancellationToken token = default)
         {
             settings ??= DefaultReaderSettings.Value;
@@ -109,8 +103,6 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="token"></param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
         /// <returns>The OpenAPI element.</returns>
-        /// <exception cref="System.Text.Json.JsonException">Thrown when syntax-level JSON errors are detected before a fragment is created.</exception>
-        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a fragment is created.</exception>
         public static async Task<T?> LoadAsync<T>(string url, OpenApiSpecVersion version, OpenApiDocument openApiDocument, OpenApiReaderSettings? settings = null, CancellationToken token = default) where T : IOpenApiElement
         {
             settings ??= DefaultReaderSettings.Value;
@@ -130,10 +122,8 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="format">The Open API format</param>
         /// <returns></returns>
         /// <remarks>
-        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>.
+        /// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>.
         /// </remarks>
-        /// <exception cref="System.Text.Json.JsonException">Thrown when syntax-level JSON errors are detected before a <see cref="ReadResult"/> is created.</exception>
-        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a <see cref="ReadResult"/> is created.</exception>
         public static async Task<ReadResult> LoadAsync(Stream input, string? format = null, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
         {
 #if NET6_0_OR_GREATER
@@ -181,8 +171,6 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        /// <exception cref="System.Text.Json.JsonException">Thrown when syntax-level JSON errors are detected before a fragment is created.</exception>
-        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a fragment is created.</exception>
         public static async Task<T?> LoadAsync<T>(Stream input,
                                                  OpenApiSpecVersion version,
                                                  OpenApiDocument openApiDocument,
@@ -217,18 +205,16 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns>An OpenAPI document instance.</returns>
         /// <remarks>
-        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>.
+        /// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>.
         /// </remarks>
-        /// <exception cref="System.Text.Json.JsonException">Thrown when syntax-level JSON errors are detected before a <see cref="ReadResult"/> is created.</exception>
-        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a <see cref="ReadResult"/> is created.</exception>
         public static ReadResult Parse(string input,
                                        string? format = null,
                                        OpenApiReaderSettings? settings = null)
         {
 #if NET6_0_OR_GREATER
-            ArgumentException.ThrowIfNullOrEmpty(input);
+            ArgumentNullException.ThrowIfNull(input);
 #else
-            if (string.IsNullOrEmpty(input)) throw new ArgumentNullException(nameof(input));
+            if (input is null) throw new ArgumentNullException(nameof(input));
 #endif
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
@@ -250,10 +236,8 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns>An OpenAPI document instance.</returns>
         /// <remarks>
-        /// OpenAPI semantic errors are returned in the <paramref name="diagnostic"/>.
+        /// OpenAPI semantic and parser errors are returned in the <paramref name="diagnostic"/>.
         /// </remarks>
-        /// <exception cref="System.Text.Json.JsonException">Thrown when syntax-level JSON errors are detected before a fragment is created.</exception>
-        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a fragment is created.</exception>
         public static T? Parse<T>(string input,
                                  OpenApiSpecVersion version,
                                  OpenApiDocument openApiDocument,
@@ -262,9 +246,9 @@ namespace Microsoft.OpenApi.Reader
                                  OpenApiReaderSettings? settings = null) where T : IOpenApiElement
         {
 #if NET6_0_OR_GREATER
-            ArgumentException.ThrowIfNullOrEmpty(input);
+            ArgumentNullException.ThrowIfNull(input);
 #else
-            if (string.IsNullOrEmpty(input)) throw new ArgumentNullException(nameof(input));
+            if (input is null) throw new ArgumentNullException(nameof(input));
 #endif
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
@@ -315,11 +299,6 @@ namespace Microsoft.OpenApi.Reader
             {
                 throw new InvalidOperationException("Loading external references are not supported when using synchronous methods.");
             }
-            if (input.Length == 0 || input.Position == input.Length)
-            {
-                throw new ArgumentException($"Cannot parse the stream: {nameof(input)} is empty or contains no elements.");
-            }
-
             var location = new Uri(OpenApiConstants.BaseRegistryUri);
             var reader = settings.GetReader(format);
             var readResult = reader.Read(input, location, settings);
