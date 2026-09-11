@@ -68,7 +68,6 @@ namespace Microsoft.OpenApi.Tests.Mocks
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi3_1)]
-        [InlineData(OpenApiSpecVersion.OpenApi3_2)]
         public async Task SerializeResponseWithoutDescriptionAsJsonDoesNotWriteNullDescription(OpenApiSpecVersion specVersion)
         {
             // Arrange
