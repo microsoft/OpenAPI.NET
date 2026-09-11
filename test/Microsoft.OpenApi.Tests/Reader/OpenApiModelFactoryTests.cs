@@ -4,11 +4,41 @@ using System.Threading.Tasks;
 using System.IO;
 using System;
 using System.Threading;
+using Microsoft.OpenApi.YamlReader;
 
 namespace Microsoft.OpenApi.Tests.Reader;
 
 public class OpenApiModelFactoryTests
 {
+    [Fact]
+    public void LoadReturnsDiagnosticWhenStreamIsEmpty()
+    {
+        using var stream = new MemoryStream();
+        var settings = new OpenApiReaderSettings();
+        settings.AddYamlReader();
+
+        var result = OpenApiDocument.Load(stream, settings: settings);
+
+        Assert.Null(result.Document);
+        var error = Assert.Single(result.Diagnostic.Errors);
+        Assert.Contains("No documents found", error.Message, StringComparison.Ordinal);
+        Assert.Equal(OpenApiConstants.Yaml, result.Diagnostic.Format);
+    }
+
+    [Fact]
+    public void ParseReturnsDiagnosticWhenInputIsEmpty()
+    {
+        var settings = new OpenApiReaderSettings();
+        settings.AddYamlReader();
+
+        var result = OpenApiDocument.Parse(string.Empty, settings: settings);
+
+        Assert.Null(result.Document);
+        var error = Assert.Single(result.Diagnostic.Errors);
+        Assert.Contains("No documents found", error.Message, StringComparison.Ordinal);
+        Assert.Equal(OpenApiConstants.Yaml, result.Diagnostic.Format);
+    }
+
     [Fact]
     public async Task LoadDocumentWithCircularSchemaPropertyReferencesShouldSucceed()
     {
