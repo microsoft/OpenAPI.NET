@@ -176,9 +176,7 @@ namespace Microsoft.OpenApi.Tests.Models
             string format)
         {
             // Arrange
-            var expected = format == OpenApiConstants.Json ? @"{
-  ""description"": null
-}" : @"description: null";
+            var expected = @"{ }";
 
             // Act
             var actual = await BasicResponse.SerializeAsync(version, format, TestContext.Current.CancellationToken);
