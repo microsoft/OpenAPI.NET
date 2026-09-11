@@ -21,22 +21,17 @@ public class OpenApiModelFactoryTests
 
         Assert.Null(result.Document);
         var error = Assert.Single(result.Diagnostic.Errors);
-        Assert.Contains("No documents found", error.Message, StringComparison.Ordinal);
+        Assert.Equal("Cannot parse the stream: input is empty or contains no elements.", error.Message);
         Assert.Equal(OpenApiConstants.Yaml, result.Diagnostic.Format);
     }
 
     [Fact]
-    public void ParseReturnsDiagnosticWhenInputIsEmpty()
+    public void ParseThrowsWhenInputIsEmpty()
     {
         var settings = new OpenApiReaderSettings();
         settings.AddYamlReader();
 
-        var result = OpenApiDocument.Parse(string.Empty, settings: settings);
-
-        Assert.Null(result.Document);
-        var error = Assert.Single(result.Diagnostic.Errors);
-        Assert.Contains("No documents found", error.Message, StringComparison.Ordinal);
-        Assert.Equal(OpenApiConstants.Yaml, result.Diagnostic.Format);
+        Assert.Throws<ArgumentException>(() => OpenApiDocument.Parse(string.Empty, settings: settings));
     }
 
     [Fact]

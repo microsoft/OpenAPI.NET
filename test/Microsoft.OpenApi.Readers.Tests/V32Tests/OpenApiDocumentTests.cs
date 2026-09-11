@@ -625,9 +625,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         }
 
         [Fact]
-        public void ParseEmptyMemoryStreamThrowsAnArgumentException()
+        public void ParseEmptyMemoryStreamReturnsDiagnostic()
         {
-            Assert.Throws<ArgumentException>(() => OpenApiDocument.Load(new MemoryStream()));
+            var result = OpenApiDocument.Load(new MemoryStream());
+
+            Assert.Null(result.Document);
+            var error = Assert.Single(result.Diagnostic.Errors);
+            Assert.Equal("Cannot parse the stream: input is empty or contains no elements.", error.Message);
         }
 
         [Fact]
