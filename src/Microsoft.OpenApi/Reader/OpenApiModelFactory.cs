@@ -204,9 +204,10 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="format">The Open API format</param>
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns>An OpenAPI document instance.</returns>
-        /// <remarks>
-        /// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>.
-        /// </remarks>
+/// <remarks>
+/// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>.
+/// <see cref="ArgumentException"/> is thrown when <paramref name="input"/> is null or empty before parsing starts.
+/// </remarks>
         public static ReadResult Parse(string input,
                                        string? format = null,
                                        OpenApiReaderSettings? settings = null)
