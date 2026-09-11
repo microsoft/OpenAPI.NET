@@ -42,9 +42,9 @@ namespace Microsoft.OpenApi.Reader
             {
                 jsonNode = JsonNode.Parse(input) ?? throw new InvalidOperationException($"Cannot parse input stream, {nameof(input)}.");
             }
-            catch (JsonException ex)
+            catch (Exception ex) when (ex is JsonException or InvalidOperationException)
             {
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", $"Please provide the correct format, {ex.Message}"));
+                diagnostic.Errors.Add(CreateOpenApiError(ex, true));
                 diagnostic.Format = OpenApiConstants.Json;
                 return new ReadResult
                 {
@@ -146,9 +146,9 @@ namespace Microsoft.OpenApi.Reader
                 jsonNode = await JsonNode.ParseAsync(input, cancellationToken: cancellationToken).ConfigureAwait(false) ??
                     throw new InvalidOperationException($"failed to parse input stream, {nameof(input)}");
             }
-            catch (JsonException ex)
+            catch (Exception ex) when (ex is JsonException or InvalidOperationException)
             {
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", $"Please provide the correct format, {ex.Message}"));
+                diagnostic.Errors.Add(CreateOpenApiError(ex, true));
                 diagnostic.Format = OpenApiConstants.Json;
                 return new ReadResult
                 {
@@ -180,14 +180,24 @@ namespace Microsoft.OpenApi.Reader
             {
                 jsonNode = JsonNode.Parse(input) ?? throw new InvalidOperationException($"Failed to parse stream, {nameof(input)}");
             }
-            catch (JsonException ex)
+            catch (Exception ex) when (ex is JsonException or InvalidOperationException)
             {
-                diagnostic = new();
-                diagnostic.Errors.Add(new($"#line={ex.LineNumber}", ex.Message));
+                diagnostic = new()
+                {
+                    Format = OpenApiConstants.Json,
+                };
+                diagnostic.Errors.Add(CreateOpenApiError(ex, false));
                 return default;
             }
 
             return ReadFragment<T>(jsonNode, version, openApiDocument, out diagnostic);
+        }
+
+        private static OpenApiError CreateOpenApiError(Exception ex, bool includeFormatHint)
+        {
+            return ex is JsonException jsonException
+                ? new OpenApiError($"#line={jsonException.LineNumber}", includeFormatHint ? $"Please provide the correct format, {jsonException.Message}" : jsonException.Message)
+                : new OpenApiError(null, ex.Message);
         }
 
         /// <inheritdoc/>

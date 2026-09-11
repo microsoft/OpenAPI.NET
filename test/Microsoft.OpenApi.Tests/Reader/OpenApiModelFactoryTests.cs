@@ -35,6 +35,22 @@ public class OpenApiModelFactoryTests
     }
 
     [Fact]
+    public void ParseGenericReturnsDiagnosticWhenJsonRootIsNull()
+    {
+        var schema = OpenApiModelFactory.Parse<OpenApiSchema>(
+            "null",
+            OpenApiSpecVersion.OpenApi3_0,
+            new OpenApiDocument(),
+            out var diagnostic,
+            OpenApiConstants.Json);
+
+        Assert.Null(schema);
+        var error = Assert.Single(diagnostic.Errors);
+        Assert.Equal(OpenApiConstants.Json, diagnostic.Format);
+        Assert.Equal("Failed to parse stream, input", error.Message);
+    }
+
+    [Fact]
     public async Task LoadDocumentWithCircularSchemaPropertyReferencesShouldSucceed()
     {
         var filePath = Path.Join(Path.GetTempPath(), $"{Guid.NewGuid():N}.json");

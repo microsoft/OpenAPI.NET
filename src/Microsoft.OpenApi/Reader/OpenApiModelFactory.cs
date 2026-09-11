@@ -239,6 +239,7 @@ namespace Microsoft.OpenApi.Reader
         /// <returns>An OpenAPI document instance.</returns>
         /// <remarks>
         /// OpenAPI semantic and parser errors are returned in the <paramref name="diagnostic"/>.
+        /// <see cref="ArgumentException"/> is thrown when <paramref name="input"/> is null or empty before parsing starts.
         /// </remarks>
         public static T? Parse<T>(string input,
                                  OpenApiSpecVersion version,

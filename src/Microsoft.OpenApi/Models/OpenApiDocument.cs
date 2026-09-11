@@ -782,7 +782,7 @@ namespace Microsoft.OpenApi
         /// <param name="settings"></param>
         /// <returns></returns>
         /// <remarks>
-/// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>; an empty input string throws <see cref="ArgumentException"/>.
+        /// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>; a null or empty input string throws <see cref="ArgumentException"/>.
         /// </remarks>
         public static ReadResult Parse(string input,
                                        string? format = null,
