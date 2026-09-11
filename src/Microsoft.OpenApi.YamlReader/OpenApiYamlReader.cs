@@ -59,9 +59,9 @@ namespace Microsoft.OpenApi.YamlReader
 
         /// <inheritdoc/>
         /// <remarks>
-        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>. Syntax-level YAML
-        /// errors can throw before a <see cref="ReadResult"/> is created.
+        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>.
         /// </remarks>
+        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a <see cref="ReadResult"/> is created.</exception>
         public async Task<ReadResult> ReadAsync(Stream input,
                                                 Uri location,
                                                 OpenApiReaderSettings settings,
@@ -100,9 +100,9 @@ namespace Microsoft.OpenApi.YamlReader
 
         /// <inheritdoc/>
         /// <remarks>
-        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>. Syntax-level YAML
-        /// errors can throw before a <see cref="ReadResult"/> is created.
+        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>.
         /// </remarks>
+        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a <see cref="ReadResult"/> is created.</exception>
         public ReadResult Read(MemoryStream input,
                                Uri location,
                                OpenApiReaderSettings settings)
@@ -203,9 +203,9 @@ namespace Microsoft.OpenApi.YamlReader
 
         /// <inheritdoc/>
         /// <remarks>
-        /// OpenAPI semantic errors are returned in the <paramref name="diagnostic"/>. Syntax-level YAML
-        /// errors can throw before a fragment is created.
+        /// OpenAPI semantic errors are returned in the <paramref name="diagnostic"/>.
         /// </remarks>
+        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a fragment is created.</exception>
         public T? ReadFragment<T>(MemoryStream input,
                                  OpenApiSpecVersion version,
                                  OpenApiDocument openApiDocument,

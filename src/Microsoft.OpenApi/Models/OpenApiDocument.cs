@@ -733,9 +733,10 @@ namespace Microsoft.OpenApi
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns></returns>
         /// <remarks>
-        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>. Syntax-level JSON or YAML
-        /// errors can throw before a <see cref="ReadResult"/> is created.
+        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>.
         /// </remarks>
+        /// <exception cref="System.Text.Json.JsonException">Thrown when syntax-level JSON errors are detected before a <see cref="ReadResult"/> is created.</exception>
+        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a <see cref="ReadResult"/> is created.</exception>
         public static ReadResult Load(MemoryStream stream,
                                       string? format = null,
                                       OpenApiReaderSettings? settings = null)
@@ -751,9 +752,10 @@ namespace Microsoft.OpenApi
         /// <param name="token">The cancellation token</param>
         /// <returns></returns>
         /// <remarks>
-        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>. Syntax-level JSON or YAML
-        /// errors can throw before a <see cref="ReadResult"/> is created.
+        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>.
         /// </remarks>
+        /// <exception cref="System.Text.Json.JsonException">Thrown when syntax-level JSON errors are detected before a <see cref="ReadResult"/> is created.</exception>
+        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a <see cref="ReadResult"/> is created.</exception>
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings? settings = null, CancellationToken token = default)
         {
             return await OpenApiModelFactory.LoadAsync(url, settings, token).ConfigureAwait(false);
@@ -768,9 +770,10 @@ namespace Microsoft.OpenApi
         /// <param name="cancellationToken">Propagates information about operation cancelling.</param>
         /// <returns></returns>
         /// <remarks>
-        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>. Syntax-level JSON or YAML
-        /// errors can throw before a <see cref="ReadResult"/> is created.
+        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>.
         /// </remarks>
+        /// <exception cref="System.Text.Json.JsonException">Thrown when syntax-level JSON errors are detected before a <see cref="ReadResult"/> is created.</exception>
+        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a <see cref="ReadResult"/> is created.</exception>
         public static async Task<ReadResult> LoadAsync(Stream stream, string? format = null, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
         {
             return await OpenApiModelFactory.LoadAsync(stream, format, settings, cancellationToken).ConfigureAwait(false);
@@ -785,9 +788,10 @@ namespace Microsoft.OpenApi
         /// <param name="settings"></param>
         /// <returns></returns>
         /// <remarks>
-        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>. Syntax-level JSON or YAML
-        /// errors can throw before a <see cref="ReadResult"/> is created.
+        /// OpenAPI semantic errors are returned in the <see cref="ReadResult.Diagnostic"/>.
         /// </remarks>
+        /// <exception cref="System.Text.Json.JsonException">Thrown when syntax-level JSON errors are detected before a <see cref="ReadResult"/> is created.</exception>
+        /// <exception cref="OpenApiReaderException">Thrown when syntax-level YAML errors are detected before a <see cref="ReadResult"/> is created.</exception>
         public static ReadResult Parse(string input,
                                        string? format = null,
                                        OpenApiReaderSettings? settings = null)
