@@ -625,7 +625,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         }
 
         [Fact]
-        public void ParseEmptyMemoryStreamReturnsDiagnostic()
+public void LoadEmptyMemoryStreamReturnsDiagnostic()
         {
             var result = OpenApiDocument.Load(new MemoryStream());
 
