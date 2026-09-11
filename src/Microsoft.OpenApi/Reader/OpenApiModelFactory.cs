@@ -212,9 +212,9 @@ namespace Microsoft.OpenApi.Reader
                                        OpenApiReaderSettings? settings = null)
         {
 #if NET6_0_OR_GREATER
-            ArgumentNullException.ThrowIfNull(input);
+            ArgumentException.ThrowIfNullOrEmpty(input);
 #else
-            if (input is null) throw new ArgumentNullException(nameof(input));
+            if (string.IsNullOrEmpty(input)) throw new ArgumentNullException(nameof(input));
 #endif
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
@@ -246,9 +246,9 @@ namespace Microsoft.OpenApi.Reader
                                  OpenApiReaderSettings? settings = null) where T : IOpenApiElement
         {
 #if NET6_0_OR_GREATER
-            ArgumentNullException.ThrowIfNull(input);
+            ArgumentException.ThrowIfNullOrEmpty(input);
 #else
-            if (input is null) throw new ArgumentNullException(nameof(input));
+            if (string.IsNullOrEmpty(input)) throw new ArgumentNullException(nameof(input));
 #endif
             format ??= InspectInputFormat(input);
             settings ??= new OpenApiReaderSettings();
@@ -298,6 +298,20 @@ namespace Microsoft.OpenApi.Reader
             if (settings.LoadExternalRefs)
             {
                 throw new InvalidOperationException("Loading external references are not supported when using synchronous methods.");
+            }
+            if (input.Length == 0 || input.Position == input.Length)
+            {
+                var diagnostic = new OpenApiDiagnostic
+                {
+                    Format = format,
+                };
+                diagnostic.Errors.Add(new OpenApiError(null, $"Cannot parse the stream: {nameof(input)} is empty or contains no elements."));
+
+                return new()
+                {
+                    Document = null,
+                    Diagnostic = diagnostic,
+                };
             }
             var location = new Uri(OpenApiConstants.BaseRegistryUri);
             var reader = settings.GetReader(format);
