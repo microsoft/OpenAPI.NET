@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.13.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.12.2...v2.13.0) (2026-09-11)
+
+
+### Features
+
+* **document:** add GetOperationById to search operations across path… ([#3025](https://github.com/microsoft/OpenAPI.NET/issues/3025)) ([#3074](https://github.com/microsoft/OpenAPI.NET/issues/3074)) ([75d6cea](https://github.com/microsoft/OpenAPI.NET/commit/75d6ceafe7d9898dc415c7d7508e994687401f69))
+
+
+### Bug Fixes
+
+* **openapi:** omit null response descriptions ([1344a43](https://github.com/microsoft/OpenAPI.NET/commit/1344a43fb823fea5b48d78e2aca4e3a1eff9221a))
+
 ## [2.12.2](https://github.com/microsoft/OpenAPI.NET/compare/v2.12.1...v2.12.2) (2026-08-20)
 
 
