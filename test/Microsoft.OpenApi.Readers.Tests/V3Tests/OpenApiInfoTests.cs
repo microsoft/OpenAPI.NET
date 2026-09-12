@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.Tests;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var openApiInfo = await OpenApiModelFactory.LoadAsync<OpenApiInfo>(Path.Join(SampleFolderPath, "advancedInfo.yaml"), OpenApiSpecVersion.OpenApi3_0, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
-            openApiInfo.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiInfo
                 {
                     Title = "Advanced Info",
@@ -61,20 +61,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }),
                             ["x-list"] = new JsonNodeExtension (new JsonArray { "1", "2" })
                     }
-                }, options => options.IgnoringCyclicReferences()
-                .Excluding(i => ((JsonNodeExtension)i.Contact.Extensions["x-twitter"]).Node.Parent)
-                .Excluding(i => ((JsonNodeExtension)i.License.Extensions["x-disclaimer"]).Node.Parent)
-                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-something"]).Node.Parent)
-                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-contact"]).Node["name"].Parent)
-                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-contact"]).Node["name"].Root)
-                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-contact"]).Node["url"].Parent)
-                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-contact"]).Node["url"].Root)
-                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-contact"]).Node["email"].Parent)
-                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-contact"]).Node["email"].Root)
-                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-list"]).Node[0].Parent)
-                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-list"]).Node[0].Root)
-                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-list"]).Node[1].Parent)
-                .Excluding(i => ((JsonNodeExtension)i.Extensions["x-list"]).Node[1].Root));
+                }, openApiInfo, nameof(JsonNode.Parent), nameof(JsonNode.Root));
         }
 
         [Fact]

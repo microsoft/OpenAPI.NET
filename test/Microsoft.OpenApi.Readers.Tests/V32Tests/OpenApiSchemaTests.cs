@@ -6,8 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using FluentAssertions;
-using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Tests;
 using Xunit;
@@ -291,10 +289,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             };
 
             // Assert
-            schema.Should().BeEquivalentTo(expectedSchema, options => options
-                    .IgnoringCyclicReferences()
-                    .Excluding((IMemberInfo memberInfo) =>
-                            memberInfo.Path.EndsWith("Parent")));
+            OpenApiTestAssert.Equivalent(expectedSchema, schema, nameof(JsonNode.Parent));
         }
 
         [Fact]

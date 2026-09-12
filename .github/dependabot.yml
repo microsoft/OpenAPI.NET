@@ -5,6 +5,10 @@ updates:
   open-pull-requests-limit: 10
   schedule:
     interval: daily
+  groups:
+    codeql:
+      patterns:
+      - github/codeql-action*
   cooldown:
     default-days: 7
 - package-ecosystem: nuget
@@ -16,9 +20,12 @@ updates:
     MicrosoftExtensions:
       patterns:
       - Microsoft.Extensions.*
-    coverlet:
+    testing:
       patterns:
       - coverlet.*
+      - Microsoft.NET.Test.Sdk
+      - Microsoft.Testing.*
+      - xunit.*
   cooldown:
     default-days: 7
 - package-ecosystem: dotnet-sdk

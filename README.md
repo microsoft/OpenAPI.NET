@@ -91,22 +91,6 @@ In order to test the validity of an OpenApi document, we avail the following too
 
     A commandline tool for validating and transforming OpenAPI descriptions. [Installation guidelines and documentation](https://github.com/microsoft/OpenAPI.NET/blob/main/src/Microsoft.OpenApi.Hidi/readme.md)
 
-- Microsoft.OpenApi.Workbench
-
-    A workbench tool consisting of a GUI where you can test and convert OpenAPI descriptions in both JSON and YAML from v2-->v3 and vice versa.
-
-    #### Installation guidelines:
-    1. Clone the repo locally by running this command:
-        `git clone https://github.com/microsoft/OpenAPI.NET.git`
-    2. Open the solution file `(.slnx)` in the root of the project with Visual Studio
-    3. Navigate to the `src/Microsoft.OpenApi.Workbench` directory and set it as the startup project
-    4. Run the project and you'll see a GUI pop up resembling the one below:
-    
-    
-    ![workbench preview](https://raw.githubusercontent.com/microsoft/OpenAPI.NET/main/docs/images/workbench.png "a screenshot of the workbench application")
-    
-    5. Copy and paste your OpenAPI descriptions in the **Input Content** window or paste the path to the descriptions file in the **Input File** textbox and click on `Convert` to render the results.
-
 # Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a

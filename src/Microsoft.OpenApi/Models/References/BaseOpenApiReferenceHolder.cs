@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Microsoft.OpenApi;
 /// <summary>
@@ -10,6 +11,11 @@ namespace Microsoft.OpenApi;
 /// <typeparam name="V">The type for the reference holding the additional fields and annotations</typeparam>
 public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHolder<T, U, V> where T : class, IOpenApiReferenceable, U where U : IOpenApiReferenceable, IOpenApiSerializable where V : BaseOpenApiReference, new()
 {
+    [ThreadStatic]
+    private static HashSet<BaseOpenApiReferenceHolder<T, U, V>>? t_activeReferenceAccesses;
+    [ThreadStatic]
+    private static HashSet<BaseOpenApiReferenceHolder<T, U, V>>? t_activeTargetActions;
+
     /// <inheritdoc/>
     public virtual U? Target
     {
@@ -19,28 +25,129 @@ public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHol
             return Reference.HostDocument.ResolveReferenceTo<U>(Reference, this as IOpenApiSchema);
         }
     }
+
+    /// <summary>
+    /// Gets a value from the resolved target while detecting cycles in delegated member access.
+    /// </summary>
+    /// <typeparam name="TResult">The type of value to get from the target.</typeparam>
+    /// <param name="selector">Selects the value from the resolved target.</param>
+    /// <returns>The selected value, or the default value when the target cannot be resolved.</returns>
+    /// <remarks>
+    /// The guard remains active while <paramref name="selector"/> reads the target member. This covers
+    /// the complete delegated call chain without changing the immediate-resolution semantics of
+    /// <see cref="Target"/> or walking an acyclic chain more than once.
+    /// </remarks>
+    private protected TResult GetFromTarget<TResult>(Func<U, TResult> selector)
+    {
+        Utils.CheckArgumentNull(selector);
+        return ExecuteWithReferenceAccessGuard(this, () =>
+        {
+            return Target is { } target ? selector(target) : default!;
+        });
+    }
+
+    /// <summary>
+    /// Executes an action against the resolved target while detecting cycles in delegated access.
+    /// </summary>
+    /// <param name="action">The action to execute against the resolved target.</param>
+    private protected void ApplyToTarget(Action<U> action)
+    {
+        Utils.CheckArgumentNull(action);
+        ExecuteWithTargetActionGuard<object?>(this, () =>
+        {
+            if (Target is { } target)
+            {
+                action(target);
+            }
+            return null;
+        });
+    }
+
+    private static TResult ExecuteWithReferenceAccessGuard<TResult>(
+        BaseOpenApiReferenceHolder<T, U, V> holder,
+        Func<TResult> action)
+    {
+        return ExecuteWithReferenceGuard(ref t_activeReferenceAccesses, holder, action);
+    }
+
+    private static TResult ExecuteWithTargetActionGuard<TResult>(
+        BaseOpenApiReferenceHolder<T, U, V> holder,
+        Func<TResult> action)
+    {
+        return ExecuteWithReferenceGuard(ref t_activeTargetActions, holder, action);
+    }
+
+    private static TResult ExecuteWithReferenceGuard<TResult>(
+        ref HashSet<BaseOpenApiReferenceHolder<T, U, V>>? activeReferences,
+        BaseOpenApiReferenceHolder<T, U, V> holder,
+        Func<TResult> action)
+    {
+        activeReferences ??= new HashSet<BaseOpenApiReferenceHolder<T, U, V>>(ReferenceHolderComparer.Instance);
+        if (!activeReferences.Add(holder))
+        {
+            throw new InvalidOperationException($"Circular reference detected while resolving reference: {holder.Reference.ReferenceV3}");
+        }
+
+        try
+        {
+            RuntimeHelpers.EnsureSufficientExecutionStack();
+            return action();
+        }
+        catch (InsufficientExecutionStackException ex)
+        {
+            throw new InvalidOperationException(
+                $"The chain of references starting at {holder.Reference.ReferenceV3} is nested too deeply to resolve.",
+                ex);
+        }
+        finally
+        {
+            activeReferences.Remove(holder);
+            if (activeReferences.Count == 0)
+            {
+                activeReferences = null;
+            }
+        }
+    }
+
     /// <inheritdoc/>
     public T? RecursiveTarget
     {
         get
         {
-            return ResolveRecursiveTarget(new HashSet<BaseOpenApiReferenceHolder<T, U, V>>());
+            var visitedReferences = new HashSet<BaseOpenApiReferenceHolder<T, U, V>>(ReferenceHolderComparer.Instance);
+            BaseOpenApiReferenceHolder<T, U, V> current = this;
+
+            while (visitedReferences.Add(current))
+            {
+                switch (current.Target)
+                {
+                    case BaseOpenApiReferenceHolder<T, U, V> recursiveTarget:
+                        current = recursiveTarget;
+                        break;
+                    case T concrete:
+                        return concrete;
+                    default:
+                        return null;
+                }
+            }
+
+            throw new InvalidOperationException($"Circular reference detected while resolving reference: {current.Reference.ReferenceV3}");
         }
     }
 
-    private T? ResolveRecursiveTarget(ISet<BaseOpenApiReferenceHolder<T, U, V>> visitedReferences)
+    private sealed class ReferenceHolderComparer : IEqualityComparer<BaseOpenApiReferenceHolder<T, U, V>>
     {
-        if (!visitedReferences.Add(this))
+        internal static ReferenceHolderComparer Instance { get; } = new();
+
+        public bool Equals(BaseOpenApiReferenceHolder<T, U, V>? x, BaseOpenApiReferenceHolder<T, U, V>? y)
         {
-            throw new InvalidOperationException($"Circular reference detected while resolving reference: {Reference.ReferenceV3}");
+            return ReferenceEquals(x, y);
         }
 
-        return Target switch
+        public int GetHashCode(BaseOpenApiReferenceHolder<T, U, V> obj)
         {
-            BaseOpenApiReferenceHolder<T, U, V> recursiveTarget => recursiveTarget.ResolveRecursiveTarget(visitedReferences),
-            T concrete => concrete,
-            _ => null
-        };
+            return RuntimeHelpers.GetHashCode(obj);
+        }
     }
     /// <summary>
     /// Copy the reference as a target element with overrides.
@@ -160,9 +267,6 @@ public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHol
         Action<IOpenApiWriter, U> action)
     {
         Utils.CheckArgumentNull(writer);
-        if (Target is not null)
-        {
-            action(writer, Target);
-        }
+        ApplyToTarget(element => action(writer, element));
     }
 }

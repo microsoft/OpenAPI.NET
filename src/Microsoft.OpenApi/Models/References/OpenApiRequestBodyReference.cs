@@ -36,18 +36,18 @@ namespace Microsoft.OpenApi
         /// <inheritdoc/>
         public string? Description
         {
-            get => string.IsNullOrEmpty(Reference.Description) ? Target?.Description : Reference.Description;
+            get => string.IsNullOrEmpty(Reference.Description) ? GetFromTarget(static target => target.Description) : Reference.Description;
             set => Reference.Description = value;
         }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiMediaType>? Content { get => Target?.Content; }
+        public IDictionary<string, IOpenApiMediaType>? Content { get => GetFromTarget(static target => target.Content); }
 
         /// <inheritdoc/>
-        public bool Required { get => Target?.Required ?? false; }
+        public bool Required { get => GetFromTarget(static target => target.Required); }
 
         /// <inheritdoc/>
-        public IDictionary<string, IOpenApiExtension>? Extensions { get => Target?.Extensions; }
+        public IDictionary<string, IOpenApiExtension>? Extensions { get => GetFromTarget(static target => target.Extensions); }
 
         /// <inheritdoc/>
         public override IOpenApiRequestBody CopyReferenceAsTargetElementWithOverrides(IOpenApiRequestBody source)
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi
         {
             if (writer.GetSettings().ShouldInlineReference(Reference))
             {
-                return Target?.ConvertToBodyParameter(writer);
+                return GetFromTarget(target => target.ConvertToBodyParameter(writer));
             }
 
             return Reference.Id is not null ? new OpenApiParameterReference(Reference.Id, Reference.HostDocument) : null;
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi
         {
             if (writer.GetSettings().ShouldInlineReference(Reference))
             {
-                return Target?.ConvertToFormDataParameters(writer);
+                return GetFromTarget(target => target.ConvertToFormDataParameters(writer));
             }
 
             if (Content == null || !Content.Any())

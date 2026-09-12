@@ -9,7 +9,6 @@
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj" />
-    <Project Path="src/Microsoft.OpenApi.Workbench/Microsoft.OpenApi.Workbench.csproj" />
     <Project Path="src/Microsoft.OpenApi.YamlReader/Microsoft.OpenApi.YamlReader.csproj" />
     <Project Path="src/Microsoft.OpenApi/Microsoft.OpenApi.csproj" />
   </Folder>

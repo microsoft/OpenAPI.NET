@@ -5,7 +5,6 @@ using System.Text.Json.Nodes;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V32;
 using Microsoft.OpenApi.Tests;
@@ -25,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Join(SampleFolderPath, "mediaTypeWithExample.yaml"), OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
-            mediaType.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiMediaType
                 {
                     Example = 5,
@@ -34,9 +33,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
                         Type = JsonSchemaType.Number,
                         Format = "float"
                     }
-                }, options => options.IgnoringCyclicReferences()
-                .Excluding(m => m.Example.Parent)
-                );
+                }, mediaType, nameof(JsonNode.Parent));
         }
 
         [Fact]
@@ -46,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             var mediaType = await OpenApiModelFactory.LoadAsync<OpenApiMediaType>(Path.Join(SampleFolderPath, "mediaTypeWithExamples.yaml"), OpenApiSpecVersion.OpenApi3_2, new(), SettingsFixture.ReaderSettings, token: TestContext.Current.CancellationToken);
 
             // Assert
-            mediaType.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
                 new OpenApiMediaType
                 {
                     Examples = new Dictionary<string, IOpenApiExample>
@@ -65,9 +62,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
                         Type = JsonSchemaType.Number,
                         Format = "float"
                     }
-                }, options => options.IgnoringCyclicReferences()
-                .Excluding(m => m.Examples["example1"].Value.Parent)
-                .Excluding(m => m.Examples["example2"].Value.Parent));
+                }, mediaType, nameof(JsonNode.Parent));
         }
 
         [Fact]

@@ -100,12 +100,16 @@ extends:
             arguments: '--configuration $(BuildConfiguration) --no-incremental'
 
         # Run the Unit test
-        - task: DotNetCoreCLI@2
+        - pwsh: |
+            dotnet test "$(Build.SourcesDirectory)\Microsoft.OpenApi.slnx" `
+              --configuration $(BuildConfiguration) `
+              --no-build `
+              -- `
+              --report-azdo `
+              --publish-azdo-test-results `
+              --results-directory="$(Agent.TempDirectory)\TestResults" `
+              --minimum-expected-tests 1
           displayName: 'test'
-          inputs:
-            command: test
-            projects: '$(Build.SourcesDirectory)\Microsoft.OpenApi.slnx'
-            arguments: '--configuration $(BuildConfiguration) --no-build'
 
         - task: EsrpCodeSigning@6
           displayName: 'ESRP CodeSigning binaries'
@@ -287,7 +291,7 @@ extends:
                 vmImage: ubuntu-latest
               steps:
               - pwsh: |
-                  $fileNames = "$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.Workbench.*.nupkg"
+                  $fileNames = "$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg"
                   foreach($fileName in $fileNames) {
                     if(Test-Path $fileName) {
                       Remove-Item $fileName -Verbose

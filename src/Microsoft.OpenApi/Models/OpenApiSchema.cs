@@ -964,10 +964,7 @@ namespace Microsoft.OpenApi
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.SerializeAsV2(w));
 
             // example
-#pragma warning disable CS0618
             writer.WriteOptionalObject(OpenApiConstants.Example, GetCompatibilityExample(), (w, e) => w.WriteAny(e));
-            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
-#pragma warning restore CS0618
 
             // x-nullable extension
             SerializeNullable(writer, OpenApiSpecVersion.OpenApi2_0);

@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi
             }
 
             // description
-            writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // headers
             writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, callback);
@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi
             writer.WriteStartObject();
 
             // description
-            writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             var extensionsClone = Extensions is not null ? new Dictionary<string, IOpenApiExtension>(Extensions) : null;
 
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi
                             // so remove it from the cloned collection so we don't write it again.
                             extensionsClone?.Remove(key);
                         }
-                    }                    
+                    }
                 }
             }
 

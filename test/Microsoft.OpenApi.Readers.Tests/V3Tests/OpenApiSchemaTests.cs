@@ -6,8 +6,6 @@ using System.IO;
 using System.Net.Http;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using FluentAssertions;
-using FluentAssertions.Equivalency;
 using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Reader.V3;
 using Microsoft.OpenApi.Tests;
@@ -67,12 +65,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
-            jsonNodeExtension.Should().BeEquivalentTo(new JsonNodeExtension(
+            OpenApiTestAssert.Equivalent(new JsonNodeExtension(
                 new JsonObject
                 {
                     ["foo"] = "bar",
                     ["baz"] = new JsonArray() { 1, 2 }
-                }), options => options.IgnoringCyclicReferences());
+                }), jsonNodeExtension);
         }
 
         [Fact]
@@ -90,12 +88,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
-            jsonNodeExtension.Should().BeEquivalentTo(new JsonNodeExtension(
+            OpenApiTestAssert.Equivalent(new JsonNodeExtension(
                 new JsonArray
                 {
                     "foo",
                     "baz"
-                }), options => options.IgnoringCyclicReferences());
+                }), jsonNodeExtension);
         }
 
         [Fact]
@@ -254,7 +252,7 @@ get:
             // Assert
             Assert.Equivalent(new OpenApiDiagnostic(), diagnostic);
 
-            schema.Should().BeEquivalentTo(
+            OpenApiTestAssert.Equivalent(
             new OpenApiSchema
             {
                 Type = JsonSchemaType.Object,
@@ -279,12 +277,7 @@ get:
                     ["name"] = new JsonNodeExtension("Puma").Node,
                     ["id"] = new JsonNodeExtension(1).Node
                 }
-            }, options => options
-            .IgnoringCyclicReferences()
-            .Excluding((IMemberInfo memberInfo) =>
-                memberInfo.Path.EndsWith("Parent"))
-            .Excluding((IMemberInfo memberInfo) =>
-                memberInfo.Path.EndsWith("Root")));
+            }, schema, nameof(JsonNode.Parent), nameof(JsonNode.Root));
         }
 
         [Fact]

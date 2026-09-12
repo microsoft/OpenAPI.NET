@@ -29,15 +29,15 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="3.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.11" />
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="18.7.23">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="System.CommandLine" Version="2.0.10" />
+    <PackageReference Include="System.CommandLine" Version="2.0.11" />
     <PackageReference Include="Microsoft.OData.Edm" Version="8.4.4" />
     <PackageReference Include="Microsoft.OpenApi.OData" Version="3.2.1" />
     <PackageReference Include="Microsoft.OpenApi.ApiManifest" Version="3.0.0-preview.1" />
