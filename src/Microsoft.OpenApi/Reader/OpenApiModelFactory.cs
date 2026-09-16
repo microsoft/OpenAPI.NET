@@ -238,7 +238,8 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns>An OpenAPI document instance.</returns>
         /// <remarks>
-        /// OpenAPI semantic and parser errors are returned in the <paramref name="diagnostic"/>.
+        /// OpenAPI semantic errors and parser errors that can be represented in the <paramref name="diagnostic"/> are returned.
+        /// Parser failures that occur before a diagnostic can be created may throw.
         /// <see cref="ArgumentException"/> is thrown when <paramref name="input"/> is null or empty before parsing starts.
         /// </remarks>
         public static T? Parse<T>(string input,
@@ -264,6 +265,11 @@ namespace Microsoft.OpenApi.Reader
         private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
         {
             settings ??= DefaultReaderSettings.Value;
+            if (input.CanSeek && (input.Length == 0 || input.Position == input.Length))
+            {
+                return CreateEmptyStreamReadResult(format);
+            }
+
             var reader = settings.GetReader(format);
             var location =
                         (input is FileStream fileStream ? new Uri(fileStream.Name) : null) ??
@@ -304,22 +310,27 @@ namespace Microsoft.OpenApi.Reader
             }
             if (input.Length == 0 || input.Position == input.Length)
             {
-                var diagnostic = new OpenApiDiagnostic
-                {
-                    Format = format,
-                };
-                diagnostic.Errors.Add(new OpenApiError(null, $"Cannot parse the stream: {nameof(input)} is empty or contains no elements."));
-
-                return new()
-                {
-                    Document = null,
-                    Diagnostic = diagnostic,
-                };
+                return CreateEmptyStreamReadResult(format);
             }
             var location = new Uri(OpenApiConstants.BaseRegistryUri);
             var reader = settings.GetReader(format);
             var readResult = reader.Read(input, location, settings);
             return readResult;
+        }
+
+        private static ReadResult CreateEmptyStreamReadResult(string format)
+        {
+            var diagnostic = new OpenApiDiagnostic
+            {
+                Format = format,
+            };
+            diagnostic.Errors.Add(new OpenApiError(null, "Cannot parse the stream: input is empty or contains no elements."));
+
+            return new()
+            {
+                Document = null,
+                Diagnostic = diagnostic,
+            };
         }
 
         private static async Task<(Stream, string?)> RetrieveStreamAndFormatAsync(string url, OpenApiReaderSettings settings, CancellationToken token = default)

@@ -26,6 +26,19 @@ public class OpenApiModelFactoryTests
     }
 
     [Fact]
+    public async Task LoadAsyncReturnsDiagnosticWhenStreamIsEmpty()
+    {
+        await using var stream = new MemoryStream();
+
+        var result = await OpenApiDocument.LoadAsync(stream, cancellationToken: TestContext.Current.CancellationToken);
+
+        Assert.Null(result.Document);
+        var error = Assert.Single(result.Diagnostic.Errors);
+        Assert.Equal("Cannot parse the stream: input is empty or contains no elements.", error.Message);
+        Assert.Equal(OpenApiConstants.Yaml, result.Diagnostic.Format);
+    }
+
+    [Fact]
     public void ParseThrowsWhenInputIsEmpty()
     {
         var settings = new OpenApiReaderSettings();
