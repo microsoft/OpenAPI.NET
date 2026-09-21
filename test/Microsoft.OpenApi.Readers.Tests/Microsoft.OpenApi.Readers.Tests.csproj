@@ -20,7 +20,7 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.0" />
         <PackageReference Include="Microsoft.Testing.Extensions.AzureDevOpsReport" Version="2.4.0" />
         <PackageReference Include="Microsoft.Testing.Extensions.GitHubActionsReport" Version="2.4.0" />
-        <PackageReference Include="xunit.v3" Version="4.0.0" />
+        <PackageReference Include="xunit.v3" Version="4.0.1" />
     </ItemGroup>
 
     <ItemGroup>
