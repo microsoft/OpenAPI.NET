@@ -14,7 +14,7 @@
     <PackageReference Include="Microsoft.Testing.Extensions.AzureDevOpsReport" Version="2.4.0" />
     <PackageReference Include="Microsoft.Testing.Extensions.GitHubActionsReport" Version="2.4.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="Verify.XunitV3" Version="32.0.0" />
+    <PackageReference Include="Verify.XunitV3" Version="33.0.2" />
     <PackageReference Include="xunit.v3" Version="4.0.1" />
   </ItemGroup>
 
