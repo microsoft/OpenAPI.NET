@@ -8,6 +8,8 @@
     <RepositoryUrl>https://github.com/Microsoft/OpenAPI.NET</RepositoryUrl>
     <PackageReleaseNotes>https://github.com/microsoft/OpenAPI.NET/releases</PackageReleaseNotes>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Verify_SponsorshipExemption>OpenSource</Verify_SponsorshipExemption>
+    <Verify_SponsorshipExemptionUntil>2027-09</Verify_SponsorshipExemptionUntil>
     <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</PackageIconUrl>
     <PackageProjectUrl>https://github.com/Microsoft/OpenAPI.NET</PackageProjectUrl>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
