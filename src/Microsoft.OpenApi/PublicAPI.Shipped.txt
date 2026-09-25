@@ -2287,3 +2287,4 @@ Microsoft.OpenApi.OpenApiWorkspace.GetDynamicAnchorCandidates(Microsoft.OpenApi.
 static Microsoft.OpenApi.OpenApiWorkspace.ResolveDynamicAnchorInContext(Microsoft.OpenApi.IOpenApiSchema? contextSchema, string! anchorName) -> Microsoft.OpenApi.IOpenApiSchema?
 const Microsoft.OpenApi.OpenApiConstants.JsonSchemaExamplesExtension = "x-jsonschema-examples" -> string!
 const Microsoft.OpenApi.OpenApiConstants.OaiLicenseIdentifier = "x-oai-license-identifier" -> string!
+Microsoft.OpenApi.OpenApiDocument.GetOperationById(string! operationId) -> Microsoft.OpenApi.OpenApiOperation?
