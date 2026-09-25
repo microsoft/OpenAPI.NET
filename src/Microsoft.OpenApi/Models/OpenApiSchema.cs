@@ -589,7 +589,13 @@ namespace Microsoft.OpenApi
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // format
-            writer.WriteProperty(OpenApiConstants.Format, Format);
+            var format = Format;
+            if (version < OpenApiSpecVersion.OpenApi3_1)
+            {
+                format ??= GetKnownTypeAndFormatPreOpenApi31()?.Format;
+            }
+
+            writer.WriteProperty(OpenApiConstants.Format, format);
 
             // default
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
@@ -756,7 +762,8 @@ namespace Microsoft.OpenApi
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
         {
             // type
-            writer.WriteProperty(OpenApiConstants.Type, (Type & ~JsonSchemaType.Null)?.ToFirstIdentifier());
+            var typeToUse = Type ?? GetKnownTypeAndFormatPreOpenApi31()?.Type;
+            writer.WriteProperty(OpenApiConstants.Type, (typeToUse & ~JsonSchemaType.Null)?.ToFirstIdentifier());
 
             // format
             WriteFormatProperty(writer);
@@ -813,7 +820,8 @@ namespace Microsoft.OpenApi
             var formatToWrite = Format;
             if (string.IsNullOrEmpty(formatToWrite))
             {
-                formatToWrite = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                formatToWrite = GetKnownTypeAndFormatPreOpenApi31()?.Format ??
+                    AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
                     AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
                     OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
             }
@@ -1005,7 +1013,11 @@ namespace Microsoft.OpenApi
 
         private void SerializeTypePropertyForVersion2(IOpenApiWriter writer)
         {
-            if (Type is not { } type || type == JsonSchemaType.Null)
+            // TODO: Handle "file" type for 2.0.
+            // Spec https://spec.openapis.org/oas/v2.0.html#data-types
+            var typeToUse = Type ?? GetKnownTypeAndFormatPreOpenApi31()?.Type;
+
+            if (typeToUse is not { } type || type == JsonSchemaType.Null)
             {
                 return;
             }
@@ -1024,7 +1036,13 @@ namespace Microsoft.OpenApi
         /// </summary>
         private void SerializeTypePropertyForVersion3AndLater(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
-            if (Type is not { } type)
+            var type = Type;
+            if (version < OpenApiSpecVersion.OpenApi3_1)
+            {
+                type ??= GetKnownTypeAndFormatPreOpenApi31()?.Type;
+            }
+            
+            if (type is null)
             {
                 return;
             }
@@ -1039,7 +1057,7 @@ namespace Microsoft.OpenApi
                 var typeWithoutNull = type & ~JsonSchemaType.Null;
                 var hasNull = typeWithoutNull != type;
                 var arrayWithoutNull = (from JsonSchemaType flag in jsonSchemaTypeValues
-                                        where typeWithoutNull.HasFlag(flag)
+                                        where typeWithoutNull.Value.HasFlag(flag)
                                         select flag).ToArray();
 
                 // - If we have more than one type (excluding null), we have to use anyOf/oneOf.
@@ -1070,7 +1088,7 @@ namespace Microsoft.OpenApi
             else
             {
                 var array = (from JsonSchemaType flag in jsonSchemaTypeValues
-                                        where type.HasFlag(flag)
+                                        where type.Value.HasFlag(flag)
                                         select flag).ToArray();
 
                 if (array.Length > 1)
@@ -1152,6 +1170,22 @@ namespace Microsoft.OpenApi
                         break;
                 }
             }
+        }
+
+        private (JsonSchemaType Type, string Format)? GetKnownTypeAndFormatPreOpenApi31()
+        {
+            // https://spec.openapis.org/oas/v3.2.0.html#migrating-binary-descriptions-from-oas-3-0
+            if (Type is JsonSchemaType.String or (JsonSchemaType.String | JsonSchemaType.Null) && ContentEncoding == "base64")
+            {
+                return (Type.Value, "byte");
+            }
+
+            if (Type is null && ContentEncoding is null && !string.IsNullOrEmpty(ContentMediaType))
+            {
+                return (JsonSchemaType.String, "binary");
+            }
+
+            return null;
         }
 
 #if NET5_0_OR_GREATER

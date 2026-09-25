@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiSchemaV30CompatibilityTests
     {
-        private static IOpenApiSchema ParseSchemaFromV30Document(string schemaJson)
+        private static OpenApiSchema ParseSchemaFromV30Document(string schemaJson)
         {
             var jsonContent = $$"""
             {
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             var readResult = OpenApiDocument.Parse(jsonContent, "json");
             Assert.Empty(readResult.Diagnostic.Errors);
-            return readResult.Document.Components.Schemas["TestSchema"];
+            return Assert.IsType<OpenApiSchema>(readResult.Document.Components.Schemas["TestSchema"]);
         }
 
         [Fact]
@@ -257,7 +257,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
 
-            var deserializedSchema = (OpenApiSchema)ParseSchemaFromV30Document(actual);
+            var deserializedSchema = ParseSchemaFromV30Document(actual);
             Assert.True(deserializedSchema.IsExclusiveMaximum);
             Assert.Null(deserializedSchema.Maximum);
             Assert.Equal("5", deserializedSchema.ExclusiveMaximum);
@@ -284,10 +284,208 @@ namespace Microsoft.OpenApi.Tests.Models
                 """;
             Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
 
-            var deserializedSchema = (OpenApiSchema)ParseSchemaFromV30Document(actual);
+            var deserializedSchema = ParseSchemaFromV30Document(actual);
             Assert.True(deserializedSchema.IsExclusiveMinimum);
             Assert.Null(deserializedSchema.Minimum);
             Assert.Equal("1", deserializedSchema.ExclusiveMinimum);
+        }
+
+        // https://spec.openapis.org/oas/v3.2.0.html#migrating-binary-descriptions-from-oas-3-0
+        [Fact]
+        public async Task SerializeContentEncodingAsV3EmitsByteFormatAndRoundTrips()
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String,
+                ContentEncoding = "base64"
+            };
+
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            var expected =
+                """
+                {
+                  "type": "string",
+                  "format": "byte",
+                  "x-jsonschema-contentEncoding": "base64"
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+
+            var deserializedSchema = ParseSchemaFromV30Document(actual);
+            Assert.Equal(JsonSchemaType.String, deserializedSchema.Type);
+            Assert.Equal("base64", deserializedSchema.ContentEncoding);
+            Assert.Null(deserializedSchema.Format);
+        }
+
+        // The content media type is what carries the binary-ness, so the type is dropped entirely.
+        [Fact]
+        public async Task SerializeContentMediaTypeAsV3EmitsBinaryFormatAndRoundTrips()
+        {
+            var schema = new OpenApiSchema
+            {
+                ContentMediaType = "image/png"
+            };
+
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            var expected =
+                """
+                {
+                  "type": "string",
+                  "format": "binary",
+                  "x-jsonschema-contentMediaType": "image/png"
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+
+            var deserializedSchema = ParseSchemaFromV30Document(actual);
+            Assert.Null(deserializedSchema.Type);
+            Assert.Equal("image/png", deserializedSchema.ContentMediaType);
+            Assert.Null(deserializedSchema.Format);
+        }
+
+        [Fact]
+        public async Task SerializeContentEncodingWithMediaTypeAsV3EmitsByteFormatAndRoundTrips()
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String,
+                ContentEncoding = "base64",
+                ContentMediaType = "image/png"
+            };
+
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            var expected =
+                """
+                {
+                  "type": "string",
+                  "format": "byte",
+                  "x-jsonschema-contentEncoding": "base64",
+                  "x-jsonschema-contentMediaType": "image/png"
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+
+            var deserializedSchema = ParseSchemaFromV30Document(actual);
+            Assert.Equal(JsonSchemaType.String, deserializedSchema.Type);
+            Assert.Equal("base64", deserializedSchema.ContentEncoding);
+            Assert.Equal("image/png", deserializedSchema.ContentMediaType);
+            Assert.Null(deserializedSchema.Format);
+        }
+
+        [Fact]
+        public async Task SerializeNullableContentEncodingAsV3EmitsByteFormatAndRoundTrips()
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String | JsonSchemaType.Null,
+                ContentEncoding = "base64"
+            };
+
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            var expected =
+                """
+                {
+                  "type": "string",
+                  "format": "byte",
+                  "nullable": true,
+                  "x-jsonschema-contentEncoding": "base64"
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+
+            var deserializedSchema = ParseSchemaFromV30Document(actual);
+            Assert.Equal(JsonSchemaType.String | JsonSchemaType.Null, deserializedSchema.Type);
+            Assert.Equal("base64", deserializedSchema.ContentEncoding);
+            Assert.Null(deserializedSchema.Format);
+        }
+
+        [Fact]
+        public async Task SerializeExplicitFormatAsV3IsNotOverriddenByContentKeywords()
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String,
+                Format = "password",
+                ContentEncoding = "base64"
+            };
+
+            var actual = await schema.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi3_0);
+
+            var expected =
+                """
+                {
+                  "type": "string",
+                  "format": "password",
+                  "x-jsonschema-contentEncoding": "base64"
+                }
+                """;
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)));
+        }
+
+        [Fact]
+        public void DeserializeByteFormatAsV3NormalizesToContentEncoding()
+        {
+            var deserializedSchema = ParseSchemaFromV30Document($$"""
+                {
+                  "type": "string",
+                  "format": "byte"
+                }
+                """);
+
+            Assert.Equal(JsonSchemaType.String, deserializedSchema.Type);
+            Assert.Equal("base64", deserializedSchema.ContentEncoding);
+            Assert.Null(deserializedSchema.Format);
+        }
+
+        [Fact]
+        public void DeserializeBinaryFormatAsV3NormalizesToContentMediaType()
+        {
+            var deserializedSchema = ParseSchemaFromV30Document($$"""
+                {
+                  "type": "string",
+                  "format": "binary"
+                }
+                """);
+
+            Assert.Null(deserializedSchema.Type);
+            Assert.Equal("application/octet-stream", deserializedSchema.ContentMediaType);
+            Assert.Null(deserializedSchema.Format);
+        }
+
+        [Fact]
+        public void DeserializeByteFormatAsV3WithConflictingEncodingKeepsFormat()
+        {
+            var deserializedSchema = ParseSchemaFromV30Document("""
+                {
+                  "type": "string",
+                  "format": "byte",
+                  "x-jsonschema-contentEncoding": "base64url"
+                }
+                """);
+
+            Assert.Equal(JsonSchemaType.String, deserializedSchema.Type);
+            Assert.Equal("base64url", deserializedSchema.ContentEncoding);
+            Assert.Equal("byte", deserializedSchema.Format);
+        }
+
+        [Fact]
+        public void DeserializeUnrelatedFormatAsV3IsNotNormalized()
+        {
+            var deserializedSchema = ParseSchemaFromV30Document("""
+                {
+                  "type": "string",
+                  "format": "date-time"
+                }
+                """);
+
+            Assert.Equal(JsonSchemaType.String, deserializedSchema.Type);
+            Assert.Equal("date-time", deserializedSchema.Format);
+            Assert.Null(deserializedSchema.ContentEncoding);
+            Assert.Null(deserializedSchema.ContentMediaType);
         }
     }
 }
