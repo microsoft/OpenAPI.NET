@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
-using System.Text.Json.Nodes;
+using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
-using System;
 
 namespace Microsoft.OpenApi.Reader
 {
@@ -23,6 +23,9 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="location">Location of where the document that is getting loaded is saved</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <returns></returns>
+        /// <remarks>
+        /// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>.
+        /// </remarks>
         public ReadResult Read(MemoryStream input,
                                Uri location,
                                OpenApiReaderSettings settings)
@@ -39,9 +42,9 @@ namespace Microsoft.OpenApi.Reader
             {
                 jsonNode = JsonNode.Parse(input) ?? throw new InvalidOperationException($"Cannot parse input stream, {nameof(input)}.");
             }
-            catch (JsonException ex)
+            catch (Exception ex) when (ex is JsonException or InvalidOperationException)
             {
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", $"Please provide the correct format, {ex.Message}"));
+                diagnostic.Errors.Add(CreateOpenApiError(ex, true));
                 diagnostic.Format = OpenApiConstants.Json;
                 return new ReadResult
                 {
@@ -60,6 +63,10 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="location">Location of where the document that is getting loaded is saved</param>
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <returns></returns>
+        /// <remarks>
+        /// Use this overload when JSON has already been parsed into a <see cref="JsonNode"/>. OpenAPI semantic
+        /// errors are returned in the <see cref="ReadResult.Diagnostic"/>.
+        /// </remarks>
         public ReadResult Read(JsonNode jsonNode,
                                Uri location,
                                OpenApiReaderSettings settings)
@@ -91,7 +98,7 @@ namespace Microsoft.OpenApi.Reader
             if (document is not null && settings.RuleSet is not null && settings.RuleSet.Rules.Any())
             {
                 var openApiErrors = document.Validate(settings.RuleSet);
-                if(openApiErrors is not null)
+                if (openApiErrors is not null)
                 {
                     foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
                     {
@@ -101,7 +108,7 @@ namespace Microsoft.OpenApi.Reader
                     {
                         diagnostic.Warnings.Add(item);
                     }
-                }                
+                }
             }
             diagnostic.Format = OpenApiConstants.Json;
             return new()
@@ -119,6 +126,9 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="settings">The Reader settings to be used during parsing.</param>
         /// <param name="cancellationToken">Propagates notifications that operations should be cancelled.</param>
         /// <returns></returns>
+        /// <remarks>
+        /// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>.
+        /// </remarks>
         public async Task<ReadResult> ReadAsync(Stream input,
                                                 Uri location,
                                                 OpenApiReaderSettings settings,
@@ -136,9 +146,9 @@ namespace Microsoft.OpenApi.Reader
                 jsonNode = await JsonNode.ParseAsync(input, cancellationToken: cancellationToken).ConfigureAwait(false) ??
                     throw new InvalidOperationException($"failed to parse input stream, {nameof(input)}");
             }
-            catch (JsonException ex)
+            catch (Exception ex) when (ex is JsonException or InvalidOperationException)
             {
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", $"Please provide the correct format, {ex.Message}"));
+                diagnostic.Errors.Add(CreateOpenApiError(ex, true));
                 diagnostic.Format = OpenApiConstants.Json;
                 return new ReadResult
                 {
@@ -151,6 +161,9 @@ namespace Microsoft.OpenApi.Reader
         }
 
         /// <inheritdoc/>
+        /// <remarks>
+        /// OpenAPI semantic and parser errors are returned in the <paramref name="diagnostic"/>.
+        /// </remarks>
         public T? ReadFragment<T>(MemoryStream input,
                                  OpenApiSpecVersion version,
                                  OpenApiDocument openApiDocument,
@@ -167,14 +180,24 @@ namespace Microsoft.OpenApi.Reader
             {
                 jsonNode = JsonNode.Parse(input) ?? throw new InvalidOperationException($"Failed to parse stream, {nameof(input)}");
             }
-            catch (JsonException ex)
+            catch (Exception ex) when (ex is JsonException or InvalidOperationException)
             {
-                diagnostic = new();
-                diagnostic.Errors.Add(new($"#line={ex.LineNumber}", ex.Message));
+                diagnostic = new()
+                {
+                    Format = OpenApiConstants.Json,
+                };
+                diagnostic.Errors.Add(CreateOpenApiError(ex, false));
                 return default;
             }
 
             return ReadFragment<T>(jsonNode, version, openApiDocument, out diagnostic);
+        }
+
+        private static OpenApiError CreateOpenApiError(Exception ex, bool includeFormatHint)
+        {
+            return ex is JsonException jsonException
+                ? new OpenApiError($"#line={jsonException.LineNumber}", includeFormatHint ? $"Please provide the correct format, {jsonException.Message}" : jsonException.Message)
+                : new OpenApiError(null, ex.Message);
         }
 
         /// <inheritdoc/>
