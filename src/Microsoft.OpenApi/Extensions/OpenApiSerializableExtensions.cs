@@ -28,6 +28,23 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
+        /// Serialize the <see cref="IOpenApiSerializable"/> to the Open API document (JSON) using the given stream, specification version and settings.
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
+        /// <param name="element">The Open API element.</param>
+        /// <param name="stream">The output stream.</param>
+        /// <param name="specVersion">The Open API specification version.</param>
+        /// <param name="settings">Settings controlling JSON output, including <see cref="OpenApiJsonWriterSettings.Terse"/> for compact formatting.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+#pragma warning disable RS0026 // Intentional overload alongside the CancellationToken-only variant; types are unambiguous.
+        public static Task SerializeAsJsonAsync<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, OpenApiJsonWriterSettings settings, CancellationToken cancellationToken = default)
+#pragma warning restore RS0026
+            where T : IOpenApiSerializable
+        {
+            return element.SerializeAsync(stream, specVersion, OpenApiConstants.Json, settings, cancellationToken);
+        }
+
+        /// <summary>
         /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document (YAML) using the given stream and specification version.
         /// </summary>
         /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
@@ -152,6 +169,26 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
+        /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document as a string in JSON format using the given settings.
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
+        /// <param name="element">The Open API element.</param>
+        /// <param name="specVersion">The Open API specification version.</param>
+        /// <param name="settings">Settings controlling JSON output, including <see cref="OpenApiJsonWriterSettings.Terse"/> for compact formatting.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+#pragma warning disable RS0026 // Intentional overload alongside the CancellationToken-only variant; types are unambiguous.
+        public static Task<string> SerializeAsJsonAsync<T>(
+            this T element,
+            OpenApiSpecVersion specVersion,
+            OpenApiJsonWriterSettings settings,
+            CancellationToken cancellationToken = default)
+#pragma warning restore RS0026
+            where T : IOpenApiSerializable
+        {
+            return element.SerializeAsync(specVersion, OpenApiConstants.Json, settings, cancellationToken);
+        }
+
+        /// <summary>
         /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document as a string in YAML format.
         /// </summary>
         /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
@@ -186,6 +223,39 @@ namespace Microsoft.OpenApi
 
             using var stream = new MemoryStream();
             await element.SerializeAsync(stream, specVersion, format, cancellationToken).ConfigureAwait(false);
+            stream.Position = 0;
+
+            using var streamReader = new StreamReader(stream);
+#if NET7_0_OR_GREATER
+            return await streamReader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+#else
+            return await streamReader.ReadToEndAsync().ConfigureAwait(false);
+#endif
+        }
+
+        /// <summary>
+        /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document as a string in the given format using the given settings.
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
+        /// <param name="element">The Open API element.</param>
+        /// <param name="specVersion">The Open API specification version.</param>
+        /// <param name="format">Open API document format.</param>
+        /// <param name="settings">Provide configuration settings for controlling writing output.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+#pragma warning disable RS0026 // Intentional overload alongside the CancellationToken-only variant; types are unambiguous.
+        public static async Task<string> SerializeAsync<T>(
+            this T element,
+            OpenApiSpecVersion specVersion,
+            string format,
+            OpenApiWriterSettings? settings,
+            CancellationToken cancellationToken = default)
+#pragma warning restore RS0026
+            where T : IOpenApiSerializable
+        {
+            Utils.CheckArgumentNull(element);
+
+            using var stream = new MemoryStream();
+            await element.SerializeAsync(stream, specVersion, format, settings, cancellationToken).ConfigureAwait(false);
             stream.Position = 0;
 
             using var streamReader = new StreamReader(stream);
