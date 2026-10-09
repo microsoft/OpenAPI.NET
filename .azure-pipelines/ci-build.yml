@@ -215,7 +215,7 @@ extends:
           displayName: 'Include version-check script in Nugets artifact'
           inputs:
             SourceFolder: '$(Build.SourcesDirectory)/scripts'
-            Contents: 'checkNuGetVersion.ps1'
+            Contents: 'check-nuget-package-published.ps1'
             TargetFolder: '$(Build.ArtifactStagingDirectory)/Nugets/scripts'
 
     - stage: deploy
@@ -247,7 +247,7 @@ extends:
                 displayName: 'Check whether NuGet package version already published (idempotent)'
                 inputs:
                   targetType: filePath
-                  filePath: '$(Pipeline.Workspace)/scripts/checkNuGetVersion.ps1'
+                  filePath: '$(Pipeline.Workspace)/scripts/check-nuget-package-published.ps1'
                   arguments: '-PackageId "Microsoft.OpenApi" -PackageDirectory "$(Pipeline.Workspace)" -NuGetServiceIndexUrl "$(privateFeedBaseUrl)/nuget/v3/index.json"'
                   pwsh: true
                 env:
@@ -306,7 +306,7 @@ extends:
                 displayName: 'Check whether NuGet package version already published (idempotent)'
                 inputs:
                   targetType: filePath
-                  filePath: '$(Pipeline.Workspace)/scripts/checkNuGetVersion.ps1'
+                  filePath: '$(Pipeline.Workspace)/scripts/check-nuget-package-published.ps1'
                   arguments: '-PackageId "Microsoft.OpenApi.YamlReader" -PackageDirectory "$(Pipeline.Workspace)" -NuGetServiceIndexUrl "$(privateFeedBaseUrl)/nuget/v3/index.json"'
                   pwsh: true
                 env:
