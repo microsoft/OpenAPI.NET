@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -20,6 +21,8 @@ namespace Microsoft.OpenApi
 #if NET8_0_OR_GREATER
         [GeneratedRegex(KeyPattern, RegexOptions.None, matchTimeoutMilliseconds: 100)]
         private static partial Regex KeyRegex();
+#else
+        private static readonly Regex KeyRegex = new(KeyPattern, RegexOptions.None, TimeSpan.FromMilliseconds(100));
 #endif
 
         /// <summary>
@@ -61,7 +64,7 @@ namespace Microsoft.OpenApi
 #if NET8_0_OR_GREATER
                 var isValidKey = KeyRegex().IsMatch(key);
 #else
-                var isValidKey = IsValidKey(key);
+                var isValidKey = KeyRegex.IsMatch(key);
 #endif
                 if (!isValidKey)
                 {
@@ -71,34 +74,5 @@ namespace Microsoft.OpenApi
             }
         }
 
-        internal static bool IsValidKey(string key)
-        {
-            // Match the fixed character class without wall-clock timeouts on downlevel targets.
-            var length = key.Length;
-            // The regex's $ anchor also accepts a single final newline.
-            if (length > 0 && key[length - 1] == '\n')
-            {
-                length--;
-            }
-
-            if (length == 0)
-            {
-                return false;
-            }
-
-            for (var i = 0; i < length; i++)
-            {
-                var character = key[i];
-                if (!(character >= 'a' && character <= 'z') &&
-                    !(character >= 'A' && character <= 'Z') &&
-                    !(character >= '0' && character <= '9') &&
-                    character != '.' && character != '-' && character != '_')
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
     }
 }

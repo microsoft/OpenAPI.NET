@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.False(result);
             Assert.NotNull(errors);
             var error = Assert.Single(errors);
-            Assert.Equal(string.Format(SRResource.Validation_ComponentsKeyMustMatchRegularExpr, key, "responses", @"^[a-zA-Z0-9\.\-_]+$"),
+            Assert.Equal(string.Format(SRResource.Validation_ComponentsKeyMustMatchRegularExpr, key, "responses", OpenApiComponentsRules.KeyPattern),
                 error.Message);
         }
 
@@ -67,7 +67,6 @@ namespace Microsoft.OpenApi.Validations.Tests
             rules.Add(typeof(OpenApiComponents), OpenApiComponentsRules.KeyMustBeRegularExpression);
             var errors = components.Validate(rules);
 
-            Assert.Equal(isValid, OpenApiComponentsRules.IsValidKey(key));
             Assert.Equal(isValid, !errors.Any());
         }
 
@@ -77,7 +76,6 @@ namespace Microsoft.OpenApi.Validations.Tests
         public async Task LoadAsyncValidatesLongComponentKeys(bool isValid)
         {
             var key = new string('a', 1_000_000) + (isValid ? string.Empty : "!");
-            Assert.Equal(isValid, OpenApiComponentsRules.IsValidKey(key));
             var json = """
                 {"openapi":"3.1.0","info":{"title":"Test","version":"1.0"},"paths":{},"components":{"schemas":{
                 """ + JsonSerializer.Serialize(key) + ":{\"type\":\"string\"}}}}";
@@ -95,7 +93,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 var error = Assert.Single(result.Diagnostic.Errors);
                 Assert.Equal(string.Format(SRResource.Validation_ComponentsKeyMustMatchRegularExpr,
-                    key, "schemas", @"^[a-zA-Z0-9\.\-_]+$"), error.Message);
+                    key, "schemas", OpenApiComponentsRules.KeyPattern), error.Message);
             }
         }
     }
