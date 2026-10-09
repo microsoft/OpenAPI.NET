@@ -594,7 +594,33 @@ extends:
                   displayName: 'Get current date'
                   name: setdate
                   condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
-                
+
+                # Keep feed credentials out of the Docker build context and image layers.
+                - pwsh: |
+                    if ([string]::IsNullOrWhiteSpace($env:FEED_ACCESS_TOKEN)) {
+                      throw "No Azure Artifacts access token available for the Docker build."
+                    }
+                    $feedAccessToken = [System.Security.SecurityElement]::Escape($env:FEED_ACCESS_TOKEN)
+                    @"
+                    <?xml version="1.0" encoding="utf-8"?>
+                    <configuration>
+                      <packageSources>
+                        <clear />
+                        <add key="GraphDeveloperExperiences_Public" value="https://microsoftgraph.pkgs.visualstudio.com/0985d294-5762-4bc2-a565-161ef349ca3e/_packaging/GraphDeveloperExperiences_Public/nuget/v3/index.json" />
+                      </packageSources>
+                      <packageSourceCredentials>
+                        <GraphDeveloperExperiences_Public>
+                          <add key="Username" value="AzureDevOps" />
+                          <add key="ClearTextPassword" value="$feedAccessToken" />
+                          <add key="ValidAuthenticationTypes" value="Basic" />
+                        </GraphDeveloperExperiences_Public>
+                      </packageSourceCredentials>
+                    </configuration>
+                    "@ | Set-Content -Path "$(Agent.TempDirectory)/hidi-docker.nuget.config" -Encoding UTF8
+                  displayName: 'Create Docker NuGet config (central feed)'
+                  env:
+                    FEED_ACCESS_TOKEN: $(System.AccessToken)
+
                 - script: |
                     docker run --privileged --rm msgraphprodregistry.azurecr.io/tonistiigi/binfmt --install all
                   displayName: "Enable multi-platform builds"
@@ -613,6 +639,7 @@ extends:
                     # Using quotes around tags to prevent flag interpretation
                     docker buildx build \
                       --platform linux/amd64,linux/arm64/v8 \
+                      --secret id=nuget_config,src="$(Agent.TempDirectory)/hidi-docker.nuget.config" \
                       --push \
                       -t "$(REGISTRY)/$(IMAGE_NAME):nightly" \
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
@@ -625,12 +652,21 @@ extends:
                     echo "Building Docker image for release..."
                     docker buildx build\
                       --platform linux/amd64,linux/arm64/v8 \
+                      --secret id=nuget_config,src="$(Agent.TempDirectory)/hidi-docker.nuget.config" \
                       --push \
                       -t "$(REGISTRY)/$(IMAGE_NAME):latest" \
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}" \
                       "$(Pipeline.Workspace)"
                   displayName: 'Build and Push Release Image'
                   condition: contains(variables['Build.SourceBranch'], 'refs/tags/v')
+
+                - pwsh: |
+                    $configPath = "$(Agent.TempDirectory)/hidi-docker.nuget.config"
+                    if (Test-Path $configPath) {
+                      Remove-Item $configPath -Force
+                    }
+                  displayName: 'Remove Docker NuGet config'
+                  condition: always()
 
 # once the nuget has been released, fill this form to get the public documentation updated.
 # https://dev.azure.com/msft-skilling/Content/_workitems/create/User%20Story?templateId=39fb91e3-64a2-4c8a-83db-b2bdf3603dd3&ownerId=c4a28f90-17ae-4384-b514-7273392b082b

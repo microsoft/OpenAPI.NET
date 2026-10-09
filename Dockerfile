@@ -5,7 +5,9 @@ COPY ./src ./hidi/src
 COPY ./Directory.Build.props ./hidi/Directory.Build.props
 COPY ./README.md ./hidi/README.md
 WORKDIR /app/hidi
-RUN dotnet publish ./src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -c Release
+# CI supplies the private feed config as a secret; local builds use default NuGet sources.
+RUN --mount=type=secret,id=nuget_config,target=/app/hidi/NuGet.Config \
+    dotnet publish ./src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -c Release
 
 FROM mcr.microsoft.com/dotnet/runtime:8.0-jammy-chiseled AS runtime
 WORKDIR /app
