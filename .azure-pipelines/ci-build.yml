@@ -21,6 +21,8 @@ pr:
 variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  NuGetOrganizationName: 'openapinet'
+  privateFeedBaseUrl: 'https://microsoftgraph.pkgs.visualstudio.com/0985d294-5762-4bc2-a565-161ef349ca3e/_packaging/GraphDeveloperExperiences_Public'
   ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
   
 resources:
@@ -81,7 +83,7 @@ extends:
             <configuration>
               <packageSources>
                 <clear />
-                <add key="GraphDeveloperExperiences_Public" value="https://microsoftgraph.pkgs.visualstudio.com/0985d294-5762-4bc2-a565-161ef349ca3e/_packaging/GraphDeveloperExperiences_Public/nuget/v3/index.json" />
+                <add key="GraphDeveloperExperiences_Public" value="$(privateFeedBaseUrl)/nuget/v3/index.json" />
               </packageSources>
             </configuration>
             "@ | Set-Content -Path "$(Build.SourcesDirectory)/nuget.config" -Encoding UTF8
@@ -205,7 +207,16 @@ extends:
           inputs:
             targetFolder: $(Build.ArtifactStagingDirectory)/Nugets
             sourceFolder: $(Build.ArtifactStagingDirectory)
-            content: '*.nupkg'
+            Contents: |
+              *.nupkg
+              *.snupkg
+
+        - task: CopyFiles@2
+          displayName: 'Include version-check script in Nugets artifact'
+          inputs:
+            SourceFolder: '$(Build.SourcesDirectory)/scripts'
+            Contents: 'check-nuget-package-published.ps1'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)/Nugets/scripts'
 
     - stage: deploy
       condition: and(contains(variables['Build.SourceBranch'], 'refs/tags/v'), succeeded())
@@ -232,13 +243,47 @@ extends:
               pool:
                 vmImage: ubuntu-latest
               steps:
-              - task: 1ES.PublishNuget@1
-                displayName: 'NuGet push'
+              - task: PowerShell@2
+                displayName: 'Check whether NuGet package version already published (idempotent)'
                 inputs:
-                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.[0-9]*.nupkg'
-                  packageParentPath: '$(Pipeline.Workspace)'
-                  nuGetFeedType: external
-                  publishFeedCredentials: 'OpenAPI Nuget Connection'
+                  targetType: filePath
+                  filePath: '$(Pipeline.Workspace)/scripts/check-nuget-package-published.ps1'
+                  arguments: '-PackageId "Microsoft.OpenApi" -PackageDirectory "$(Pipeline.Workspace)" -NuGetServiceIndexUrl "$(privateFeedBaseUrl)/nuget/v3/index.json"'
+                  pwsh: true
+                env:
+                  FEED_ACCESS_TOKEN: $(System.AccessToken)
+              - task: CopyFiles@2
+                displayName: 'Stage OpenAPI NuGet packages for ESRP release'
+                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
+                inputs:
+                  SourceFolder: '$(Pipeline.Workspace)'
+                  Contents: |
+                    Microsoft.OpenApi.*.nupkg
+                    Microsoft.OpenApi.*.snupkg
+                    !Microsoft.OpenApi.YamlReader.*
+                  TargetFolder: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/openapi'
+                  CleanTargetFolder: true
+              - task: EsrpRelease@14
+                displayName: 'ESRP Release - OpenAPI NuGet'
+                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
+                inputs:
+                  connectedservicename: 'Federated DevX ESRP Managed Identity Connection'
+                  usemanagedidentity: false
+                  keyvaultname: 'akv-prod-eastus'
+                  authcertname: 'ReferenceLibraryPrivateCert'
+                  signcertname: 'ReferencePackagePublisherCertificate'
+                  clientid: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'
+                  intent: 'packagedistribution'
+                  contenttype: 'NuGet'
+                  organizationname: '$(NuGetOrganizationName)'
+                  contentsource: 'Folder'
+                  folderlocation: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/openapi'
+                  waitforreleasecompletion: true
+                  owners: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
+                  approvers: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
+                  serviceendpointurl: 'https://api.esrp.microsoft.com/'
+                  mainpublisher: 'ESRPRELPACMAN'
+                  domaintenantid: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
 
       - deployment: deploy_yaml_reader
         condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
@@ -257,13 +302,46 @@ extends:
               pool:
                 vmImage: ubuntu-latest
               steps:
-              - task: 1ES.PublishNuget@1
-                displayName: 'NuGet push'
+              - task: PowerShell@2
+                displayName: 'Check whether NuGet package version already published (idempotent)'
                 inputs:
-                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg'
-                  packageParentPath: '$(Pipeline.Workspace)'
-                  nuGetFeedType: external
-                  publishFeedCredentials: 'OpenAPI Nuget Connection'
+                  targetType: filePath
+                  filePath: '$(Pipeline.Workspace)/scripts/check-nuget-package-published.ps1'
+                  arguments: '-PackageId "Microsoft.OpenApi.YamlReader" -PackageDirectory "$(Pipeline.Workspace)" -NuGetServiceIndexUrl "$(privateFeedBaseUrl)/nuget/v3/index.json"'
+                  pwsh: true
+                env:
+                  FEED_ACCESS_TOKEN: $(System.AccessToken)
+              - task: CopyFiles@2
+                displayName: 'Stage YAML reader NuGet packages for ESRP release'
+                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
+                inputs:
+                  SourceFolder: '$(Pipeline.Workspace)'
+                  Contents: |
+                    Microsoft.OpenApi.YamlReader.*.nupkg
+                    Microsoft.OpenApi.YamlReader.*.snupkg
+                  TargetFolder: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/yaml-reader'
+                  CleanTargetFolder: true
+              - task: EsrpRelease@14
+                displayName: 'ESRP Release - YAML reader NuGet'
+                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
+                inputs:
+                  connectedservicename: 'Federated DevX ESRP Managed Identity Connection'
+                  usemanagedidentity: false
+                  keyvaultname: 'akv-prod-eastus'
+                  authcertname: 'ReferenceLibraryPrivateCert'
+                  signcertname: 'ReferencePackagePublisherCertificate'
+                  clientid: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'
+                  intent: 'packagedistribution'
+                  contenttype: 'NuGet'
+                  organizationname: '$(NuGetOrganizationName)'
+                  contentsource: 'Folder'
+                  folderlocation: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/yaml-reader'
+                  waitforreleasecompletion: true
+                  owners: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
+                  approvers: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
+                  serviceendpointurl: 'https://api.esrp.microsoft.com/'
+                  mainpublisher: 'ESRPRELPACMAN'
+                  domaintenantid: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
 
       - deployment: create_github_release
         condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
