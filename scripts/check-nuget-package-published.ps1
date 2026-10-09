@@ -64,6 +64,11 @@ try {
     if ($null -eq $response.versions) {
         throw "No versions returned for NuGet $id by the private feed."
     }
+    if ($response.versions -isnot [array] -or @($response.versions | Where-Object {
+        $_ -isnot [string] -or $_ -notmatch '^\d[\w\.\-]*$'
+    }).Count -gt 0) {
+        throw "Invalid version list returned for NuGet $id by the private feed."
+    }
     $alreadyPublished = $response.versions -contains $version
 }
 catch {
