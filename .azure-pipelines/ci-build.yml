@@ -265,6 +265,41 @@ extends:
                   nuGetFeedType: external
                   publishFeedCredentials: 'OpenAPI Nuget Connection'
 
+      - deployment: create_github_release
+        condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
+        templateContext:
+          type: releaseJob
+          isProduction: true
+          inputs:
+          - input: pipelineArtifact
+            artifactName: Nugets
+            targetPath: '$(Pipeline.Workspace)'
+        dependsOn: []
+        environment: kiota-github-releases
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: ubuntu-latest
+              steps:
+              - pwsh: |
+                  $artifactName = Get-ChildItem -Path $(Pipeline.Workspace) -Filter Microsoft.OpenApi.*.nupkg -recurse | select -First 1
+                  $artifactVersion= $artifactName.Name -replace "Microsoft.OpenApi.", "" -replace ".nupkg", ""
+                  #Set Variable $artifactName and $artifactVersion
+                  Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false;]$artifactVersion"
+                  echo "$artifactVersion"
+                displayName: 'Fetch Artifact Name'
+              - task: GitHubRelease@1
+                displayName: 'GitHub release (edit)'
+                condition: succeededOrFailed()
+                inputs:
+                  gitHubConnection: 'Github-MaggieKimani1'
+                  action: edit
+                  tagSource: userSpecifiedTag
+                  tag: 'v$(artifactVersion)'
+                  releaseNotesSource: inline
+                  addChangeLog: false
+
 # once the nuget has been released, fill this form to get the public documentation updated.
 # https://dev.azure.com/msft-skilling/Content/_workitems/create/User%20Story?templateId=39fb91e3-64a2-4c8a-83db-b2bdf3603dd3&ownerId=c4a28f90-17ae-4384-b514-7273392b082b
 # https://learn.microsoft.com/en-us/dotnet/api/microsoft.openapi
