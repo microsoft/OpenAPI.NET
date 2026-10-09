@@ -146,6 +146,28 @@ namespace Microsoft.OpenApi.Tests.Writers
         }
 
         [Fact]
+        public void CompositeRuntimeExpressionPreservesMultilineCaptures()
+        {
+            const string expression = "prefix {$request.header.foo\nbar} {$url} suffix";
+
+            var composite = Assert.IsType<CompositeExpression>(RuntimeExpression.Build(expression));
+
+            Assert.Equal(expression, composite.Expression);
+            Assert.Equal(new[] { "$request.header.foo\nbar", "$url" },
+                composite.ContainedExpressions.Select(static item => item.Expression));
+        }
+
+        [Fact]
+        public void CompositeRuntimeExpressionPreservesUnterminatedCapture()
+        {
+            const string expression = "prefix {$url";
+
+            var composite = Assert.IsType<CompositeExpression>(RuntimeExpression.Build(expression));
+
+            Assert.IsType<UrlExpression>(Assert.Single(composite.ContainedExpressions));
+        }
+
+        [Fact]
         public void CompositeRuntimeExpressionContainsExpression()
         {
             // Arrange
