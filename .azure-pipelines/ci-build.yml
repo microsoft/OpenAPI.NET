@@ -21,6 +21,8 @@ pr:
 variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  NuGetOrganizationName: 'openapinet'
+  privateFeedBaseUrl: 'https://microsoftgraph.pkgs.visualstudio.com/0985d294-5762-4bc2-a565-161ef349ca3e/_packaging/GraphDeveloperExperiences_Public'
   ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
   REGISTRY: 'msgraphprodregistry.azurecr.io'
   IMAGE_NAME: 'public/openapi/hidi'
@@ -88,7 +90,7 @@ extends:
             <configuration>
               <packageSources>
                 <clear />
-                <add key="GraphDeveloperExperiences_Public" value="https://microsoftgraph.pkgs.visualstudio.com/0985d294-5762-4bc2-a565-161ef349ca3e/_packaging/GraphDeveloperExperiences_Public/nuget/v3/index.json" />
+                <add key="GraphDeveloperExperiences_Public" value="$(privateFeedBaseUrl)/nuget/v3/index.json" />
               </packageSources>
             </configuration>
             "@ | Set-Content -Path "$(Build.SourcesDirectory)/nuget.config" -Encoding UTF8
@@ -226,7 +228,16 @@ extends:
           inputs:
             targetFolder: $(Build.ArtifactStagingDirectory)/Nugets
             sourceFolder: $(Build.ArtifactStagingDirectory)
-            content: '*.nupkg'
+            Contents: |
+              *.nupkg
+              *.snupkg
+
+        - task: CopyFiles@2
+          displayName: 'Include version-check script in Nugets artifact'
+          inputs:
+            SourceFolder: '$(Build.SourcesDirectory)/scripts'
+            Contents: 'check-nuget-package-published.ps1'
+            TargetFolder: '$(Build.ArtifactStagingDirectory)/Nugets/scripts'
 
         # Copy repository files to be used in the deploy stage
         - task: CopyFiles@2
@@ -265,13 +276,46 @@ extends:
               pool:
                 vmImage: ubuntu-latest
               steps:
-              - task: 1ES.PublishNuget@1
-                displayName: 'NuGet push'
+              - task: PowerShell@2
+                displayName: 'Check whether NuGet package version already published (idempotent)'
                 inputs:
-                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg'
-                  packageParentPath: '$(Pipeline.Workspace)'
-                  nuGetFeedType: external
-                  publishFeedCredentials: 'OpenAPI Nuget Connection'
+                  targetType: filePath
+                  filePath: '$(Pipeline.Workspace)/scripts/check-nuget-package-published.ps1'
+                  arguments: '-PackageId "Microsoft.OpenApi.Hidi" -PackageDirectory "$(Pipeline.Workspace)" -NuGetServiceIndexUrl "$(privateFeedBaseUrl)/nuget/v3/index.json"'
+                  pwsh: true
+                env:
+                  FEED_ACCESS_TOKEN: $(System.AccessToken)
+              - task: CopyFiles@2
+                displayName: 'Stage Hidi NuGet packages for ESRP release'
+                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
+                inputs:
+                  SourceFolder: '$(Pipeline.Workspace)'
+                  Contents: |
+                    Microsoft.OpenApi.Hidi.*.nupkg
+                    Microsoft.OpenApi.Hidi.*.snupkg
+                  TargetFolder: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/hidi'
+                  CleanTargetFolder: true
+              - task: EsrpRelease@14
+                displayName: 'ESRP Release - Hidi NuGet'
+                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
+                inputs:
+                  connectedservicename: 'Federated DevX ESRP Managed Identity Connection'
+                  usemanagedidentity: false
+                  keyvaultname: 'akv-prod-eastus'
+                  authcertname: 'ReferenceLibraryPrivateCert'
+                  signcertname: 'ReferencePackagePublisherCertificate'
+                  clientid: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'
+                  intent: 'packagedistribution'
+                  contenttype: 'NuGet'
+                  organizationname: '$(NuGetOrganizationName)'
+                  contentsource: 'Folder'
+                  folderlocation: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/hidi'
+                  waitforreleasecompletion: true
+                  owners: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
+                  approvers: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
+                  serviceendpointurl: 'https://api.esrp.microsoft.com/'
+                  mainpublisher: 'ESRPRELPACMAN'
+                  domaintenantid: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
 
       - deployment: deploy_lib
         condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
@@ -290,21 +334,48 @@ extends:
               pool:
                 vmImage: ubuntu-latest
               steps:
-              - pwsh: |
-                  $fileNames = "$(Pipeline.Workspace)/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg"
-                  foreach($fileName in $fileNames) {
-                    if(Test-Path $fileName) {
-                      Remove-Item $fileName -Verbose
-                    }
-                  }
-                displayName: remove other nupkgs to avoid duplication
-              - task: 1ES.PublishNuget@1
-                displayName: 'NuGet push'
+              - task: PowerShell@2
+                displayName: 'Check whether NuGet package version already published (idempotent)'
                 inputs:
-                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.*.nupkg'
-                  packageParentPath: '$(Pipeline.Workspace)'
-                  nuGetFeedType: external
-                  publishFeedCredentials: 'OpenAPI Nuget Connection'
+                  targetType: filePath
+                  filePath: '$(Pipeline.Workspace)/scripts/check-nuget-package-published.ps1'
+                  arguments: '-PackageId "Microsoft.OpenApi" -PackageDirectory "$(Pipeline.Workspace)" -NuGetServiceIndexUrl "$(privateFeedBaseUrl)/nuget/v3/index.json"'
+                  pwsh: true
+                env:
+                  FEED_ACCESS_TOKEN: $(System.AccessToken)
+              - task: CopyFiles@2
+                displayName: 'Stage OpenAPI NuGet packages for ESRP release'
+                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
+                inputs:
+                  SourceFolder: '$(Pipeline.Workspace)'
+                  Contents: |
+                    Microsoft.OpenApi.*.nupkg
+                    Microsoft.OpenApi.*.snupkg
+                    !Microsoft.OpenApi.Hidi.*
+                    !Microsoft.OpenApi.YamlReader.*
+                  TargetFolder: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/openapi'
+                  CleanTargetFolder: true
+              - task: EsrpRelease@14
+                displayName: 'ESRP Release - OpenAPI NuGet'
+                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
+                inputs:
+                  connectedservicename: 'Federated DevX ESRP Managed Identity Connection'
+                  usemanagedidentity: false
+                  keyvaultname: 'akv-prod-eastus'
+                  authcertname: 'ReferenceLibraryPrivateCert'
+                  signcertname: 'ReferencePackagePublisherCertificate'
+                  clientid: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'
+                  intent: 'packagedistribution'
+                  contenttype: 'NuGet'
+                  organizationname: '$(NuGetOrganizationName)'
+                  contentsource: 'Folder'
+                  folderlocation: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/openapi'
+                  waitforreleasecompletion: true
+                  owners: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
+                  approvers: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
+                  serviceendpointurl: 'https://api.esrp.microsoft.com/'
+                  mainpublisher: 'ESRPRELPACMAN'
+                  domaintenantid: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
 
       - deployment: deploy_yaml_reader
         condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
@@ -323,13 +394,46 @@ extends:
               pool:
                 vmImage: ubuntu-latest
               steps:
-              - task: 1ES.PublishNuget@1
-                displayName: 'NuGet push'
+              - task: PowerShell@2
+                displayName: 'Check whether NuGet package version already published (idempotent)'
                 inputs:
-                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg'
-                  packageParentPath: '$(Pipeline.Workspace)'
-                  nuGetFeedType: external
-                  publishFeedCredentials: 'OpenAPI Nuget Connection'
+                  targetType: filePath
+                  filePath: '$(Pipeline.Workspace)/scripts/check-nuget-package-published.ps1'
+                  arguments: '-PackageId "Microsoft.OpenApi.YamlReader" -PackageDirectory "$(Pipeline.Workspace)" -NuGetServiceIndexUrl "$(privateFeedBaseUrl)/nuget/v3/index.json"'
+                  pwsh: true
+                env:
+                  FEED_ACCESS_TOKEN: $(System.AccessToken)
+              - task: CopyFiles@2
+                displayName: 'Stage YAML reader NuGet packages for ESRP release'
+                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
+                inputs:
+                  SourceFolder: '$(Pipeline.Workspace)'
+                  Contents: |
+                    Microsoft.OpenApi.YamlReader.*.nupkg
+                    Microsoft.OpenApi.YamlReader.*.snupkg
+                  TargetFolder: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/yaml-reader'
+                  CleanTargetFolder: true
+              - task: EsrpRelease@14
+                displayName: 'ESRP Release - YAML reader NuGet'
+                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
+                inputs:
+                  connectedservicename: 'Federated DevX ESRP Managed Identity Connection'
+                  usemanagedidentity: false
+                  keyvaultname: 'akv-prod-eastus'
+                  authcertname: 'ReferenceLibraryPrivateCert'
+                  signcertname: 'ReferencePackagePublisherCertificate'
+                  clientid: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'
+                  intent: 'packagedistribution'
+                  contenttype: 'NuGet'
+                  organizationname: '$(NuGetOrganizationName)'
+                  contentsource: 'Folder'
+                  folderlocation: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/yaml-reader'
+                  waitforreleasecompletion: true
+                  owners: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
+                  approvers: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
+                  serviceendpointurl: 'https://api.esrp.microsoft.com/'
+                  mainpublisher: 'ESRPRELPACMAN'
+                  domaintenantid: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
 
       - deployment: create_github_release
         condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
@@ -459,7 +563,33 @@ extends:
                   displayName: 'Get current date'
                   name: setdate
                   condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
-                
+
+                # Keep feed credentials out of the Docker build context and image layers.
+                - pwsh: |
+                    if ([string]::IsNullOrWhiteSpace($env:FEED_ACCESS_TOKEN)) {
+                      throw "No Azure Artifacts access token available for the Docker build."
+                    }
+                    $feedAccessToken = [System.Security.SecurityElement]::Escape($env:FEED_ACCESS_TOKEN)
+                    @"
+                    <?xml version="1.0" encoding="utf-8"?>
+                    <configuration>
+                      <packageSources>
+                        <clear />
+                        <add key="GraphDeveloperExperiences_Public" value="$(privateFeedBaseUrl)/nuget/v3/index.json" />
+                      </packageSources>
+                      <packageSourceCredentials>
+                        <GraphDeveloperExperiences_Public>
+                          <add key="Username" value="AzureDevOps" />
+                          <add key="ClearTextPassword" value="$feedAccessToken" />
+                          <add key="ValidAuthenticationTypes" value="Basic" />
+                        </GraphDeveloperExperiences_Public>
+                      </packageSourceCredentials>
+                    </configuration>
+                    "@ | Set-Content -Path "$(Agent.TempDirectory)/hidi-docker.nuget.config" -Encoding UTF8
+                  displayName: 'Create Docker NuGet config (central feed)'
+                  env:
+                    FEED_ACCESS_TOKEN: $(System.AccessToken)
+
                 - script: |
                     docker run --privileged --rm msgraphprodregistry.azurecr.io/tonistiigi/binfmt --install all
                   displayName: "Enable multi-platform builds"
@@ -478,6 +608,7 @@ extends:
                     # Using quotes around tags to prevent flag interpretation
                     docker buildx build \
                       --platform linux/amd64,linux/arm64/v8 \
+                      --secret id=nuget_config,src="$(Agent.TempDirectory)/hidi-docker.nuget.config" \
                       --push \
                       -t "$(REGISTRY)/$(IMAGE_NAME):nightly" \
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
@@ -490,12 +621,21 @@ extends:
                     echo "Building Docker image for release..."
                     docker buildx build\
                       --platform linux/amd64,linux/arm64/v8 \
+                      --secret id=nuget_config,src="$(Agent.TempDirectory)/hidi-docker.nuget.config" \
                       --push \
                       -t "$(REGISTRY)/$(IMAGE_NAME):latest" \
                       -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}" \
                       "$(Pipeline.Workspace)"
                   displayName: 'Build and Push Release Image'
                   condition: contains(variables['Build.SourceBranch'], 'refs/tags/v')
+
+                - pwsh: |
+                    $configPath = "$(Agent.TempDirectory)/hidi-docker.nuget.config"
+                    if (Test-Path $configPath) {
+                      Remove-Item $configPath -Force
+                    }
+                  displayName: 'Remove Docker NuGet config'
+                  condition: always()
 
 # once the nuget has been released, fill this form to get the public documentation updated.
 # https://dev.azure.com/msft-skilling/Content/_workitems/create/User%20Story?templateId=39fb91e3-64a2-4c8a-83db-b2bdf3603dd3&ownerId=c4a28f90-17ae-4384-b514-7273392b082b
