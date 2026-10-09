@@ -21,6 +21,7 @@ pr:
 variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  NuGetOrganizationName: 'openapinet'
   ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
   
 resources:
@@ -205,7 +206,9 @@ extends:
           inputs:
             targetFolder: $(Build.ArtifactStagingDirectory)/Nugets
             sourceFolder: $(Build.ArtifactStagingDirectory)
-            content: '*.nupkg'
+            Contents: |
+              *.nupkg
+              *.snupkg
 
     - stage: deploy
       condition: and(contains(variables['Build.SourceBranch'], 'refs/tags/v'), succeeded())
@@ -232,13 +235,60 @@ extends:
               pool:
                 vmImage: ubuntu-latest
               steps:
-              - task: 1ES.PublishNuget@1
-                displayName: 'NuGet push'
+              - pwsh: |
+                  $pkg = Get-ChildItem -Path "$(Pipeline.Workspace)" -Filter "Microsoft.OpenApi.*.nupkg" | Where-Object { $_.Name -match '^Microsoft\.OpenApi\.(\d[\w\.\-]*)\.nupkg$' } | Select-Object -First 1
+                  if (-not $pkg) { throw "No Microsoft.OpenApi nupkg found to publish." }
+                  $version = $pkg.Name -replace '^Microsoft\.OpenApi\.', '' -replace '\.nupkg$', ''
+                  $id = 'microsoft.openapi'
+                  $uri = "https://api.nuget.org/v3-flatcontainer/$id/index.json"
+                  try {
+                    $resp = Invoke-RestMethod -Uri $uri -Headers @{ 'User-Agent' = 'openapinet-azdo-pipeline' }
+                    if ($resp.versions -contains $version) {
+                      Write-Host "NuGet $id $version already published; skipping ESRP release (idempotent re-run)."
+                      Write-Host "##vso[task.setvariable variable=nugetAlreadyPublished]true"
+                    } else {
+                      Write-Host "NuGet $id $version not found on nuget.org; will publish via ESRP."
+                      Write-Host "##vso[task.setvariable variable=nugetAlreadyPublished]false"
+                    }
+                  } catch {
+                    if ($_.Exception.Response.StatusCode.value__ -eq 404) {
+                      Write-Host "NuGet $id has no published versions yet; will publish via ESRP."
+                      Write-Host "##vso[task.setvariable variable=nugetAlreadyPublished]false"
+                    } else { throw }
+                  }
+                displayName: 'Check whether NuGet package version already published (idempotent)'
+              - task: CopyFiles@2
+                displayName: 'Stage OpenAPI NuGet packages for ESRP release'
+                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
                 inputs:
-                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.[0-9]*.nupkg'
-                  packageParentPath: '$(Pipeline.Workspace)'
-                  nuGetFeedType: external
-                  publishFeedCredentials: 'OpenAPI Nuget Connection'
+                  SourceFolder: '$(Pipeline.Workspace)'
+                  Contents: |
+                    Microsoft.OpenApi.*.nupkg
+                    Microsoft.OpenApi.*.snupkg
+                    !Microsoft.OpenApi.YamlReader.*
+                  TargetFolder: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/openapi'
+                  CleanTargetFolder: true
+              - task: EsrpRelease@14
+                displayName: 'ESRP Release - OpenAPI NuGet'
+                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
+                inputs:
+                  connectedservicename: 'Federated DevX ESRP Managed Identity Connection'
+                  usemanagedidentity: false
+                  keyvaultname: 'akv-prod-eastus'
+                  authcertname: 'ReferenceLibraryPrivateCert'
+                  signcertname: 'ReferencePackagePublisherCertificate'
+                  clientid: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'
+                  intent: 'packagedistribution'
+                  contenttype: 'NuGet'
+                  organizationname: '$(NuGetOrganizationName)'
+                  contentsource: 'Folder'
+                  folderlocation: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/openapi'
+                  waitforreleasecompletion: true
+                  owners: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
+                  approvers: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
+                  serviceendpointurl: 'https://api.esrp.microsoft.com/'
+                  mainpublisher: 'ESRPRELPACMAN'
+                  domaintenantid: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
 
       - deployment: deploy_yaml_reader
         condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
@@ -257,13 +307,59 @@ extends:
               pool:
                 vmImage: ubuntu-latest
               steps:
-              - task: 1ES.PublishNuget@1
-                displayName: 'NuGet push'
+              - pwsh: |
+                  $pkg = Get-ChildItem -Path "$(Pipeline.Workspace)" -Filter "Microsoft.OpenApi.YamlReader.*.nupkg" | Where-Object { $_.Name -match '^Microsoft\.OpenApi\.YamlReader\.(\d[\w\.\-]*)\.nupkg$' } | Select-Object -First 1
+                  if (-not $pkg) { throw "No Microsoft.OpenApi.YamlReader nupkg found to publish." }
+                  $version = $pkg.Name -replace '^Microsoft\.OpenApi\.YamlReader\.', '' -replace '\.nupkg$', ''
+                  $id = 'microsoft.openapi.yamlreader'
+                  $uri = "https://api.nuget.org/v3-flatcontainer/$id/index.json"
+                  try {
+                    $resp = Invoke-RestMethod -Uri $uri -Headers @{ 'User-Agent' = 'openapinet-azdo-pipeline' }
+                    if ($resp.versions -contains $version) {
+                      Write-Host "NuGet $id $version already published; skipping ESRP release (idempotent re-run)."
+                      Write-Host "##vso[task.setvariable variable=nugetAlreadyPublished]true"
+                    } else {
+                      Write-Host "NuGet $id $version not found on nuget.org; will publish via ESRP."
+                      Write-Host "##vso[task.setvariable variable=nugetAlreadyPublished]false"
+                    }
+                  } catch {
+                    if ($_.Exception.Response.StatusCode.value__ -eq 404) {
+                      Write-Host "NuGet $id has no published versions yet; will publish via ESRP."
+                      Write-Host "##vso[task.setvariable variable=nugetAlreadyPublished]false"
+                    } else { throw }
+                  }
+                displayName: 'Check whether NuGet package version already published (idempotent)'
+              - task: CopyFiles@2
+                displayName: 'Stage YAML reader NuGet packages for ESRP release'
+                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
                 inputs:
-                  packagesToPush: '$(Pipeline.Workspace)/Microsoft.OpenApi.YamlReader.*.nupkg'
-                  packageParentPath: '$(Pipeline.Workspace)'
-                  nuGetFeedType: external
-                  publishFeedCredentials: 'OpenAPI Nuget Connection'
+                  SourceFolder: '$(Pipeline.Workspace)'
+                  Contents: |
+                    Microsoft.OpenApi.YamlReader.*.nupkg
+                    Microsoft.OpenApi.YamlReader.*.snupkg
+                  TargetFolder: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/yaml-reader'
+                  CleanTargetFolder: true
+              - task: EsrpRelease@14
+                displayName: 'ESRP Release - YAML reader NuGet'
+                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
+                inputs:
+                  connectedservicename: 'Federated DevX ESRP Managed Identity Connection'
+                  usemanagedidentity: false
+                  keyvaultname: 'akv-prod-eastus'
+                  authcertname: 'ReferenceLibraryPrivateCert'
+                  signcertname: 'ReferencePackagePublisherCertificate'
+                  clientid: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'
+                  intent: 'packagedistribution'
+                  contenttype: 'NuGet'
+                  organizationname: '$(NuGetOrganizationName)'
+                  contentsource: 'Folder'
+                  folderlocation: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/yaml-reader'
+                  waitforreleasecompletion: true
+                  owners: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
+                  approvers: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
+                  serviceendpointurl: 'https://api.esrp.microsoft.com/'
+                  mainpublisher: 'ESRPRELPACMAN'
+                  domaintenantid: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
 
       - deployment: create_github_release
         condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
