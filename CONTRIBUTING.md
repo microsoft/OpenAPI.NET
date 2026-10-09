@@ -8,7 +8,9 @@ OpenAPI.net is a mono-repo containing source code for the following packages:
 |----------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [Microsoft.OpenAPI](./src/Microsoft.OpenAPI/README.md)                         | [![NuGet Version](https://img.shields.io/nuget/vpre/Microsoft.OpenAPI?label=Latest&logo=nuget)](https://www.nuget.org/packages/Microsoft.OpenAPI/)                       |
 | [Microsoft.OpenAPI.YamlReader](./src/Microsoft.OpenApi.YamlReader/README.md)                         | [![NuGet Version](https://img.shields.io/nuget/vpre/Microsoft.OpenAPI.YamlReader?label=Latest&logo=nuget)](https://www.nuget.org/packages/Microsoft.OpenAPI.YamlReader/)                       |
-| [Microsoft.OpenAPI.Hidi](./src/Microsoft.OpenAPI.Hidi/README.md)                         | [![NuGet Version](https://img.shields.io/nuget/vpre/Microsoft.OpenAPI.Hidi?label=Latest&logo=nuget)](https://www.nuget.org/packages/Microsoft.OpenAPI.Hidi/)                       |
+
+The OpenAPI.NET v2-compatible [Microsoft.OpenApi.Hidi command line tool](https://github.com/microsoft/OpenAPI.NET.OData/blob/support/v2/src/Microsoft.OpenApi.Hidi/readme.md) is maintained separately.
+Contribute to Hidi in [OpenAPI.NET.OData's support/v2 branch](https://github.com/microsoft/OpenAPI.NET.OData/tree/support/v2).
 
 OpenAPI.net is open to contributions. There are a couple of different recommended paths to get contributions into the released version of this library.
 
