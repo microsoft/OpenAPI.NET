@@ -24,9 +24,6 @@ variables:
   NuGetOrganizationName: 'openapinet'
   privateFeedBaseUrl: 'https://microsoftgraph.pkgs.visualstudio.com/0985d294-5762-4bc2-a565-161ef349ca3e/_packaging/GraphDeveloperExperiences_Public'
   ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
-  REGISTRY: 'msgraphprodregistry.azurecr.io'
-  IMAGE_NAME: 'public/openapi/hidi'
-  PREVIEW_BRANCH: 'refs/heads/main'
   
 resources:
   repositories:
@@ -53,10 +50,6 @@ extends:
             displayName: 'Publish Artifact: Nugets'
             artifactName: Nugets
             targetPath: '$(Build.ArtifactStagingDirectory)/Nugets'
-          - output: pipelineArtifact
-            displayName: 'Publish Artifact: RepoFiles'
-            artifactName: RepoFiles
-            targetPath: '$(Build.ArtifactStagingDirectory)/RepoFiles'
         steps:
         - task: UseDotNet@2
           displayName: 'Use .NET 6'
@@ -175,10 +168,6 @@ extends:
         - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.YamlReader/Microsoft.OpenApi.YamlReader.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
           displayName: 'pack YamlReader'
 
-        # Pack hidi
-        - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
-          displayName: 'pack Hidi'
-         
         - task: EsrpCodeSigning@6
           displayName: 'ESRP CodeSigning Nuget Packages'
           inputs:
@@ -213,16 +202,6 @@ extends:
             MaxRetryAttempts: '5'
             PendingAnalysisWaitTimeoutMinutes: '5'
       
-        # publish hidi as an .exe
-        - task: DotNetCoreCLI@2
-          displayName: publish Hidi as executable
-          inputs:
-            command: 'publish'
-            arguments: -c Release --runtime win-x64 -p:RestoreConfigFile=$(Build.SourcesDirectory)\nuget.config /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi
-            projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
-            publishWebProjects: False
-            zipAfterPublish: false
-            
         - task: CopyFiles@2
           displayName: Prepare staging folder for upload
           inputs:
@@ -239,84 +218,14 @@ extends:
             Contents: 'check-nuget-package-published.ps1'
             TargetFolder: '$(Build.ArtifactStagingDirectory)/Nugets/scripts'
 
-        # Copy repository files to be used in the deploy stage
-        - task: CopyFiles@2
-          displayName: 'Copy repository files for deploy stage'
-          inputs:
-            SourceFolder: '$(Build.SourcesDirectory)'
-            Contents: |
-              **/*
-              !**/bin/**
-              !**/obj/**
-              !**/.git/**
-            TargetFolder: '$(Build.ArtifactStagingDirectory)/RepoFiles'
-
     - stage: deploy
-      condition: and(or(contains(variables['Build.SourceBranch'], 'refs/tags/v'), eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])), succeeded())
+      condition: and(contains(variables['Build.SourceBranch'], 'refs/tags/v'), succeeded())
       dependsOn: build
       pool:
         name: Azure-Pipelines-1ESPT-ExDShared
         os: linux
         image: ubuntu-latest
       jobs:
-      - deployment: deploy_hidi
-        condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
-        templateContext:
-          type: releaseJob
-          isProduction: true
-          inputs:
-          - input: pipelineArtifact
-            artifactName: Nugets
-            targetPath: '$(Pipeline.Workspace)'
-        dependsOn: []
-        environment: nuget-org
-        strategy:
-          runOnce:
-            deploy:
-              pool:
-                vmImage: ubuntu-latest
-              steps:
-              - task: PowerShell@2
-                displayName: 'Check whether NuGet package version already published (idempotent)'
-                inputs:
-                  targetType: filePath
-                  filePath: '$(Pipeline.Workspace)/scripts/check-nuget-package-published.ps1'
-                  arguments: '-PackageId "Microsoft.OpenApi.Hidi" -PackageDirectory "$(Pipeline.Workspace)" -NuGetServiceIndexUrl "$(privateFeedBaseUrl)/nuget/v3/index.json"'
-                  pwsh: true
-                env:
-                  FEED_ACCESS_TOKEN: $(System.AccessToken)
-              - task: CopyFiles@2
-                displayName: 'Stage Hidi NuGet packages for ESRP release'
-                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
-                inputs:
-                  SourceFolder: '$(Pipeline.Workspace)'
-                  Contents: |
-                    Microsoft.OpenApi.Hidi.*.nupkg
-                    Microsoft.OpenApi.Hidi.*.snupkg
-                  TargetFolder: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/hidi'
-                  CleanTargetFolder: true
-              - task: EsrpRelease@14
-                displayName: 'ESRP Release - Hidi NuGet'
-                condition: and(succeeded(), ne(variables['nugetAlreadyPublished'], 'true'))
-                inputs:
-                  connectedservicename: 'Federated DevX ESRP Managed Identity Connection'
-                  usemanagedidentity: false
-                  keyvaultname: 'akv-prod-eastus'
-                  authcertname: 'ReferenceLibraryPrivateCert'
-                  signcertname: 'ReferencePackagePublisherCertificate'
-                  clientid: '65035b7f-7357-4f29-bf25-c5ee5c3949f8'
-                  intent: 'packagedistribution'
-                  contenttype: 'NuGet'
-                  organizationname: '$(NuGetOrganizationName)'
-                  contentsource: 'Folder'
-                  folderlocation: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/hidi'
-                  waitforreleasecompletion: true
-                  owners: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
-                  approvers: 'christiano@microsoft.com,ramsess@microsoft.com,gavinbarron@microsoft.com,jingjingjia@microsoft.com,peombwa@microsoft.com,treicys@microsoft.com'
-                  serviceendpointurl: 'https://api.esrp.microsoft.com/'
-                  mainpublisher: 'ESRPRELPACMAN'
-                  domaintenantid: 'cdc5aeea-15c5-4db6-b079-fcadd2505dc2'
-
       - deployment: deploy_lib
         condition: and(contains(variables['build.SourceBranch'], 'refs/tags/v'), succeeded())
         templateContext:
@@ -351,7 +260,6 @@ extends:
                   Contents: |
                     Microsoft.OpenApi.*.nupkg
                     Microsoft.OpenApi.*.snupkg
-                    !Microsoft.OpenApi.Hidi.*
                     !Microsoft.OpenApi.YamlReader.*
                   TargetFolder: '$(Pipeline.Workspace)/nuget-packages/$(NuGetOrganizationName)/openapi'
                   CleanTargetFolder: true
@@ -468,174 +376,7 @@ extends:
                   tagSource: userSpecifiedTag
                   tag: 'v$(artifactVersion)'
                   releaseNotesSource: inline
-                  assets: '$(Pipeline.Workspace)\**\*.exe'
                   addChangeLog: false
-
-      - deployment: deploy_docker_image
-        environment: docker-images-deploy
-        templateContext:
-          type: releaseJob
-          isProduction: true
-          inputs:
-          - input: pipelineArtifact
-            artifactName: RepoFiles
-            targetPath: '$(Pipeline.Workspace)'
-        strategy:
-          runOnce:
-            deploy:
-              pool:
-                vmImage: 'ubuntu-latest'
-              steps:
-                - task: AzureCLI@2
-                  displayName: 'Login to Azure Container Registry'
-                  inputs:
-                    azureSubscription: 'ACR Images Push Service Connection'
-                    scriptType: bash
-                    scriptLocation: inlineScript
-                    inlineScript: |
-                      az acr login --name $(REGISTRY)
-              
-                - pwsh: |
-                    $content = [XML](Get-Content $(Pipeline.Workspace)/Directory.Build.props)
-                    Write-Host "XML loaded, finding version..."
-                    
-                    # Handle PropertyGroup as either a single element or array
-                    $version = $null
-                    if ($content.Project.PropertyGroup -is [array]) {
-                      Write-Host "PropertyGroup is an array, checking each entry..."
-                      foreach ($pg in $content.Project.PropertyGroup) {
-                        if ($pg.Version) {
-                          $version = $pg.Version.ToString().Trim()
-                          Write-Host "Found version in PropertyGroup array: $version"
-                          break
-                        }
-                      }
-                    } else {
-                      # Single PropertyGroup
-                      $version = $content.Project.PropertyGroup.Version
-                      if ($version) {
-                        $version = $version.ToString().Trim()
-                        Write-Host "Found version in PropertyGroup: $version"
-                      }
-                    }
-                    
-                    if (-not $version) {
-                      Write-Host "##vso[task.logissue type=error]Version not found in Directory.Build.props"
-                      exit 1
-                    }
-                    
-                    Write-Host "Version found: $version" 
-                    Write-Host "##vso[task.setvariable variable=version;isoutput=true]$version"
-                    Write-Host "##vso[task.setvariable variable=VERSION]$version"
-                  displayName: 'Get version from csproj'
-                  name: getversion
-                
-                - bash: |
-                    # Debug output to verify version variable
-                    echo "Version from previous step: $VERSION"
-                  displayName: 'Verify version variable'
-                
-                - bash: |
-                    echo "Build Number: $(Build.BuildNumber)"
-                    # Extract the last 3 characters for the run number
-                    runnumber=$(echo "$(Build.BuildNumber)" | grep -o '[0-9]\+$')
-                    echo "Extracted Run Number: $runnumber"
-                    
-                    # If extraction fails, set a default
-                    if [ -z "$runnumber" ]; then
-                      echo "Extraction failed, using default value"
-                      runnumber=$(date +"%S%N" | cut -c1-3)
-                      echo "Generated fallback run number: $runnumber"
-                    fi
-                    
-                    # Set the variable for later steps
-                    echo "##vso[task.setvariable variable=RUNNUMBER]$runnumber"
-                    echo "##vso[task.setvariable variable=RUNNUMBER;isOutput=true]$runnumber"
-                  displayName: 'Get truncated run number'
-                  name: getrunnumber
-                  condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
-                  
-                - bash: |
-                    date=$(date +'%Y%m%d')
-                    echo "Date value: $date"
-                    echo "##vso[task.setvariable variable=BUILDDATE;isOutput=true]$date"
-                    echo "##vso[task.setvariable variable=BUILDDATE]$date"
-                  displayName: 'Get current date'
-                  name: setdate
-                  condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
-
-                # Keep feed credentials out of the Docker build context and image layers.
-                - pwsh: |
-                    if ([string]::IsNullOrWhiteSpace($env:FEED_ACCESS_TOKEN)) {
-                      throw "No Azure Artifacts access token available for the Docker build."
-                    }
-                    $feedAccessToken = [System.Security.SecurityElement]::Escape($env:FEED_ACCESS_TOKEN)
-                    @"
-                    <?xml version="1.0" encoding="utf-8"?>
-                    <configuration>
-                      <packageSources>
-                        <clear />
-                        <add key="GraphDeveloperExperiences_Public" value="$(privateFeedBaseUrl)/nuget/v3/index.json" />
-                      </packageSources>
-                      <packageSourceCredentials>
-                        <GraphDeveloperExperiences_Public>
-                          <add key="Username" value="AzureDevOps" />
-                          <add key="ClearTextPassword" value="$feedAccessToken" />
-                          <add key="ValidAuthenticationTypes" value="Basic" />
-                        </GraphDeveloperExperiences_Public>
-                      </packageSourceCredentials>
-                    </configuration>
-                    "@ | Set-Content -Path "$(Agent.TempDirectory)/hidi-docker.nuget.config" -Encoding UTF8
-                  displayName: 'Create Docker NuGet config (central feed)'
-                  env:
-                    FEED_ACCESS_TOKEN: $(System.AccessToken)
-
-                - script: |
-                    docker run --privileged --rm msgraphprodregistry.azurecr.io/tonistiigi/binfmt --install all
-                  displayName: "Enable multi-platform builds"
-
-                - script: |
-                    docker buildx create --use --name mybuilder
-                  displayName: "Set up Docker BuildX"
-
-                - script: |
-                    docker buildx inspect --bootstrap
-                  displayName: "Ensure BuildX is working"
-                
-                - bash: |
-                    echo "Building Docker image..."
-                    echo "Using build date: ${BUILDDATE}"
-                    # Using quotes around tags to prevent flag interpretation
-                    docker buildx build \
-                      --platform linux/amd64,linux/arm64/v8 \
-                      --secret id=nuget_config,src="$(Agent.TempDirectory)/hidi-docker.nuget.config" \
-                      --push \
-                      -t "$(REGISTRY)/$(IMAGE_NAME):nightly" \
-                      -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}.${BUILDDATE}${RUNNUMBER}" \
-                      "$(Pipeline.Workspace)"
-
-                  displayName: 'Build and Push Nightly Image'
-                  condition: eq(variables['Build.SourceBranch'], variables['PREVIEW_BRANCH'])
-                
-                - bash: |
-                    echo "Building Docker image for release..."
-                    docker buildx build\
-                      --platform linux/amd64,linux/arm64/v8 \
-                      --secret id=nuget_config,src="$(Agent.TempDirectory)/hidi-docker.nuget.config" \
-                      --push \
-                      -t "$(REGISTRY)/$(IMAGE_NAME):latest" \
-                      -t "$(REGISTRY)/$(IMAGE_NAME):${VERSION}" \
-                      "$(Pipeline.Workspace)"
-                  displayName: 'Build and Push Release Image'
-                  condition: contains(variables['Build.SourceBranch'], 'refs/tags/v')
-
-                - pwsh: |
-                    $configPath = "$(Agent.TempDirectory)/hidi-docker.nuget.config"
-                    if (Test-Path $configPath) {
-                      Remove-Item $configPath -Force
-                    }
-                  displayName: 'Remove Docker NuGet config'
-                  condition: always()
 
 # once the nuget has been released, fill this form to get the public documentation updated.
 # https://dev.azure.com/msft-skilling/Content/_workitems/create/User%20Story?templateId=39fb91e3-64a2-4c8a-83db-b2bdf3603dd3&ownerId=c4a28f90-17ae-4384-b514-7273392b082b

@@ -7,7 +7,6 @@
 |--|--|
 |Models and Writers|[![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.svg)](https://www.nuget.org/packages/Microsoft.OpenApi/) |
 |YamlReader | [![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.YamlReader.svg)](https://www.nuget.org/packages/Microsoft.OpenApi.YamlReader/) |
-|Hidi|[![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.Hidi.svg)](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi/)
 
 The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OpenAPI JSON and YAML documents from the model.
 
@@ -86,10 +85,9 @@ var outputString = await openApiDocument.SerializeAsJsonAsync(OpenApiSpecVersion
 ```
 
 # Validating/Testing OpenAPI descriptions
-In order to test the validity of an OpenApi document, we avail the following tools:
-- [Microsoft.OpenApi.Hidi](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi)
-
-    A commandline tool for validating and transforming OpenAPI descriptions. [Installation guidelines and documentation](https://github.com/microsoft/OpenAPI.NET/blob/main/src/Microsoft.OpenApi.Hidi/readme.md)
+[Microsoft.OpenApi.Hidi](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi) is a command line tool for validating and transforming OpenAPI descriptions.
+The OpenAPI.NET v3-compatible tool is maintained in [OpenAPI.NET.OData's main branch](https://github.com/microsoft/OpenAPI.NET.OData/tree/main/src/Microsoft.OpenApi.Hidi).
+See its [installation guidelines and documentation](https://github.com/microsoft/OpenAPI.NET.OData/blob/main/src/Microsoft.OpenApi.Hidi/readme.md).
 
 # Contributing
 

@@ -44,8 +44,7 @@ jobs:
         run: |
           $projectsArray = @(
             '.\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj',
-            '.\src\Microsoft.OpenApi.YamlReader\Microsoft.OpenApi.YamlReader.csproj',
-            '.\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj'
+            '.\src\Microsoft.OpenApi.YamlReader\Microsoft.OpenApi.YamlReader.csproj'
           )
 
           $projectsArray | ForEach-Object {
