@@ -909,20 +909,26 @@ namespace Microsoft.OpenApi.Tests.Models
         [Fact]
         public void OpenApiOperationCopyConstructorPreservesSortedSet()
         {
+            var comparer = Comparer<OpenApiTagReference>.Create((x, y) =>
+                string.Compare(y?.Name, x?.Name, System.StringComparison.Ordinal));
             var operation = new OpenApiOperation
             {
-                Tags = new SortedSet<OpenApiTagReference>(new TagReferenceComparer())
+                Tags = new SortedSet<OpenApiTagReference>(comparer)
                 {
                     new OpenApiTagReference("b"),
                     new OpenApiTagReference("a")
                 }
             };
 
+            Assert.Collection(operation.Tags,
+                tag => Assert.Equal("b", tag.Name),
+                tag => Assert.Equal("a", tag.Name));
+
             var copy = new OpenApiOperation(operation);
             Assert.IsType<SortedSet<OpenApiTagReference>>(copy.Tags);
             Assert.Collection(copy.Tags,
-                tag => Assert.Equal("a", tag.Name),
-                tag => Assert.Equal("b", tag.Name));
+                tag => Assert.Equal("b", tag.Name),
+                tag => Assert.Equal("a", tag.Name));
         }
 
         private sealed class TagReferenceComparer : IComparer<OpenApiTagReference>
