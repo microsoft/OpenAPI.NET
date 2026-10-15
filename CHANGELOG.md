@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.11.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.10.2...v3.11.0) (2026-10-09)
+
+
+### Features
+
+* **document:** add GetOperationById to search operations across path… ([#3025](https://github.com/microsoft/OpenAPI.NET/issues/3025)) ([1dae1ff](https://github.com/microsoft/OpenAPI.NET/commit/1dae1fff4fcd8170f38672593a30b023a66c052c))
+
+
+### Bug Fixes
+
+* components-key validation timeouts under load ([#3108](https://github.com/microsoft/OpenAPI.NET/issues/3108)) ([01d4729](https://github.com/microsoft/OpenAPI.NET/commit/01d472995b3c466feb5bbf61e303bcd7752da16a))
+* **openapi:** omit null response descriptions ([afd4967](https://github.com/microsoft/OpenAPI.NET/commit/afd4967a9e6db390175e2df9e6f34ff77168d19d))
+
 ## [3.10.2](https://github.com/microsoft/OpenAPI.NET/compare/v3.10.1...v3.10.2) (2026-08-20)
 
 
