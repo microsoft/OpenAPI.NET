@@ -851,5 +851,105 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Assert.NotEqual(baseOperation.Metadata["key1"], actualOperation.Metadata["key1"]);
         }
+
+        [Fact]
+        public void TagsCanBeReInitializedToNull()
+        {
+            var operation = new OpenApiOperation();
+            Assert.Null(operation.Tags);
+            operation.Tags = new HashSet<OpenApiTagReference>();
+            Assert.NotNull(operation.Tags);
+            operation.Tags = null;
+            Assert.Null(operation.Tags);
+        }
+
+        [Fact]
+        public void TagsSupportsCustomComparer()
+        {
+            var operation = new OpenApiOperation
+            {
+                Tags = new HashSet<OpenApiTagReference>(new CaseInsensitiveOpenApiTagReferenceEqualityComparer()),
+            };
+
+            Assert.True(operation.Tags.Add(new OpenApiTagReference("Tag1")));
+            Assert.False(operation.Tags.Add(new OpenApiTagReference("tag1")));
+            Assert.True(operation.Tags.Add(new OpenApiTagReference("tag2")));
+            Assert.False(operation.Tags.Add(new OpenApiTagReference("TAG1")));
+            Assert.Equal(2, operation.Tags.Count);
+        }
+
+        [Fact]
+        public void TagsSupportsSortedSet()
+        {
+            var operation = new OpenApiOperation
+            {
+                Tags = new SortedSet<OpenApiTagReference>(new TagReferenceComparer()),
+            };
+
+            Assert.IsType<SortedSet<OpenApiTagReference>>(operation.Tags);
+        }
+
+        [Fact]
+        public void OpenApiOperationCopyConstructorPreservesCustomComparer()
+        {
+            var operation = new OpenApiOperation
+            {
+                Tags = new HashSet<OpenApiTagReference>(new CaseInsensitiveOpenApiTagReferenceEqualityComparer())
+                {
+                    new OpenApiTagReference("Tag1")
+                }
+            };
+
+            var copy = new OpenApiOperation(operation);
+            Assert.NotNull(copy.Tags);
+            Assert.False(copy.Tags.Add(new OpenApiTagReference("tag1")));
+            Assert.Single(copy.Tags);
+        }
+
+        [Fact]
+        public void OpenApiOperationCopyConstructorPreservesSortedSet()
+        {
+            var comparer = Comparer<OpenApiTagReference>.Create((x, y) =>
+                string.Compare(y?.Name, x?.Name, System.StringComparison.Ordinal));
+            var operation = new OpenApiOperation
+            {
+                Tags = new SortedSet<OpenApiTagReference>(comparer)
+                {
+                    new OpenApiTagReference("b"),
+                    new OpenApiTagReference("a")
+                }
+            };
+
+            Assert.Collection(operation.Tags,
+                tag => Assert.Equal("b", tag.Name),
+                tag => Assert.Equal("a", tag.Name));
+
+            var copy = new OpenApiOperation(operation);
+            Assert.IsType<SortedSet<OpenApiTagReference>>(copy.Tags);
+            Assert.Collection(copy.Tags,
+                tag => Assert.Equal("b", tag.Name),
+                tag => Assert.Equal("a", tag.Name));
+        }
+
+        private sealed class TagReferenceComparer : IComparer<OpenApiTagReference>
+        {
+            public int Compare(OpenApiTagReference x, OpenApiTagReference y)
+            {
+                return string.Compare(x?.Name, y?.Name, System.StringComparison.Ordinal);
+            }
+        }
+
+        private sealed class CaseInsensitiveOpenApiTagReferenceEqualityComparer : IEqualityComparer<OpenApiTagReference>
+        {
+            public bool Equals(OpenApiTagReference x, OpenApiTagReference y)
+            {
+                return string.Equals(x?.Name, y?.Name, System.StringComparison.OrdinalIgnoreCase);
+            }
+
+            public int GetHashCode(OpenApiTagReference obj)
+            {
+                return obj?.Name == null ? 0 : System.StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Name);
+            }
+        }
     }
 }

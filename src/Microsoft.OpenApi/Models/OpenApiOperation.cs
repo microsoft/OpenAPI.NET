@@ -3,6 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+#if NET
+using System.Collections.Immutable;
+#endif
 using System.Linq;
 
 namespace Microsoft.OpenApi
@@ -27,11 +30,18 @@ namespace Microsoft.OpenApi
             {
                 if (value is null)
                 {
+                    _tags = null;
                     return;
                 }
-                _tags = value is HashSet<OpenApiTagReference> tags && tags.Comparer is OpenApiTagComparer ?
-                        tags :
-                        new HashSet<OpenApiTagReference>(value, OpenApiTagComparer.Instance);
+                _tags = value switch
+                {
+                    HashSet<OpenApiTagReference> tags when tags.Comparer != EqualityComparer<OpenApiTagReference>.Default => value,
+                    SortedSet<OpenApiTagReference> => value,
+#if NET
+                    ImmutableSortedSet<OpenApiTagReference> => value,
+#endif
+                    _ => new HashSet<OpenApiTagReference>(value, OpenApiTagComparer.Instance),
+                };
             }
         }
 
@@ -129,7 +139,15 @@ namespace Microsoft.OpenApi
         public OpenApiOperation(OpenApiOperation operation)
         {
             Utils.CheckArgumentNull(operation);
-            Tags = operation.Tags != null ? new HashSet<OpenApiTagReference>(operation.Tags) : null;
+            Tags = operation.Tags switch
+            {
+                HashSet<OpenApiTagReference> tags when tags.Comparer != EqualityComparer<OpenApiTagReference>.Default => new HashSet<OpenApiTagReference>(tags, tags.Comparer),
+                SortedSet<OpenApiTagReference> sorted => new SortedSet<OpenApiTagReference>(sorted, sorted.Comparer),
+#if NET
+                ImmutableSortedSet<OpenApiTagReference> => operation.Tags,
+#endif
+                _ => operation.Tags != null ? new HashSet<OpenApiTagReference>(operation.Tags, OpenApiTagComparer.Instance) : null,
+            };
             Summary = operation.Summary ?? Summary;
             Description = operation.Description ?? Description;
             ExternalDocs = operation.ExternalDocs != null ? new(operation.ExternalDocs) : null;
