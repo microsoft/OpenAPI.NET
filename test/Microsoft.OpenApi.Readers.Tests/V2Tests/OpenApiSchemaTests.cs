@@ -186,5 +186,75 @@ x-nullable: true";
 
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
         }
+
+        private static OpenApiSchema LoadV2Schema(string json)
+            => Assert.IsType<OpenApiSchema>(
+                OpenApiV2Deserializer.LoadSchema(JsonNode.Parse(json), new(), new ParsingContext(new())));
+
+        private static string SerializeAsV2(OpenApiSchema schema)
+        {
+            var writer = new StringWriter();
+            schema.SerializeAsV2(new OpenApiJsonWriter(writer));
+            return writer.ToString();
+        }
+
+        // The object model represents the latest version of the spec, so v2 binary descriptions
+        // are normalized on read and reconstructed on write.
+        // https://spec.openapis.org/oas/v3.2.0.html#migrating-binary-descriptions-from-oas-3-0
+        [Fact]
+        public void ParseSchemaWithByteFormatNormalizesToContentEncoding()
+        {
+            var schema = LoadV2Schema("""{ "type": "string", "format": "byte" }""");
+
+            Assert.Equal(JsonSchemaType.String, schema.Type);
+            Assert.Equal("base64", schema.ContentEncoding);
+            Assert.Null(schema.Format);
+        }
+
+        [Fact]
+        public void ParseSchemaWithBinaryFormatNormalizesToContentMediaType()
+        {
+            var schema = LoadV2Schema("""{ "type": "string", "format": "binary" }""");
+
+            Assert.Null(schema.Type);
+            Assert.Equal("application/octet-stream", schema.ContentMediaType);
+            Assert.Null(schema.Format);
+        }
+
+        [Fact]
+        public void ParseSchemaWithContentEncodingExtensionAssignsContentProperties()
+        {
+            var schema = LoadV2Schema("""
+                {
+                  "type": "string",
+                  "x-jsonschema-contentEncoding": "base64",
+                  "x-jsonschema-contentMediaType": "image/png",
+                  "x-jsonschema-contentSchema": { "type": "array" }
+                }
+                """);
+
+            Assert.Equal("base64", schema.ContentEncoding);
+            Assert.Equal("image/png", schema.ContentMediaType);
+            Assert.Equal(JsonSchemaType.Array, schema.ContentSchema?.Type);
+            Assert.Empty(schema.Extensions ?? new Dictionary<string, IOpenApiExtension>());
+        }
+
+        [Theory]
+        [InlineData("""{ "type": "string", "format": "byte" }""")]
+        [InlineData("""{ "type": "string", "format": "binary" }""")]
+        public void SchemaWithBinaryDescriptionRoundTripsThroughV2(string original)
+        {
+            var schema = LoadV2Schema(original);
+
+            var serialized = SerializeAsV2(schema);
+            Assert.True(JsonNode.DeepEquals(JsonNode.Parse(original), JsonNode.Parse(serialized)));
+
+            // Reading our own output must produce an equivalent model.
+            var reparsed = LoadV2Schema(serialized);
+            Assert.Equal(schema.Type, reparsed.Type);
+            Assert.Equal(schema.Format, reparsed.Format);
+            Assert.Equal(schema.ContentEncoding, reparsed.ContentEncoding);
+            Assert.Equal(schema.ContentMediaType, reparsed.ContentMediaType);
+        }
     }
 }
