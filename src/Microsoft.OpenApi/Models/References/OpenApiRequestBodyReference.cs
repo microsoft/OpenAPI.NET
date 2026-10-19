@@ -64,6 +64,7 @@ namespace Microsoft.OpenApi
         {
             if (writer.GetSettings().ShouldInlineReference(Reference))
             {
+                writer.CountInlineReference();
                 return GetFromTarget(target => target.ConvertToBodyParameter(writer));
             }
 
@@ -74,6 +75,7 @@ namespace Microsoft.OpenApi
         {
             if (writer.GetSettings().ShouldInlineReference(Reference))
             {
+                writer.CountInlineReference();
                 return GetFromTarget(target => target.ConvertToFormDataParameters(writer));
             }
 

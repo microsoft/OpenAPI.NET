@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-        internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);
@@ -175,7 +175,12 @@ namespace Microsoft.OpenApi
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            var targetSchema = Schema switch {
+            if (Schema is OpenApiSchemaReference)
+            {
+                writer.CountInlineReference();
+            }
+            var targetSchema = Schema switch
+            {
                 OpenApiSchemaReference schemaReference => schemaReference.RecursiveTarget,
                 OpenApiSchema schema => schema,
                 _ => null,
