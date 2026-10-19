@@ -250,8 +250,14 @@ namespace Microsoft.OpenApi
             }
             else
             {
-                SerializeInternal(writer, (w, element) => action(w, element));
-                writer.GetSettings().LoopDetector.PopLoop<IOpenApiSchema>();
+                try
+                {
+                    SerializeInternal(writer, (w, element) => action(w, element));
+                }
+                finally
+                {
+                    writer.GetSettings().LoopDetector.PopLoop<IOpenApiSchema>();
+                }
             }
 
         }

@@ -15,5 +15,13 @@
             }
             return new();
         }
+
+        internal static void CountInlineReference(this IOpenApiWriter openApiWriter)
+        {
+            if (openApiWriter is OpenApiWriterBase @base)
+            {
+                @base.CountInlineReference();
+            }
+        }
     }
 }

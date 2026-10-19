@@ -1,2 +1,4 @@
 #nullable enable
 Microsoft.OpenApi.OpenApiDocument.GetOperationById(string! operationId) -> Microsoft.OpenApi.OpenApiOperation?
+Microsoft.OpenApi.OpenApiWriterSettings.MaxInlineReferenceCount.get -> int
+Microsoft.OpenApi.OpenApiWriterSettings.MaxInlineReferenceCount.set -> void

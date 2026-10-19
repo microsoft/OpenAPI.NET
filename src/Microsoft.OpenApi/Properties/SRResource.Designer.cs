@@ -113,6 +113,15 @@ namespace Microsoft.OpenApi {
                 return ResourceManager.GetString("IndentationLevelInvalid", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The maximum number of inline references ({0}) has been exceeded..
+        /// </summary>
+        internal static string MaximumInlineReferenceCountExceeded {
+            get {
+                return ResourceManager.GetString("MaximumInlineReferenceCountExceeded", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to The input item should be in type of &apos;{0}&apos;..
