@@ -207,7 +207,7 @@ public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHol
     /// <inheritdoc/>
     public virtual void SerializeAsV3(IOpenApiWriter writer)
     {
-        if (!writer.GetSettings().ShouldInlineReference(Reference) 
+        if (!writer.GetSettings().ShouldInlineReference(Reference)
             || Reference.Type == ReferenceType.Tag) // tags are held as references need to drop in.
         {
             Reference.SerializeAsV3(writer);
@@ -267,6 +267,7 @@ public abstract class BaseOpenApiReferenceHolder<T, U, V> : IOpenApiReferenceHol
         Action<IOpenApiWriter, U> action)
     {
         Utils.CheckArgumentNull(writer);
+        writer.CountInlineReference();
         ApplyToTarget(element => action(writer, element));
     }
 }
