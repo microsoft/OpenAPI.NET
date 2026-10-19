@@ -1,0 +1,305 @@
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Text;
+using Xunit;
+
+namespace Microsoft.OpenApi.Tests.Writers
+{
+    public class OpenApiWriterInlineReferenceTests
+    {
+        private const int InlineReferenceLimit = 128;
+        private const int OutputCharacterLimit = 100_000;
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, false)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, true)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, false)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, true)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1, false)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1, true)]
+        public void SerializeWithRepeatedInlineReferencesStopsBeforeWriterLimit(
+            OpenApiSpecVersion specVersion,
+            bool useYaml)
+        {
+            var readResult = OpenApiDocument.Parse(CreateDocumentWithRepeatedReferences(18), "json");
+            Assert.Empty(readResult.Diagnostic.Errors);
+            Assert.NotNull(readResult.Document);
+
+            using var textWriter = new CharacterLimitedTextWriter(OutputCharacterLimit);
+            IOpenApiWriter writer = useYaml
+                ? new OpenApiYamlWriter(textWriter, CreateWriterSettings(InlineReferenceLimit))
+                : new OpenApiJsonWriter(textWriter, CreateWriterSettings(InlineReferenceLimit));
+
+            var exception = Assert.Throws<OpenApiWriterException>(
+                () => Serialize(readResult.Document, writer, specVersion));
+            Assert.Contains(InlineReferenceLimit.ToString(CultureInfo.InvariantCulture), exception.Message);
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1)]
+        public void SerializeWithInlineReferencesBelowLimitWorks(OpenApiSpecVersion specVersion)
+        {
+            var readResult = OpenApiDocument.Parse(CreateDocumentWithRepeatedReferences(4), "json");
+            Assert.Empty(readResult.Diagnostic.Errors);
+            Assert.NotNull(readResult.Document);
+
+            using var textWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(textWriter, CreateWriterSettings(32));
+
+            Serialize(readResult.Document, writer, specVersion);
+
+            Assert.NotEmpty(textWriter.ToString());
+        }
+
+        [Fact]
+        public void ReusingSettingsWithNewWriterStartsANewInlineReferenceCount()
+        {
+            var largeReadResult = OpenApiDocument.Parse(CreateDocumentWithRepeatedReferences(6), "json");
+            Assert.Empty(largeReadResult.Diagnostic.Errors);
+            Assert.NotNull(largeReadResult.Document);
+            var smallReadResult = OpenApiDocument.Parse(CreateDocumentWithRepeatedReferences(4), "json");
+            Assert.Empty(smallReadResult.Diagnostic.Errors);
+            Assert.NotNull(smallReadResult.Document);
+            var settings = CreateWriterSettings(32);
+
+            using var firstOutput = new StringWriter(CultureInfo.InvariantCulture);
+            Assert.Throws<OpenApiWriterException>(
+                () => Serialize(
+                    largeReadResult.Document,
+                    new OpenApiJsonWriter(firstOutput, settings),
+                    OpenApiSpecVersion.OpenApi3_0));
+
+            using var secondOutput = new StringWriter(CultureInfo.InvariantCulture);
+            Serialize(
+                smallReadResult.Document,
+                new OpenApiJsonWriter(secondOutput, settings),
+                OpenApiSpecVersion.OpenApi3_0);
+
+            Assert.DoesNotContain("$ref", secondOutput.ToString());
+        }
+
+        [Fact]
+        public void ConvertRequestBodyReferenceToV2ParameterUsesInlineReferenceCount()
+        {
+            var document = CreateDocumentWithRequestBodyComponent();
+            var reference = new OpenApiRequestBodyReference("shared", document);
+            using var output = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(output, CreateWriterSettings(0));
+
+            Assert.Throws<OpenApiWriterException>(() => reference.ConvertToBodyParameter(writer));
+            Assert.Throws<OpenApiWriterException>(() => reference.ConvertToFormDataParameters(writer));
+        }
+
+        [Fact]
+        public void SerializeV2HeaderSchemaReferenceUsesInlineReferenceCount()
+        {
+            var document = CreateDocumentWithSchemaComponent();
+            var header = new OpenApiHeader
+            {
+                Schema = new OpenApiSchemaReference("shared", document)
+            };
+            using var output = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(output, CreateWriterSettings(0));
+
+            Assert.Throws<OpenApiWriterException>(() => header.SerializeAsV2(writer));
+        }
+
+        [Fact]
+        public void SerializeV2ParameterSchemaReferenceUsesInlineReferenceCount()
+        {
+            var document = CreateDocumentWithSchemaComponent();
+            var parameter = new OpenApiParameter
+            {
+                Name = "value",
+                In = ParameterLocation.Query,
+                Schema = new OpenApiSchemaReference("shared", document)
+            };
+            using var output = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(output, CreateWriterSettings(0));
+
+            Assert.Throws<OpenApiWriterException>(() => parameter.SerializeAsV2(writer));
+        }
+
+        private static OpenApiDocument CreateDocumentWithRequestBodyComponent()
+        {
+            var document = new OpenApiDocument
+            {
+                Components = new OpenApiComponents
+                {
+                    RequestBodies = new Dictionary<string, IOpenApiRequestBody>
+                    {
+                        ["shared"] = new OpenApiRequestBody
+                        {
+                            Content = new Dictionary<string, OpenApiMediaType>
+                            {
+                                ["application/x-www-form-urlencoded"] = new OpenApiMediaType
+                                {
+                                    Schema = new OpenApiSchema
+                                    {
+                                        Type = JsonSchemaType.Object,
+                                        Properties = new Dictionary<string, IOpenApiSchema>
+                                        {
+                                            ["value"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            document.Workspace.RegisterComponents(document);
+            return document;
+        }
+
+        private static OpenApiDocument CreateDocumentWithSchemaComponent()
+        {
+            var document = new OpenApiDocument
+            {
+                Components = new OpenApiComponents
+                {
+                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    {
+                        ["shared"] = new OpenApiSchema { Type = JsonSchemaType.String }
+                    }
+                }
+            };
+            document.Workspace.RegisterComponents(document);
+            return document;
+        }
+
+        private static string CreateDocumentWithRepeatedReferences(int levels)
+        {
+            var schemas = new StringBuilder();
+            for (var i = 0; i < levels; i++)
+            {
+                if (i > 0)
+                {
+                    schemas.Append(',');
+                }
+
+                schemas
+                    .Append("\"s")
+                    .Append(i.ToString(CultureInfo.InvariantCulture))
+                    .Append("\":{\"allOf\":[{\"$ref\":\"#/components/schemas/s")
+                    .Append((i + 1).ToString(CultureInfo.InvariantCulture))
+                    .Append("\"},{\"$ref\":\"#/components/schemas/s")
+                    .Append((i + 1).ToString(CultureInfo.InvariantCulture))
+                    .Append("\"}]}");
+            }
+
+            schemas
+                .Append(",\"s")
+                .Append(levels.ToString(CultureInfo.InvariantCulture))
+                .Append("\":{\"type\":\"string\"}");
+
+            return $$"""
+                {
+                  "openapi": "3.0.0",
+                  "info": {
+                    "title": "Repeated references",
+                    "version": "1.0.0"
+                  },
+                  "paths": {
+                    "/test": {
+                      "get": {
+                        "responses": {
+                          "200": {
+                            "description": "OK",
+                            "content": {
+                              "application/json": {
+                                "schema": {
+                                  "$ref": "#/components/schemas/s0"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "components": {
+                    "schemas": {
+                      {{schemas}}
+                    }
+                  }
+                }
+                """;
+        }
+
+        private static void Serialize(
+            IOpenApiSerializable serializable,
+            IOpenApiWriter writer,
+            OpenApiSpecVersion specVersion)
+        {
+            switch (specVersion)
+            {
+                case OpenApiSpecVersion.OpenApi2_0:
+                    serializable.SerializeAsV2(writer);
+                    break;
+                case OpenApiSpecVersion.OpenApi3_0:
+                    serializable.SerializeAsV3(writer);
+                    break;
+                case OpenApiSpecVersion.OpenApi3_1:
+                    serializable.SerializeAsV31(writer);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(specVersion), specVersion, null);
+            }
+        }
+
+        private static OpenApiWriterSettings CreateWriterSettings(int maxInlineReferenceCount)
+        {
+            return new OpenApiWriterSettings
+            {
+                InlineLocalReferences = true,
+                MaxInlineReferenceCount = maxInlineReferenceCount
+            };
+        }
+
+        private sealed class CharacterLimitedTextWriter(int characterLimit) : TextWriter
+        {
+            private int _characterCount;
+
+            public override Encoding Encoding => Encoding.UTF8;
+
+            public override void Write(char value)
+            {
+                CountCharacters(1);
+            }
+
+            public override void Write(string value)
+            {
+                CountCharacters(value?.Length ?? 0);
+            }
+
+            public override void Write(char[] buffer, int index, int count)
+            {
+                CountCharacters(count);
+            }
+
+            public override void Write(ReadOnlySpan<char> buffer)
+            {
+                CountCharacters(buffer.Length);
+            }
+
+            private void CountCharacters(int count)
+            {
+                _characterCount += count;
+                if (_characterCount > characterLimit)
+                {
+                    throw new CharacterLimitExceededException();
+                }
+            }
+        }
+
+        private sealed class CharacterLimitExceededException : Exception;
+    }
+}

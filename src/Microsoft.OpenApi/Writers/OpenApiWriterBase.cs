@@ -35,6 +35,7 @@ namespace Microsoft.OpenApi
         /// Number which specifies the level of indentation.
         /// </summary>
         private int _indentLevel;
+        private int _inlineReferenceCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiWriterBase"/> class.
@@ -69,6 +70,20 @@ namespace Microsoft.OpenApi
         /// The text writer.
         /// </summary>
         protected TextWriter Writer { get; }
+
+        internal void CountInlineReference()
+        {
+            if (_inlineReferenceCount >= Settings.MaxInlineReferenceCount)
+            {
+                throw new OpenApiWriterException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        SRResource.MaximumInlineReferenceCountExceeded,
+                        Settings.MaxInlineReferenceCount));
+            }
+
+            _inlineReferenceCount++;
+        }
 
         /// <summary>
         /// Write start object.
@@ -319,7 +334,7 @@ namespace Microsoft.OpenApi
                 Writer.Write(IndentationString);
             }
         }
-        
+
         /// <summary>
         /// Get current scope.
         /// </summary>

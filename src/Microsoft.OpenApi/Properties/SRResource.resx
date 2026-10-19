@@ -132,6 +132,9 @@
   <data name="IndentationLevelInvalid" xml:space="preserve">
     <value>Indentation level cannot be lower than 0.</value>
   </data>
+  <data name="MaximumInlineReferenceCountExceeded" xml:space="preserve">
+    <value>The maximum number of inline references ({0}) has been exceeded.</value>
+  </data>
   <data name="InputItemShouldBeType" xml:space="preserve">
     <value>The input item should be in type of '{0}'.</value>
   </data>
