@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi
                 }
                 _tags = value switch
                 {
-                    HashSet<OpenApiTagReference> tags when tags.Comparer != EqualityComparer<OpenApiTagReference>.Default => value,
+                    HashSet<OpenApiTagReference> tags when !ReferenceEquals(tags.Comparer, EqualityComparer<OpenApiTagReference>.Default) => value,
                     SortedSet<OpenApiTagReference> => value,
 #if NET
                     ImmutableSortedSet<OpenApiTagReference> => value,
