@@ -21,6 +21,6 @@
       <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Condition="!$(MSBuildProjectName.EndsWith('Tests'))" Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="All"/>
+    <PackageReference Condition="!$(MSBuildProjectName.EndsWith('Tests'))" Include="Microsoft.SourceLink.GitHub" Version="10.0.402" PrivateAssets="All"/>
   </ItemGroup>
 </Project>
