@@ -1,8 +1,11 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
+#if NET
+using System.Collections.Immutable;
+#endif
 using System.Linq;
 
 namespace Microsoft.OpenApi
@@ -27,11 +30,18 @@ namespace Microsoft.OpenApi
             {
                 if (value is null)
                 {
+                    _tags = null;
                     return;
                 }
-                _tags = value is HashSet<OpenApiTagReference> tags && tags.Comparer is OpenApiTagComparer ?
-                        tags :
-                        new HashSet<OpenApiTagReference>(value, OpenApiTagComparer.Instance);
+                _tags = value switch
+                {
+                    HashSet<OpenApiTagReference> tags when !ReferenceEquals(tags.Comparer, EqualityComparer<OpenApiTagReference>.Default) => value,
+                    SortedSet<OpenApiTagReference> => value,
+#if NET
+                    ImmutableSortedSet<OpenApiTagReference> => value,
+#endif
+                    _ => new HashSet<OpenApiTagReference>(value, OpenApiTagComparer.Instance),
+                };
             }
         }
 
