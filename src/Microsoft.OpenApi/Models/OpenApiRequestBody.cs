@@ -130,26 +130,7 @@ namespace Microsoft.OpenApi
             {
                 foreach (var property in properties)
                 {
-                    var paramSchema = property.Value.CreateShallowCopy();
-                    if ((paramSchema.Type & JsonSchemaType.String) == JsonSchemaType.String
-                        && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)
-                        || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        var updatedSchema = paramSchema switch
-                        {
-                            OpenApiSchema s => s, // we already have a copy
-                                                  // we have a copy of a reference but don't want to mutate the source schema
-                                                  // TODO might need recursive resolution of references here
-                            OpenApiSchemaReference r when r.Target is not null => (OpenApiSchema)r.Target.CreateShallowCopy(),
-                            OpenApiSchemaReference => throw new InvalidOperationException("Unresolved reference target"),
-                            _ => throw new InvalidOperationException("Unexpected schema type")
-                        };
-                        
-                        updatedSchema.Type = "file".ToJsonSchemaType();
-                        updatedSchema.Format = null;
-                        paramSchema = updatedSchema;
-                        
-                    }
+                    var paramSchema = property.Value;
                     yield return new OpenApiFormDataParameter()
                     {
                         Description = paramSchema.Description,
