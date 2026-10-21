@@ -139,7 +139,15 @@ namespace Microsoft.OpenApi
         public OpenApiOperation(OpenApiOperation operation)
         {
             Utils.CheckArgumentNull(operation);
-            Tags = operation.Tags != null ? new HashSet<OpenApiTagReference>(operation.Tags) : null;
+            Tags = operation.Tags switch
+            {
+                HashSet<OpenApiTagReference> tags when !ReferenceEquals(tags.Comparer, EqualityComparer<OpenApiTagReference>.Default) => new HashSet<OpenApiTagReference>(tags, tags.Comparer),
+                SortedSet<OpenApiTagReference> sorted => new SortedSet<OpenApiTagReference>(sorted, sorted.Comparer),
+#if NET
+                ImmutableSortedSet<OpenApiTagReference> => operation.Tags,
+#endif
+                _ => operation.Tags != null ? new HashSet<OpenApiTagReference>(operation.Tags, OpenApiTagComparer.Instance) : null,
+            };
             Summary = operation.Summary ?? Summary;
             Description = operation.Description ?? Description;
             ExternalDocs = operation.ExternalDocs != null ? new(operation.ExternalDocs) : null;
