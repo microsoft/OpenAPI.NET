@@ -87,21 +87,22 @@ namespace Microsoft.OpenApi
             }
             set
             {
-                if (value is null)
-                {
-                    _tags = null;
-                    return;
-                }
-                _tags = value switch
-                {
-                    HashSet<OpenApiTag> tags when tags.Comparer != EqualityComparer<OpenApiTag>.Default => value,
-                    SortedSet<OpenApiTag> => value,
-#if NET
-                    ImmutableSortedSet<OpenApiTag> => value,
-#endif
-                    _ => new HashSet<OpenApiTag>(value, OpenApiTagComparer.Instance),
-                };
+                _tags = CopyTags(value);
             }
+        }
+
+        private static ISet<OpenApiTag>? CopyTags(ISet<OpenApiTag>? tags, bool copy = false)
+        {
+            return tags switch
+            {
+                null => null,
+                HashSet<OpenApiTag> hashSet when !ReferenceEquals(hashSet.Comparer, EqualityComparer<OpenApiTag>.Default) => copy ? new HashSet<OpenApiTag>(hashSet, hashSet.Comparer) : hashSet,
+                SortedSet<OpenApiTag> sorted => copy ? new SortedSet<OpenApiTag>(sorted, sorted.Comparer) : sorted,
+#if NET
+                ImmutableSortedSet<OpenApiTag> => tags,
+#endif
+                _ => new HashSet<OpenApiTag>(tags, OpenApiTagComparer.Instance),
+            };
         }
 
         /// <summary>
@@ -147,7 +148,7 @@ namespace Microsoft.OpenApi
             Webhooks = document?.Webhooks != null ? new Dictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
             Security = document?.Security != null ? [.. document.Security] : null;
-            Tags = document?.Tags != null ? new HashSet<OpenApiTag>(document.Tags, OpenApiTagComparer.Instance) : null;
+            Tags = CopyTags(document?.Tags, copy: true);
             ExternalDocs = document?.ExternalDocs != null ? new(document.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
             Metadata = document?.Metadata != null ? new Dictionary<string, object>(document.Metadata) : null;
