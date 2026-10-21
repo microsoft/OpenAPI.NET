@@ -939,5 +939,61 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.Equal(["tagC", "tagB", "tagA"], names);
             Assert.IsType<ImmutableSortedSet<OpenApiTagReference>>(operation.Tags);
         }
+
+        [Fact]
+        public void OpenApiOperationCopyConstructorPreservesCustomComparer()
+        {
+            var operation = new OpenApiOperation
+            {
+                Tags = new HashSet<OpenApiTagReference>(new CaseInsensitiveOpenApiTagReferenceEqualityComparer())
+                {
+                    new("Tag1")
+                }
+            };
+
+            var copy = new OpenApiOperation(operation);
+            Assert.NotNull(copy.Tags);
+            Assert.False(copy.Tags.Add(new OpenApiTagReference("tag1")));
+            Assert.Single(copy.Tags);
+        }
+
+        [Fact]
+        public void OpenApiOperationCopyConstructorPreservesSortedSet()
+        {
+            var operation = new OpenApiOperation
+            {
+                Tags = new SortedSet<OpenApiTagReference>(new DescendingOpenApiTagReferenceComparer())
+                {
+                    new("tagB"),
+                    new("tagA"),
+                    new("tagC"),
+                }
+            };
+
+            var copy = new OpenApiOperation(operation);
+            Assert.IsType<SortedSet<OpenApiTagReference>>(copy.Tags);
+            var copyNames = copy.Tags.Select(t => t.Name);
+            Assert.Equal(["tagC", "tagB", "tagA"], copyNames);
+        }
+
+        [Fact]
+        public void OpenApiOperationCopyConstructorPreservesImmutableSortedSet()
+        {
+            var operation = new OpenApiOperation
+            {
+                Tags = ImmutableSortedSet.Create(
+                    new DescendingOpenApiTagReferenceComparer(),
+                    [
+                        new OpenApiTagReference("tagB"),
+                        new OpenApiTagReference("tagA"),
+                        new OpenApiTagReference("tagC"),
+                    ]),
+            };
+
+            var copy = new OpenApiOperation(operation);
+            Assert.IsType<ImmutableSortedSet<OpenApiTagReference>>(copy.Tags);
+            var copyNames = copy.Tags.Select(t => t.Name);
+            Assert.Equal(["tagC", "tagB", "tagA"], copyNames);
+        }
     }
 }
