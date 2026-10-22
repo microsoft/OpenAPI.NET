@@ -29,6 +29,20 @@ public class OpenApiJsonReaderTests
     }
 
     [Fact]
+    public void ReadReturnsDiagnosticWhenJsonRootIsNull()
+    {
+        var reader = new OpenApiJsonReader();
+        using var stream = CreateStream("null");
+
+        var result = reader.Read(stream, DocumentLocation, new OpenApiReaderSettings());
+
+        Assert.Null(result.Document);
+        var error = Assert.Single(result.Diagnostic.Errors);
+        Assert.Equal(OpenApiConstants.Json, result.Diagnostic.Format);
+        Assert.Equal("Cannot parse input stream, input.", error.Message);
+    }
+
+    [Fact]
     public async Task ReadAsyncReturnsDiagnosticWhenJsonIsInvalid()
     {
         var reader = new OpenApiJsonReader();
@@ -39,6 +53,20 @@ public class OpenApiJsonReaderTests
         Assert.Null(result.Document);
         Assert.Single(result.Diagnostic.Errors);
         Assert.Equal(OpenApiConstants.Json, result.Diagnostic.Format);
+    }
+
+    [Fact]
+    public async Task ReadAsyncReturnsDiagnosticWhenJsonRootIsNull()
+    {
+        var reader = new OpenApiJsonReader();
+        await using var stream = CreateStream("null");
+
+        var result = await reader.ReadAsync(stream, DocumentLocation, new OpenApiReaderSettings(), CancellationToken.None);
+
+        Assert.Null(result.Document);
+        var error = Assert.Single(result.Diagnostic.Errors);
+        Assert.Equal(OpenApiConstants.Json, result.Diagnostic.Format);
+        Assert.Equal("failed to parse input stream, input", error.Message);
     }
 
     [Fact]
@@ -135,6 +163,20 @@ public class OpenApiJsonReaderTests
 
         Assert.Null(schema);
         Assert.Single(diagnostic.Errors);
+    }
+
+    [Fact]
+    public void ReadFragmentReturnsDiagnosticWhenJsonRootIsNull()
+    {
+        var reader = new OpenApiJsonReader();
+        using var stream = CreateStream("null");
+
+        var schema = reader.ReadFragment<OpenApiSchema>(stream, OpenApiSpecVersion.OpenApi3_0, new OpenApiDocument(), out var diagnostic);
+
+        Assert.Null(schema);
+        var error = Assert.Single(diagnostic.Errors);
+        Assert.Equal(OpenApiConstants.Json, diagnostic.Format);
+        Assert.Equal("Failed to parse stream, input", error.Message);
     }
 
     private static MemoryStream CreateStream(string json)
