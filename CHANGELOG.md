@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.11.1](https://github.com/microsoft/OpenAPI.NET/compare/v3.11.0...v3.11.1) (2026-10-23)
+
+
+### Bug Fixes
+
+* **models:** preserve tag collection types and comparers in copy constructors ([#3141](https://github.com/microsoft/OpenAPI.NET/issues/3141)) ([76ea786](https://github.com/microsoft/OpenAPI.NET/commit/76ea786406270d0465831e4c6d1bd50c3685a74b))
+* **models:** preserve tag collection types and comparers in OpenApiDocument copy constructor ([76ea786](https://github.com/microsoft/OpenAPI.NET/commit/76ea786406270d0465831e4c6d1bd50c3685a74b))
+* Support custom tag ordering and null assignment in OpenApiOperation.Tags ([#3128](https://github.com/microsoft/OpenAPI.NET/issues/3128)) ([d868431](https://github.com/microsoft/OpenAPI.NET/commit/d8684318ce83c4a573f83bcd9560c98caac1bfe7))
+* support reinitializing OpenApiOperation.Tags to null and custom comparers ([#3116](https://github.com/microsoft/OpenAPI.NET/issues/3116)) ([4f53ad5](https://github.com/microsoft/OpenAPI.NET/commit/4f53ad590a605237817440646e3cd695d77f082d))
+
 ## [3.11.0](https://github.com/microsoft/OpenAPI.NET/compare/v3.10.2...v3.11.0) (2026-10-19)
 
 
