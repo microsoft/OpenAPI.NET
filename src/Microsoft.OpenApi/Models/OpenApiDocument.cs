@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -142,7 +142,7 @@ namespace Microsoft.OpenApi
             Info = document?.Info != null ? new(document.Info) : new OpenApiInfo();
             JsonSchemaDialect = document?.JsonSchemaDialect ?? JsonSchemaDialect;
             Self = document?.Self ?? Self;
-            Servers = document?.Servers != null ? [.. document.Servers] : null;
+            Servers = document?.Servers != null ? [.. document.Servers.Select(static s => new OpenApiServer(s))] : null;
             Paths = document?.Paths != null ? new(document.Paths) : [];
             Webhooks = document?.Webhooks != null ? new Dictionary<string, IOpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;

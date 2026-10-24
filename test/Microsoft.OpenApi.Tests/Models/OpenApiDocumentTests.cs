@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -2696,6 +2696,29 @@ x-oai-$self: https://example.org/api/openapi.json";
 
             Assert.Throws<ArgumentNullException>(() => doc.GetOperationById(null!));
             Assert.Throws<ArgumentNullException>(() => doc.GetOperationById(string.Empty));
+        }
+
+        [Fact]
+        public void OpenApiDocumentCopyConstructorDeepCopiesServers()
+        {
+            var document = new OpenApiDocument
+            {
+                Servers =
+                [
+                    new OpenApiServer
+                    {
+                        Url = "https://api.example.com",
+                        Description = "Production server"
+                    }
+                ]
+            };
+
+            var copy = new OpenApiDocument(document);
+            Assert.NotNull(copy.Servers);
+            Assert.NotSame(document.Servers[0], copy.Servers[0]);
+
+            copy.Servers[0].Url = "https://staging.example.com";
+            Assert.Equal("https://api.example.com", document.Servers[0].Url);
         }
     }
 }
