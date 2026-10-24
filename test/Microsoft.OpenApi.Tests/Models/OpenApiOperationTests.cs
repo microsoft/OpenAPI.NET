@@ -995,5 +995,28 @@ namespace Microsoft.OpenApi.Tests.Models
             var copyNames = copy.Tags.Select(t => t.Name);
             Assert.Equal(["tagC", "tagB", "tagA"], copyNames);
         }
+
+        [Fact]
+        public void OpenApiOperationCopyConstructorDeepCopiesServers()
+        {
+            var operation = new OpenApiOperation
+            {
+                Servers =
+                [
+                    new OpenApiServer
+                    {
+                        Url = "https://api.example.com/v1",
+                        Description = "Operation server"
+                    }
+                ]
+            };
+
+            var copy = new OpenApiOperation(operation);
+            Assert.NotNull(copy.Servers);
+            Assert.NotSame(operation.Servers[0], copy.Servers[0]);
+
+            copy.Servers[0].Url = "https://staging.example.com/v1";
+            Assert.Equal("https://api.example.com/v1", operation.Servers[0].Url);
+        }
     }
 }

@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi
             Callbacks = operation.Callbacks != null ? new Dictionary<string, IOpenApiCallback>(operation.Callbacks) : null;
             Deprecated = operation.Deprecated;
             Security = operation.Security != null ? [.. operation.Security] : null;
-            Servers = operation.Servers != null ? [.. operation.Servers] : null;
+            Servers = operation.Servers != null ? [.. operation.Servers.Select(static s => new OpenApiServer(s))] : null;
             Extensions = operation.Extensions != null ? new Dictionary<string, IOpenApiExtension>(operation.Extensions) : null;
             Metadata = operation.Metadata != null ? new Dictionary<string, object>(operation.Metadata) : null;
         }
