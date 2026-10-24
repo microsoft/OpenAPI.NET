@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -189,6 +189,37 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.Equal(original.Name, copy.Name);
             Assert.Equal(original.Description, copy.Description);
             Assert.Equal(original.Url, copy.Url);
+        }
+
+        [Fact]
+        public void CopyConstructorDeepCopiesVariables()
+        {
+            // Arrange
+            var original = new OpenApiServer
+            {
+                Url = "https://{username}.example.com:{port}",
+                Variables = new Dictionary<string, OpenApiServerVariable>
+                {
+                    ["port"] = new()
+                    {
+                        Default = "8443",
+                        Enum = ["443", "8443"]
+                    }
+                }
+            };
+
+            // Act
+            var copy = new OpenApiServer(original);
+
+            // Assert
+            Assert.NotNull(copy.Variables);
+            Assert.NotSame(original.Variables["port"], copy.Variables["port"]);
+            Assert.NotSame(original.Variables["port"].Enum, copy.Variables["port"].Enum);
+
+            copy.Variables["port"].Default = "9443";
+            copy.Variables["port"].Enum?.Add("9443");
+            Assert.Equal("8443", original.Variables["port"].Default);
+            Assert.DoesNotContain("9443", original.Variables["port"].Enum);
         }
     }
 }
