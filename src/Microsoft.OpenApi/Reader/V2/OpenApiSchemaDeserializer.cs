@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -170,6 +170,10 @@ namespace Microsoft.OpenApi.Reader.V2
                     if (type != null)
                     {
                         o.Type = type.ToJsonSchemaType();
+                        if ("file".Equals(type, StringComparison.OrdinalIgnoreCase))
+                        {
+                            o.Format = "binary";
+                        }
                     }
                 }
             },
