@@ -170,6 +170,7 @@ namespace Microsoft.OpenApi.Reader.V2
                     if (type != null)
                     {
                         o.Type = type.ToJsonSchemaType();
+                        // OpenAPI 2.0 response schema allows type: file, which maps to format: binary in OpenAPI 3.x
                         if ("file".Equals(type, StringComparison.OrdinalIgnoreCase))
                         {
                             o.Format = "binary";
