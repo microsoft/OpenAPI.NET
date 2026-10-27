@@ -206,13 +206,15 @@ x-nullable: true";
         public void ParseResponseSchemaWithTypeFileShouldSetTypeStringAndFormatBinary()
         {
             // Arrange
-            var node = JsonNode.Parse("{\"description\": \"File response\", \"schema\": {\"type\": \"file\"}}");
+            var node = JsonNode.Parse("{\"produces\": [\"application/octet-stream\"], \"responses\": {\"200\": {\"description\": \"File response\", \"schema\": {\"type\": \"file\"}}}}");
 
             // Act
-            var response = Assert.IsType<OpenApiResponse>(OpenApiV2Deserializer.LoadResponse(node, new(), new ParsingContext(new())));
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
 
             // Assert
-            Assert.NotNull(response);
+            Assert.NotNull(operation);
+            Assert.NotNull(operation.Responses);
+            var response = Assert.IsType<OpenApiResponse>(operation.Responses["200"]);
             Assert.NotNull(response.Content);
             var mediaType = Assert.Single(response.Content.Values);
             Assert.NotNull(mediaType.Schema);
