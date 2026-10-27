@@ -201,5 +201,23 @@ x-nullable: true";
             Assert.Equal(JsonSchemaType.String, schema.Type);
             Assert.Equal("binary", schema.Format);
         }
+
+        [Fact]
+        public void ParseResponseSchemaWithTypeFileShouldSetTypeStringAndFormatBinary()
+        {
+            // Arrange
+            var node = JsonNode.Parse("{\"description\": \"File response\", \"schema\": {\"type\": \"file\"}}");
+
+            // Act
+            var response = Assert.IsType<OpenApiResponse>(OpenApiV2Deserializer.LoadResponse(node, new(), new ParsingContext(new())));
+
+            // Assert
+            Assert.NotNull(response);
+            Assert.NotNull(response.Content);
+            var mediaType = Assert.Single(response.Content.Values);
+            Assert.NotNull(mediaType.Schema);
+            Assert.Equal(JsonSchemaType.String, mediaType.Schema.Type);
+            Assert.Equal("binary", mediaType.Schema.Format);
+        }
     }
 }
