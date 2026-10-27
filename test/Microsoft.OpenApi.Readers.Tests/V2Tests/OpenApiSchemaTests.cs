@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -185,6 +185,21 @@ x-nullable: true";
             var schemaString = writer.ToString();
 
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
+        public void ParseSchemaWithTypeFileShouldSetTypeStringAndFormatBinary()
+        {
+            // Arrange
+            var node = JsonNode.Parse("{\"type\": \"file\"}");
+
+            // Act
+            var schema = OpenApiV2Deserializer.LoadSchema(node, new(), new ParsingContext(new()));
+
+            // Assert
+            Assert.NotNull(schema);
+            Assert.Equal(JsonSchemaType.String, schema.Type);
+            Assert.Equal("binary", schema.Format);
         }
     }
 }
