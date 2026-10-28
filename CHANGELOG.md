@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.13.1](https://github.com/microsoft/OpenAPI.NET/compare/v2.13.0...v2.13.1) (2026-10-28)
+
+
+### Bug Fixes
+
+* **models:** preserve tag collection types and comparers in copy constructors ([#3141](https://github.com/microsoft/OpenAPI.NET/issues/3141)) ([#3145](https://github.com/microsoft/OpenAPI.NET/issues/3145)) ([aa5e2b5](https://github.com/microsoft/OpenAPI.NET/commit/aa5e2b52505a71983f4c0cc16a3b76fb634270d8))
+* **models:** preserve tag collection types and comparers in OpenApiDocument copy constructor ([aa5e2b5](https://github.com/microsoft/OpenAPI.NET/commit/aa5e2b52505a71983f4c0cc16a3b76fb634270d8))
+* Support custom tag ordering and null assignment in OpenApiOperation.Tags ([#3128](https://github.com/microsoft/OpenAPI.NET/issues/3128)) ([#3133](https://github.com/microsoft/OpenAPI.NET/issues/3133)) ([295c89c](https://github.com/microsoft/OpenAPI.NET/commit/295c89ce7d3d7573de6c56d4059cfd92ffec8ff1))
+* support reinitializing OpenApiOperation.Tags to null and custom comparers ([#3116](https://github.com/microsoft/OpenAPI.NET/issues/3116)) ([#3142](https://github.com/microsoft/OpenAPI.NET/issues/3142)) ([9cfcdd2](https://github.com/microsoft/OpenAPI.NET/commit/9cfcdd23c2f177dd8487e6c852dfd908054f1353))
+* **v2:** map OpenAPI 2.0 response schema type file to binary format ([#3150](https://github.com/microsoft/OpenAPI.NET/issues/3150)) ([#3151](https://github.com/microsoft/OpenAPI.NET/issues/3151)) ([4cf52e1](https://github.com/microsoft/OpenAPI.NET/commit/4cf52e14df9894a334e701ce5c7da1971a105fa1))
+
 ## [2.13.0](https://github.com/microsoft/OpenAPI.NET/compare/v2.12.2...v2.13.0) (2026-10-19)
 
 
