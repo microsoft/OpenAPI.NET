@@ -57,5 +57,31 @@ public class OpenApiSchemaReferenceDeserializerTests
         Assert.Equal("example reference value", resultReference.Examples[0]?.ToString());
         Assert.NotNull(resultReference.Target);
     }
+
+    [Theory]
+    [InlineData("schemas/uuid.schema.json", "schemas/uuid.schema.json", "schemas/uuid.schema.json")]
+    [InlineData("./schemas/uuid.schema.json", "./schemas/uuid.schema.json", "./schemas/uuid.schema.json")]
+    [InlineData("uuid.schema.json", "uuid.schema.json", "uuid.schema.json")]
+    [InlineData("https://example.com/schemas/resource.json", "https://example.com/schemas/resource.json", "https://example.com/schemas/resource.json")]
+    public void ShouldDeserializeExternalSchemaReferenceWithoutFragment(string refPointer, string expectedId, string expectedExternalResource)
+    {
+        var json = $$"""
+        {
+            "$ref": "{{refPointer}}"
+        }
+        """;
+
+        var hostDocument = new OpenApiDocument();
+        var jsonNode = JsonNode.Parse(json);
+
+        var result = OpenApiV32Deserializer.LoadSchema(jsonNode, hostDocument, new ParsingContext(new()));
+
+        Assert.NotNull(result);
+        var resultReference = Assert.IsType<OpenApiSchemaReference>(result);
+
+        Assert.True(resultReference.Reference.IsExternal);
+        Assert.Equal(expectedId, resultReference.Reference.Id);
+        Assert.Equal(expectedExternalResource, resultReference.Reference.ExternalResource);
+    }
 }
 
