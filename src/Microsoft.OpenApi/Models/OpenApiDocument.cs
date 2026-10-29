@@ -630,7 +630,7 @@ namespace Microsoft.OpenApi
 
             string uriLocation;
             var id = reference.Id;
-            if (!string.IsNullOrEmpty(id) && id!.Contains('/')) // this means its a URL reference
+            if (!string.IsNullOrEmpty(id) && (id!.Contains('/') || (reference.IsExternal && reference.ExternalResource == id))) // this means its a URL or standalone external reference
             {
                 uriLocation = id!;
             }
@@ -668,17 +668,26 @@ namespace Microsoft.OpenApi
                     : BaseUri + relativePath;
             }
 
-            var absoluteUri =
-#if NETSTANDARD2_1 || NETCOREAPP || NET5_0_OR_GREATER
-            uriLocation.StartsWith('#')
-#else
-            uriLocation.StartsWith("#", StringComparison.OrdinalIgnoreCase)
-#endif
-            switch
+            Uri? resolvedUri = null;
+            if (Uri.TryCreate(uriLocation, UriKind.Absolute, out var absUri))
             {
-                true => new Uri(BaseUri, uriLocation).AbsoluteUri,
-                false => new Uri(uriLocation).AbsoluteUri
-            };
+                resolvedUri = absUri;
+            }
+            else if (useExternal && reference.ExternalResource is not null && Workspace?.GetDocumentId(reference.ExternalResource) is Uri extDocUri)
+            {
+                resolvedUri = extDocUri;
+            }
+            else if (BaseUri is not null && Uri.TryCreate(BaseUri, uriLocation, out var relCombinedUri))
+            {
+                resolvedUri = relCombinedUri;
+            }
+
+            if (resolvedUri is null)
+            {
+                return null;
+            }
+
+            var absoluteUri = resolvedUri.AbsoluteUri;
 
             if (reference.Type is ReferenceType.Schema && absoluteUri.Contains('#') && parentSchema is not null)
             {

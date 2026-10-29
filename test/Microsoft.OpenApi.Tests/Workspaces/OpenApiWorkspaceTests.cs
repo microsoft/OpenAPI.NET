@@ -172,6 +172,21 @@ namespace Microsoft.OpenApi.Tests
 
             return doc;
         }
+
+        [Fact]
+        public void OpenApiWorkspacesCanResolveAbsoluteUriReferences()
+        {
+            var workspace = new OpenApiWorkspace();
+            var targetSchema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String,
+                Description = "Schema at absolute URI"
+            };
+            workspace.RegisterComponent("https://example.com/schemas/uuid.schema.json", targetSchema);
+
+            var resolved = workspace.ResolveReference<OpenApiSchema>("https://example.com/schemas/uuid.schema.json");
+            Assert.Same(targetSchema, resolved);
+        }
     }
 
     public static class OpenApiFactoryExtensions

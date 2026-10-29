@@ -2697,5 +2697,45 @@ x-oai-$self: https://example.org/api/openapi.json";
             Assert.Throws<ArgumentNullException>(() => doc.GetOperationById(null!));
             Assert.Throws<ArgumentNullException>(() => doc.GetOperationById(string.Empty));
         }
+
+        [Theory]
+        [InlineData("schemas/uuid.schema.json")]
+        [InlineData("./schemas/uuid.schema.json")]
+        [InlineData("uuid.schema.json")]
+        public void ResolveReference_RelativeReferenceWithoutFragmentDoesNotThrowUriFormatException(string referenceId)
+        {
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test", Version = "1.0" },
+                BaseUri = new Uri("https://example.com/api/openapi.json"),
+            };
+
+            var schemaRef = new OpenApiSchemaReference(referenceId, doc, referenceId);
+
+            var result = doc.ResolveReferenceTo<OpenApiSchema>(schemaRef.Reference, null);
+            Assert.Null(result);
+            Assert.Null(schemaRef.Target);
+        }
+
+        [Fact]
+        public void ResolveReference_RelativeReferenceWithoutFragmentResolvesAgainstWorkspace()
+        {
+            var workspace = new OpenApiWorkspace(new Uri("https://example.com/api/"));
+            var targetSchema = new OpenApiSchema { Type = JsonSchemaType.String, Description = "UUID schema" };
+            workspace.RegisterComponent("https://example.com/api/schemas/uuid.schema.json", targetSchema);
+
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test", Version = "1.0" },
+                BaseUri = new Uri("https://example.com/api/openapi.json"),
+                Workspace = workspace,
+            };
+
+            var schemaRef = new OpenApiSchemaReference("schemas/uuid.schema.json", doc, "schemas/uuid.schema.json");
+
+            var result = doc.ResolveReferenceTo<OpenApiSchema>(schemaRef.Reference, null);
+            Assert.Same(targetSchema, result);
+            Assert.Same(targetSchema, schemaRef.Target);
+        }
     }
 }
