@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -767,8 +767,9 @@ components:
             }
             """;
 
-            var reader = new OpenApiStringReader();
-            var doc = reader.Read(openApi, out var diagnostic);
+            var readResult = OpenApiDocument.Parse(openApi, "json");
+            var doc = readResult.Document;
+            var diagnostic = readResult.Diagnostic;
 
             Assert.NotNull(doc);
             Assert.Empty(diagnostic.Errors);
@@ -780,6 +781,12 @@ components:
             Assert.Equal("schemas/uuid.schema.json", attemptIdRef.Reference.Id);
 
             Assert.Null(attemptIdRef.Target);
+
+            using var writer = new StringWriter();
+            doc.SerializeAsV31(new OpenApiJsonWriter(writer));
+            var serialized = writer.ToString();
+            Assert.Contains("\"$ref\": \"schemas/uuid.schema.json\"", serialized);
+            Assert.DoesNotContain("#/components/schemas/schemas/uuid.schema.json", serialized);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -949,14 +949,14 @@ namespace Microsoft.OpenApi
 
         private Uri? ToLocationUrl(string location)
         {
-            if (Uri.TryCreate(location, UriKind.Absolute, out var absoluteUri))
-            {
-                return absoluteUri;
-            }
-
             if (BaseUrl is not null && Uri.TryCreate(BaseUrl, location, out var relativeUri))
             {
                 return relativeUri;
+            }
+
+            if (Uri.TryCreate(location, UriKind.Absolute, out var absoluteUri))
+            {
+                return absoluteUri;
             }
 
             return null;

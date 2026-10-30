@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -630,14 +630,21 @@ namespace Microsoft.OpenApi
 
             string uriLocation;
             var id = reference.Id;
-            if (!string.IsNullOrEmpty(id) && (id!.Contains('/') || (reference.IsExternal && reference.ExternalResource == id))) // this means its a URL or standalone external reference
+            var referenceV3 = !string.IsNullOrEmpty(reference.ReferenceV3) ? reference.ReferenceV3! : string.Empty;
+            var isStandaloneExternal = reference.IsExternal &&
+                (!string.IsNullOrEmpty(referenceV3) ? !referenceV3.Contains("#") : (id is not null && !id.Contains("#")));
+
+            if (isStandaloneExternal)
+            {
+                uriLocation = id ?? reference.ExternalResource ?? string.Empty;
+            }
+            else if (!string.IsNullOrEmpty(id) && id!.Contains("/"))
             {
                 uriLocation = id!;
             }
             else
             {
                 string relativePath;
-                var referenceV3 = !string.IsNullOrEmpty(reference.ReferenceV3) ? reference.ReferenceV3! : string.Empty;
 
                 if (reference.Type is ReferenceType.Schema && useExternal && TryGetPlainNameFragment(referenceV3, out var plainNameFragment))
                 {
@@ -689,7 +696,7 @@ namespace Microsoft.OpenApi
 
             var absoluteUri = resolvedUri.AbsoluteUri;
 
-            if (reference.Type is ReferenceType.Schema && absoluteUri.Contains('#') && parentSchema is not null)
+            if (reference.Type is ReferenceType.Schema && absoluteUri.Contains("#") && parentSchema is not null)
             {
                 return Workspace?.ResolveJsonSchemaReference(absoluteUri, parentSchema);
             }

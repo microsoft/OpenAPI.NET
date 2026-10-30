@@ -82,6 +82,7 @@ public class OpenApiSchemaReferenceDeserializerTests
         Assert.True(resultReference.Reference.IsExternal);
         Assert.Equal(expectedId, resultReference.Reference.Id);
         Assert.Equal(expectedExternalResource, resultReference.Reference.ExternalResource);
+        Assert.Equal(refPointer, resultReference.Reference.ReferenceV3);
     }
 }
 
