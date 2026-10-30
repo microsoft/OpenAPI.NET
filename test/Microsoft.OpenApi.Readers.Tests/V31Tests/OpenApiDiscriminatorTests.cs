@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -41,6 +41,60 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                     },
                    DefaultMapping = new OpenApiSchemaReference("Animal", openApiDocument)  
                }, discriminator);
+        }
+
+        [Fact]
+        public void ParseDiscriminatorWithBareSchemaNameMappingResolvesLocalTarget()
+        {
+            var openApi = """
+            {
+              "openapi": "3.1.1",
+              "info": { "title": "Repro", "version": "1" },
+              "paths": {},
+              "components": {
+                "schemas": {
+                  "Dog": {
+                    "type": "object",
+                    "properties": { "bark": { "type": "boolean" } }
+                  },
+                  "Pet": {
+                    "type": "object",
+                    "required": [ "petType" ],
+                    "properties": {
+                      "petType": { "type": "string" }
+                    },
+                    "discriminator": {
+                      "propertyName": "petType",
+                      "mapping": {
+                        "dog": "Dog"
+                      },
+                      "x-oas-default-mapping": "Dog"
+                    }
+                  }
+                }
+              }
+            }
+            """;
+
+            var readResult = OpenApiDocument.Parse(openApi, "json");
+            var doc = readResult.Document;
+            Assert.NotNull(doc);
+            Assert.Empty(readResult.Diagnostic.Errors);
+
+            var petSchema = Assert.IsType<OpenApiSchema>(doc.Components.Schemas["Pet"]);
+            Assert.NotNull(petSchema.Discriminator);
+
+            var dogMapping = petSchema.Discriminator.Mapping["dog"];
+            Assert.False(dogMapping.Reference.IsExternal);
+            Assert.Null(dogMapping.Reference.ExternalResource);
+            Assert.Equal("Dog", dogMapping.Reference.Id);
+
+            var dogSchema = Assert.IsType<OpenApiSchema>(doc.Components.Schemas["Dog"]);
+            Assert.Same(dogSchema, dogMapping.Target);
+
+            Assert.NotNull(petSchema.Discriminator.DefaultMapping);
+            Assert.False(petSchema.Discriminator.DefaultMapping.Reference.IsExternal);
+            Assert.Same(dogSchema, petSchema.Discriminator.DefaultMapping.Target);
         }
     }
 }

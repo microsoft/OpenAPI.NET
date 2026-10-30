@@ -254,6 +254,11 @@ namespace Microsoft.OpenApi
                     return Id;
                 }
 
+                if (string.Equals(ExternalResource, Id, StringComparison.Ordinal) && !Id.Contains("#"))
+                {
+                    return ExternalResource;
+                }
+
                 return ExternalResource + "#/components/" + Type.GetDisplayName() + "/"+ Id; 
             }
 
@@ -329,9 +334,8 @@ namespace Microsoft.OpenApi
                 ReferenceV3 = ResolveRelativePointer(nodeLocation, pointer);
             }
 
-            // Absolute reference or anchor (e.g. "#/components/schemas/..." or full URL)
-            else if ((pointer.Contains('#') || pointer.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-                && !string.Equals(ReferenceV3, pointer, StringComparison.OrdinalIgnoreCase))
+            // Absolute reference, anchor, or relative pointer (e.g. "#/components/schemas/...", full URL, or "schemas/uuid.schema.json")
+            else if (!string.Equals(ReferenceV3, pointer, StringComparison.OrdinalIgnoreCase))
             {
                 ReferenceV3 = pointer;
             }

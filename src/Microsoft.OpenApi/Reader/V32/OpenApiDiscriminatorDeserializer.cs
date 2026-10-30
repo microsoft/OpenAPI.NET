@@ -51,8 +51,28 @@ namespace Microsoft.OpenApi.Reader.V32
         public static OpenApiSchemaReference LoadMapping(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
         {
             var pointer = node.GetScalarValue() ?? throw new InvalidOperationException("Could not get a pointer reference");
+            if (IsBareSchemaName(pointer))
+            {
+                var schemaRef = new OpenApiSchemaReference(pointer, hostDocument);
+                schemaRef.Reference.SetJsonPointerPath(pointer, context.GetLocation());
+                return schemaRef;
+            }
+
             var reference = GetReferenceIdAndExternalResource(pointer);
-            return new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
+            var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
+            result.Reference.SetJsonPointerPath(pointer, context.GetLocation());
+            return result;
+        }
+
+        private static bool IsBareSchemaName(string pointer)
+        {
+            return !pointer.StartsWith("#", StringComparison.OrdinalIgnoreCase)
+                && !pointer.Contains("/")
+                && !pointer.Contains("#")
+                && !pointer.Contains(":")
+                && !pointer.EndsWith(".json", StringComparison.OrdinalIgnoreCase)
+                && !pointer.EndsWith(".yaml", StringComparison.OrdinalIgnoreCase)
+                && !pointer.EndsWith(".yml", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
