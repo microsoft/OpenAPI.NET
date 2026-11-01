@@ -48,5 +48,17 @@ components:
             Assert.Equal(JsonSchemaType.String, userName.Target.Type);
             Assert.Equal("#/components/schemas/User/properties/name", userName.Reference.ReferenceV3);
         }
+
+        [Fact]
+        public void ReferenceToNestedComponentPropertyResolvesToThatProperty()
+        {
+            var document = OpenApiDocument.Parse(Document, "yaml", SettingsFixture.ReaderSettings).Document;
+
+            var userCity = Assert.IsType<OpenApiSchemaReference>(document.Components.Schemas["UserCity"]);
+
+            Assert.NotNull(userCity.Target);
+            Assert.Equal(JsonSchemaType.String, userCity.Target.Type);
+            Assert.Equal("#/components/schemas/User/properties/address/properties/city", userCity.Reference.ReferenceV3);
+        }
     }
 }
