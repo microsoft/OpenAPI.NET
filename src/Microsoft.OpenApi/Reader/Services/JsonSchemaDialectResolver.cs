@@ -36,7 +36,7 @@ internal sealed class JsonSchemaDialectResolver
         IEnumerable<Uri> dialects,
         CancellationToken cancellationToken)
     {
-        var result = new Dictionary<Uri, Uri>();
+        var result = new Dictionary<Uri, Uri>(new DialectUriEqualityComparer());
         foreach (var dialect in dialects)
         {
             if (await ResolveAsync(dialect, cancellationToken).ConfigureAwait(false) is { } knownDialect)
@@ -143,13 +143,14 @@ internal sealed class JsonSchemaDialectResolver
                 ? parentDialect
                 : null;
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
-            throw;
+            return null;
         }
         catch (Exception exception) when (exception is IOException or HttpRequestException or JsonException or OpenApiException or
                                            ArgumentException or InvalidOperationException or SecurityException or UnauthorizedAccessException)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return null;
         }
     }
@@ -158,5 +159,28 @@ internal sealed class JsonSchemaDialectResolver
     {
         var value = dialect.AbsoluteUri;
         return value.EndsWith("#", StringComparison.Ordinal) ? value.Substring(0, value.Length - 1) : value;
+    }
+
+    private sealed class DialectUriEqualityComparer : IEqualityComparer<Uri>
+    {
+        public bool Equals(Uri? x, Uri? y)
+        {
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
+            if (x is null || y is null)
+            {
+                return false;
+            }
+
+            return StringComparer.Ordinal.Equals(GetDialectKey(x), GetDialectKey(y));
+        }
+
+        public int GetHashCode(Uri obj)
+        {
+            return StringComparer.Ordinal.GetHashCode(GetDialectKey(obj));
+        }
     }
 }

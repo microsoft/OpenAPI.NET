@@ -452,7 +452,7 @@ internal static partial class OpenApiV32Deserializer
                         schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
                         schema.UnrecognizedKeywords[name] = value;
                     }
-                });
+                }, preserveInvalidProperties: context.SchemaDialectService?.IsUsingFallback == true);
             result.Reference.ApplySchemaMetadata(referenceMetadata, jsonObject);
             result.Reference.SetJsonPointerPath(pointer, nodeLocation);
 
@@ -476,7 +476,7 @@ internal static partial class OpenApiV32Deserializer
                         schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
                         schema.UnrecognizedKeywords[name] = value;
                     }
-                });
+                }, preserveInvalidProperties: context.SchemaDialectService?.IsUsingFallback == true);
             result.Reference.ApplySchemaMetadata(referenceMetadata, jsonObject);
             result.Reference.SetJsonPointerPath(dynamicPointer, nodeLocation);
             return result;
@@ -489,7 +489,7 @@ internal static partial class OpenApiV32Deserializer
             {
                 schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
                 schema.UnrecognizedKeywords[name] = value;
-            });
+            }, preserveInvalidProperties: context.SchemaDialectService?.IsUsingFallback == true);
 
         if (!string.IsNullOrEmpty(identifier) && hostDocument.Workspace is not null)
         {

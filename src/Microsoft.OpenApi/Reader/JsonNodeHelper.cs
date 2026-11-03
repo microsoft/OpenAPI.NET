@@ -248,7 +248,8 @@ namespace Microsoft.OpenApi.Reader
             PatternFieldMap<T> patternFieldMap,
             OpenApiDocument hostDocument,
             ParsingContext context,
-            Action<T, string, JsonNode>? unrecognizedProperty = null)
+            Action<T, string, JsonNode>? unrecognizedProperty = null,
+            bool preserveInvalidProperties = false)
         {
             if (JsonObject == null)
             {
@@ -257,7 +258,7 @@ namespace Microsoft.OpenApi.Reader
 
             foreach (var propertyNode in JsonObject)
             {
-                ParseField(propertyNode.Key, propertyNode.Value ?? JsonNullSentinel.JsonNull, domainObject, fixedFieldMap, patternFieldMap, hostDocument, context, unrecognizedProperty);
+                ParseField(propertyNode.Key, propertyNode.Value ?? JsonNullSentinel.JsonNull, domainObject, fixedFieldMap, patternFieldMap, hostDocument, context, unrecognizedProperty, preserveInvalidProperties);
             }
         }
 
@@ -269,7 +270,8 @@ namespace Microsoft.OpenApi.Reader
             PatternFieldMap<T> patternFields,
             OpenApiDocument hostDocument,
             ParsingContext context,
-            Action<T, string, JsonNode>? unrecognizedProperty)
+            Action<T, string, JsonNode>? unrecognizedProperty,
+            bool preserveInvalidProperties)
         {
             if (fixedFields.TryGetValue(name, out var fixedFieldMap))
             {
@@ -281,11 +283,26 @@ namespace Microsoft.OpenApi.Reader
                 catch (OpenApiReaderException ex)
                 {
                     context.Diagnostic.Errors.Add(new(ex));
+                    if (preserveInvalidProperties)
+                    {
+                        unrecognizedProperty?.Invoke(parentInstance, name, value);
+                    }
                 }
                 catch (OpenApiException ex)
                 {
                     ex.Pointer = context.GetLocation();
                     context.Diagnostic.Errors.Add(new(ex));
+                    if (preserveInvalidProperties)
+                    {
+                        unrecognizedProperty?.Invoke(parentInstance, name, value);
+                    }
+                }
+                catch (Exception ex) when (preserveInvalidProperties && unrecognizedProperty is not null && value is JsonValue &&
+                                           ex is FormatException or OverflowException)
+                {
+                    // Scalar conversions belong to this field; nested schemas can use a different dialect.
+                    context.Diagnostic.Errors.Add(new OpenApiError(context.GetLocation(), ex.Message));
+                    unrecognizedProperty(parentInstance, name, value);
                 }
                 finally
                 {
@@ -305,11 +322,19 @@ namespace Microsoft.OpenApi.Reader
                     catch (OpenApiReaderException ex)
                     {
                         context.Diagnostic.Errors.Add(new(ex));
+                        if (preserveInvalidProperties)
+                        {
+                            unrecognizedProperty?.Invoke(parentInstance, name, value);
+                        }
                     }
                     catch (OpenApiException ex)
                     {
                         ex.Pointer = context.GetLocation();
                         context.Diagnostic.Errors.Add(new(ex));
+                        if (preserveInvalidProperties)
+                        {
+                            unrecognizedProperty?.Invoke(parentInstance, name, value);
+                        }
                     }
                     finally
                     {

@@ -39,6 +39,8 @@ internal sealed class JsonSchemaDialectService
 
     internal IReadOnlyCollection<Uri> UnsupportedDialects => _unsupportedDialects.Values;
     internal IReadOnlyCollection<(Uri Dialect, OpenApiError Error)> UnsupportedDialectErrors => _unsupportedDialectErrors;
+    internal bool IsUsingFallback => _dialectScopes.Count > 0 &&
+        !_versionServices.ContainsKey(GetDialectKey(_dialectScopes.Peek()));
 
     internal IOpenApiSchema LoadSchema(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
     {
