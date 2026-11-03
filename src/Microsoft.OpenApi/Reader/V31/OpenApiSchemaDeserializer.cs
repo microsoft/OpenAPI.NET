@@ -26,7 +26,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "$id",
-            (o, n, _, _) => o.Id = n.GetScalarValue()
+            (o, n, _, c) => o.Id = n.GetScalarValue(requireString: c.SchemaDialectService?.IsUsingFallback == true)
         },
         {
             "$comment",
@@ -39,7 +39,7 @@ internal static partial class OpenApiV31Deserializer
         },
         {
             "$dynamicRef",
-            (o, n, _, _) => o.DynamicRef = n.GetScalarValue()
+            (o, n, _, c) => o.DynamicRef = n.GetScalarValue(requireString: c.SchemaDialectService?.IsUsingFallback == true)
         },
         {
             "$dynamicAnchor",
@@ -435,9 +435,10 @@ internal static partial class OpenApiV31Deserializer
 
         var jsonObject = node.CheckMapNode(OpenApiConstants.Schema, context);
 
-        var pointer = jsonObject.GetReferencePointer();
-        var dynamicPointer = jsonObject.GetDynamicReferencePointer();
-        var identifier = jsonObject.GetJsonSchemaIdentifier();
+        var preserveInvalidProperties = context.SchemaDialectService?.IsUsingFallback == true;
+        var pointer = jsonObject.GetReferencePointer(context, preserveInvalidProperties);
+        var dynamicPointer = jsonObject.GetDynamicReferencePointer(preserveInvalidProperties);
+        var identifier = jsonObject.GetJsonSchemaIdentifier(preserveInvalidProperties);
 
         if (pointer != null)
         {

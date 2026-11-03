@@ -25,7 +25,6 @@ internal sealed class JsonSchemaDialectResolver
     private readonly IStreamLoader _loader;
     private readonly Uri _baseUrl;
     private readonly Dictionary<string, Uri?> _metaSchemaDialects = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, Uri> _resolvedDialects = new(StringComparer.Ordinal);
 
     internal JsonSchemaDialectResolver(IStreamLoader loader, Uri baseUrl)
     {
@@ -52,7 +51,6 @@ internal sealed class JsonSchemaDialectResolver
     private async Task<Uri?> ResolveAsync(Uri dialect, CancellationToken cancellationToken)
     {
         var visited = new HashSet<string>(StringComparer.Ordinal);
-        var chain = new List<Uri>();
         var current = dialect;
 
         for (var depth = 0; depth < MaxResolutionDepth; depth++)
@@ -61,25 +59,16 @@ internal sealed class JsonSchemaDialectResolver
 
             if (JsonSchemaDialectService.IsKnownDialect(current))
             {
-                foreach (var item in chain)
-                {
-                    _resolvedDialects[GetDialectKey(item)] = current;
-                }
                 return current;
             }
 
             var key = GetDialectKey(current);
-            if (_resolvedDialects.TryGetValue(key, out var resolvedDialect))
-            {
-                return resolvedDialect;
-            }
-
             if (!visited.Add(key))
             {
                 return null;
             }
 
-            chain.Add(current);
+            // Cached parent links still count toward this chain's depth limit.
             if (!_metaSchemaDialects.TryGetValue(key, out var parentDialect))
             {
                 parentDialect = await LoadParentDialectAsync(current, cancellationToken).ConfigureAwait(false);
@@ -96,10 +85,6 @@ internal sealed class JsonSchemaDialectResolver
 
         if (JsonSchemaDialectService.IsKnownDialect(current))
         {
-            foreach (var item in chain)
-            {
-                _resolvedDialects[GetDialectKey(item)] = current;
-            }
             return current;
         }
 

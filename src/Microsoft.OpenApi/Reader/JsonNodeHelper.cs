@@ -165,8 +165,18 @@ namespace Microsoft.OpenApi.Reader
             return nodes.ToDictionary(kvp => kvp.key, kvp => kvp.values);
         }
 
-        public static string? GetScalarValue(this JsonNode? node)
+        public static string? GetScalarValue(this JsonNode? node, bool requireString = false)
         {
+            if (requireString)
+            {
+                if (!TryGetStringValue(node, out var stringValue))
+                {
+                    throw new OpenApiException("Expected string value.");
+                }
+
+                return stringValue;
+            }
+
             if (node.IsJsonNullSentinel())
             {
                 return null;
@@ -180,6 +190,47 @@ namespace Microsoft.OpenApi.Reader
         public static string? GetReferencePointer(this JsonObject jsonObject)
         {
             return jsonObject.TryGetPropertyValue("$ref", out var refNode) ? refNode?.GetScalarValue() : null;
+        }
+
+        public static string? GetReferencePointer(this JsonObject jsonObject, ParsingContext context, bool preserveInvalidProperties = false)
+        {
+            if (!preserveInvalidProperties)
+            {
+                return jsonObject.GetReferencePointer();
+            }
+
+            if (!jsonObject.TryGetPropertyValue(OpenApiConstants.DollarRef, out var refNode))
+            {
+                return null;
+            }
+
+            try
+            {
+                var pointer = refNode.GetScalarValue(requireString: true);
+                if (pointer is not null)
+                {
+                    ValidateReferencePointerFormat(pointer);
+                }
+
+                return pointer;
+            }
+            catch (OpenApiException exception)
+            {
+                // $ref is consumed before ParseMap, so recover only this keyword's
+                // extraction/format failure and let the ordinary map retain its raw value.
+                try
+                {
+                    context.StartObject(OpenApiConstants.DollarRef);
+                    exception.Pointer = context.GetLocation();
+                    context.Diagnostic.Errors.Add(new(exception));
+                }
+                finally
+                {
+                    context.EndObject();
+                }
+
+                return null;
+            }
         }
 
         public static void ValidateReferencePointerFormat(string pointer)
@@ -198,11 +249,13 @@ namespace Microsoft.OpenApi.Reader
         /// Returns the value of $dynamicRef if $ref is absent. Used to create a schema reference
         /// for bare $dynamicRef schemas (no $ref) so they participate in reference resolution.
         /// </summary>
-        public static string? GetDynamicReferencePointer(this JsonObject jsonObject)
+        public static string? GetDynamicReferencePointer(this JsonObject jsonObject, bool preserveInvalidProperties = false)
         {
             if (jsonObject.TryGetPropertyValue("$ref", out _))
                 return null;
-            return jsonObject.TryGetPropertyValue("$dynamicRef", out var dynRefNode) ? dynRefNode?.GetScalarValue() : null;
+            return jsonObject.TryGetPropertyValue("$dynamicRef", out var dynRefNode)
+                ? GetSchemaKeywordValue(dynRefNode, preserveInvalidProperties)
+                : null;
         }
 
         /// <summary>
@@ -240,9 +293,26 @@ namespace Microsoft.OpenApi.Reader
             return hashIndex > 0 ? dynamicRef.Substring(0, hashIndex) : null;
         }
 
-        public static string? GetJsonSchemaIdentifier(this JsonObject jsonObject)
+        public static string? GetJsonSchemaIdentifier(this JsonObject jsonObject, bool preserveInvalidProperties = false)
         {
-            return jsonObject.TryGetPropertyValue("$id", out var idNode) ? idNode?.GetScalarValue() : null;
+            return jsonObject.TryGetPropertyValue("$id", out var idNode)
+                ? GetSchemaKeywordValue(idNode, preserveInvalidProperties)
+                : null;
+        }
+
+        private static string? GetSchemaKeywordValue(JsonNode? node, bool preserveInvalidProperties)
+        {
+            // The fixed-field handler reports invalid values during ParseMap. Do not
+            // interpret them as a reference or identifier before that handler can run.
+            return preserveInvalidProperties
+                ? TryGetStringValue(node, out var value) ? value : null
+                : node?.GetScalarValue();
+        }
+
+        private static bool TryGetStringValue(JsonNode? node, out string? value)
+        {
+            value = null;
+            return !node.IsJsonNullSentinel() && node is JsonValue jsonValue && jsonValue.TryGetValue(out value);
         }
 
         public static void ParseMap<T>(
