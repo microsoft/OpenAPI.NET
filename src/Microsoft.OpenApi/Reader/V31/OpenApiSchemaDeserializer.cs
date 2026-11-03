@@ -413,6 +413,12 @@ internal static partial class OpenApiV31Deserializer
 
     public static IOpenApiSchema LoadSchema(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
     {
+        return context.SchemaDialectService?.LoadSchema(node, hostDocument, context) ??
+               LoadSchemaCore(node, hostDocument, context);
+    }
+
+    internal static IOpenApiSchema LoadSchemaCore(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
+    {
         // Handle boolean schemas (true/false) for JSON Schema 2020-12 compatibility
         if (node is JsonValue jsonValue && jsonValue.TryGetValue<bool>(out var boolValue))
         {

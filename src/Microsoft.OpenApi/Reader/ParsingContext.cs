@@ -29,6 +29,7 @@ namespace Microsoft.OpenApi.Reader
 
         internal JsonNode? JsonNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new();
+        internal JsonSchemaDialectService? SchemaDialectService { get; private set; }
 
         /// <summary>
         /// The base url for the document
@@ -85,12 +86,14 @@ namespace Microsoft.OpenApi.Reader
                     break;
                 case string version when version.is3_1():
                     VersionService = new OpenApiV31VersionService(Diagnostic);
+                    SchemaDialectService = new JsonSchemaDialectService(VersionService, GetJsonSchemaDialect(jsonNode), Diagnostic);
                     doc = VersionService.LoadDocument(jsonNode, location, this);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_1;
                     ValidateRequiredFields(doc, version);
                     break;
                 case string version when version.is3_2():
                     VersionService = new OpenApiV32VersionService(Diagnostic);
+                    SchemaDialectService = new JsonSchemaDialectService(VersionService, GetJsonSchemaDialect(jsonNode), Diagnostic);
                     doc = VersionService.LoadDocument(jsonNode, location, this);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_2;
                     ValidateRequiredFields(doc, version);
@@ -126,10 +129,12 @@ namespace Microsoft.OpenApi.Reader
                     break;
                 case OpenApiSpecVersion.OpenApi3_1:
                     this.VersionService = new OpenApiV31VersionService(Diagnostic);
+                    SchemaDialectService = new JsonSchemaDialectService(VersionService, openApiDocument.JsonSchemaDialect, Diagnostic);
                     element = this.VersionService.LoadElement<T>(jsonNode, openApiDocument, this);
                     break;
                 case OpenApiSpecVersion.OpenApi3_2:
                     this.VersionService = new OpenApiV32VersionService(Diagnostic);
+                    SchemaDialectService = new JsonSchemaDialectService(VersionService, openApiDocument.JsonSchemaDialect, Diagnostic);
                     element = this.VersionService.LoadElement<T>(jsonNode, openApiDocument, this);
                     break;
             }
@@ -153,6 +158,15 @@ namespace Microsoft.OpenApi.Reader
             versionNode = new JsonPointer("/swagger").Find(jsonNode);
 
             return versionNode?.GetScalarValue()?.Replace("\"", string.Empty) ?? throw new OpenApiException("Version node not found.");
+        }
+
+        private static Uri? GetJsonSchemaDialect(JsonNode jsonNode)
+        {
+            var dialectNode = new JsonPointer("/jsonSchemaDialect").Find(jsonNode);
+            return dialectNode is JsonValue &&
+                   Uri.TryCreate(dialectNode.GetScalarValue(), UriKind.Absolute, out var dialect)
+                ? dialect
+                : null;
         }
 
         /// <summary>

@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Reader
         /// <inheritdoc/>
         public async Task<Stream> LoadAsync(Uri baseUrl, Uri uri, CancellationToken cancellationToken = default)
         {
-            var absoluteUri = baseUrl.AbsoluteUri.Equals(OpenApiConstants.BaseRegistryUri) switch
+            var absoluteUri = uri.IsAbsoluteUri ? uri : baseUrl.AbsoluteUri.Equals(OpenApiConstants.BaseRegistryUri) switch
             {
                 true => new Uri(Path.Combine(Directory.GetCurrentDirectory(), uri.ToString())),
                 _ => new Uri(baseUrl, uri),
