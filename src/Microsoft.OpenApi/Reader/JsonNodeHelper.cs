@@ -28,11 +28,30 @@ namespace Microsoft.OpenApi.Reader
                 throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", context);
             }
 
-            return jsonArray
-                .OfType<JsonObject>()
-                .Select(n => map(n, hostDocument, context))
-                .Where(static i => i != null)
-                .ToList();
+            var list = new List<T>();
+            for (var index = 0; index < jsonArray.Count; index++)
+            {
+                if (jsonArray[index] is not JsonObject jsonObject)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    context.StartObject(index.ToString(CultureInfo.InvariantCulture));
+                    var value = map(jsonObject, hostDocument, context);
+                    if (value != null)
+                    {
+                        list.Add(value);
+                    }
+                }
+                finally
+                {
+                    context.EndObject();
+                }
+            }
+
+            return list;
         }
 
         public static List<JsonNode> CreateListOfAny(this JsonNode? node, ParsingContext context)
