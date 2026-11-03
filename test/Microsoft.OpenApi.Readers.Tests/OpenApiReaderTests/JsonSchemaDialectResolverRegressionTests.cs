@@ -23,8 +23,14 @@ public class JsonSchemaDialectResolverRegressionTests
     [InlineData("3.2.0")]
     public async Task ResolvingOneFragmentDoesNotResolveAnotherFragment(string version)
     {
-        var loader = new DelegateLoader((uri, _) => Task.FromResult<Stream>(CreateStream(
-            uri.AbsoluteUri == CustomDialect + "#a" ? MetaSchema : "{}")));
+        var loader = new DelegateLoader((_, _) => Task.FromResult<Stream>(CreateStream("""
+            {
+              "$defs": {
+                "First": { "$anchor": "a", "$schema": "https://json-schema.org/draft/2020-12/schema" },
+                "Second": { "$anchor": "b" }
+              }
+            }
+            """)));
         var settings = new OpenApiReaderSettings
         {
             LoadExternalRefs = true,

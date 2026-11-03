@@ -97,6 +97,8 @@ var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Json,
 
 This also enables ordinary external references. For an unknown dialect, the reader follows its meta-schema's `$schema` chain to a supported dialect using `CustomExternalLoader` or the default HTTP/file loader. Resolution is cached per document read, detects cycles, and is limited to 16 loads per chain and 1 MiB per response. Cancellation is passed to the configured loader and stream reads. Failed or unsupported chains retain their diagnostic.
 
+Non-empty dialect URI fragments select a JSON Pointer target or a schema named by `$anchor` or `$dynamicAnchor` within the loaded resource. Fragment lookup traverses recognized schema locations only; missing or ambiguous targets and locations defined by unknown custom vocabularies retain the unsupported-dialect diagnostic. Named-anchor lookup stops at nested non-empty `$id` declarations; it does not build an embedded-resource index.
+
 This does not add parsers for other JSON Schema drafts or custom vocabularies. Writing still follows the requested OpenAPI output version rather than dispatching on the schema dialect.
 
 # Validating/Testing OpenAPI descriptions

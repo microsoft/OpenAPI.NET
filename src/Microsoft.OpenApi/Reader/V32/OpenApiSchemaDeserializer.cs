@@ -34,7 +34,8 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "$vocabulary",
-            (o, n, _, c) => o.Vocabulary = n.CreateSimpleMap(LoadBool, c).ToDictionary(kvp => kvp.Key, kvp => kvp.Value ?? false)
+            (o, n, _, c) => o.Vocabulary = n.CreateSimpleMap(LoadBool, c,
+                reportConversionErrors: c.SchemaDialectService?.IsUsingFallback == true).ToDictionary(kvp => kvp.Key, kvp => kvp.Value ?? false)
         },
         {
             "$dynamicRef",

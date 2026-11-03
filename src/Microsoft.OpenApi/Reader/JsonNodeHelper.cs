@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Reader
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
-        public static Dictionary<string, T> CreateSimpleMap<T>(this JsonNode? node, Func<JsonNode, T> map, ParsingContext context)
+        public static Dictionary<string, T> CreateSimpleMap<T>(this JsonNode? node, Func<JsonNode, T> map, ParsingContext context, bool reportConversionErrors = false)
         {
             if (node is not JsonObject jsonMap)
             {
@@ -120,6 +120,10 @@ namespace Microsoft.OpenApi.Reader
                         : throw new OpenApiReaderException($"Expected scalar while parsing {typeof(T).Name}", context);
 
                     return (key, value: map(jsonNode));
+                }
+                catch (Exception exception) when (reportConversionErrors && exception is FormatException or OverflowException)
+                {
+                    throw new OpenApiReaderException(exception.Message, exception) { Pointer = context.GetLocation() };
                 }
                 finally
                 {
