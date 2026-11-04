@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,18 +45,25 @@ namespace Microsoft.OpenApi.Reader
                 // If not already in workspace, load it and process references
                 if (item.ExternalResource is not null && !_workspace.Contains(item.ExternalResource))
                 {
-                    var uri = new Uri(item.ExternalResource, UriKind.RelativeOrAbsolute);
-                    var input = await _loader.LoadAsync(item.HostDocument!.BaseUri, uri, cancellationToken).ConfigureAwait(false);
-                    var result = await OpenApiDocument.LoadAsync(input, format, _readerSettings, cancellationToken).ConfigureAwait(false);
-                    // Merge diagnostics
-                    if (result.Diagnostic != null)
+                    try
                     {
-                        diagnostic.AppendDiagnostic(result.Diagnostic, item.ExternalResource);
+                        var uri = new Uri(item.ExternalResource, UriKind.RelativeOrAbsolute);
+                        var input = await _loader.LoadAsync(item.HostDocument!.BaseUri, uri, cancellationToken).ConfigureAwait(false);
+                        var result = await OpenApiDocument.LoadAsync(input, format, _readerSettings, cancellationToken).ConfigureAwait(false);
+                        // Merge diagnostics
+                        if (result.Diagnostic != null)
+                        {
+                            diagnostic.AppendDiagnostic(result.Diagnostic, item.ExternalResource);
+                        }
+                        if (result.Document != null)
+                        {
+                            var loadDiagnostic = await LoadAsync(item, result.Document, format, diagnostic, cancellationToken).ConfigureAwait(false);
+                            diagnostic = loadDiagnostic;
+                        }
                     }
-                    if (result.Document != null)
+                    catch (Exception ex)
                     {
-                        var loadDiagnostic = await LoadAsync(item, result.Document, format, diagnostic, cancellationToken).ConfigureAwait(false);
-                        diagnostic = loadDiagnostic;
+                        diagnostic.Errors.Add(new OpenApiError(string.Empty, ex.Message));
                     }
                 }
             }

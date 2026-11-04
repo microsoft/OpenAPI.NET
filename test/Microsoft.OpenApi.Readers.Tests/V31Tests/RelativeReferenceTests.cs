@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -746,6 +746,47 @@ components:
             var parentSchemaRef = Assert.IsType<OpenApiSchemaReference>(categorySchema.Properties["parent"]);
             Assert.Equal("#/components/schemas/Category", parentSchemaRef.Reference.ReferenceV3);
             Assert.NotNull(parentSchemaRef.Target);
+        }
+
+        [Fact]
+        public void ParseDocumentWithRelativeReferenceWithoutFragmentDoesNotThrowUriFormatException()
+        {
+            var openApi = """
+            {
+              "openapi": "3.1.1",
+              "info": { "title": "Repro", "version": "1" },
+              "paths": {},
+              "components": {
+                "schemas": {
+                  "Request": {
+                    "type": "object",
+                    "properties": { "attemptId": { "$ref": "schemas/uuid.schema.json" } }
+                  }
+                }
+              }
+            }
+            """;
+
+            var readResult = OpenApiDocument.Parse(openApi, "json");
+            var doc = readResult.Document;
+            var diagnostic = readResult.Diagnostic;
+
+            Assert.NotNull(doc);
+            Assert.Empty(diagnostic.Errors);
+
+            var requestSchema = Assert.IsType<OpenApiSchema>(doc.Components.Schemas["Request"]);
+            var attemptIdRef = Assert.IsType<OpenApiSchemaReference>(requestSchema.Properties["attemptId"]);
+            Assert.True(attemptIdRef.Reference.IsExternal);
+            Assert.Equal("schemas/uuid.schema.json", attemptIdRef.Reference.ExternalResource);
+            Assert.Equal("schemas/uuid.schema.json", attemptIdRef.Reference.Id);
+
+            Assert.Null(attemptIdRef.Target);
+
+            using var writer = new StringWriter();
+            doc.SerializeAsV31(new OpenApiJsonWriter(writer));
+            var serialized = writer.ToString();
+            Assert.Contains("\"$ref\": \"schemas/uuid.schema.json\"", serialized);
+            Assert.DoesNotContain("#/components/schemas/schemas/uuid.schema.json", serialized);
         }
     }
 }

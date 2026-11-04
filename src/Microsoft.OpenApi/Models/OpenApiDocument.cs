@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -631,14 +631,21 @@ namespace Microsoft.OpenApi
 
             string uriLocation;
             var id = reference.Id;
-            if (!string.IsNullOrEmpty(id) && id!.Contains('/')) // this means its a URL reference
+            var referenceV3 = !string.IsNullOrEmpty(reference.ReferenceV3) ? reference.ReferenceV3! : string.Empty;
+            var isStandaloneExternal = reference.IsExternal &&
+                (!string.IsNullOrEmpty(referenceV3) ? !referenceV3.Contains("#") : (id is not null && !id.Contains("#")));
+
+            if (isStandaloneExternal)
+            {
+                uriLocation = id ?? reference.ExternalResource ?? string.Empty;
+            }
+            else if (!string.IsNullOrEmpty(id) && id!.Contains("/"))
             {
                 uriLocation = id!;
             }
             else
             {
                 string relativePath;
-                var referenceV3 = !string.IsNullOrEmpty(reference.ReferenceV3) ? reference.ReferenceV3! : string.Empty;
 
                 if (reference.Type is ReferenceType.Schema && useExternal && TryGetPlainNameFragment(referenceV3, out var plainNameFragment))
                 {
@@ -669,19 +676,28 @@ namespace Microsoft.OpenApi
                     : BaseUri + relativePath;
             }
 
-            var absoluteUri =
-#if NETSTANDARD2_1 || NETCOREAPP || NET5_0_OR_GREATER
-            uriLocation.StartsWith('#')
-#else
-            uriLocation.StartsWith("#", StringComparison.OrdinalIgnoreCase)
-#endif
-            switch
+            Uri? resolvedUri = null;
+            if (Uri.TryCreate(uriLocation, UriKind.Absolute, out var absUri))
             {
-                true => new Uri(BaseUri, uriLocation).AbsoluteUri,
-                false => new Uri(uriLocation).AbsoluteUri
-            };
+                resolvedUri = absUri;
+            }
+            else if (useExternal && reference.ExternalResource is not null && Workspace?.GetDocumentId(reference.ExternalResource) is Uri extDocUri)
+            {
+                resolvedUri = extDocUri;
+            }
+            else if (BaseUri is not null && Uri.TryCreate(BaseUri, uriLocation, out var relCombinedUri))
+            {
+                resolvedUri = relCombinedUri;
+            }
 
-            if (reference.Type is ReferenceType.Schema && absoluteUri.Contains('#') && parentSchema is not null)
+            if (resolvedUri is null)
+            {
+                return null;
+            }
+
+            var absoluteUri = resolvedUri.AbsoluteUri;
+
+            if (reference.Type is ReferenceType.Schema && absoluteUri.Contains("#") && parentSchema is not null)
             {
                 return Workspace?.ResolveJsonSchemaReference(absoluteUri, parentSchema);
             }
