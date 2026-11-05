@@ -16,9 +16,13 @@ namespace Microsoft.OpenApi
         public OpenApiResponses() { }
 
         /// <summary>
-        /// Initializes a copy of <see cref="OpenApiResponses"/> object
+        /// Initializes a copy of <see cref="OpenApiResponses"/> object.
         /// </summary>
-        /// <param name="openApiResponses">The <see cref="OpenApiResponses"/></param>
+        /// <param name="openApiResponses">The <see cref="OpenApiResponses"/>.</param>
+        /// <remarks>
+        /// This creates a shallow copy; the responses are the same reference as in the provided parameter,
+        /// and specification extensions are copied into a new dictionary.
+        /// </remarks>
         public OpenApiResponses(OpenApiResponses openApiResponses) : base(dictionary: openApiResponses, extensions: openApiResponses?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(openApiResponses.Extensions) : null) { }
     }
 }
