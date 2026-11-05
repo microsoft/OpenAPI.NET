@@ -995,5 +995,37 @@ namespace Microsoft.OpenApi.Tests.Models
             var copyNames = copy.Tags.Select(t => t.Name);
             Assert.Equal(["tagC", "tagB", "tagA"], copyNames);
         }
+
+        [Fact]
+        public void OpenApiOperationCopyConstructorPreservesResponsesExtensions()
+        {
+            // Arrange
+            var operation = new OpenApiOperation
+            {
+                OperationId = "getItem",
+                Responses = new OpenApiResponses
+                {
+                    ["200"] = new OpenApiResponse { Description = "Success" },
+                    Extensions = new Dictionary<string, IOpenApiExtension>
+                    {
+                        ["x-responses-meta"] = new JsonNodeExtension("Metadata for responses")
+                    }
+                }
+            };
+
+            // Act
+            var copy = new OpenApiOperation(operation);
+
+            // Assert
+            Assert.NotNull(copy.Responses);
+            Assert.NotNull(copy.Responses.Extensions);
+            Assert.Single(copy.Responses.Extensions);
+            Assert.True(copy.Responses.Extensions.ContainsKey("x-responses-meta"));
+
+            // Verify isolation
+            copy.Responses.Extensions["x-isolated"] = new JsonNodeExtension("isolated");
+            Assert.Single(operation.Responses.Extensions);
+            Assert.False(operation.Responses.Extensions.ContainsKey("x-isolated"));
+        }
     }
 }
