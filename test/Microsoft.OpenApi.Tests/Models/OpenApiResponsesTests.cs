@@ -54,5 +54,48 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.Single(responses.Extensions);
             Assert.False(responses.Extensions.ContainsKey("x-copy-only"));
         }
+
+        [Fact]
+        public void CopyConstructorWithNullResponsesInitializesEmptyExtensions()
+        {
+            // Act
+            var copy = new OpenApiResponses(null!);
+
+            // Assert
+            Assert.NotNull(copy.Extensions);
+            Assert.Empty(copy.Extensions);
+            Assert.Empty(copy);
+        }
+
+        [Fact]
+        public void CopyConstructorWithNullExtensionsInitializesEmptyExtensions()
+        {
+            // Arrange
+            var responses = new OpenApiResponses { Extensions = null };
+
+            // Act
+            var copy = new OpenApiResponses(responses);
+
+            // Assert
+            Assert.NotNull(copy.Extensions);
+            Assert.Empty(copy.Extensions);
+        }
+
+        [Fact]
+        public void CopyConstructorWithEmptyExtensionsInitializesEmptyExtensions()
+        {
+            // Arrange
+            var responses = new OpenApiResponses
+            {
+                Extensions = new Dictionary<string, IOpenApiExtension>()
+            };
+
+            // Act
+            var copy = new OpenApiResponses(responses);
+
+            // Assert
+            Assert.NotNull(copy.Extensions);
+            Assert.Empty(copy.Extensions);
+        }
     }
 }
