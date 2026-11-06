@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Reader
         {
             var resolved = uri.IsAbsoluteUri ? uri :
                 baseUrl.AbsoluteUri.Equals(OpenApiConstants.BaseRegistryUri) ?
-                    new Uri(Path.Combine(Directory.GetCurrentDirectory(), uri.ToString())) :
+                    new Uri(new Uri(Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar), uri) :
                     new Uri(baseUrl, uri);
             return new UriBuilder(resolved) { Fragment = string.Empty }.Uri;
         }

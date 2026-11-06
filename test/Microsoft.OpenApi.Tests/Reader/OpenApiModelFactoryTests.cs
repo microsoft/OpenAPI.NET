@@ -9,6 +9,20 @@ namespace Microsoft.OpenApi.Tests.Reader;
 
 public class OpenApiModelFactoryTests
 {
+    [Theory]
+    [InlineData("a.json")]
+    [InlineData("../a.json")]
+    [InlineData("/a.json")]
+    [InlineData("\\a.json")]
+    public void DefaultRegistryReferencesResolveAgainstCurrentDirectory(string resource)
+    {
+        var expected = new Uri(Path.GetFullPath(resource.Replace('\\', Path.DirectorySeparatorChar)));
+        var actual = DefaultStreamLoader.ResolveUri(new Uri(OpenApiConstants.BaseRegistryUri),
+            new Uri(resource, UriKind.RelativeOrAbsolute));
+
+        Assert.Equal(expected.AbsoluteUri, actual.AbsoluteUri);
+    }
+
     [Fact]
     public async Task LoadDocumentWithCircularSchemaPropertyReferencesShouldSucceed()
     {

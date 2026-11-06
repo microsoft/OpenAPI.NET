@@ -82,8 +82,10 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             Assert.Equal(Math.Min(length, limit), loader.Requests.Count);
             if (succeeds)
             {
+                var document = result.Document;
+                Assert.NotNull(document);
                 Assert.Empty(result.Diagnostic.Errors);
-                var reference = Assert.IsType<OpenApiSchemaReference>(result.Document.Components.Schemas["Main"]);
+                var reference = Assert.IsType<OpenApiSchemaReference>(document.Components.Schemas["Main"]);
                 Assert.Equal(JsonSchemaType.Object, reference.RecursiveTarget.Type);
             }
             else
@@ -277,6 +279,72 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             Assert.Equal(2, loader.Requests.Count);
             Assert.Equal(JsonSchemaType.Object, result.Document.Components.Schemas["Main"].Type);
             Assert.Equal(JsonSchemaType.String, result.Document.Components.Schemas["Main"].Properties["child"].Type);
+        }
+
+        [Theory]
+        [InlineData("$defs", false)]
+        [InlineData("$defs", true)]
+        [InlineData("patternProperties", true)]
+        [InlineData("contains", true)]
+        public async Task ExternalReferencesBeneathConcreteSchemaChildrenAreLoaded(string keyword, bool hasReferenceSibling)
+        {
+            var loader = new RecordingLoader();
+            var childReference = new Dictionary<string, string> { ["$ref"] = "child.json#/components/schemas/A" };
+            var wrapper = new Dictionary<string, object>
+            {
+                [keyword] = keyword == "contains" ? childReference :
+                    new Dictionary<string, object> { ["Child"] = childReference }
+            };
+            var schema = new Dictionary<string, object>
+            {
+                ["type"] = "object",
+                ["properties"] = new Dictionary<string, object> { ["wrapper"] = wrapper }
+            };
+            if (hasReferenceSibling)
+            {
+                schema["$ref"] = "a.json#/components/schemas/A";
+            }
+            loader.Documents["http://example.test/a.json"] =
+                Document(JsonSerializer.Serialize(new Dictionary<string, object> { ["A"] = schema }), "3.1.0");
+            loader.Documents["http://example.test/child.json"] = Document("""{"A":{"type":"string"}}""", "3.1.0");
+            var result = await Load(Document("""{"Main":{"$ref":"a.json#/components/schemas/A"}}""", "3.1.0"), Settings(loader));
+
+            var document = result.Document;
+            Assert.NotNull(document);
+            Assert.Empty(result.Diagnostic.Errors);
+            Assert.Equal(2, loader.Requests.Count);
+            var wrapperSchema = document.Components.Schemas["Main"].Properties["wrapper"];
+            var childSchema = keyword switch
+            {
+                "$defs" => wrapperSchema.Definitions["Child"],
+                "patternProperties" => wrapperSchema.PatternProperties["Child"],
+                _ => ((IOpenApiSchemaMissingProperties)wrapperSchema).Contains
+            };
+            Assert.Equal(JsonSchemaType.String, Assert.IsType<OpenApiSchemaReference>(childSchema).RecursiveTarget.Type);
+        }
+
+        [Theory]
+        [InlineData("properties")]
+        [InlineData("allOf")]
+        [InlineData("allOf/-1")]
+        [InlineData("anyOf/-1")]
+        [InlineData("oneOf/-1")]
+        public async Task MalformedExternalSubschemaPointersReturnDiagnostics(string pointer)
+        {
+            var loader = new RecordingLoader();
+            loader.Documents["http://example.test/a.json"] = Document("""
+                {"A":{"type":"object","properties":{"name":{"type":"string"}},
+                      "allOf":[{"type":"object"}],"anyOf":[{"type":"object"}],"oneOf":[{"type":"object"}]}}
+                """, "3.1.0");
+            var settings = Settings(loader);
+            settings.RuleSet = new ValidationRuleSet();
+            var result = await Load(Document($$$"""{"Main":{"$ref":"a.json#/components/schemas/A/{{{pointer}}}"}}""", "3.1.0"), settings);
+
+            Assert.Null(result.Document);
+            Assert.Single(loader.Requests);
+            Assert.Contains(result.Diagnostic.Errors, error =>
+                error.Message.Contains("Could not resolve external reference chain", StringComparison.Ordinal) &&
+                error.Message.Contains(pointer, StringComparison.Ordinal));
         }
 
         [Fact]

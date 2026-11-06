@@ -144,7 +144,8 @@ namespace Microsoft.OpenApi.Reader
                             target = reference.HostDocument?.ResolveReference(reference, reference.IsExternal, parentSchema);
                         }
                     }
-                    catch (InvalidOperationException ex)
+                    catch (Exception ex) when (ex is InvalidOperationException ||
+                        (ex is IndexOutOfRangeException or ArgumentOutOfRangeException) && chain.Any(static item => item.IsExternal))
                     {
                         if (chain.Any(static item => item.IsExternal))
                         {
