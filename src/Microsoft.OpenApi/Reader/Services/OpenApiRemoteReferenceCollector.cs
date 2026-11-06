@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Microsoft.OpenApi.Reader
 {
@@ -11,6 +12,8 @@ namespace Microsoft.OpenApi.Reader
     internal class OpenApiRemoteReferenceCollector : OpenApiVisitorBase
     {
         private readonly Dictionary<string, BaseOpenApiReference> _references = new();
+        private readonly HashSet<IOpenApiSchema> _schemas = new(SchemaIdentityComparer.Instance);
+        internal List<IOpenApiReferenceHolder> ReferenceHolders { get; } = new();
 
         /// <summary>
         /// List of all external references collected from OpenApiDocument
@@ -26,7 +29,57 @@ namespace Microsoft.OpenApi.Reader
         /// <inheritdoc/>
         public override void Visit(IOpenApiReferenceHolder referenceHolder)
         {
-            var reference = referenceHolder switch
+            if (referenceHolder is IOpenApiSchema schema)
+            {
+                Visit(schema);
+                return;
+            }
+
+            AddReference(referenceHolder);
+        }
+
+        /// <inheritdoc/>
+        public override void Visit(IOpenApiSchema schema)
+        {
+            var pending = new Stack<IOpenApiSchema>();
+            pending.Push(schema);
+            while (pending.Count > 0)
+            {
+                var current = pending.Pop();
+                if (!_schemas.Add(current))
+                {
+                    continue;
+                }
+
+                IEnumerable<IOpenApiSchema> children;
+                if (current is OpenApiSchemaReference reference)
+                {
+                    AddReference(reference);
+                    children = OpenApiWorkspace.EnumerateChildren(reference.Reference);
+                }
+                else
+                {
+                    children = OpenApiWorkspace.EnumerateChildren(current);
+                }
+                foreach (var child in children)
+                {
+                    if (child is not null)
+                    {
+                        pending.Push(child);
+                    }
+                }
+            }
+        }
+
+        private void AddReference(IOpenApiReferenceHolder referenceHolder)
+        {
+            ReferenceHolders.Add(referenceHolder);
+            var reference = GetReference(referenceHolder);
+            AddExternalReferences(reference);
+        }
+
+        internal static BaseOpenApiReference GetReference(IOpenApiReferenceHolder referenceHolder)
+            => referenceHolder switch
             {
                 IOpenApiReferenceHolder<OpenApiReferenceWithDescriptionAndSummary> { Reference: OpenApiReferenceWithDescriptionAndSummary withSummary } => withSummary,
                 IOpenApiReferenceHolder<OpenApiReferenceWithDescription> { Reference: OpenApiReferenceWithDescription withDescription } => withDescription,
@@ -34,8 +87,6 @@ namespace Microsoft.OpenApi.Reader
                 IOpenApiReferenceHolder<BaseOpenApiReference> { Reference: BaseOpenApiReference baseReference } => baseReference,
                 _ => throw new OpenApiException($"Unsupported reference holder type: {referenceHolder.GetType().FullName}")
             };
-            AddExternalReferences(reference);
-        }
 
         /// <summary>
         /// Collect external references
@@ -47,6 +98,13 @@ namespace Microsoft.OpenApi.Reader
             {
                 _references.Add(externalResource, reference);
             }
+        }
+
+        private sealed class SchemaIdentityComparer : IEqualityComparer<IOpenApiSchema>
+        {
+            public static SchemaIdentityComparer Instance { get; } = new();
+            public bool Equals(IOpenApiSchema? x, IOpenApiSchema? y) => ReferenceEquals(x, y);
+            public int GetHashCode(IOpenApiSchema obj) => RuntimeHelpers.GetHashCode(obj);
         }
     }
 }

@@ -662,7 +662,7 @@ namespace Microsoft.OpenApi
                     relativePath = $"#{OpenApiConstants.ComponentsSegment}{reference.Type.GetDisplayName()}/{id}";
                 }
 
-                Uri? externalResourceUri = useExternal ? Workspace?.GetDocumentId(reference.ExternalResource) : null;
+                Uri? externalResourceUri = useExternal ? Workspace?.GetDocumentId(reference.ExternalResource, BaseUri) : null;
 
                 uriLocation = useExternal && externalResourceUri is not null
                     ? externalResourceUri.AbsoluteUri + relativePath

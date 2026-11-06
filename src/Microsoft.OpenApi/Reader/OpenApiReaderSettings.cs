@@ -101,6 +101,21 @@ namespace Microsoft.OpenApi.Reader
         /// </summary>
         public bool LoadExternalRefs { get; set; } = false;
 
+        private int _maxExternalReferenceDepth = 64;
+
+        /// <summary>
+        /// Maximum number of external document hops loaded along a reference path. Defaults to 64.
+        /// The root document has depth zero. This does not limit JSON/YAML nesting or internal references.
+        /// When exceeded, loading returns a null document and an error diagnostic.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">The value is not positive.</exception>
+        public int MaxExternalReferenceDepth
+        {
+            get => _maxExternalReferenceDepth;
+            set => _maxExternalReferenceDepth = value > 0 ? value :
+                throw new ArgumentOutOfRangeException(nameof(value), "External reference depth must be greater than zero.");
+        }
+
         /// <summary>
         /// Dictionary of parsers for converting extensions into strongly typed classes
         /// </summary>

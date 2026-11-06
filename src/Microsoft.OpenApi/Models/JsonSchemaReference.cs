@@ -361,6 +361,23 @@ public class JsonSchemaReference : OpenApiReferenceWithDescription
            && ReferenceV3 is string refV3
            && !refV3.StartsWith("#/components/", StringComparison.OrdinalIgnoreCase);
 
+    internal bool IsReferenceOnly =>
+        Description is null && Title is null && Default is null && Deprecated is null &&
+        ReadOnly is null && WriteOnly is null && Examples is null && Extensions is not { Count: > 0 } &&
+        SchemaId is null && Schema is null && Comment is null && Vocabulary is null &&
+        DynamicRef is null && DynamicAnchor is null && Definitions is null && Anchor is null &&
+        ExclusiveMaximum is null && ExclusiveMinimum is null && SchemaType is null && !WasConstExplicitlySet &&
+        Format is null && Maximum is null && Minimum is null && MaxLength is null && MinLength is null &&
+        Pattern is null && MultipleOf is null && AllOf is null && OneOf is null && AnyOf is null &&
+        Not is null && Required is null && Items is null && MaxItems is null && MinItems is null &&
+        UniqueItems is null && Contains is null && MaxContains is null && MinContains is null &&
+        Properties is null && PatternProperties is null && MaxProperties is null && MinProperties is null &&
+        AdditionalPropertiesAllowed is null && AdditionalProperties is null && Discriminator is null &&
+        Example is null && Enum is null && UnevaluatedProperties is null && UnevaluatedPropertiesSchema is null &&
+        ExternalDocs is null && Xml is null && UnrecognizedKeywords is not { Count: > 0 } &&
+        DependentRequired is null && ContentEncoding is null && ContentMediaType is null && ContentSchema is null &&
+        PropertyNames is null && DependentSchemas is null && If is null && Then is null && Else is null;
+
     /// <summary>
     /// Parameterless constructor
     /// </summary>
