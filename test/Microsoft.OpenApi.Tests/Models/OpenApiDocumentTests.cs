@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -2667,6 +2667,38 @@ components:
 
             Assert.Throws<ArgumentNullException>(() => doc.GetOperationById(null!));
             Assert.Throws<ArgumentNullException>(() => doc.GetOperationById(string.Empty));
+        }
+
+        [Fact]
+        public void OpenApiDocumentCopyConstructorPreservesPathsExtensions()
+        {
+            // Arrange
+            var document = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test API", Version = "1.0.0" },
+                Paths = new OpenApiPaths
+                {
+                    ["/items"] = new OpenApiPathItem(),
+                    Extensions = new Dictionary<string, IOpenApiExtension>
+                    {
+                        ["x-paths-summary"] = new JsonNodeExtension("Paths level extension")
+                    }
+                }
+            };
+
+            // Act
+            var copy = new OpenApiDocument(document);
+
+            // Assert
+            Assert.NotNull(copy.Paths);
+            Assert.NotNull(copy.Paths.Extensions);
+            Assert.Single(copy.Paths.Extensions);
+            Assert.True(copy.Paths.Extensions.ContainsKey("x-paths-summary"));
+
+            // Verify isolation
+            copy.Paths.Extensions["x-isolated"] = new JsonNodeExtension("isolated");
+            Assert.Single(document.Paths.Extensions);
+            Assert.False(document.Paths.Extensions.ContainsKey("x-isolated"));
         }
     }
 }
