@@ -26,7 +26,7 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "$id",
-            (o, n, _, _) => o.Id = n.GetScalarValue()
+            (o, n, _, c) => o.Id = n.GetScalarValue(requireString: c.SchemaDialectService?.IsUsingFallback == true)
         },
         {
             "$comment",
@@ -34,11 +34,12 @@ internal static partial class OpenApiV32Deserializer
         },
         {
             "$vocabulary",
-            (o, n, _, c) => o.Vocabulary = n.CreateSimpleMap(LoadBool, c).ToDictionary(kvp => kvp.Key, kvp => kvp.Value ?? false)
+            (o, n, _, c) => o.Vocabulary = n.CreateSimpleMap(LoadBool, c,
+                reportConversionErrors: c.SchemaDialectService?.IsUsingFallback == true).ToDictionary(kvp => kvp.Key, kvp => kvp.Value ?? false)
         },
         {
             "$dynamicRef",
-            (o, n, _, _) => o.DynamicRef = n.GetScalarValue()
+            (o, n, _, c) => o.DynamicRef = n.GetScalarValue(requireString: c.SchemaDialectService?.IsUsingFallback == true)
         },
         {
             "$dynamicAnchor",
@@ -413,6 +414,12 @@ internal static partial class OpenApiV32Deserializer
 
     public static IOpenApiSchema LoadSchema(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
     {
+        return context.SchemaDialectService?.LoadSchema(node, hostDocument, context) ??
+               LoadSchemaCore(node, hostDocument, context);
+    }
+
+    internal static IOpenApiSchema LoadSchemaCore(JsonNode node, OpenApiDocument hostDocument, ParsingContext context)
+    {
         // Handle boolean schemas (true/false) for JSON Schema 2020-12 compatibility
         if (node is JsonValue jsonValue && jsonValue.TryGetValue<bool>(out var boolValue))
         {
@@ -428,9 +435,10 @@ internal static partial class OpenApiV32Deserializer
 
         var jsonObject = node.CheckMapNode(OpenApiConstants.Schema, context);
 
-        var pointer = jsonObject.GetReferencePointer();
-        var dynamicPointer = jsonObject.GetDynamicReferencePointer();
-        var identifier = jsonObject.GetJsonSchemaIdentifier();
+        var preserveInvalidProperties = context.SchemaDialectService?.IsUsingFallback == true;
+        var pointer = jsonObject.GetReferencePointer(context, preserveInvalidProperties);
+        var dynamicPointer = jsonObject.GetDynamicReferencePointer(preserveInvalidProperties);
+        var identifier = jsonObject.GetJsonSchemaIdentifier(preserveInvalidProperties);
 
         if (pointer != null)
         {
@@ -446,7 +454,7 @@ internal static partial class OpenApiV32Deserializer
                         schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
                         schema.UnrecognizedKeywords[name] = value;
                     }
-                });
+                }, preserveInvalidProperties: context.SchemaDialectService?.IsUsingFallback == true);
             result.Reference.ApplySchemaMetadata(referenceMetadata, jsonObject);
             result.Reference.SetJsonPointerPath(pointer, nodeLocation);
 
@@ -470,7 +478,7 @@ internal static partial class OpenApiV32Deserializer
                         schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
                         schema.UnrecognizedKeywords[name] = value;
                     }
-                });
+                }, preserveInvalidProperties: context.SchemaDialectService?.IsUsingFallback == true);
             result.Reference.ApplySchemaMetadata(referenceMetadata, jsonObject);
             result.Reference.SetJsonPointerPath(dynamicPointer, nodeLocation);
             return result;
@@ -483,7 +491,7 @@ internal static partial class OpenApiV32Deserializer
             {
                 schema.UnrecognizedKeywords ??= new Dictionary<string, JsonNode>(StringComparer.Ordinal);
                 schema.UnrecognizedKeywords[name] = value;
-            });
+            }, preserveInvalidProperties: context.SchemaDialectService?.IsUsingFallback == true);
 
         if (!string.IsNullOrEmpty(identifier) && hostDocument.Workspace is not null)
         {

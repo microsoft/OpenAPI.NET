@@ -60,8 +60,13 @@ namespace Microsoft.OpenApi.Reader.V32
         {
             return OpenApiV32Deserializer.LoadOpenApi(jsonNode, location, context);
         }
+
+        public override IOpenApiSchema LoadSchema(JsonNode node, OpenApiDocument doc, ParsingContext context)
+        {
+            return OpenApiV32Deserializer.LoadSchemaCore(node, doc, context);
+        }
+
         internal override Dictionary<Type, Func<JsonNode, OpenApiDocument, ParsingContext, object?>> Loaders => _loaders;
 
     }
 }
-

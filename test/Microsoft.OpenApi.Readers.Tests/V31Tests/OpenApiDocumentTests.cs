@@ -52,6 +52,83 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
         }
 
         [Fact]
+        public void DocumentDialectAppliesToSchemasRegardlessOfPropertyOrder()
+        {
+            var result = OpenApiDocument.Parse(
+                """
+                openapi: 3.1.1
+                info:
+                  title: test
+                  version: 1.0.0
+                components:
+                  schemas:
+                    Item:
+                      type: object
+                jsonSchemaDialect: https://example.com/dialect
+                """,
+                OpenApiConstants.Yaml,
+                SettingsFixture.ReaderSettings);
+
+            var error = Assert.Single(result.Diagnostic.Errors);
+            Assert.Equal("#/jsonSchemaDialect", error.Pointer);
+            Assert.Equal("The JSON Schema dialect 'https://example.com/dialect' is not supported.", error.Message);
+        }
+
+        [Fact]
+        public void SchemaDialectOverridesDocumentDialect()
+        {
+            var result = OpenApiDocument.Parse(
+                """
+                openapi: 3.1.1
+                info:
+                  title: test
+                  version: 1.0.0
+                jsonSchemaDialect: https://example.com/dialect
+                components:
+                  schemas:
+                    Item:
+                      $schema: https://json-schema.org/draft/2020-12/schema
+                      customKeyword: true
+                      type: object
+                """,
+                OpenApiConstants.Yaml,
+                SettingsFixture.ReaderSettings);
+
+            Assert.Empty(result.Diagnostic.Errors);
+            var schema = result.Document.Components.Schemas["Item"];
+            Assert.Equal(new Uri("https://json-schema.org/draft/2020-12/schema"), schema.Schema);
+            Assert.True(schema.UnrecognizedKeywords.ContainsKey("customKeyword"));
+        }
+
+        [Fact]
+        public void NestedSchemasInheritAnExplicitUnsupportedDialect()
+        {
+            var result = OpenApiDocument.Parse(
+                """
+                openapi: 3.1.1
+                info:
+                  title: test
+                  version: 1.0.0
+                components:
+                  schemas:
+                    Item:
+                      $schema: https://example.com/dialect
+                      type: object
+                      properties:
+                        name:
+                          customKeyword: value
+                          type: string
+                """,
+                OpenApiConstants.Yaml,
+                SettingsFixture.ReaderSettings);
+
+            var error = Assert.Single(result.Diagnostic.Errors);
+            Assert.Equal("#/components/schemas/Item", error.Pointer);
+            var propertySchema = result.Document.Components.Schemas["Item"].Properties["name"];
+            Assert.True(propertySchema.UnrecognizedKeywords.ContainsKey("customKeyword"));
+        }
+
+        [Fact]
         public async Task ParseDocumentWithWebhooksShouldSucceed()
         {
             // Arrange and Act

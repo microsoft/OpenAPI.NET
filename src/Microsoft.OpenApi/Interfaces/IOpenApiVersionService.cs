@@ -32,6 +32,15 @@ namespace Microsoft.OpenApi
         OpenApiDocument LoadDocument(JsonNode jsonNode, Uri location, ParsingContext context);
 
         /// <summary>
+        /// Converts a JSON Schema node into an OpenAPI schema using this version's parsing rules.
+        /// </summary>
+        /// <param name="node">The JSON Schema node.</param>
+        /// <param name="doc">The host document instance.</param>
+        /// <param name="context">The current parsing context.</param>
+        /// <returns>The parsed schema.</returns>
+        IOpenApiSchema LoadSchema(JsonNode node, OpenApiDocument doc, ParsingContext context);
+
+        /// <summary>
         /// Gets the description and summary scalar values in a reference object for V3.1 support
         /// </summary>
         /// <param name="jsonObject">A Json object.</param>
