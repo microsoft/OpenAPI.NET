@@ -1,5 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
+
+using System.Collections.Generic;
 
 namespace Microsoft.OpenApi
 {
@@ -14,12 +16,13 @@ namespace Microsoft.OpenApi
         public OpenApiPaths() { }
 
         /// <summary>
-        /// Initializes a copy of <see cref="OpenApiPaths"/> object
+        /// Initializes a copy of <see cref="OpenApiPaths"/> object.
         /// </summary>
         /// <param name="paths">The <see cref="OpenApiPaths"/>.</param>
         /// <remarks>
-        /// This creates a shallow copy, the path items are the same reference as in the provided parameter.
+        /// This creates a shallow copy; the path items are the same reference as in the provided parameter,
+        /// and specification extensions are copied into a new dictionary.
         /// </remarks>
-        public OpenApiPaths(OpenApiPaths paths) : base(dictionary: paths) { }
+        public OpenApiPaths(OpenApiPaths paths) : base(dictionary: paths, extensions: paths?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(paths.Extensions) : null) { }
     }
 }
