@@ -28,11 +28,7 @@ namespace Microsoft.OpenApi.Reader
         /// <inheritdoc/>
         public async Task<Stream> LoadAsync(Uri baseUrl, Uri uri, CancellationToken cancellationToken = default)
         {
-            var absoluteUri = baseUrl.AbsoluteUri.Equals(OpenApiConstants.BaseRegistryUri) switch
-            {
-                true => new Uri(Path.Combine(Directory.GetCurrentDirectory(), uri.ToString())),
-                _ => new Uri(baseUrl, uri),
-            };
+            var absoluteUri = ResolveUri(baseUrl, uri);
 
             return absoluteUri.Scheme switch
             {
@@ -45,6 +41,15 @@ namespace Microsoft.OpenApi.Reader
 #endif
                 _ => throw new ArgumentException("Unsupported scheme"),
             };
+        }
+
+        internal static Uri ResolveUri(Uri baseUrl, Uri uri)
+        {
+            var resolved = uri.IsAbsoluteUri ? uri :
+                baseUrl.AbsoluteUri.Equals(OpenApiConstants.BaseRegistryUri) ?
+                    new Uri(Path.Combine(Directory.GetCurrentDirectory(), uri.ToString())) :
+                    new Uri(baseUrl, uri);
+            return new UriBuilder(resolved) { Fragment = string.Empty }.Uri;
         }
     }
 }

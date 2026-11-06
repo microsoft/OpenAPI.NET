@@ -11,6 +11,7 @@ namespace Microsoft.OpenApi.Reader
     internal class OpenApiRemoteReferenceCollector : OpenApiVisitorBase
     {
         private readonly Dictionary<string, BaseOpenApiReference> _references = new();
+        internal List<IOpenApiReferenceHolder> ReferenceHolders { get; } = new();
 
         /// <summary>
         /// List of all external references collected from OpenApiDocument
@@ -26,7 +27,21 @@ namespace Microsoft.OpenApi.Reader
         /// <inheritdoc/>
         public override void Visit(IOpenApiReferenceHolder referenceHolder)
         {
-            var reference = referenceHolder switch
+            ReferenceHolders.Add(referenceHolder);
+            var reference = GetReference(referenceHolder);
+            AddExternalReferences(reference);
+            if (reference is JsonSchemaReference schema)
+            {
+                var walker = new OpenApiWalker(this);
+                foreach (var child in OpenApiWorkspace.EnumerateChildren(schema))
+                {
+                    walker.Walk(child);
+                }
+            }
+        }
+
+        internal static BaseOpenApiReference GetReference(IOpenApiReferenceHolder referenceHolder)
+            => referenceHolder switch
             {
                 IOpenApiReferenceHolder<OpenApiReferenceWithDescriptionAndSummary> { Reference: OpenApiReferenceWithDescriptionAndSummary withSummary } => withSummary,
                 IOpenApiReferenceHolder<OpenApiReferenceWithDescription> { Reference: OpenApiReferenceWithDescription withDescription } => withDescription,
@@ -34,8 +49,6 @@ namespace Microsoft.OpenApi.Reader
                 IOpenApiReferenceHolder<BaseOpenApiReference> { Reference: BaseOpenApiReference baseReference } => baseReference,
                 _ => throw new OpenApiException($"Unsupported reference holder type: {referenceHolder.GetType().FullName}")
             };
-            AddExternalReferences(reference);
-        }
 
         /// <summary>
         /// Collect external references
