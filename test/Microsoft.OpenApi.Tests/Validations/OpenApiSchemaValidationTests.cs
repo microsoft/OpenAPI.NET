@@ -582,6 +582,34 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.Equal("#/properties/name", error.Pointer);
         }
 
+        [Fact]
+        public void ValidateSchemaPropertyHasValueWithMultipleNullPropertiesShouldIncludePropertiesSegmentForEach()
+        {
+            // Arrange
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                Properties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["first"] = null!,
+                    ["valid"] = new OpenApiSchema { Type = JsonSchemaType.String },
+                    ["second"] = null!
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk((IOpenApiSchema)schema);
+
+            // Assert
+            var errors = validator.Errors.ToList();
+            Assert.Equal(2, errors.Count);
+            Assert.All(errors, e => Assert.Equal(nameof(OpenApiSchemaRules.ValidateSchemaPropertyHasValue), e.RuleName));
+            Assert.Contains(errors, e => e.Pointer == "#/properties/first");
+            Assert.Contains(errors, e => e.Pointer == "#/properties/second");
+        }
+
         private static OpenApiSchema CreateSchemaChain(int depth, string discriminatorName)
         {
             var root = new OpenApiSchema();
