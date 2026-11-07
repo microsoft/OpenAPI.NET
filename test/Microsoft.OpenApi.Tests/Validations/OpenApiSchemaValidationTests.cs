@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -209,7 +209,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.NotEmpty(validator.Errors);
             Assert.Equivalent(new List<OpenApiValidatorError>
             {
-                new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateSchemaPropertyHasValue),"#/schemas/schema1/property1",
+                new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateSchemaPropertyHasValue),"#/schemas/schema1/properties/property1",
                     string.Format(SRResource.Validation_SchemaPropertyObjectRequired,
                         string.Empty, "property1"))
             }, validator.Errors);
