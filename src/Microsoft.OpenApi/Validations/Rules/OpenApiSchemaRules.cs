@@ -17,7 +17,8 @@ namespace Microsoft.OpenApi
     public static class OpenApiSchemaRules
     {
         /// <summary>
-        /// Validates Schema Property has value
+        /// Validates that each property defined in a schema's properties dictionary has a non-null schema value.
+        /// When a property entry value is null, reports a validation error with a JSON pointer anchored under the properties segment.
         /// </summary>
         public static ValidationRule<IOpenApiSchema> ValidateSchemaPropertyHasValue =>
             new(nameof(ValidateSchemaPropertyHasValue),
