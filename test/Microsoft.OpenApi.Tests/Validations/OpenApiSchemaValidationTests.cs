@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json.Nodes;
 using Xunit;
 
@@ -608,6 +609,93 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.All(errors, e => Assert.Equal(nameof(OpenApiSchemaRules.ValidateSchemaPropertyHasValue), e.RuleName));
             Assert.Contains(errors, e => e.Pointer == "#/properties/first");
             Assert.Contains(errors, e => e.Pointer == "#/properties/second");
+        }
+
+        [Fact]
+        public void ValidateSchemaPropertyHasValueInDocumentComponentsShouldReportFullPointer()
+        {
+            // Arrange
+            var document = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test API", Version = "1.0.0" },
+                Components = new OpenApiComponents
+                {
+                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    {
+                        ["User"] = new OpenApiSchema
+                        {
+                            Type = JsonSchemaType.Object,
+                            Properties = new Dictionary<string, IOpenApiSchema>
+                            {
+                                ["nullProp"] = null!
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(document);
+
+            // Assert
+            var error = Assert.Single(validator.Errors);
+            Assert.Equal(nameof(OpenApiSchemaRules.ValidateSchemaPropertyHasValue), error.RuleName);
+            Assert.Equal("#/components/schemas/User/properties/nullProp", error.Pointer);
+        }
+
+        [Fact]
+        public void ValidateSchemaPropertyHasValueInOperationResponseShouldReportFullPointer()
+        {
+            // Arrange
+            var document = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test API", Version = "1.0.0" },
+                Paths = new OpenApiPaths
+                {
+                    ["/items"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<HttpMethod, OpenApiOperation>
+                        {
+                            [HttpMethod.Get] = new OpenApiOperation
+                            {
+                                Responses = new OpenApiResponses
+                                {
+                                    ["200"] = new OpenApiResponse
+                                    {
+                                        Description = "OK",
+                                        Content = new Dictionary<string, IOpenApiMediaType>
+                                        {
+                                            ["application/json"] = new OpenApiMediaType
+                                            {
+                                                Schema = new OpenApiSchema
+                                                {
+                                                    Type = JsonSchemaType.Object,
+                                                    Properties = new Dictionary<string, IOpenApiSchema>
+                                                    {
+                                                        ["missingSchema"] = null!
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(document);
+
+            // Assert
+            var error = Assert.Single(validator.Errors);
+            Assert.Equal(nameof(OpenApiSchemaRules.ValidateSchemaPropertyHasValue), error.RuleName);
+            Assert.Equal("#/paths/~1items/get/responses/200/content/application~1json/schema/properties/missingSchema", error.Pointer);
         }
 
         private static OpenApiSchema CreateSchemaChain(int depth, string discriminatorName)
