@@ -557,6 +557,31 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.Empty(validator.Errors);
         }
 
+        [Fact]
+        public void ValidateSchemaPropertyHasValueShouldReportErrorWithPropertiesPath()
+        {
+            // Arrange
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Object,
+                Properties = new Dictionary<string, IOpenApiSchema>
+                {
+                    ["id"] = new OpenApiSchema { Type = JsonSchemaType.Integer },
+                    ["name"] = null!
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk((IOpenApiSchema)schema);
+
+            // Assert
+            var error = Assert.Single(validator.Errors);
+            Assert.Equal(nameof(OpenApiSchemaRules.ValidateSchemaPropertyHasValue), error.RuleName);
+            Assert.Equal("#/properties/name", error.Pointer);
+        }
+
         private static OpenApiSchema CreateSchemaChain(int depth, string discriminatorName)
         {
             var root = new OpenApiSchema();
