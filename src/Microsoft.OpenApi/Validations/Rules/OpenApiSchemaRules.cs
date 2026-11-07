@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -28,12 +28,14 @@ namespace Microsoft.OpenApi
                         foreach (var property in schema.Properties
                                      .Where(entry => entry.Value is null))
                         {
+                            context.Enter(OpenApiConstants.Properties);
                             context.Enter(property.Key);
                             context.CreateError(nameof(ValidateSchemaPropertyHasValue),
                                 string.Format(SRResource.Validation_SchemaPropertyObjectRequired,
                                     schema is OpenApiSchemaReference { Reference: not null } schemaReference
                                         ? schemaReference.Reference.Id
                                         : string.Empty, property.Key));
+                            context.Exit();
                             context.Exit();
                         }
                     }
