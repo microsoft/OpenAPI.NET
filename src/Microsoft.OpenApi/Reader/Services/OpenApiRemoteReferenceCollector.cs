@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Microsoft.OpenApi.Reader
@@ -61,12 +62,9 @@ namespace Microsoft.OpenApi.Reader
                 {
                     children = OpenApiWorkspace.EnumerateChildren(current);
                 }
-                foreach (var child in children)
+                foreach (var child in children.Where(static child => child is not null))
                 {
-                    if (child is not null)
-                    {
-                        pending.Push(child);
-                    }
+                    pending.Push(child);
                 }
             }
         }
