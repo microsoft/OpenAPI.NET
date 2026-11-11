@@ -79,6 +79,7 @@ namespace Microsoft.OpenApi.Reader
             var (stream, format) = await RetrieveStreamAndFormatAsync(url, settings, token).ConfigureAwait(false);
             using (stream)
             {
+                // Relative file paths can return false/null; LoadStreamAsync derives the absolute URI from FileStream.Name.
                 Uri.TryCreate(url, UriKind.Absolute, out var sourceUri);
                 return await LoadStreamAsync(stream, format, settings, sourceUri, token).ConfigureAwait(false);
             }

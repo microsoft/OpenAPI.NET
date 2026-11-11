@@ -33,48 +33,15 @@ namespace Microsoft.OpenApi.Reader
             }
             var references = new List<IOpenApiReferenceHolder>();
             var pending = new Stack<(OpenApiDocument Document, int Depth, IEnumerator<BaseOpenApiReference> References)>();
-            RegisterDocument(document, 0);
+            RegisterDocument(document, 0, references, pending);
             try
             {
                 while (pending.Count > 0)
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    var frame = pending.Peek();
-                    if (!frame.References.MoveNext())
+                    if (!await LoadNextReferenceAsync(pending, documents, references, format, diagnostic, cancellationToken).ConfigureAwait(false))
                     {
-                        frame.References.Dispose();
-                        pending.Pop();
-                        continue;
+                        return false;
                     }
-
-                    var reference = frame.References.Current;
-                    var resource = reference.ExternalResource!;
-                    var uri = DefaultStreamLoader.ResolveUri(frame.Document.BaseUri, new Uri(resource, UriKind.RelativeOrAbsolute));
-                    if (!documents.TryGetValue(uri.AbsoluteUri, out var loadedDocument))
-                    {
-                        if (frame.Depth >= _maxDepth)
-                        {
-                            diagnostic.Errors.Add(new(reference.ReferenceV3,
-                                $"External reference depth limit {_maxDepth} exceeded while loading '{uri}' from '{frame.Document.BaseUri}'."));
-                            return false;
-                        }
-
-                        using var input = await _loader.LoadAsync(frame.Document.BaseUri, new Uri(resource, UriKind.RelativeOrAbsolute), cancellationToken).ConfigureAwait(false);
-                        var result = await OpenApiModelFactory.ReadDocumentAsync(input, format, uri, _readerSettings, cancellationToken).ConfigureAwait(false);
-                        if (result.Diagnostic is { } externalDiagnostic)
-                        {
-                            diagnostic.AppendDiagnostic(externalDiagnostic, uri.AbsoluteUri);
-                        }
-                        loadedDocument = result.Document;
-                        documents.Add(uri.AbsoluteUri, loadedDocument);
-                        if (loadedDocument is not null)
-                        {
-                            RegisterDocument(loadedDocument, frame.Depth + 1);
-                        }
-                    }
-
-                    _workspace.AddDocumentId(resource, loadedDocument?.BaseUri);
-                    _workspace.AddDocumentId(uri.AbsoluteUri, loadedDocument?.BaseUri);
                 }
 
                 return ValidateReferenceChains(references, documents, diagnostic, cancellationToken);
@@ -86,16 +53,68 @@ namespace Microsoft.OpenApi.Reader
                     frame.References.Dispose();
                 }
             }
+        }
 
-            void RegisterDocument(OpenApiDocument loaded, int depth)
+        private async Task<bool> LoadNextReferenceAsync(
+            Stack<(OpenApiDocument Document, int Depth, IEnumerator<BaseOpenApiReference> References)> pending,
+            Dictionary<string, OpenApiDocument?> documents,
+            List<IOpenApiReferenceHolder> references,
+            string format,
+            OpenApiDiagnostic diagnostic,
+            CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var frame = pending.Peek();
+            if (!frame.References.MoveNext())
             {
-                loaded.Workspace = _workspace;
-                _workspace.RegisterComponents(loaded);
-                var collector = new OpenApiRemoteReferenceCollector();
-                new OpenApiWalker(collector).Walk(loaded);
-                references.AddRange(collector.ReferenceHolders);
-                pending.Push((loaded, depth, collector.References.GetEnumerator()));
+                frame.References.Dispose();
+                pending.Pop();
+                return true;
             }
+
+            var reference = frame.References.Current;
+            var resource = reference.ExternalResource!;
+            var uri = DefaultStreamLoader.ResolveUri(frame.Document.BaseUri, new Uri(resource, UriKind.RelativeOrAbsolute));
+            if (!documents.TryGetValue(uri.AbsoluteUri, out var loadedDocument))
+            {
+                if (frame.Depth >= _maxDepth)
+                {
+                    diagnostic.Errors.Add(new(reference.ReferenceV3,
+                        $"External reference depth limit {_maxDepth} exceeded while loading '{uri}' from '{frame.Document.BaseUri}'."));
+                    return false;
+                }
+
+                using var input = await _loader.LoadAsync(frame.Document.BaseUri, new Uri(resource, UriKind.RelativeOrAbsolute), cancellationToken).ConfigureAwait(false);
+                var result = await OpenApiModelFactory.ReadDocumentAsync(input, format, uri, _readerSettings, cancellationToken).ConfigureAwait(false);
+                if (result.Diagnostic is { } externalDiagnostic)
+                {
+                    diagnostic.AppendDiagnostic(externalDiagnostic, uri.AbsoluteUri);
+                }
+                loadedDocument = result.Document;
+                documents.Add(uri.AbsoluteUri, loadedDocument);
+                if (loadedDocument is not null)
+                {
+                    RegisterDocument(loadedDocument, frame.Depth + 1, references, pending);
+                }
+            }
+
+            _workspace.AddDocumentId(resource, loadedDocument?.BaseUri);
+            _workspace.AddDocumentId(uri.AbsoluteUri, loadedDocument?.BaseUri);
+            return true;
+        }
+
+        private void RegisterDocument(
+            OpenApiDocument loaded,
+            int depth,
+            List<IOpenApiReferenceHolder> references,
+            Stack<(OpenApiDocument Document, int Depth, IEnumerator<BaseOpenApiReference> References)> pending)
+        {
+            loaded.Workspace = _workspace;
+            _workspace.RegisterComponents(loaded);
+            var collector = new OpenApiRemoteReferenceCollector();
+            new OpenApiWalker(collector).Walk(loaded);
+            references.AddRange(collector.ReferenceHolders);
+            pending.Push((loaded, depth, collector.References.GetEnumerator()));
         }
 
         private static bool ValidateReferenceChains(List<IOpenApiReferenceHolder> references, Dictionary<string, OpenApiDocument?> documents, OpenApiDiagnostic diagnostic, CancellationToken cancellationToken)
@@ -103,62 +122,76 @@ namespace Microsoft.OpenApi.Reader
             var completed = new HashSet<IOpenApiReferenceHolder>(ReferenceIdentityComparer.Instance);
             foreach (var start in references)
             {
-                var path = new Dictionary<IOpenApiReferenceHolder, int>(ReferenceIdentityComparer.Instance);
-                var chain = new List<BaseOpenApiReference>();
-                IOpenApiReferenceHolder? current = start;
-                while (current is not null && !completed.Contains(current))
+                if (!ValidateReferenceChain(start, completed, documents, diagnostic, cancellationToken))
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    var reference = OpenApiRemoteReferenceCollector.GetReference(current);
-                    if (current is OpenApiSchemaReference schema && !schema.Reference.IsReferenceOnly)
-                    {
-                        break;
-                    }
-                    if (reference.IsExternal && reference.HostDocument is { } host)
-                    {
-                        var location = DefaultStreamLoader.ResolveUri(host.BaseUri, new Uri(reference.ExternalResource!, UriKind.RelativeOrAbsolute));
-                        if (!documents.TryGetValue(location.AbsoluteUri, out var loaded) || loaded is null)
-                        {
-                            break;
-                        }
-                    }
-                    if (path.TryGetValue(current, out var cycleStart))
-                    {
-                        if (chain.Skip(cycleStart).Any(static item => item.IsExternal))
-                        {
-                            diagnostic.Errors.Add(new(reference.ReferenceV3,
-                                $"Circular external reference-only chain detected: {string.Join(" -> ", chain.Select(static item => $"{item.HostDocument?.BaseUri}: {item.ReferenceV3}"))}."));
-                            return false;
-                        }
-                        break;
-                    }
-
-                    path.Add(current, chain.Count);
-                    chain.Add(reference);
-                    IOpenApiReferenceable? target;
-                    try
-                    {
-                        target = reference.HostDocument?.ResolveReference(reference, reference.IsExternal, null);
-                        if (target is null && current is IOpenApiSchema parentSchema)
-                        {
-                            target = reference.HostDocument?.ResolveReference(reference, reference.IsExternal, parentSchema);
-                        }
-                    }
-                    catch (Exception ex) when (ex is InvalidOperationException ||
-                        (ex is IndexOutOfRangeException or ArgumentOutOfRangeException) && chain.Any(static item => item.IsExternal))
-                    {
-                        if (chain.Any(static item => item.IsExternal))
-                        {
-                            diagnostic.Errors.Add(new(reference.ReferenceV3,
-                                $"Could not resolve external reference chain from '{chain[0].HostDocument?.BaseUri}' ({chain[0].ReferenceV3}): {ex.Message}"));
-                            return false;
-                        }
-                        break;
-                    }
-                    current = target as IOpenApiReferenceHolder;
+                    return false;
                 }
-                completed.UnionWith(path.Keys);
             }
+            return true;
+        }
+
+        private static bool ValidateReferenceChain(
+            IOpenApiReferenceHolder start,
+            HashSet<IOpenApiReferenceHolder> completed,
+            Dictionary<string, OpenApiDocument?> documents,
+            OpenApiDiagnostic diagnostic,
+            CancellationToken cancellationToken)
+        {
+            var path = new Dictionary<IOpenApiReferenceHolder, int>(ReferenceIdentityComparer.Instance);
+            var chain = new List<BaseOpenApiReference>();
+            IOpenApiReferenceHolder? current = start;
+            while (current is not null && !completed.Contains(current))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var reference = OpenApiRemoteReferenceCollector.GetReference(current);
+                if (current is OpenApiSchemaReference schema && !schema.Reference.IsReferenceOnly)
+                {
+                    break;
+                }
+                if (reference.IsExternal && reference.HostDocument is { } host)
+                {
+                    var location = DefaultStreamLoader.ResolveUri(host.BaseUri, new Uri(reference.ExternalResource!, UriKind.RelativeOrAbsolute));
+                    if (!documents.TryGetValue(location.AbsoluteUri, out var loaded) || loaded is null)
+                    {
+                        break;
+                    }
+                }
+                if (path.TryGetValue(current, out var cycleStart))
+                {
+                    if (chain.Skip(cycleStart).Any(static item => item.IsExternal))
+                    {
+                        diagnostic.Errors.Add(new(reference.ReferenceV3,
+                            $"Circular external reference-only chain detected: {string.Join(" -> ", chain.Select(static item => $"{item.HostDocument?.BaseUri}: {item.ReferenceV3}"))}."));
+                        return false;
+                    }
+                    break;
+                }
+
+                path.Add(current, chain.Count);
+                chain.Add(reference);
+                IOpenApiReferenceable? target;
+                try
+                {
+                    target = reference.HostDocument?.ResolveReference(reference, reference.IsExternal, null);
+                    if (target is null && current is IOpenApiSchema parentSchema)
+                    {
+                        target = reference.HostDocument?.ResolveReference(reference, reference.IsExternal, parentSchema);
+                    }
+                }
+                catch (Exception ex) when (ex is InvalidOperationException ||
+                    (ex is IndexOutOfRangeException or ArgumentOutOfRangeException) && chain.Any(static item => item.IsExternal))
+                {
+                    if (chain.Any(static item => item.IsExternal))
+                    {
+                        diagnostic.Errors.Add(new(reference.ReferenceV3,
+                            $"Could not resolve external reference chain from '{chain[0].HostDocument?.BaseUri}' ({chain[0].ReferenceV3}): {ex.Message}"));
+                        return false;
+                    }
+                    break;
+                }
+                current = target as IOpenApiReferenceHolder;
+            }
+            completed.UnionWith(path.Keys);
             return true;
         }
 
