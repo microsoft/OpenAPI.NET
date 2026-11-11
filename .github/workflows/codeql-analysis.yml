@@ -34,7 +34,7 @@ jobs:
 
       - name: Initialize CodeQL
         id: init_codeql
-        uses: github/codeql-action/init@1fc58d04a4d4374f921bdac573c3811c240f9c26 # v4.39.2
+        uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
         with:
           queries: security-and-quality
 
@@ -53,6 +53,6 @@ jobs:
 
       - name: Perform CodeQL Analysis
         id: analyze_codeql
-        uses: github/codeql-action/analyze@1fc58d04a4d4374f921bdac573c3811c240f9c26 # v4.39.2
+        uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
 
 # Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)
