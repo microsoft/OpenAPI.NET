@@ -28,21 +28,22 @@ namespace Microsoft.OpenApi
             }
             set
             {
-                if (value is null)
-                {
-                    _tags = null;
-                    return;
-                }
-                _tags = value switch
-                {
-                    HashSet<OpenApiTagReference> tags when !ReferenceEquals(tags.Comparer, EqualityComparer<OpenApiTagReference>.Default) => value,
-                    SortedSet<OpenApiTagReference> => value,
-#if NET
-                    ImmutableSortedSet<OpenApiTagReference> => value,
-#endif
-                    _ => new HashSet<OpenApiTagReference>(value, OpenApiTagComparer.Instance),
-                };
+                _tags = CopyTags(value);
             }
+        }
+
+        private static ISet<OpenApiTagReference>? CopyTags(ISet<OpenApiTagReference>? tags, bool copy = false)
+        {
+            return tags switch
+            {
+                null => null,
+                HashSet<OpenApiTagReference> hashSet when !ReferenceEquals(hashSet.Comparer, EqualityComparer<OpenApiTagReference>.Default) => copy ? new HashSet<OpenApiTagReference>(hashSet, hashSet.Comparer) : hashSet,
+                SortedSet<OpenApiTagReference> sorted => copy ? new SortedSet<OpenApiTagReference>(sorted, sorted.Comparer) : sorted,
+#if NET
+                ImmutableSortedSet<OpenApiTagReference> => tags,
+#endif
+                _ => new HashSet<OpenApiTagReference>(tags, OpenApiTagComparer.Instance),
+            };
         }
 
         /// <summary>
@@ -139,7 +140,7 @@ namespace Microsoft.OpenApi
         public OpenApiOperation(OpenApiOperation operation)
         {
             Utils.CheckArgumentNull(operation);
-            Tags = operation.Tags != null ? new HashSet<OpenApiTagReference>(operation.Tags) : null;
+            Tags = CopyTags(operation.Tags, copy: true);
             Summary = operation.Summary ?? Summary;
             Description = operation.Description ?? Description;
             ExternalDocs = operation.ExternalDocs != null ? new(operation.ExternalDocs) : null;

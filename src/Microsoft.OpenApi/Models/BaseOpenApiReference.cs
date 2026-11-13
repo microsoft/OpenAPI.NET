@@ -322,7 +322,7 @@ namespace Microsoft.OpenApi
             // noop for the base type
         }
 
-        internal void SetJsonPointerPath(string pointer, string nodeLocation)
+        internal void SetJsonPointerPath(string pointer, ParsingContext context)
         {
             // Relative reference to internal JSON schema node/resource (e.g. "#/properties/b")
 #if NETSTANDARD2_1 || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
@@ -331,7 +331,7 @@ namespace Microsoft.OpenApi
             if (pointer.StartsWith("#/", StringComparison.OrdinalIgnoreCase) && !pointer.ToLowerInvariant().Contains("/components/schemas"))
 #endif
             {
-                ReferenceV3 = ResolveRelativePointer(nodeLocation, pointer);
+                ReferenceV3 = ResolveRelativePointer(context.GetLocation(), pointer);
             }
 
             // Absolute reference, anchor, or relative pointer (e.g. "#/components/schemas/...", full URL, or "schemas/uuid.schema.json")
