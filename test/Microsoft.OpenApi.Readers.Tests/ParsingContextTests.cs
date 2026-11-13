@@ -122,6 +122,8 @@ namespace Microsoft.OpenApi.Tests
         [InlineData(OpenApiSpecVersion.OpenApi3_0, true)]
         [InlineData(OpenApiSpecVersion.OpenApi3_1, false)]
         [InlineData(OpenApiSpecVersion.OpenApi3_1, true)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_2, false)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_2, true)]
         public void ParseFragment_WithNamedExamples_RestoresLocation(OpenApiSpecVersion version, bool isParameter)
         {
             var context = CreateContext();
@@ -154,6 +156,8 @@ namespace Microsoft.OpenApi.Tests
         [InlineData(OpenApiSpecVersion.OpenApi3_0, true)]
         [InlineData(OpenApiSpecVersion.OpenApi3_1, false)]
         [InlineData(OpenApiSpecVersion.OpenApi3_1, true)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_2, false)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_2, true)]
         public void ParseFragment_WhenNamedExampleThrows_RestoresLocation(OpenApiSpecVersion version, bool isParameter)
         {
             var context = CreateContext();
@@ -186,6 +190,8 @@ namespace Microsoft.OpenApi.Tests
         [InlineData(OpenApiSpecVersion.OpenApi3_0, true)]
         [InlineData(OpenApiSpecVersion.OpenApi3_1, false)]
         [InlineData(OpenApiSpecVersion.OpenApi3_1, true)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_2, false)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_2, true)]
         public void ParseFragment_WhenNamedExampleReportsError_PreservesExampleLocation(OpenApiSpecVersion version, bool isParameter)
         {
             var context = CreateContext();
