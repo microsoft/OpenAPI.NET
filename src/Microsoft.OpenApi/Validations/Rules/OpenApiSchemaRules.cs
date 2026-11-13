@@ -26,10 +26,10 @@ namespace Microsoft.OpenApi
                 {
                     if (schema.Properties is not null)
                     {
+                        context.Enter(OpenApiConstants.Properties);
                         foreach (var property in schema.Properties
                                      .Where(entry => entry.Value is null))
                         {
-                            context.Enter(OpenApiConstants.Properties);
                             context.Enter(property.Key);
                             context.CreateError(nameof(ValidateSchemaPropertyHasValue),
                                 string.Format(SRResource.Validation_SchemaPropertyObjectRequired,
@@ -37,8 +37,8 @@ namespace Microsoft.OpenApi
                                         ? schemaReference.Reference.Id
                                         : string.Empty, property.Key));
                             context.Exit();
-                            context.Exit();
                         }
+                        context.Exit();
                     }
                 });
         
