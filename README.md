@@ -84,6 +84,23 @@ var (openApiDocument, _) = await OpenApiDocument.LoadAsync("https://raw.githubus
 var outputString = await openApiDocument.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 ```
 
+## JSON Schema dialects
+
+For OpenAPI 3.1 and 3.2, the reader selects a schema's dialect from its explicit `$schema`, its enclosing schema's dialect, the document's `jsonSchemaDialect`, or the OpenAPI default, in that order. The OpenAPI base dialect and JSON Schema draft 2020-12 use the existing version-specific schema readers. Unrecognized keywords remain available through `UnrecognizedKeywords`; unsupported dialects produce a diagnostic without discarding the schema.
+
+External dialect resolution is opt-in through asynchronous loading:
+
+```C#
+var result = await OpenApiDocument.LoadAsync(stream, OpenApiConstants.Json,
+    new OpenApiReaderSettings { LoadExternalRefs = true });
+```
+
+This also enables ordinary external references. For an unknown dialect, the reader follows its meta-schema's `$schema` chain to a supported dialect using `CustomExternalLoader` or the default HTTP/file loader. Resolution is cached per document read, detects cycles, and is limited to 16 parent links per chain (including cached links) and 1 MiB per response. Cancellation is passed to the configured loader and stream reads. Failed or unsupported chains retain their diagnostic.
+
+Non-empty dialect URI fragments select a JSON Pointer target or a schema named by `$anchor` or `$dynamicAnchor` within the loaded resource. Fragment lookup traverses recognized schema locations only; missing or ambiguous targets and locations defined by unknown custom vocabularies retain the unsupported-dialect diagnostic. Named-anchor lookup stops at nested non-empty `$id` declarations; it does not build an embedded-resource index.
+
+This does not add parsers for other JSON Schema drafts or custom vocabularies. Writing still follows the requested OpenAPI output version rather than dispatching on the schema dialect.
+
 # Validating/Testing OpenAPI descriptions
 [Microsoft.OpenApi.Hidi](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi) is a command line tool for validating and transforming OpenAPI descriptions.
 The OpenAPI.NET v3-compatible tool is maintained in [OpenAPI.NET.OData's main branch](https://github.com/microsoft/OpenAPI.NET.OData/tree/main/src/Microsoft.OpenApi.Hidi).

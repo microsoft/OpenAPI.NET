@@ -29,6 +29,17 @@ internal abstract class BaseOpenApiVersionService : IOpenApiVersionService
         }
         return default;
     }
+
+    public virtual IOpenApiSchema LoadSchema(JsonNode node, OpenApiDocument doc, ParsingContext context)
+    {
+        if (Loaders.TryGetValue(typeof(OpenApiSchema), out var loader) && loader(node, doc, context) is IOpenApiSchema schema)
+        {
+            return schema;
+        }
+
+        throw new InvalidOperationException($"No schema loader is registered for {GetType().Name}.");
+    }
+
     public virtual string? GetReferenceScalarValues(JsonObject jsonObject, string scalarValue)
     {
         if (jsonObject.Any(static x => !"$ref".Equals(x.Key, StringComparison.OrdinalIgnoreCase)) &&

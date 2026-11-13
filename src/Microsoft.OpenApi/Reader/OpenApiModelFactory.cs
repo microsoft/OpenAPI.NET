@@ -2,9 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security;
 using System.Text;
 using System.Threading;
@@ -253,6 +255,7 @@ namespace Microsoft.OpenApi.Reader
 
             if (settings.LoadExternalRefs)
             {
+                await ResolveJsonSchemaDialectsAsync(readResult, location, settings, cancellationToken).ConfigureAwait(false);
                 var diagnosticExternalRefs = await LoadExternalRefsAsync(readResult.Document, settings, format, cancellationToken).ConfigureAwait(false);
                 // Merge diagnostics of external reference
                 if (diagnosticExternalRefs != null)
@@ -262,7 +265,53 @@ namespace Microsoft.OpenApi.Reader
                 }
             }
 
+            readResult.UnsupportedSchemaDialects = null;
+            readResult.UnsupportedSchemaDialectErrors = null;
+
             return readResult;
+        }
+
+        private static async Task ResolveJsonSchemaDialectsAsync(
+            ReadResult readResult,
+            Uri location,
+            OpenApiReaderSettings settings,
+            CancellationToken cancellationToken)
+        {
+            if (readResult.Document is null ||
+                readResult.Diagnostic is null ||
+                readResult.UnsupportedSchemaDialectErrors is null ||
+                readResult.UnsupportedSchemaDialects is not { Count: > 0 } unsupportedDialects)
+            {
+                return;
+            }
+
+            var loader = settings.CustomExternalLoader ?? new DefaultStreamLoader(settings.HttpClient);
+            var resolver = new JsonSchemaDialectResolver(loader, location);
+            var dialectMappings = await resolver.ResolveAsync(unsupportedDialects, cancellationToken).ConfigureAwait(false);
+            // Both supported dialects use the current OpenAPI version service, which is also
+            // the fallback used during parsing. Resolving an alias therefore only removes its
+            // unsupported-dialect errors; reparsing would rerun callbacks and replace custom readers' results.
+            // Dialects requiring different parsing rules will need a different resolution approach.
+            var resolvedErrors = new HashSet<OpenApiError>(readResult.UnsupportedSchemaDialectErrors
+                .Where(item => dialectMappings.ContainsKey(item.Dialect))
+                .Select(item => item.Error), DiagnosticReferenceEqualityComparer.Instance);
+            if (resolvedErrors.Count > 0)
+            {
+                readResult.Diagnostic.Errors = readResult.Diagnostic.Errors
+                    .Where(error => !resolvedErrors.Contains(error))
+                    .ToList();
+            }
+        }
+
+        private sealed class DiagnosticReferenceEqualityComparer : IEqualityComparer<OpenApiError>
+        {
+            internal static DiagnosticReferenceEqualityComparer Instance { get; } = new();
+
+            public bool Equals(OpenApiError? x, OpenApiError? y)
+                => ReferenceEquals(x, y);
+
+            public int GetHashCode(OpenApiError obj)
+                => RuntimeHelpers.GetHashCode(obj);
         }
 
         private static async Task<OpenApiDiagnostic> LoadExternalRefsAsync(OpenApiDocument? document, OpenApiReaderSettings settings, string? format = null, CancellationToken token = default)

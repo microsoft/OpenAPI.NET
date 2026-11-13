@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
-using System.Text.Json.Nodes;
+using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
-using System;
 
 namespace Microsoft.OpenApi.Reader
 {
@@ -108,6 +108,12 @@ namespace Microsoft.OpenApi.Reader
             {
                 Document = document,
                 Diagnostic = diagnostic,
+                UnsupportedSchemaDialects = settings.LoadExternalRefs
+                    ? context.SchemaDialectService?.UnsupportedDialects.ToArray()
+                    : null,
+                UnsupportedSchemaDialectErrors = settings.LoadExternalRefs
+                    ? context.SchemaDialectService?.UnsupportedDialectErrors.ToArray()
+                    : null,
             };
         }
 

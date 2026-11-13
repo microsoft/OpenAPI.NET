@@ -28,11 +28,30 @@ namespace Microsoft.OpenApi.Reader
                 throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", context);
             }
 
-            return jsonArray
-                .OfType<JsonObject>()
-                .Select(n => map(n, hostDocument, context))
-                .Where(static i => i != null)
-                .ToList();
+            var list = new List<T>();
+            for (var index = 0; index < jsonArray.Count; index++)
+            {
+                if (jsonArray[index] is not JsonObject jsonObject)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    context.StartObject(index.ToString(CultureInfo.InvariantCulture));
+                    var value = map(jsonObject, hostDocument, context);
+                    if (value != null)
+                    {
+                        list.Add(value);
+                    }
+                }
+                finally
+                {
+                    context.EndObject();
+                }
+            }
+
+            return list;
         }
 
         public static List<JsonNode> CreateListOfAny(this JsonNode? node, ParsingContext context)
@@ -102,7 +121,7 @@ namespace Microsoft.OpenApi.Reader
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
-        public static Dictionary<string, T> CreateSimpleMap<T>(this JsonNode? node, Func<JsonNode, T> map, ParsingContext context)
+        public static Dictionary<string, T> CreateSimpleMap<T>(this JsonNode? node, Func<JsonNode, T> map, ParsingContext context, bool reportConversionErrors = false)
         {
             if (node is not JsonObject jsonMap)
             {
@@ -120,6 +139,10 @@ namespace Microsoft.OpenApi.Reader
                         : throw new OpenApiReaderException($"Expected scalar while parsing {typeof(T).Name}", context);
 
                     return (key, value: map(jsonNode));
+                }
+                catch (Exception exception) when (reportConversionErrors && exception is FormatException or OverflowException)
+                {
+                    throw new OpenApiReaderException(exception.Message, exception) { Pointer = context.GetLocation() };
                 }
                 finally
                 {
@@ -161,8 +184,18 @@ namespace Microsoft.OpenApi.Reader
             return nodes.ToDictionary(kvp => kvp.key, kvp => kvp.values);
         }
 
-        public static string? GetScalarValue(this JsonNode? node)
+        public static string? GetScalarValue(this JsonNode? node, bool requireString = false)
         {
+            if (requireString)
+            {
+                if (!TryGetStringValue(node, out var stringValue))
+                {
+                    throw new OpenApiException("Expected string value.");
+                }
+
+                return stringValue;
+            }
+
             if (node.IsJsonNullSentinel())
             {
                 return null;
@@ -176,6 +209,47 @@ namespace Microsoft.OpenApi.Reader
         public static string? GetReferencePointer(this JsonObject jsonObject)
         {
             return jsonObject.TryGetPropertyValue("$ref", out var refNode) ? refNode?.GetScalarValue() : null;
+        }
+
+        public static string? GetReferencePointer(this JsonObject jsonObject, ParsingContext context, bool preserveInvalidProperties = false)
+        {
+            if (!preserveInvalidProperties)
+            {
+                return jsonObject.GetReferencePointer();
+            }
+
+            if (!jsonObject.TryGetPropertyValue(OpenApiConstants.DollarRef, out var refNode))
+            {
+                return null;
+            }
+
+            try
+            {
+                var pointer = refNode.GetScalarValue(requireString: true);
+                if (pointer is not null)
+                {
+                    ValidateReferencePointerFormat(pointer);
+                }
+
+                return pointer;
+            }
+            catch (OpenApiException exception)
+            {
+                // $ref is consumed before ParseMap, so recover only this keyword's
+                // extraction/format failure and let the ordinary map retain its raw value.
+                try
+                {
+                    context.StartObject(OpenApiConstants.DollarRef);
+                    exception.Pointer = context.GetLocation();
+                    context.Diagnostic.Errors.Add(new(exception));
+                }
+                finally
+                {
+                    context.EndObject();
+                }
+
+                return null;
+            }
         }
 
         public static void ValidateReferencePointerFormat(string pointer)
@@ -194,11 +268,13 @@ namespace Microsoft.OpenApi.Reader
         /// Returns the value of $dynamicRef if $ref is absent. Used to create a schema reference
         /// for bare $dynamicRef schemas (no $ref) so they participate in reference resolution.
         /// </summary>
-        public static string? GetDynamicReferencePointer(this JsonObject jsonObject)
+        public static string? GetDynamicReferencePointer(this JsonObject jsonObject, bool preserveInvalidProperties = false)
         {
             if (jsonObject.TryGetPropertyValue("$ref", out _))
                 return null;
-            return jsonObject.TryGetPropertyValue("$dynamicRef", out var dynRefNode) ? dynRefNode?.GetScalarValue() : null;
+            return jsonObject.TryGetPropertyValue("$dynamicRef", out var dynRefNode)
+                ? GetSchemaKeywordValue(dynRefNode, preserveInvalidProperties)
+                : null;
         }
 
         /// <summary>
@@ -236,9 +312,26 @@ namespace Microsoft.OpenApi.Reader
             return hashIndex > 0 ? dynamicRef.Substring(0, hashIndex) : null;
         }
 
-        public static string? GetJsonSchemaIdentifier(this JsonObject jsonObject)
+        public static string? GetJsonSchemaIdentifier(this JsonObject jsonObject, bool preserveInvalidProperties = false)
         {
-            return jsonObject.TryGetPropertyValue("$id", out var idNode) ? idNode?.GetScalarValue() : null;
+            return jsonObject.TryGetPropertyValue("$id", out var idNode)
+                ? GetSchemaKeywordValue(idNode, preserveInvalidProperties)
+                : null;
+        }
+
+        private static string? GetSchemaKeywordValue(JsonNode? node, bool preserveInvalidProperties)
+        {
+            // The fixed-field handler reports invalid values during ParseMap. Do not
+            // interpret them as a reference or identifier before that handler can run.
+            return preserveInvalidProperties
+                ? TryGetStringValue(node, out var value) ? value : null
+                : node?.GetScalarValue();
+        }
+
+        private static bool TryGetStringValue(JsonNode? node, out string? value)
+        {
+            value = null;
+            return !node.IsJsonNullSentinel() && node is JsonValue jsonValue && jsonValue.TryGetValue(out value);
         }
 
         public static void ParseMap<T>(
@@ -248,7 +341,8 @@ namespace Microsoft.OpenApi.Reader
             PatternFieldMap<T> patternFieldMap,
             OpenApiDocument hostDocument,
             ParsingContext context,
-            Action<T, string, JsonNode>? unrecognizedProperty = null)
+            Action<T, string, JsonNode>? unrecognizedProperty = null,
+            bool preserveInvalidProperties = false)
         {
             if (JsonObject == null)
             {
@@ -257,7 +351,7 @@ namespace Microsoft.OpenApi.Reader
 
             foreach (var propertyNode in JsonObject)
             {
-                ParseField(propertyNode.Key, propertyNode.Value ?? JsonNullSentinel.JsonNull, domainObject, fixedFieldMap, patternFieldMap, hostDocument, context, unrecognizedProperty);
+                ParseField(propertyNode.Key, propertyNode.Value ?? JsonNullSentinel.JsonNull, domainObject, fixedFieldMap, patternFieldMap, hostDocument, context, unrecognizedProperty, preserveInvalidProperties);
             }
         }
 
@@ -269,7 +363,8 @@ namespace Microsoft.OpenApi.Reader
             PatternFieldMap<T> patternFields,
             OpenApiDocument hostDocument,
             ParsingContext context,
-            Action<T, string, JsonNode>? unrecognizedProperty)
+            Action<T, string, JsonNode>? unrecognizedProperty,
+            bool preserveInvalidProperties)
         {
             if (fixedFields.TryGetValue(name, out var fixedFieldMap))
             {
@@ -281,11 +376,26 @@ namespace Microsoft.OpenApi.Reader
                 catch (OpenApiReaderException ex)
                 {
                     context.Diagnostic.Errors.Add(new(ex));
+                    if (preserveInvalidProperties)
+                    {
+                        unrecognizedProperty?.Invoke(parentInstance, name, value);
+                    }
                 }
                 catch (OpenApiException ex)
                 {
                     ex.Pointer = context.GetLocation();
                     context.Diagnostic.Errors.Add(new(ex));
+                    if (preserveInvalidProperties)
+                    {
+                        unrecognizedProperty?.Invoke(parentInstance, name, value);
+                    }
+                }
+                catch (Exception ex) when (preserveInvalidProperties && unrecognizedProperty is not null && value is JsonValue &&
+                                           ex is FormatException or OverflowException)
+                {
+                    // Scalar conversions belong to this field; nested schemas can use a different dialect.
+                    context.Diagnostic.Errors.Add(new OpenApiError(context.GetLocation(), ex.Message));
+                    unrecognizedProperty(parentInstance, name, value);
                 }
                 finally
                 {
@@ -305,11 +415,19 @@ namespace Microsoft.OpenApi.Reader
                     catch (OpenApiReaderException ex)
                     {
                         context.Diagnostic.Errors.Add(new(ex));
+                        if (preserveInvalidProperties)
+                        {
+                            unrecognizedProperty?.Invoke(parentInstance, name, value);
+                        }
                     }
                     catch (OpenApiException ex)
                     {
                         ex.Pointer = context.GetLocation();
                         context.Diagnostic.Errors.Add(new(ex));
+                        if (preserveInvalidProperties)
+                        {
+                            unrecognizedProperty?.Invoke(parentInstance, name, value);
+                        }
                     }
                     finally
                     {
