@@ -398,7 +398,7 @@ namespace Microsoft.OpenApi.Reader.V3
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
-                result.Reference.SetJsonPointerPath(pointer, context.GetLocation());
+                result.Reference.SetJsonPointerPath(pointer, context);
                 return result;
             }
 

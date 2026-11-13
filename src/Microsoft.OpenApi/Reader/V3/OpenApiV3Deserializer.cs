@@ -75,14 +75,26 @@ namespace Microsoft.OpenApi.Reader.V3
                         foreach (var propertyMapElement in mapElements)
                         {
                             context.StartObject(propertyMapElement.Key);
-
-                            if (propertyMapElement.Value != null)
+                            try
                             {
-                                var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
-                                if (any is not null)
+                                if (propertyMapElement.Value != null)
                                 {
-                                    anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, any);
+                                    var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
+                                    if (any is not null)
+                                    {
+                                        anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, any);
+                                    }
                                 }
+                            }
+                            catch (OpenApiException exception)
+                            {
+                                exception.Pointer = context.GetLocation();
+                                context.Diagnostic.Errors.Add(new(exception));
+                                break;
+                            }
+                            finally
+                            {
+                                context.EndObject();
                             }
                         }
                     }                    
