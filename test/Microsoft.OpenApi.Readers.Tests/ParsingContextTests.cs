@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Reader;
 using Xunit;
 
@@ -113,6 +115,114 @@ namespace Microsoft.OpenApi.Tests
             var location = context.GetLocation();
 
             Assert.Equal("#/content/application~1json/schema", location);
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, false)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, true)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1, false)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1, true)]
+        public void ParseFragment_WithNamedExamples_RestoresLocation(OpenApiSpecVersion version, bool isParameter)
+        {
+            var context = CreateContext();
+            context.StartObject("parent");
+            var node = JsonNode.Parse("""
+                {
+                  "examples": {
+                    "empty": {},
+                    "populated": { "value": "hello" }
+                  }
+                }
+                """);
+            Assert.NotNull(node);
+            var document = new OpenApiDocument();
+
+            if (isParameter)
+            {
+                Assert.NotNull(context.ParseFragment<OpenApiParameter>(node, version, document));
+            }
+            else
+            {
+                Assert.NotNull(context.ParseFragment<OpenApiMediaType>(node, version, document));
+            }
+
+            Assert.Equal("#/parent", context.GetLocation());
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, false)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, true)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1, false)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1, true)]
+        public void ParseFragment_WhenNamedExampleThrows_RestoresLocation(OpenApiSpecVersion version, bool isParameter)
+        {
+            var context = CreateContext();
+            context.StartObject("parent");
+            var document = new OpenApiDocument();
+            document.AddComponent("cycle", new OpenApiExampleReference("cycle", document));
+            var node = JsonNode.Parse("""
+                {
+                  "examples": {
+                    "cycle": { "$ref": "#/components/examples/cycle" }
+                  }
+                }
+                """);
+            Assert.NotNull(node);
+
+            if (isParameter)
+            {
+                Assert.Throws<InvalidOperationException>(() => context.ParseFragment<OpenApiParameter>(node, version, document));
+            }
+            else
+            {
+                Assert.Throws<InvalidOperationException>(() => context.ParseFragment<OpenApiMediaType>(node, version, document));
+            }
+
+            Assert.Equal("#/parent", context.GetLocation());
+        }
+
+        [Theory]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, false)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, true)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1, false)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_1, true)]
+        public void ParseFragment_WhenNamedExampleReportsError_PreservesExampleLocation(OpenApiSpecVersion version, bool isParameter)
+        {
+            var context = CreateContext();
+            context.StartObject("parent");
+            var document = new OpenApiDocument();
+            document.AddComponent("unreadable", new UnreadableExampleReference());
+            var node = JsonNode.Parse("""
+                {
+                  "examples": {
+                    "unreadable": { "$ref": "#/components/examples/unreadable" }
+                  }
+                }
+                """);
+            Assert.NotNull(node);
+
+            if (isParameter)
+            {
+                Assert.NotNull(context.ParseFragment<OpenApiParameter>(node, version, document));
+            }
+            else
+            {
+                Assert.NotNull(context.ParseFragment<OpenApiMediaType>(node, version, document));
+            }
+
+            var error = Assert.Single(context.Diagnostic.Errors);
+            Assert.Equal("Cannot read example.", error.Message);
+            Assert.Equal("#/parent/examples/unreadable", error.Pointer);
+            Assert.Equal("#/parent", context.GetLocation());
+        }
+
+        private sealed class UnreadableExampleReference : OpenApiExampleReference
+        {
+            public UnreadableExampleReference() : base("unreadable")
+            {
+            }
+
+            public override IOpenApiExample Target => throw new OpenApiException("Cannot read example.");
         }
     }
 }
