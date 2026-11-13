@@ -1439,7 +1439,7 @@ public class OpenApiDynamicRefTests
         doc.Workspace.RegisterComponents(doc);
 
         var nextRef = Assert.IsType<OpenApiSchemaReference>(tree.Properties["next"]);
-        nextRef.Reference.SetJsonPointerPath("#node", "#/components/schemas/Tree/properties/next");
+        nextRef.Reference.SetJsonPointerPath("#node", new ParsingContext(new()));
         Assert.True(nextRef.Reference.IsDynamicRefOnly);
         Assert.NotNull(nextRef.Target);
         Assert.Same(tree, nextRef.Target);
