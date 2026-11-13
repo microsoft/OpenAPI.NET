@@ -75,6 +75,12 @@ namespace Microsoft.OpenApi.Reader
             var reference = frame.References.Current;
             var resource = reference.ExternalResource!;
             var uri = DefaultStreamLoader.ResolveUri(frame.Document.BaseUri, new Uri(resource, UriKind.RelativeOrAbsolute));
+            if (_workspace.Contains(uri.AbsoluteUri))
+            {
+                _workspace.AddDocumentId(resource, uri);
+                _workspace.AddDocumentId(uri.AbsoluteUri, uri);
+                return true;
+            }
             if (!documents.TryGetValue(uri.AbsoluteUri, out var loadedDocument))
             {
                 if (frame.Depth >= _maxDepth)
@@ -172,14 +178,15 @@ namespace Microsoft.OpenApi.Reader
                 IOpenApiReferenceable? target;
                 try
                 {
-                    target = reference.HostDocument?.ResolveReference(reference, reference.IsExternal, null);
+                    target = current is OpenApiTagReference tag
+                        ? tag.Target
+                        : reference.HostDocument?.ResolveReference(reference, reference.IsExternal, null);
                     if (target is null && current is IOpenApiSchema parentSchema)
                     {
                         target = reference.HostDocument?.ResolveReference(reference, reference.IsExternal, parentSchema);
                     }
                 }
-                catch (Exception ex) when (ex is InvalidOperationException ||
-                    (ex is IndexOutOfRangeException or ArgumentOutOfRangeException) && chain.Any(static item => item.IsExternal))
+                catch (Exception ex) when (ex is InvalidOperationException or IndexOutOfRangeException or ArgumentOutOfRangeException)
                 {
                     if (chain.Any(static item => item.IsExternal))
                     {

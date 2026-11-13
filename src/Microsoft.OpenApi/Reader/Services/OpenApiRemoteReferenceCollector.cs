@@ -53,14 +53,28 @@ namespace Microsoft.OpenApi.Reader
                 }
 
                 IEnumerable<IOpenApiSchema> children;
+                OpenApiDiscriminator? discriminator;
                 if (current is OpenApiSchemaReference reference)
                 {
                     AddReference(reference);
                     children = OpenApiWorkspace.EnumerateChildren(reference.Reference);
+                    discriminator = reference.Reference.Discriminator;
                 }
                 else
                 {
                     children = OpenApiWorkspace.EnumerateChildren(current);
+                    discriminator = current.Discriminator;
+                }
+                if (discriminator?.Mapping is { } mapping)
+                {
+                    foreach (var mappedSchema in mapping.Values)
+                    {
+                        pending.Push(mappedSchema);
+                    }
+                }
+                if (discriminator?.DefaultMapping is { } defaultMapping)
+                {
+                    pending.Push(defaultMapping);
                 }
                 foreach (var child in children.Where(static child => child is not null))
                 {

@@ -348,6 +348,85 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         }
 
         [Fact]
+        public async Task EmbeddedSchemaResourcesAreNotFetchedAsExternalDocuments()
+        {
+            var loader = new RecordingLoader();
+            var result = await Load(Document("""
+                {"Embedded":{"$id":"http://example.test/embedded","$anchor":"value","type":"string"},
+                 "Main":{"$ref":"http://example.test/embedded#value"}}
+                """, "3.1.0"), Settings(loader));
+
+            var document = Assert.IsType<OpenApiDocument>(result.Document);
+            Assert.Empty(result.Diagnostic.Errors);
+            Assert.Empty(loader.Requests);
+            Assert.Equal(JsonSchemaType.String, document.Components.Schemas["Main"].Type);
+        }
+
+        [Fact]
+        public async Task SlashContainingOperationTagsDoNotUseComponentReferenceResolution()
+        {
+            var loader = new RecordingLoader();
+            var result = await Load("""
+                {"openapi":"3.0.0","info":{"title":"Test","version":"1.0"},
+                 "tags":[{"name":"users/admin","description":"Admin users"}],
+                 "paths":{"/users":{"get":{"tags":["users/admin"],"responses":{"200":{"description":"OK"}}}}}}
+                """, Settings(loader));
+
+            var document = Assert.IsType<OpenApiDocument>(result.Document);
+            Assert.Empty(result.Diagnostic.Errors);
+            Assert.Empty(loader.Requests);
+            var tag = Assert.Single(document.Paths["/users"].Operations[HttpMethod.Get].Tags);
+            Assert.Equal("Admin users", tag.Description);
+        }
+
+        [Theory]
+        [InlineData("properties")]
+        [InlineData("allOf/-1")]
+        public async Task MalformedLocalSubschemaPointersPreserveLoadingBehavior(string pointer)
+        {
+            var loader = new RecordingLoader();
+            var settings = Settings(loader);
+            settings.RuleSet = new ValidationRuleSet();
+            var result = await Load(Document($$$"""
+                {"Main":{"$ref":"#/components/schemas/A/{{{pointer}}}"},
+                 "A":{"type":"object","properties":{"name":{"type":"string"}},"allOf":[{"type":"object"}]}}
+                """, "3.1.0"), settings);
+
+            Assert.NotNull(result.Document);
+            Assert.Empty(result.Diagnostic.Errors);
+            Assert.Empty(loader.Requests);
+        }
+
+        [Theory]
+        [InlineData(false, false)]
+        [InlineData(false, true)]
+        [InlineData(true, false)]
+        [InlineData(true, true)]
+        public async Task AuthoredDiscriminatorReferencesAreLoaded(bool hasReferenceSibling, bool useDefaultMapping)
+        {
+            var loader = new RecordingLoader();
+            loader.Documents["http://example.test/child.json"] = Document("""{"A":{"type":"string"}}""", "3.2.0");
+            var discriminator = useDefaultMapping
+                ? """{"propertyName":"kind","defaultMapping":"child.json#/components/schemas/A"}"""
+                : """{"propertyName":"kind","mapping":{"child":"child.json#/components/schemas/A"}}""";
+            var schema = hasReferenceSibling
+                ? $$$"""{"$ref":"#/components/schemas/Base","discriminator":{{{discriminator}}}}"""
+                : $$$$"""{"$defs":{"Child":{"type":"object","discriminator":{{{{discriminator}}}}}}}""";
+            var result = await Load(Document($$$"""{"Base":{"type":"object"},"Main":{{{schema}}}}""", "3.2.0"), Settings(loader));
+
+            var document = Assert.IsType<OpenApiDocument>(result.Document);
+            Assert.Empty(result.Diagnostic.Errors);
+            Assert.Single(loader.Requests);
+            var main = document.Components.Schemas["Main"];
+            var authoredDiscriminator = hasReferenceSibling
+                ? Assert.IsType<OpenApiSchemaReference>(main).Reference.Discriminator
+                : main.Definitions["Child"].Discriminator;
+            Assert.NotNull(authoredDiscriminator);
+            var mapping = useDefaultMapping ? authoredDiscriminator.DefaultMapping : authoredDiscriminator.Mapping["child"];
+            Assert.Equal(JsonSchemaType.String, mapping.RecursiveTarget.Type);
+        }
+
+        [Fact]
         public async Task WideGraphsDoNotConsumeTheDepthBudgetAcrossSiblings()
         {
             var loader = new RecordingLoader();
