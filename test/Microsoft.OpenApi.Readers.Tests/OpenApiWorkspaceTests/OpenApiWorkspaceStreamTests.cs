@@ -157,6 +157,29 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         }
 
         [Fact]
+        public async Task FailedExternalDocumentsDoNotReuseRawMappingsFromOtherDirectories()
+        {
+            var loader = new RecordingLoader();
+            foreach (var directory in new[] { "left", "right" })
+            {
+                loader.Documents[$"http://example.test/{directory}/a.json"] =
+                    Document("""{"A":{"$ref":"shared.json#/components/schemas/A"}}""");
+            }
+            loader.Documents["http://example.test/left/shared.json"] = Document("""{"A":{"type":"string"}}""");
+            loader.Documents["http://example.test/right/shared.json"] = "{";
+            var result = await Load(Document("""
+                {"Left":{"$ref":"left/a.json#/components/schemas/A"},"Right":{"$ref":"right/a.json#/components/schemas/A"}}
+                """), Settings(loader));
+
+            var document = Assert.IsType<OpenApiDocument>(result.Document);
+            Assert.NotEmpty(result.Diagnostic.Errors);
+            Assert.Equal(4, loader.Requests.Count);
+            Assert.Equal(JsonSchemaType.String, document.Components.Schemas["Left"].Type);
+            Assert.Null(document.Components.Schemas["Right"].Type);
+            Assert.Equal(new Uri("http://example.test/left/shared.json"), document.Workspace.GetDocumentId("shared.json"));
+        }
+
+        [Fact]
         public async Task MultipleFragmentsAreAllCheckedForAliasCycles()
         {
             var loader = new RecordingLoader();
@@ -345,6 +368,46 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             Assert.Contains(result.Diagnostic.Errors, error =>
                 error.Message.Contains("Could not resolve external reference chain", StringComparison.Ordinal) &&
                 error.Message.Contains(pointer, StringComparison.Ordinal));
+        }
+
+        [Theory]
+        [InlineData("description")]
+        [InlineData("default")]
+        [InlineData("$comment")]
+        public async Task AnnotatedExternalAliasesStillReportCycles(string annotation)
+        {
+            var loader = new RecordingLoader();
+            loader.Documents["http://example.test/a.json"] = Document($$$"""
+                {"A":{"$ref":"a.json#/components/schemas/A","{{{annotation}}}":"Annotated alias"}}
+                """, "3.1.0");
+            var settings = Settings(loader);
+            settings.RuleSet = new ValidationRuleSet();
+            var result = await Load(Document("""{"Main":{"$ref":"a.json#/components/schemas/A"}}""", "3.1.0"), settings);
+
+            Assert.Null(result.Document);
+            Assert.Single(loader.Requests);
+            Assert.Contains(result.Diagnostic.Errors, error => error.Message.Contains("Circular external", StringComparison.Ordinal));
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task ExternalSubschemaPointersWithSiblingsAreStillValidated(bool hasStructuralSibling)
+        {
+            var loader = new RecordingLoader();
+            loader.Documents["http://example.test/a.json"] = Document("""
+                {"A":{"type":"object","properties":{"name":{"type":"string"}}}}
+                """, "3.1.0");
+            var settings = Settings(loader);
+            settings.RuleSet = new ValidationRuleSet();
+            var sibling = hasStructuralSibling ? ""","type":"object" """ : ""","description":"Annotated alias" """;
+            var result = await Load(Document($$$"""
+                {"Main":{"$ref":"a.json#/components/schemas/A/properties"{{{sibling}}}}}
+                """, "3.1.0"), settings);
+
+            Assert.Null(result.Document);
+            Assert.Single(loader.Requests);
+            Assert.Contains(result.Diagnostic.Errors, error => error.Message.Contains("Could not resolve external reference chain", StringComparison.Ordinal));
         }
 
         [Fact]

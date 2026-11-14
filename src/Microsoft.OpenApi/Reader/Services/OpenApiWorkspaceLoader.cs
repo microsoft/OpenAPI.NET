@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Reader
             }
 
             _workspace.AddDocumentId(resource, loadedDocument?.BaseUri);
-            _workspace.AddDocumentId(uri.AbsoluteUri, loadedDocument?.BaseUri);
+            _workspace.AddDocumentId(uri.AbsoluteUri, loadedDocument?.BaseUri ?? uri);
             return true;
         }
 
@@ -150,10 +150,6 @@ namespace Microsoft.OpenApi.Reader
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 var reference = OpenApiRemoteReferenceCollector.GetReference(current);
-                if (current is OpenApiSchemaReference schema && !schema.Reference.IsReferenceOnly)
-                {
-                    break;
-                }
                 if (reference.IsExternal && reference.HostDocument is { } host)
                 {
                     var location = DefaultStreamLoader.ResolveUri(host.BaseUri, new Uri(reference.ExternalResource!, UriKind.RelativeOrAbsolute));
@@ -194,6 +190,10 @@ namespace Microsoft.OpenApi.Reader
                             $"Could not resolve external reference chain from '{chain[0].HostDocument?.BaseUri}' ({chain[0].ReferenceV3}): {ex.Message}"));
                         return false;
                     }
+                    break;
+                }
+                if (current is OpenApiSchemaReference schema && !schema.Reference.IsReferenceOnlyOrAnnotated)
+                {
                     break;
                 }
                 current = target as IOpenApiReferenceHolder;

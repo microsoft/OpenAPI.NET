@@ -91,6 +91,7 @@ JSON/YAML nesting limits. External documents are reused within a load, allowing 
 recursive schemas across files without repeated requests. Exceeding the depth limit or
 encountering an external reference-only loop returns a `ReadResult` with a null `Document`
 and an error in `Diagnostic.Errors`.
+Annotation-only siblings, such as `description`, do not exempt a reference from loop detection.
 
 # Validating/Testing OpenAPI descriptions
 [Microsoft.OpenApi.Hidi](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi) is a command line tool for validating and transforming OpenAPI descriptions.
