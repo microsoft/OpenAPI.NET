@@ -84,6 +84,15 @@ var (openApiDocument, _) = await OpenApiDocument.LoadAsync("https://raw.githubus
 var outputString = await openApiDocument.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 ```
 
+External references are loaded only when `OpenApiReaderSettings.LoadExternalRefs` is enabled.
+`MaxExternalReferenceDepth` defaults to 64 external document hops (the root is depth zero)
+and can be set to a higher positive value for deeper descriptions. It is independent of
+JSON/YAML nesting limits. External documents are reused within a load, allowing valid
+recursive schemas across files without repeated requests. Exceeding the depth limit or
+encountering an external reference-only loop returns a `ReadResult` with a null `Document`
+and an error in `Diagnostic.Errors`.
+Annotation-only siblings, such as `description`, do not exempt a reference from loop detection.
+
 # Validating/Testing OpenAPI descriptions
 [Microsoft.OpenApi.Hidi](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi) is a command line tool for validating and transforming OpenAPI descriptions.
 The OpenAPI.NET v3-compatible tool is maintained in [OpenAPI.NET.OData's main branch](https://github.com/microsoft/OpenAPI.NET.OData/tree/main/src/Microsoft.OpenApi.Hidi).

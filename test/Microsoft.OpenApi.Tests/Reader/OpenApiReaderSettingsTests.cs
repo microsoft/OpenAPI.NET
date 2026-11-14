@@ -20,6 +20,15 @@ public class OpenApiReaderSettingsTests
         Assert.Throws<ArgumentNullException>(() => settings.TryAddReader("json", null));
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void RejectsNonPositiveExternalReferenceDepth(int depth)
+    {
+        var settings = new OpenApiReaderSettings();
+        Assert.Throws<ArgumentOutOfRangeException>(() => settings.MaxExternalReferenceDepth = depth);
+    }
+
     [Fact]
     public void Defaults()
     {
