@@ -2754,6 +2754,100 @@ x-oai-$self: https://example.org/api/openapi.json";
             Assert.Throws<ArgumentNullException>(() => doc.GetOperationById(string.Empty));
         }
 
+        [Theory]
+        [InlineData("schemas/uuid.schema.json")]
+        [InlineData("./schemas/uuid.schema.json")]
+        [InlineData("uuid.schema.json")]
+        public void ResolveReference_RelativeReferenceWithoutFragmentDoesNotThrowUriFormatException(string referenceId)
+        {
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test", Version = "1.0" },
+                BaseUri = new Uri("https://example.com/api/openapi.json"),
+            };
+
+            var schemaRef = new OpenApiSchemaReference(referenceId, doc, referenceId);
+
+            var result = doc.ResolveReferenceTo<OpenApiSchema>(schemaRef.Reference, null);
+            Assert.Null(result);
+            Assert.Null(schemaRef.Target);
+        }
+
+        [Fact]
+        public void ResolveReference_RelativeReferenceWithoutFragmentResolvesAgainstWorkspace()
+        {
+            var workspace = new OpenApiWorkspace(new Uri("https://example.com/api/"));
+            var targetSchema = new OpenApiSchema { Type = JsonSchemaType.String, Description = "UUID schema" };
+            workspace.RegisterComponent("https://example.com/api/schemas/uuid.schema.json", targetSchema);
+
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test", Version = "1.0" },
+                BaseUri = new Uri("https://example.com/api/openapi.json"),
+                Workspace = workspace,
+            };
+
+            var schemaRef = new OpenApiSchemaReference("schemas/uuid.schema.json", doc, "schemas/uuid.schema.json");
+
+            var result = doc.ResolveReferenceTo<OpenApiSchema>(schemaRef.Reference, null);
+            Assert.Same(targetSchema, result);
+            Assert.Same(targetSchema, schemaRef.Target);
+        }
+
+        [Fact]
+        public void ResolveReference_ExternalComponentCollidingWithDocumentNameResolvesComponent()
+        {
+            var workspace = new OpenApiWorkspace(new Uri("https://example.com/api/"));
+            var targetSchema = new OpenApiSchema { Type = JsonSchemaType.String, Description = "Component named common.json" };
+            workspace.AddDocumentId("common.json", new Uri("https://example.com/api/common.json"));
+            workspace.RegisterComponent("https://example.com/api/common.json#/components/schemas/common.json", targetSchema);
+
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test", Version = "1.0" },
+                BaseUri = new Uri("https://example.com/api/openapi.json"),
+                Workspace = workspace,
+            };
+
+            var schemaRef = new OpenApiSchemaReference("common.json", doc, "common.json");
+            schemaRef.Reference.SetJsonPointerPath("common.json#/components/schemas/common.json", new Microsoft.OpenApi.Reader.ParsingContext(new()));
+
+            var result = doc.ResolveReferenceTo<OpenApiSchema>(schemaRef.Reference, null);
+            Assert.Same(targetSchema, result);
+            Assert.Same(targetSchema, schemaRef.Target);
+        }
+
+        [Fact]
+        public void ResolveReference_ExternalNonSchemaComponentCollidingWithDocumentNameResolvesComponent()
+        {
+            var workspace = new OpenApiWorkspace(new Uri("https://example.com/api/"));
+            var targetResponse = new OpenApiResponse { Description = "Response named common.json" };
+            var targetParam = new OpenApiParameter { Name = "common.json", In = ParameterLocation.Query };
+            workspace.AddDocumentId("common.json", new Uri("https://example.com/api/common.json"));
+            workspace.RegisterComponent("https://example.com/api/common.json#/components/responses/common.json", targetResponse);
+            workspace.RegisterComponent("https://example.com/api/common.json#/components/parameters/common.json", targetParam);
+
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test", Version = "1.0" },
+                BaseUri = new Uri("https://example.com/api/openapi.json"),
+                Workspace = workspace,
+            };
+
+            // Test publicly constructed non-schema reference
+            var responseRef = new OpenApiResponseReference("common.json", doc, "common.json");
+            Assert.Equal("common.json#/components/responses/common.json", responseRef.Reference.ReferenceV3);
+            var resultResponse = doc.ResolveReferenceTo<OpenApiResponse>(responseRef.Reference, null);
+            Assert.Same(targetResponse, resultResponse);
+            Assert.Same(targetResponse, responseRef.Target);
+
+            var paramRef = new OpenApiParameterReference("common.json", doc, "common.json");
+            Assert.Equal("common.json#/components/parameters/common.json", paramRef.Reference.ReferenceV3);
+            var resultParam = doc.ResolveReferenceTo<OpenApiParameter>(paramRef.Reference, null);
+            Assert.Same(targetParam, resultParam);
+            Assert.Same(targetParam, paramRef.Target);
+        }
+
         [Fact]
         public void OpenApiDocumentCopyConstructorPreservesPathsExtensions()
         {

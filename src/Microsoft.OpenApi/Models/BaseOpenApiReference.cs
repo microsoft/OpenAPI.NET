@@ -51,6 +51,16 @@ namespace Microsoft.OpenApi
         /// </summary>
         public bool IsFragment { get; init; }
 
+        private bool? _isStandalone;
+        /// <summary>
+        /// Gets or sets a flag indicating whether this reference points directly to a standalone external resource rather than a component within it.
+        /// </summary>
+        internal bool IsStandalone
+        {
+            get => _isStandalone ?? (Type == ReferenceType.Schema && IsExternal && Id is not null && string.Equals(ExternalResource, Id, StringComparison.Ordinal) && !Id.Contains("#"));
+            set => _isStandalone = value;
+        }
+
         private OpenApiDocument? hostDocument;        
         /// <summary>
         /// The OpenApiDocument that is hosting the OpenApiReference instance. This is used to enable dereferencing the reference.
@@ -148,6 +158,9 @@ namespace Microsoft.OpenApi
             Type = reference.Type;
             Id = reference.Id;
             HostDocument = reference.HostDocument;
+            IsFragment = reference.IsFragment;
+            IsStandalone = reference.IsStandalone;
+            _referenceV3 = reference._referenceV3;
         }
 
         /// <inheritdoc/>
@@ -241,6 +254,11 @@ namespace Microsoft.OpenApi
 
         private string? GetExternalReferenceV3()
         {
+            if (IsStandalone)
+            {
+                return ExternalResource;
+            }
+
             if (Id != null)
             {
                 if (IsFragment)
@@ -321,19 +339,23 @@ namespace Microsoft.OpenApi
         {
             // Relative reference to internal JSON schema node/resource (e.g. "#/properties/b")
 #if NETSTANDARD2_1 || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
-            if (pointer.StartsWith("#/", StringComparison.OrdinalIgnoreCase) && !pointer.Contains("/components/schemas", StringComparison.OrdinalIgnoreCase))
+            if (pointer.StartsWith("#/", StringComparison.OrdinalIgnoreCase) && !pointer.Contains("/components/", StringComparison.OrdinalIgnoreCase))
 #else
-            if (pointer.StartsWith("#/", StringComparison.OrdinalIgnoreCase) && !pointer.ToLowerInvariant().Contains("/components/schemas"))
+            if (pointer.StartsWith("#/", StringComparison.OrdinalIgnoreCase) && !pointer.ToLowerInvariant().Contains("/components/"))
 #endif
             {
                 ReferenceV3 = ResolveRelativePointer(context.GetLocation(), pointer);
             }
 
-            // Absolute reference or anchor (e.g. "#/components/schemas/..." or full URL)
-            else if ((pointer.Contains('#') || pointer.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-                && !string.Equals(ReferenceV3, pointer, StringComparison.OrdinalIgnoreCase))
+            // Absolute reference, anchor, or relative pointer (e.g. "#/components/schemas/...", full URL, or "schemas/uuid.schema.json")
+            else if (!string.Equals(ReferenceV3, pointer, StringComparison.OrdinalIgnoreCase))
             {
                 ReferenceV3 = pointer;
+            }
+
+            if (IsExternal)
+            {
+                IsStandalone = !pointer.Contains('#');
             }
         }
 

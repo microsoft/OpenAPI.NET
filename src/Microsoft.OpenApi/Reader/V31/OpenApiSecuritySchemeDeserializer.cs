@@ -116,6 +116,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var securitySchemeReference = new OpenApiSecuritySchemeReference(reference.Item1, hostDocument, reference.Item2);
                 securitySchemeReference.Reference.SetMetadataFromJsonObject(jsonObject);
+                securitySchemeReference.Reference.SetJsonPointerPath(pointer, context);
                 return securitySchemeReference;
             }
 

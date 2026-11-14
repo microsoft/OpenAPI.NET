@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -746,6 +746,99 @@ components:
             var parentSchemaRef = Assert.IsType<OpenApiSchemaReference>(categorySchema.Properties["parent"]);
             Assert.Equal("#/components/schemas/Category", parentSchemaRef.Reference.ReferenceV3);
             Assert.NotNull(parentSchemaRef.Target);
+        }
+
+        [Fact]
+        public void ParseDocumentWithRelativeReferenceWithoutFragmentDoesNotThrowUriFormatException()
+        {
+            var openApi = """
+            {
+              "openapi": "3.1.1",
+              "info": { "title": "Repro", "version": "1" },
+              "paths": {},
+              "components": {
+                "schemas": {
+                  "Request": {
+                    "type": "object",
+                    "properties": { "attemptId": { "$ref": "schemas/uuid.schema.json" } }
+                  }
+                }
+              }
+            }
+            """;
+
+            var readResult = OpenApiDocument.Parse(openApi, "json");
+            var doc = readResult.Document;
+            var diagnostic = readResult.Diagnostic;
+
+            Assert.NotNull(doc);
+            Assert.Empty(diagnostic.Errors);
+
+            var requestSchema = Assert.IsType<OpenApiSchema>(doc.Components.Schemas["Request"]);
+            var attemptIdRef = Assert.IsType<OpenApiSchemaReference>(requestSchema.Properties["attemptId"]);
+            Assert.True(attemptIdRef.Reference.IsExternal);
+            Assert.Equal("schemas/uuid.schema.json", attemptIdRef.Reference.ExternalResource);
+            Assert.Equal("schemas/uuid.schema.json", attemptIdRef.Reference.Id);
+
+            Assert.Null(attemptIdRef.Target);
+
+            using var writer = new StringWriter();
+            doc.SerializeAsV31(new OpenApiJsonWriter(writer));
+            var serialized = writer.ToString();
+            Assert.Contains("\"$ref\": \"schemas/uuid.schema.json\"", serialized);
+            Assert.DoesNotContain("#/components/schemas/schemas/uuid.schema.json", serialized);
+        }
+
+        [Fact]
+        public void ParseDocumentWithExternalNonSchemaReferenceCollidingWithDocumentNamePreservesComponentFragment()
+        {
+            var openApi = """
+            {
+              "openapi": "3.1.1",
+              "info": { "title": "Repro", "version": "1" },
+              "paths": {
+                "/items": {
+                  "get": {
+                    "parameters": [
+                      { "$ref": "common.json#/components/parameters/common.json" }
+                    ],
+                    "responses": {
+                      "200": { "$ref": "common.json#/components/responses/common.json" }
+                    }
+                  }
+                }
+              }
+            }
+            """;
+
+            var readResult = OpenApiDocument.Parse(openApi, "json");
+            var doc = readResult.Document;
+            var diagnostic = readResult.Diagnostic;
+
+            Assert.NotNull(doc);
+            Assert.Empty(diagnostic.Errors);
+
+            var pathItem = doc.Paths["/items"];
+            var operation = pathItem.Operations[HttpMethod.Get];
+
+            var paramRef = Assert.IsType<OpenApiParameterReference>(operation.Parameters[0]);
+            Assert.True(paramRef.Reference.IsExternal);
+            Assert.Equal("common.json", paramRef.Reference.ExternalResource);
+            Assert.Equal("common.json", paramRef.Reference.Id);
+            Assert.Equal("common.json#/components/parameters/common.json", paramRef.Reference.ReferenceV3);
+
+            var responseRef = Assert.IsType<OpenApiResponseReference>(operation.Responses["200"]);
+            Assert.True(responseRef.Reference.IsExternal);
+            Assert.Equal("common.json", responseRef.Reference.ExternalResource);
+            Assert.Equal("common.json", responseRef.Reference.Id);
+            Assert.Equal("common.json#/components/responses/common.json", responseRef.Reference.ReferenceV3);
+
+            using var writer = new StringWriter();
+            doc.SerializeAsV31(new OpenApiJsonWriter(writer));
+            var serialized = writer.ToString();
+            Assert.Contains("\"$ref\": \"common.json#/components/parameters/common.json\"", serialized);
+            Assert.Contains("\"$ref\": \"common.json#/components/responses/common.json\"", serialized);
+            Assert.DoesNotContain("\"$ref\": \"common.json\"", serialized);
         }
     }
 }

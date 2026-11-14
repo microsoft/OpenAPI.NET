@@ -123,6 +123,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var headerReference = new OpenApiHeaderReference(reference.Item1, hostDocument, reference.Item2);
                 headerReference.Reference.SetMetadataFromJsonObject(jsonObject);
+                headerReference.Reference.SetJsonPointerPath(pointer, context);
                 return headerReference;
             }
 
