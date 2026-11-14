@@ -434,7 +434,6 @@ internal static partial class OpenApiV31Deserializer
 
         if (pointer != null)
         {
-            var nodeLocation = context.GetLocation();
             var reference = GetReferenceIdAndExternalResource(pointer);
             var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
             var referenceMetadata = new OpenApiSchema();
@@ -448,14 +447,13 @@ internal static partial class OpenApiV31Deserializer
                     }
                 });
             result.Reference.ApplySchemaMetadata(referenceMetadata, jsonObject);
-            result.Reference.SetJsonPointerPath(pointer, nodeLocation);
+            result.Reference.SetJsonPointerPath(pointer, context);
 
             return result;
         }
 
         if (dynamicPointer != null)
         {
-            var nodeLocation = context.GetLocation();
             var anchorName = JsonNodeHelper.ExtractDynamicAnchorName(dynamicPointer);
             string? externalResource = JsonNodeHelper.IsFragmentOnlyDynamicRef(dynamicPointer)
                 ? null
@@ -472,7 +470,7 @@ internal static partial class OpenApiV31Deserializer
                     }
                 });
             result.Reference.ApplySchemaMetadata(referenceMetadata, jsonObject);
-            result.Reference.SetJsonPointerPath(dynamicPointer, nodeLocation);
+            result.Reference.SetJsonPointerPath(dynamicPointer, context);
             return result;
         }
 
