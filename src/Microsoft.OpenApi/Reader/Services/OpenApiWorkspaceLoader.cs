@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Reader
                             diagnostic = loadDiagnostic;
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception ex) when (ex is not OperationCanceledException)
                     {
                         diagnostic.Errors.Add(new OpenApiError(string.Empty, ex.Message));
                     }

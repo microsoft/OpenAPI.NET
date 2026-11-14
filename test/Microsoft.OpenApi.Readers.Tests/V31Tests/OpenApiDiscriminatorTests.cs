@@ -96,5 +96,116 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             Assert.False(petSchema.Discriminator.DefaultMapping.Reference.IsExternal);
             Assert.Same(dogSchema, petSchema.Discriminator.DefaultMapping.Target);
         }
+
+        [Theory]
+        [InlineData("Dog.json")]
+        [InlineData("Dog.yaml")]
+        [InlineData("Dog.yml")]
+        public void ParseDiscriminatorWithFileSuffixedBareSchemaNameResolvesLocalTarget(string schemaName)
+        {
+            var openApi = $$"""
+            {
+              "openapi": "3.1.1",
+              "info": { "title": "Repro", "version": "1" },
+              "paths": {},
+              "components": {
+                "schemas": {
+                  "{{schemaName}}": {
+                    "type": "object",
+                    "properties": { "bark": { "type": "boolean" } }
+                  },
+                  "Pet": {
+                    "type": "object",
+                    "required": [ "petType" ],
+                    "properties": {
+                      "petType": { "type": "string" }
+                    },
+                    "discriminator": {
+                      "propertyName": "petType",
+                      "mapping": {
+                        "dog": "{{schemaName}}"
+                      },
+                      "x-oas-default-mapping": "{{schemaName}}"
+                    }
+                  }
+                }
+              }
+            }
+            """;
+
+            var readResult = OpenApiDocument.Parse(openApi, "json");
+            var doc = readResult.Document;
+            Assert.NotNull(doc);
+            Assert.Empty(readResult.Diagnostic.Errors);
+
+            var petSchema = Assert.IsType<OpenApiSchema>(doc.Components.Schemas["Pet"]);
+            Assert.NotNull(petSchema.Discriminator);
+
+            var dogMapping = petSchema.Discriminator.Mapping["dog"];
+            Assert.False(dogMapping.Reference.IsExternal);
+            Assert.Null(dogMapping.Reference.ExternalResource);
+            Assert.Equal(schemaName, dogMapping.Reference.Id);
+
+            var dogSchema = Assert.IsType<OpenApiSchema>(doc.Components.Schemas[schemaName]);
+            Assert.Same(dogSchema, dogMapping.Target);
+
+            Assert.NotNull(petSchema.Discriminator.DefaultMapping);
+            Assert.False(petSchema.Discriminator.DefaultMapping.Reference.IsExternal);
+            Assert.Same(dogSchema, petSchema.Discriminator.DefaultMapping.Target);
+        }
+
+        [Fact]
+        public void ParseDiscriminatorWithForwardDeclaredSchemaMappingResolvesLocalTarget()
+        {
+            var openApi = """
+            {
+              "openapi": "3.1.1",
+              "info": { "title": "Repro", "version": "1" },
+              "paths": {},
+              "components": {
+                "schemas": {
+                  "Pet": {
+                    "type": "object",
+                    "required": [ "petType" ],
+                    "properties": {
+                      "petType": { "type": "string" }
+                    },
+                    "discriminator": {
+                      "propertyName": "petType",
+                      "mapping": {
+                        "dog": "Dog.json"
+                      },
+                      "x-oas-default-mapping": "Dog.json"
+                    }
+                  },
+                  "Dog.json": {
+                    "type": "object",
+                    "properties": { "bark": { "type": "boolean" } }
+                  }
+                }
+              }
+            }
+            """;
+
+            var readResult = OpenApiDocument.Parse(openApi, "json");
+            var doc = readResult.Document;
+            Assert.NotNull(doc);
+            Assert.Empty(readResult.Diagnostic.Errors);
+
+            var petSchema = Assert.IsType<OpenApiSchema>(doc.Components.Schemas["Pet"]);
+            Assert.NotNull(petSchema.Discriminator);
+
+            var dogMapping = petSchema.Discriminator.Mapping["dog"];
+            Assert.False(dogMapping.Reference.IsExternal);
+            Assert.Null(dogMapping.Reference.ExternalResource);
+            Assert.Equal("Dog.json", dogMapping.Reference.Id);
+
+            var dogSchema = Assert.IsType<OpenApiSchema>(doc.Components.Schemas["Dog.json"]);
+            Assert.Same(dogSchema, dogMapping.Target);
+
+            Assert.NotNull(petSchema.Discriminator.DefaultMapping);
+            Assert.False(petSchema.Discriminator.DefaultMapping.Reference.IsExternal);
+            Assert.Same(dogSchema, petSchema.Discriminator.DefaultMapping.Target);
+        }
     }
 }

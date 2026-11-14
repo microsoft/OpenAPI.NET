@@ -633,7 +633,7 @@ namespace Microsoft.OpenApi
             var id = reference.Id;
             var referenceV3 = !string.IsNullOrEmpty(reference.ReferenceV3) ? reference.ReferenceV3! : string.Empty;
             var isStandaloneExternal = reference.IsExternal &&
-                (!string.IsNullOrEmpty(referenceV3) ? !referenceV3.Contains("#") : (id is not null && !id.Contains("#")));
+                (reference.IsStandalone || (!string.IsNullOrEmpty(referenceV3) ? !referenceV3.Contains("#") : (reference.Type == ReferenceType.Schema && id is not null && !id.Contains("#") && id.Contains("/"))));
 
             if (isStandaloneExternal)
             {

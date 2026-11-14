@@ -124,6 +124,46 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
                 }
             }, petSchemaTarget);
         }
+
+        [Fact]
+        public async Task LoadDocumentAsync_WhenLoaderThrowsOperationCanceledException_PropagatesCancellation()
+        {
+            var settings = new OpenApiReaderSettings
+            {
+                LoadExternalRefs = true,
+                CustomExternalLoader = new CancellingStreamLoader(),
+                BaseUrl = new("file://c:\\"),
+            };
+            settings.AddYamlReader();
+
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(async () =>
+                await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml", settings, token: TestContext.Current.CancellationToken));
+        }
+
+        [Fact]
+        public async Task LoadDocumentAsync_WhenCancellationTokenCanceled_PropagatesCancellation()
+        {
+            using var cts = new CancellationTokenSource();
+            cts.Cancel();
+
+            var settings = new OpenApiReaderSettings
+            {
+                LoadExternalRefs = true,
+                CustomExternalLoader = new ResourceLoader(),
+                BaseUrl = new("file://c:\\"),
+            };
+            settings.AddYamlReader();
+
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(async () =>
+                await OpenApiDocument.LoadAsync("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml", settings, token: cts.Token));
+        }
+    }
+
+    public class CancellingStreamLoader : IStreamLoader
+    {
+        public Stream Load(Uri uri) => throw new OperationCanceledException();
+        public Task<Stream> LoadAsync(Uri baseUrl, Uri uri, CancellationToken cancellationToken = default)
+            => Task.FromException<Stream>(new OperationCanceledException(cancellationToken));
     }
 
     public class MockLoader : IStreamLoader

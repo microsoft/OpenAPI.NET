@@ -57,7 +57,9 @@ namespace Microsoft.OpenApi.Reader.V3
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiResponseReference(reference.Item1, hostDocument, reference.Item2);
+                var responseReference = new OpenApiResponseReference(reference.Item1, hostDocument, reference.Item2);
+                responseReference.Reference.SetJsonPointerPath(pointer, context);
+                return responseReference;
             }
 
             var response = new OpenApiResponse();

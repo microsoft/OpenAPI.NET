@@ -63,6 +63,7 @@ namespace Microsoft.OpenApi.Reader.V31
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var responseReference = new OpenApiResponseReference(reference.Item1, hostDocument, reference.Item2);
                 responseReference.Reference.SetMetadataFromJsonObject(jsonObject);
+                responseReference.Reference.SetJsonPointerPath(pointer, context);
                 return responseReference;
             }
 

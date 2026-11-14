@@ -54,13 +54,13 @@ namespace Microsoft.OpenApi.Reader.V32
             if (IsBareSchemaName(pointer))
             {
                 var schemaRef = new OpenApiSchemaReference(pointer, hostDocument);
-                schemaRef.Reference.SetJsonPointerPath(pointer, context.GetLocation());
+                schemaRef.Reference.SetJsonPointerPath(pointer, context);
                 return schemaRef;
             }
 
             var reference = GetReferenceIdAndExternalResource(pointer);
             var result = new OpenApiSchemaReference(reference.Item1, hostDocument, reference.Item2);
-            result.Reference.SetJsonPointerPath(pointer, context.GetLocation());
+            result.Reference.SetJsonPointerPath(pointer, context);
             return result;
         }
 
@@ -69,10 +69,7 @@ namespace Microsoft.OpenApi.Reader.V32
             return !pointer.StartsWith("#", StringComparison.OrdinalIgnoreCase)
                 && !pointer.Contains("/")
                 && !pointer.Contains("#")
-                && !pointer.Contains(":")
-                && !pointer.EndsWith(".json", StringComparison.OrdinalIgnoreCase)
-                && !pointer.EndsWith(".yaml", StringComparison.OrdinalIgnoreCase)
-                && !pointer.EndsWith(".yml", StringComparison.OrdinalIgnoreCase);
+                && !pointer.Contains(":");
         }
     }
 }
