@@ -79,7 +79,9 @@ namespace Microsoft.OpenApi.Reader
             var (stream, format) = await RetrieveStreamAndFormatAsync(url, settings, token).ConfigureAwait(false);
             using (stream)
             {
-                return await LoadAsync(stream, format, settings, token).ConfigureAwait(false);
+                // Relative file paths can return false/null; LoadStreamAsync derives the absolute URI from FileStream.Name.
+                Uri.TryCreate(url, UriKind.Absolute, out var sourceUri);
+                return await LoadStreamAsync(stream, format, settings, sourceUri, token).ConfigureAwait(false);
             }
         }
 
@@ -112,40 +114,46 @@ namespace Microsoft.OpenApi.Reader
         /// <param name="cancellationToken">Propagates notification that operations should be cancelled.</param>
         /// <param name="format">The Open API format</param>
         /// <returns></returns>
-        public static async Task<ReadResult> LoadAsync(Stream input, string? format = null, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
+        public static Task<ReadResult> LoadAsync(Stream input, string? format = null, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
+            => LoadStreamAsync(input, format, settings ?? new OpenApiReaderSettings(), null, cancellationToken);
+
+        private static async Task<ReadResult> LoadStreamAsync(Stream input, string? format, OpenApiReaderSettings settings, Uri? sourceUri, CancellationToken cancellationToken)
         {
 #if NET6_0_OR_GREATER
             ArgumentNullException.ThrowIfNull(input);
 #else
             if (input is null) throw new ArgumentNullException(nameof(input));
 #endif
-            settings ??= new OpenApiReaderSettings();
-
+            sourceUri = input is FileStream sourceFile ? new Uri(sourceFile.Name) : sourceUri;
             Stream? preparedStream = null;
-            if (format is null)
+            try
             {
-                (preparedStream, format) = await PrepareStreamForReadingAsync(input, format, cancellationToken).ConfigureAwait(false);
-            }
+                if (format is null)
+                {
+                    (preparedStream, format) = await PrepareStreamForReadingAsync(input, format, cancellationToken).ConfigureAwait(false);
+                }
 
-            // Use StreamReader to process the prepared stream (buffered for YAML, direct for JSON)
-            var result = await InternalLoadAsync(preparedStream ?? input, format, settings, cancellationToken).ConfigureAwait(false);
-            if (!settings.LeaveStreamOpen)
-            {
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
-                await input.DisposeAsync().ConfigureAwait(false);
-#else
-                input.Dispose();
-#endif
+                return await InternalLoadAsync(preparedStream ?? input, format, settings, sourceUri, cancellationToken).ConfigureAwait(false);
             }
-            if (preparedStream is not null && preparedStream != input)
+            finally
             {
+                if (!settings.LeaveStreamOpen)
+                {
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
-                await preparedStream.DisposeAsync().ConfigureAwait(false);
+                    await input.DisposeAsync().ConfigureAwait(false);
 #else
-                preparedStream.Dispose();
+                    input.Dispose();
 #endif
+                }
+                if (preparedStream is not null && preparedStream != input)
+                {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
+                    await preparedStream.DisposeAsync().ConfigureAwait(false);
+#else
+                    preparedStream.Dispose();
+#endif
+                }
             }
-            return result;
         }
 
         /// <summary>
@@ -240,38 +248,33 @@ namespace Microsoft.OpenApi.Reader
 
         private static readonly Lazy<OpenApiReaderSettings> DefaultReaderSettings = new(() => new OpenApiReaderSettings());
 
-        private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings, CancellationToken cancellationToken = default)
+        internal static Task<ReadResult> ReadDocumentAsync(Stream input, string format, Uri location, OpenApiReaderSettings settings, CancellationToken cancellationToken)
+            => settings.GetReader(format).ReadAsync(input, location, settings, cancellationToken);
+
+        private static async Task<ReadResult> InternalLoadAsync(Stream input, string format, OpenApiReaderSettings settings, Uri? sourceUri, CancellationToken cancellationToken = default)
         {
             settings ??= DefaultReaderSettings.Value;
-            var reader = settings.GetReader(format);
-            var location =
-                        (input is FileStream fileStream ? new Uri(fileStream.Name) : null) ??
+            var maxExternalReferenceDepth = settings.MaxExternalReferenceDepth;
+            var location = (sourceUri?.IsFile == true ? sourceUri : null) ??
                         settings.BaseUrl ??
+                        sourceUri ??
                         new Uri(OpenApiConstants.BaseRegistryUri);
 
-            var readResult = await reader.ReadAsync(input, location, settings, cancellationToken).ConfigureAwait(false);
+            var readResult = await ReadDocumentAsync(input, format, location, settings, cancellationToken).ConfigureAwait(false);
 
-            if (settings.LoadExternalRefs)
+            if (settings.LoadExternalRefs && readResult.Document is { } document)
             {
-                var diagnosticExternalRefs = await LoadExternalRefsAsync(readResult.Document, settings, format, cancellationToken).ConfigureAwait(false);
-                // Merge diagnostics of external reference
-                if (diagnosticExternalRefs != null)
+                var workspace = document.Workspace ?? new OpenApiWorkspace();
+                var loader = new OpenApiWorkspaceLoader(workspace,
+                    settings.CustomExternalLoader ?? new DefaultStreamLoader(settings.HttpClient), settings, maxExternalReferenceDepth);
+                readResult.Diagnostic ??= new();
+                if (!await loader.LoadAsync(document, format, readResult.Diagnostic, sourceUri, cancellationToken).ConfigureAwait(false))
                 {
-                    readResult.Diagnostic?.Errors.AddRange(diagnosticExternalRefs.Errors);
-                    readResult.Diagnostic?.Warnings.AddRange(diagnosticExternalRefs.Warnings);
+                    readResult.Document = null;
                 }
             }
 
             return readResult;
-        }
-
-        private static async Task<OpenApiDiagnostic> LoadExternalRefsAsync(OpenApiDocument? document, OpenApiReaderSettings settings, string? format = null, CancellationToken token = default)
-        {
-            // Load this document into the workspace
-            var streamLoader = new DefaultStreamLoader(settings.HttpClient);
-            var workspace = document?.Workspace ?? new OpenApiWorkspace();
-            var workspaceLoader = new OpenApiWorkspaceLoader(workspace, settings.CustomExternalLoader ?? streamLoader, settings);
-            return await workspaceLoader.LoadAsync(new BaseOpenApiReference() { ExternalResource = "/" }, document, format ?? OpenApiConstants.Json, null, token).ConfigureAwait(false);
         }
 
         private static ReadResult InternalLoad(MemoryStream input, string format, OpenApiReaderSettings settings)
