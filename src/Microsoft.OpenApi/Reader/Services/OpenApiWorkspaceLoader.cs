@@ -73,7 +73,12 @@ namespace Microsoft.OpenApi.Reader
             }
 
             var reference = frame.References.Current;
-            var resource = reference.ExternalResource!;
+            if (reference.ExternalResource is not { } resource)
+            {
+                diagnostic.Errors.Add(new(reference.ReferenceV3,
+                    $"External reference resource is missing while loading references from '{frame.Document.BaseUri}'."));
+                return false;
+            }
             var uri = DefaultStreamLoader.ResolveUri(frame.Document.BaseUri, new Uri(resource, UriKind.RelativeOrAbsolute));
             if (_workspace.Contains(uri.AbsoluteUri))
             {
