@@ -2290,3 +2290,5 @@ const Microsoft.OpenApi.OpenApiConstants.OaiLicenseIdentifier = "x-oai-license-i
 Microsoft.OpenApi.OpenApiDocument.GetOperationById(string! operationId) -> Microsoft.OpenApi.OpenApiOperation?
 Microsoft.OpenApi.OpenApiWriterSettings.MaxInlineReferenceCount.get -> int
 Microsoft.OpenApi.OpenApiWriterSettings.MaxInlineReferenceCount.set -> void
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.MaxExternalReferenceDepth.get -> int
+Microsoft.OpenApi.Reader.OpenApiReaderSettings.MaxExternalReferenceDepth.set -> void
