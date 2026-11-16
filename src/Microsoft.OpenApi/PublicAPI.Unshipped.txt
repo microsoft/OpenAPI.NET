@@ -1,3 +1,1 @@
 #nullable enable
-Microsoft.OpenApi.Reader.OpenApiReaderSettings.MaxExternalReferenceDepth.get -> int
-Microsoft.OpenApi.Reader.OpenApiReaderSettings.MaxExternalReferenceDepth.set -> void
