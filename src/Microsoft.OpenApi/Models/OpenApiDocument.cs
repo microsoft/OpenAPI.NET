@@ -631,21 +631,19 @@ namespace Microsoft.OpenApi
 
             string uriLocation;
             var id = reference.Id;
-            var referenceV3 = !string.IsNullOrEmpty(reference.ReferenceV3) ? reference.ReferenceV3! : string.Empty;
-            var isStandaloneExternal = reference.IsExternal &&
-                (reference.IsStandalone || (!string.IsNullOrEmpty(referenceV3) ? !referenceV3.Contains("#") : (reference.Type == ReferenceType.Schema && id is not null && !id.Contains("#") && id.Contains("/"))));
-
+            var isStandaloneExternal = reference.IsExternal && IsStandaloneExternalReference(reference);
             if (isStandaloneExternal)
             {
-                uriLocation = id ?? reference.ExternalResource ?? string.Empty;
+                uriLocation = reference.ExternalResource ?? id ?? string.Empty;
             }
-            else if (!string.IsNullOrEmpty(id) && id!.Contains("/"))
+            else if (!string.IsNullOrEmpty(id) && id!.IndexOf('/') >= 0)
             {
                 uriLocation = id!;
             }
             else
             {
                 string relativePath;
+                var referenceV3 = !string.IsNullOrEmpty(reference.ReferenceV3) ? reference.ReferenceV3! : string.Empty;
 
                 if (reference.Type is ReferenceType.Schema && useExternal && TryGetPlainNameFragment(referenceV3, out var plainNameFragment))
                 {
@@ -669,7 +667,9 @@ namespace Microsoft.OpenApi
                     relativePath = $"#{OpenApiConstants.ComponentsSegment}{reference.Type.GetDisplayName()}/{id}";
                 }
 
-                Uri? externalResourceUri = useExternal ? Workspace?.GetDocumentId(reference.ExternalResource, BaseUri) : null;
+                Uri? externalResourceUri = useExternal
+                    ? (BaseUri is not null ? Workspace?.GetDocumentId(reference.ExternalResource, BaseUri) : Workspace?.GetDocumentId(reference.ExternalResource))
+                    : null;
 
                 uriLocation = useExternal && externalResourceUri is not null
                     ? externalResourceUri.AbsoluteUri + relativePath
@@ -677,17 +677,18 @@ namespace Microsoft.OpenApi
             }
 
             Uri? resolvedUri = null;
-            if (Uri.TryCreate(uriLocation, UriKind.Absolute, out var absUri))
-            {
-                resolvedUri = absUri;
-            }
-            else if (useExternal && reference.ExternalResource is not null && Workspace?.GetDocumentId(reference.ExternalResource) is Uri extDocUri)
+            if (isStandaloneExternal && useExternal && reference.ExternalResource is not null &&
+                (BaseUri is not null ? Workspace?.GetDocumentId(reference.ExternalResource, BaseUri) : Workspace?.GetDocumentId(reference.ExternalResource)) is Uri extDocUri)
             {
                 resolvedUri = extDocUri;
             }
             else if (BaseUri is not null && Uri.TryCreate(BaseUri, uriLocation, out var relCombinedUri))
             {
                 resolvedUri = relCombinedUri;
+            }
+            else if (Uri.TryCreate(uriLocation, UriKind.Absolute, out var absUri))
+            {
+                resolvedUri = absUri;
             }
 
             if (resolvedUri is null)
@@ -697,12 +698,31 @@ namespace Microsoft.OpenApi
 
             var absoluteUri = resolvedUri.AbsoluteUri;
 
-            if (reference.Type is ReferenceType.Schema && absoluteUri.Contains("#") && parentSchema is not null)
+            if (reference.Type is ReferenceType.Schema && absoluteUri.IndexOf('#') >= 0 && parentSchema is not null)
             {
                 return Workspace?.ResolveJsonSchemaReference(absoluteUri, parentSchema);
             }
 
             return Workspace?.ResolveReference<IOpenApiReferenceable>(absoluteUri);
+        }
+
+        private static bool IsStandaloneExternalReference(BaseOpenApiReference reference)
+        {
+            if (reference.IsStandalone)
+            {
+                return true;
+            }
+
+            var referenceV3 = reference.ReferenceV3;
+            if (!string.IsNullOrEmpty(referenceV3))
+            {
+                return referenceV3!.IndexOf('#') < 0;
+            }
+
+            return reference.Type == ReferenceType.Schema &&
+                reference.Id is { } id &&
+                id.IndexOf('#') < 0 &&
+                id.IndexOf('/') >= 0;
         }
 
         private static bool IsSubComponent(string reference)

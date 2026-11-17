@@ -840,5 +840,85 @@ components:
             Assert.Contains("\"$ref\": \"common.json#/components/responses/common.json\"", serialized);
             Assert.DoesNotContain("\"$ref\": \"common.json\"", serialized);
         }
+
+        [Fact]
+        public void ParseRelativePointerWithComponentsPropertyNameResolvesSubschema()
+        {
+            var openApi = """
+            {
+              "openapi": "3.1.1",
+              "info": { "title": "Components property test", "version": "1" },
+              "paths": {},
+              "components": {
+                "schemas": {
+                  "Foo": {
+                    "type": "object",
+                    "properties": {
+                      "components": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" }
+                        }
+                      },
+                      "idCopy": { "$ref": "#/properties/components/properties/id" }
+                    }
+                  }
+                }
+              }
+            }
+            """;
+
+            var readResult = OpenApiDocument.Parse(openApi, "json");
+            var doc = readResult.Document;
+            Assert.NotNull(doc);
+            Assert.Empty(readResult.Diagnostic.Errors);
+
+            var fooSchema = Assert.IsType<OpenApiSchema>(doc.Components.Schemas["Foo"]);
+            var idCopyRef = Assert.IsType<OpenApiSchemaReference>(fooSchema.Properties["idCopy"]);
+
+            Assert.Equal("#/components/schemas/Foo/properties/components/properties/id", idCopyRef.Reference.ReferenceV3);
+            Assert.NotNull(idCopyRef.Target);
+            Assert.Equal(JsonSchemaType.Integer, idCopyRef.Target.Type);
+        }
+
+        [Fact]
+        public void ParseOpenApi30StandaloneRelativeReferenceWithDirectoryResolvesAgainstWorkspace()
+        {
+            var openApi = """
+            {
+              "openapi": "3.0.1",
+              "info": { "title": "V30 relative standalone", "version": "1" },
+              "paths": {},
+              "components": {
+                "schemas": {
+                  "Request": {
+                    "type": "object",
+                    "properties": {
+                      "attemptId": { "$ref": "schemas/uuid.schema.json" }
+                    }
+                  }
+                }
+              }
+            }
+            """;
+
+            var readResult = OpenApiDocument.Parse(openApi, "json");
+            var doc = readResult.Document;
+            Assert.NotNull(doc);
+            Assert.Empty(readResult.Diagnostic.Errors);
+            doc.BaseUri = new Uri("https://example.com/api/openapi.json");
+
+            var targetSchema = new OpenApiSchema { Type = JsonSchemaType.String, Format = "uuid" };
+            doc.Workspace.RegisterComponent("https://example.com/api/schemas/uuid.schema.json", targetSchema);
+
+            var requestSchema = Assert.IsType<OpenApiSchema>(doc.Components.Schemas["Request"]);
+            var attemptIdRef = Assert.IsType<OpenApiSchemaReference>(requestSchema.Properties["attemptId"]);
+
+            Assert.True(attemptIdRef.Reference.IsExternal);
+            Assert.Equal("schemas/uuid.schema.json", attemptIdRef.Reference.ExternalResource);
+            Assert.Equal("uuid.schema.json", attemptIdRef.Reference.Id);
+            Assert.Equal("schemas/uuid.schema.json", attemptIdRef.Reference.ReferenceV3);
+            Assert.Same(targetSchema, attemptIdRef.Target);
+        }
     }
 }

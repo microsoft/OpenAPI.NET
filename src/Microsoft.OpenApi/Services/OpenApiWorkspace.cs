@@ -809,9 +809,9 @@ namespace Microsoft.OpenApi
 
         internal Uri? GetDocumentId(string? key, Uri baseUri)
         {
-            if (key is not null)
+            if (key is not null && Uri.TryCreate(key, UriKind.RelativeOrAbsolute, out var keyUri))
             {
-                var location = DefaultStreamLoader.ResolveUri(baseUri, new Uri(key, UriKind.RelativeOrAbsolute));
+                var location = DefaultStreamLoader.ResolveUri(baseUri, keyUri);
                 if (_documentsIdRegistry.TryGetValue(location.AbsoluteUri, out var id))
                 {
                     return id;

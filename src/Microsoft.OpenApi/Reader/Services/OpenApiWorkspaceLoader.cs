@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -95,17 +95,25 @@ namespace Microsoft.OpenApi.Reader
                     return false;
                 }
 
-                using var input = await _loader.LoadAsync(frame.Document.BaseUri, new Uri(resource, UriKind.RelativeOrAbsolute), cancellationToken).ConfigureAwait(false);
-                var result = await OpenApiModelFactory.ReadDocumentAsync(input, format, uri, _readerSettings, cancellationToken).ConfigureAwait(false);
-                if (result.Diagnostic is { } externalDiagnostic)
+                try
                 {
-                    diagnostic.AppendDiagnostic(externalDiagnostic, uri.AbsoluteUri);
+                    using var input = await _loader.LoadAsync(frame.Document.BaseUri, new Uri(resource, UriKind.RelativeOrAbsolute), cancellationToken).ConfigureAwait(false);
+                    var result = await OpenApiModelFactory.ReadDocumentAsync(input, format, uri, _readerSettings, cancellationToken).ConfigureAwait(false);
+                    if (result.Diagnostic is { } externalDiagnostic)
+                    {
+                        diagnostic.AppendDiagnostic(externalDiagnostic, uri.AbsoluteUri);
+                    }
+                    loadedDocument = result.Document;
+                    documents.Add(uri.AbsoluteUri, loadedDocument);
+                    if (loadedDocument is not null)
+                    {
+                        RegisterDocument(loadedDocument, frame.Depth + 1, references, pending);
+                    }
                 }
-                loadedDocument = result.Document;
-                documents.Add(uri.AbsoluteUri, loadedDocument);
-                if (loadedDocument is not null)
+                catch (Exception ex) when (ex is not OperationCanceledException)
                 {
-                    RegisterDocument(loadedDocument, frame.Depth + 1, references, pending);
+                    diagnostic.Errors.Add(new(reference.ReferenceV3, ex.Message));
+                    documents[uri.AbsoluteUri] = null;
                 }
             }
 

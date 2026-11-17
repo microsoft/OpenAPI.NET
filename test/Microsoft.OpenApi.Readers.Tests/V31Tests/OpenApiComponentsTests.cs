@@ -33,6 +33,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             // Assert
             var schema = components.Schemas["Model"] as OpenApiSchemaReference;
             var expected = new OpenApiSchemaReference(referenceId, openApiDocument, externalResource);
+            if (!reference.Contains('#'))
+            {
+                expected.Reference.IsStandalone = true;
+            }
             Assert.Equivalent(expected, schema);
         }
     }
