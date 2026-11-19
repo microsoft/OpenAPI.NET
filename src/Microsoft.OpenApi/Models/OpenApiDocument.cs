@@ -79,8 +79,8 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
         /// </summary>
-        public ISet<OpenApiTag>? Tags 
-        { 
+        public ISet<OpenApiTag>? Tags
+        {
             get
             {
                 return _tags;
@@ -126,14 +126,14 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Parameter-less constructor
         /// </summary>
-        public OpenApiDocument() 
+        public OpenApiDocument()
         {
             Workspace = new OpenApiWorkspace();
             BaseUri = new(OpenApiConstants.BaseRegistryUri + Guid.NewGuid());
             Info = new OpenApiInfo();
             Paths = new OpenApiPaths();
         }
-                
+
         /// <summary>
         /// Initializes a copy of an an <see cref="OpenApiDocument"/> object
         /// </summary>
@@ -528,14 +528,14 @@ namespace Microsoft.OpenApi
                     .ToList();
 
                 // schemes
-                writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => 
+                writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) =>
                 {
-                    if(!string.IsNullOrEmpty(s) && s is not null)
+                    if (!string.IsNullOrEmpty(s) && s is not null)
                     {
                         w.WriteValue(s);
                     }
                 });
-            }            
+            }
         }
 
         /// <summary>
@@ -733,6 +733,9 @@ namespace Microsoft.OpenApi
         /// <param name="format">The OpenAPI format to use during parsing.</param>
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <returns></returns>
+        /// <remarks>
+        /// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>.
+        /// </remarks>
         public static ReadResult Load(MemoryStream stream,
                                       string? format = null,
                                       OpenApiReaderSettings? settings = null)
@@ -747,6 +750,9 @@ namespace Microsoft.OpenApi
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <param name="token">The cancellation token</param>
         /// <returns></returns>
+        /// <remarks>
+        /// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>.
+        /// </remarks>
         public static async Task<ReadResult> LoadAsync(string url, OpenApiReaderSettings? settings = null, CancellationToken token = default)
         {
             return await OpenApiModelFactory.LoadAsync(url, settings, token).ConfigureAwait(false);
@@ -760,6 +766,9 @@ namespace Microsoft.OpenApi
         /// <param name="settings">The OpenApi reader settings.</param>
         /// <param name="cancellationToken">Propagates information about operation cancelling.</param>
         /// <returns></returns>
+        /// <remarks>
+        /// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>.
+        /// </remarks>
         public static async Task<ReadResult> LoadAsync(Stream stream, string? format = null, OpenApiReaderSettings? settings = null, CancellationToken cancellationToken = default)
         {
             return await OpenApiModelFactory.LoadAsync(stream, format, settings, cancellationToken).ConfigureAwait(false);
@@ -773,6 +782,11 @@ namespace Microsoft.OpenApi
         /// <param name="format"></param>
         /// <param name="settings"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// OpenAPI semantic errors and parser errors that can be represented in the <see cref="ReadResult.Diagnostic"/> are returned.
+        /// Parser failures that occur before a result can be created may throw.
+        /// <see cref="ArgumentException"/> is thrown when <paramref name="input"/> is null or empty before parsing starts.
+        /// </remarks>
         public static ReadResult Parse(string input,
                                        string? format = null,
                                        OpenApiReaderSettings? settings = null)
@@ -931,7 +945,7 @@ namespace Microsoft.OpenApi
                 {
                     Schemas.Add(id, schema);
                 }
-            } 
+            }
             base.Visit(schema);
         }
     }

@@ -22,6 +22,9 @@ namespace Microsoft.OpenApi
         /// <param name="settings"> The OpenApi reader settings.</param>
         /// <param name="cancellationToken">Propagates notification that an operation should be cancelled.</param>
         /// <returns></returns>
+        /// <remarks>
+        /// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>.
+        /// </remarks>
         Task<ReadResult> ReadAsync(Stream input, Uri location, OpenApiReaderSettings settings, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -31,6 +34,9 @@ namespace Microsoft.OpenApi
         /// <param name="location">Location of where the document that is getting loaded is saved</param>
         /// <param name="settings"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// OpenAPI semantic and parser errors are returned in the <see cref="ReadResult.Diagnostic"/>.
+        /// </remarks>
         ReadResult Read(MemoryStream input, Uri location, OpenApiReaderSettings settings);
 
         /// <summary>
@@ -42,6 +48,9 @@ namespace Microsoft.OpenApi
         /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
         /// <param name="settings">The OpenApiReader settings.</param>
         /// <returns>Instance of newly created IOpenApiElement.</returns>
+        /// <remarks>
+        /// OpenAPI semantic and parser errors are returned in the <paramref name="diagnostic"/>.
+        /// </remarks>
         T? ReadFragment<T>(MemoryStream input, OpenApiSpecVersion version, OpenApiDocument openApiDocument, out OpenApiDiagnostic diagnostic, OpenApiReaderSettings? settings = null) where T : IOpenApiElement;
     }
 }
