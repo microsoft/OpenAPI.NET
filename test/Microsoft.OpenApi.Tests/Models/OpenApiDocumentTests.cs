@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -2214,6 +2214,62 @@ components:
             Assert.IsType<ImmutableSortedSet<OpenApiTag>>(document.Tags);
         }
 
+        [Fact]
+        public void OpenApiDocumentCopyConstructorPreservesCustomComparer()
+        {
+            var document = new OpenApiDocument
+            {
+                Tags = new HashSet<OpenApiTag>(new CaseInsensitiveOpenApiTagEqualityComparer())
+                {
+                    new() { Name = "Tag1" }
+                }
+            };
+
+            var copy = new OpenApiDocument(document);
+            Assert.NotNull(copy.Tags);
+            Assert.False(copy.Tags.Add(new OpenApiTag { Name = "tag1" }));
+            Assert.Single(copy.Tags);
+        }
+
+        [Fact]
+        public void OpenApiDocumentCopyConstructorPreservesSortedSet()
+        {
+            var document = new OpenApiDocument
+            {
+                Tags = new SortedSet<OpenApiTag>(new DescendingOpenApiTagComparer())
+                {
+                    new() { Name = "tagB" },
+                    new() { Name = "tagA" },
+                    new() { Name = "tagC" },
+                }
+            };
+
+            var copy = new OpenApiDocument(document);
+            Assert.IsType<SortedSet<OpenApiTag>>(copy.Tags);
+            var copyNames = copy.Tags.Select(t => t.Name);
+            Assert.Equal(["tagC", "tagB", "tagA"], copyNames);
+        }
+
+        [Fact]
+        public void OpenApiDocumentCopyConstructorPreservesImmutableSortedSet()
+        {
+            var document = new OpenApiDocument
+            {
+                Tags = ImmutableSortedSet.Create(
+                    new DescendingOpenApiTagComparer(),
+                    [
+                        new OpenApiTag { Name = "tagB" },
+                        new OpenApiTag { Name = "tagA" },
+                        new OpenApiTag { Name = "tagC" },
+                    ]),
+            };
+
+            var copy = new OpenApiDocument(document);
+            Assert.IsType<ImmutableSortedSet<OpenApiTag>>(copy.Tags);
+            var copyNames = copy.Tags.Select(t => t.Name);
+            Assert.Equal(["tagC", "tagB", "tagA"], copyNames);
+        }
+
         public static TheoryData<OpenApiSpecVersion> OpenApiSpecVersions()
         {
             var values = new TheoryData<OpenApiSpecVersion>();
@@ -2696,6 +2752,38 @@ x-oai-$self: https://example.org/api/openapi.json";
 
             Assert.Throws<ArgumentNullException>(() => doc.GetOperationById(null!));
             Assert.Throws<ArgumentNullException>(() => doc.GetOperationById(string.Empty));
+        }
+
+        [Fact]
+        public void OpenApiDocumentCopyConstructorPreservesPathsExtensions()
+        {
+            // Arrange
+            var document = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Test API", Version = "1.0.0" },
+                Paths = new OpenApiPaths
+                {
+                    ["/items"] = new OpenApiPathItem(),
+                    Extensions = new Dictionary<string, IOpenApiExtension>
+                    {
+                        ["x-paths-summary"] = new JsonNodeExtension("Paths level extension")
+                    }
+                }
+            };
+
+            // Act
+            var copy = new OpenApiDocument(document);
+
+            // Assert
+            Assert.NotNull(copy.Paths);
+            Assert.NotNull(copy.Paths.Extensions);
+            Assert.Single(copy.Paths.Extensions);
+            Assert.True(copy.Paths.Extensions.ContainsKey("x-paths-summary"));
+
+            // Verify isolation
+            copy.Paths.Extensions["x-isolated"] = new JsonNodeExtension("isolated");
+            Assert.Single(document.Paths.Extensions);
+            Assert.False(document.Paths.Extensions.ContainsKey("x-isolated"));
         }
     }
 }

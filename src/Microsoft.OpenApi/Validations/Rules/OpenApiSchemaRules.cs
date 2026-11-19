@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -17,7 +17,8 @@ namespace Microsoft.OpenApi
     public static class OpenApiSchemaRules
     {
         /// <summary>
-        /// Validates Schema Property has value
+        /// Validates that each property defined in a schema's properties dictionary has a non-null schema value.
+        /// When a property entry value is null, reports a validation error with a JSON pointer anchored under the properties segment.
         /// </summary>
         public static ValidationRule<IOpenApiSchema> ValidateSchemaPropertyHasValue =>
             new(nameof(ValidateSchemaPropertyHasValue),
@@ -25,6 +26,7 @@ namespace Microsoft.OpenApi
                 {
                     if (schema.Properties is not null)
                     {
+                        context.Enter(OpenApiConstants.Properties);
                         foreach (var property in schema.Properties
                                      .Where(entry => entry.Value is null))
                         {
@@ -36,6 +38,7 @@ namespace Microsoft.OpenApi
                                         : string.Empty, property.Key));
                             context.Exit();
                         }
+                        context.Exit();
                     }
                 });
         

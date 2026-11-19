@@ -11,12 +11,19 @@ namespace Microsoft.OpenApi
     /// The validation rules for <see cref="OpenApiComponents"/>.
     /// </summary>
     [OpenApiRule]
-    public static class OpenApiComponentsRules
+    public static partial class OpenApiComponentsRules
     {
         /// <summary>
-        /// The key regex.
+        /// The key regex pattern.
         /// </summary>
-        internal static readonly Regex KeyRegex = new(@"^[a-zA-Z0-9\.\-_]+$", RegexOptions.None, TimeSpan.FromMilliseconds(100));
+        internal const string KeyPattern = @"^[a-zA-Z0-9\.\-_]+$";
+
+#if NET8_0_OR_GREATER
+        [GeneratedRegex(KeyPattern, RegexOptions.None, matchTimeoutMilliseconds: 100)]
+        private static partial Regex KeyRegex();
+#else
+        private static readonly Regex KeyRegex = new(KeyPattern, RegexOptions.None, TimeSpan.FromMilliseconds(100));
+#endif
 
         /// <summary>
         /// All the fixed fields declared above are objects
@@ -54,12 +61,18 @@ namespace Microsoft.OpenApi
 
             foreach (var key in keys)
             {
-                if (!KeyRegex.IsMatch(key))
+#if NET8_0_OR_GREATER
+                var isValidKey = KeyRegex().IsMatch(key);
+#else
+                var isValidKey = KeyRegex.IsMatch(key);
+#endif
+                if (!isValidKey)
                 {
                     context.CreateError(nameof(KeyMustBeRegularExpression),
-                        string.Format(SRResource.Validation_ComponentsKeyMustMatchRegularExpr, key, component, KeyRegex.ToString()));
+                        string.Format(SRResource.Validation_ComponentsKeyMustMatchRegularExpr, key, component, KeyPattern));
                 }
             }
         }
+
     }
 }

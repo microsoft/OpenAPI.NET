@@ -1,8 +1,11 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
+#if NET
+using System.Collections.Immutable;
+#endif
 using System.Linq;
 
 namespace Microsoft.OpenApi
@@ -25,14 +28,22 @@ namespace Microsoft.OpenApi
             }
             set
             {
-                if (value is null)
-                {
-                    return;
-                }
-                _tags = value is HashSet<OpenApiTagReference> tags && tags.Comparer is OpenApiTagComparer ?
-                        tags :
-                        new HashSet<OpenApiTagReference>(value, OpenApiTagComparer.Instance);
+                _tags = CopyTags(value);
             }
+        }
+
+        private static ISet<OpenApiTagReference>? CopyTags(ISet<OpenApiTagReference>? tags, bool copy = false)
+        {
+            return tags switch
+            {
+                null => null,
+                HashSet<OpenApiTagReference> hashSet when !ReferenceEquals(hashSet.Comparer, EqualityComparer<OpenApiTagReference>.Default) => copy ? new HashSet<OpenApiTagReference>(hashSet, hashSet.Comparer) : hashSet,
+                SortedSet<OpenApiTagReference> sorted => copy ? new SortedSet<OpenApiTagReference>(sorted, sorted.Comparer) : sorted,
+#if NET
+                ImmutableSortedSet<OpenApiTagReference> => tags,
+#endif
+                _ => new HashSet<OpenApiTagReference>(tags, OpenApiTagComparer.Instance),
+            };
         }
 
         /// <summary>
@@ -129,7 +140,7 @@ namespace Microsoft.OpenApi
         public OpenApiOperation(OpenApiOperation operation)
         {
             Utils.CheckArgumentNull(operation);
-            Tags = operation.Tags != null ? new HashSet<OpenApiTagReference>(operation.Tags) : null;
+            Tags = CopyTags(operation.Tags, copy: true);
             Summary = operation.Summary ?? Summary;
             Description = operation.Description ?? Description;
             ExternalDocs = operation.ExternalDocs != null ? new(operation.ExternalDocs) : null;

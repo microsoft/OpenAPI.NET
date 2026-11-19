@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -185,6 +185,41 @@ x-nullable: true";
             var schemaString = writer.ToString();
 
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), schemaString.MakeLineBreaksEnvironmentNeutral());
+        }
+
+        [Fact]
+        public void ParseSchemaWithTypeFileShouldSetTypeStringAndFormatBinary()
+        {
+            // Arrange
+            var node = JsonNode.Parse("{\"type\": \"file\"}");
+
+            // Act
+            var schema = OpenApiV2Deserializer.LoadSchema(node, new(), new ParsingContext(new()));
+
+            // Assert
+            Assert.NotNull(schema);
+            Assert.Equal(JsonSchemaType.String, schema.Type);
+            Assert.Equal("binary", schema.Format);
+        }
+
+        [Fact]
+        public void ParseResponseSchemaWithTypeFileShouldSetTypeStringAndFormatBinary()
+        {
+            // Arrange
+            var node = JsonNode.Parse("{\"produces\": [\"application/octet-stream\"], \"responses\": {\"200\": {\"description\": \"File response\", \"schema\": {\"type\": \"file\"}}}}");
+
+            // Act
+            var operation = OpenApiV2Deserializer.LoadOperation(node, new(), new ParsingContext(new()));
+
+            // Assert
+            Assert.NotNull(operation);
+            Assert.NotNull(operation.Responses);
+            var response = Assert.IsType<OpenApiResponse>(operation.Responses["200"]);
+            Assert.NotNull(response.Content);
+            var mediaType = Assert.Single(response.Content.Values);
+            Assert.NotNull(mediaType.Schema);
+            Assert.Equal(JsonSchemaType.String, mediaType.Schema.Type);
+            Assert.Equal("binary", mediaType.Schema.Format);
         }
     }
 }

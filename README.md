@@ -7,7 +7,6 @@
 |--|--|
 |Models and Writers|[![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.svg)](https://www.nuget.org/packages/Microsoft.OpenApi/) |
 |YamlReader | [![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.YamlReader.svg)](https://www.nuget.org/packages/Microsoft.OpenApi.YamlReader/) |
-|Hidi|[![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.Hidi.svg)](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi/)
 
 The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OpenAPI JSON and YAML documents from the model.
 
@@ -85,27 +84,19 @@ var (openApiDocument, _) = await OpenApiDocument.LoadAsync("https://raw.githubus
 var outputString = await openApiDocument.SerializeAsJsonAsync(OpenApiSpecVersion.OpenApi2_0);
 ```
 
+External references are loaded only when `OpenApiReaderSettings.LoadExternalRefs` is enabled.
+`MaxExternalReferenceDepth` defaults to 64 external document hops (the root is depth zero)
+and can be set to a higher positive value for deeper descriptions. It is independent of
+JSON/YAML nesting limits. External documents are reused within a load, allowing valid
+recursive schemas across files without repeated requests. Exceeding the depth limit or
+encountering an external reference-only loop returns a `ReadResult` with a null `Document`
+and an error in `Diagnostic.Errors`.
+Annotation-only siblings, such as `description`, do not exempt a reference from loop detection.
+
 # Validating/Testing OpenAPI descriptions
-In order to test the validity of an OpenApi document, we avail the following tools:
-- [Microsoft.OpenApi.Hidi](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi)
-
-    A commandline tool for validating and transforming OpenAPI descriptions. [Installation guidelines and documentation](https://github.com/microsoft/OpenAPI.NET/blob/main/src/Microsoft.OpenApi.Hidi/readme.md)
-
-- Microsoft.OpenApi.Workbench
-
-    A workbench tool consisting of a GUI where you can test and convert OpenAPI descriptions in both JSON and YAML from v2-->v3 and vice versa.
-
-    #### Installation guidelines:
-    1. Clone the repo locally by running this command:
-        `git clone https://github.com/microsoft/OpenAPI.NET.git`
-    2. Open the solution file `(.slnx)` in the root of the project with Visual Studio
-    3. Navigate to the `src/Microsoft.OpenApi.Workbench` directory and set it as the startup project
-    4. Run the project and you'll see a GUI pop up resembling the one below:
-    
-    
-    ![workbench preview](https://raw.githubusercontent.com/microsoft/OpenAPI.NET/main/docs/images/workbench.png "a screenshot of the workbench application")
-    
-    5. Copy and paste your OpenAPI descriptions in the **Input Content** window or paste the path to the descriptions file in the **Input File** textbox and click on `Convert` to render the results.
+[Microsoft.OpenApi.Hidi](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi) is a command line tool for validating and transforming OpenAPI descriptions.
+The OpenAPI.NET v3-compatible tool is maintained in [OpenAPI.NET.OData's main branch](https://github.com/microsoft/OpenAPI.NET.OData/tree/main/src/Microsoft.OpenApi.Hidi).
+See its [installation guidelines and documentation](https://github.com/microsoft/OpenAPI.NET.OData/blob/main/src/Microsoft.OpenApi.Hidi/readme.md).
 
 # Contributing
 

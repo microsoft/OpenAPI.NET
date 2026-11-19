@@ -113,11 +113,11 @@ namespace Microsoft.OpenApi
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
-        internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        internal void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             Utils.CheckArgumentNull(writer);
-            
+
             // Validate that Cookie style is only used in OpenAPI 3.2 and later
             if (Style == ParameterStyle.Cookie && version < OpenApiSpecVersion.OpenApi3_2)
             {
@@ -228,7 +228,12 @@ namespace Microsoft.OpenApi
                 // uniqueItems
                 // enum
                 // multipleOf
-                var targetSchema = Schema switch {
+                if (Schema is OpenApiSchemaReference)
+                {
+                    writer.CountInlineReference();
+                }
+                var targetSchema = Schema switch
+                {
                     OpenApiSchemaReference schemaReference => schemaReference.RecursiveTarget,
                     OpenApiSchema schema => schema,
                     _ => null,
@@ -273,7 +278,7 @@ namespace Microsoft.OpenApi
         public virtual void SerializeAsV2(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
-            
+
             // Validate that Cookie style is only used in OpenAPI 3.2 and later
             if (Style == ParameterStyle.Cookie)
             {

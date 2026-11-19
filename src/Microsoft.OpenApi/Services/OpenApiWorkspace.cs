@@ -570,7 +570,7 @@ namespace Microsoft.OpenApi
         /// Enumerates all child schemas from an IOpenApiSchema, including properties from
         /// IOpenApiSchemaMissingProperties (Contains, If/Then/Else, etc.).
         /// </summary>
-        private static IEnumerable<IOpenApiSchema> EnumerateChildren(IOpenApiSchema s)
+        internal static IEnumerable<IOpenApiSchema> EnumerateChildren(IOpenApiSchema s)
         {
             if (s.Definitions is not null)
                 foreach (var c in s.Definitions.Values) yield return c;
@@ -597,7 +597,7 @@ namespace Microsoft.OpenApi
         /// Needed because JsonSchemaReference is not an IOpenApiSchema — reading via the interface
         /// on OpenApiSchemaReference would delegate to Target and cross document boundaries.
         /// </summary>
-        private static IEnumerable<IOpenApiSchema> EnumerateChildren(JsonSchemaReference r)
+        internal static IEnumerable<IOpenApiSchema> EnumerateChildren(JsonSchemaReference r)
         {
             if (r.Definitions is not null)
                 foreach (var c in r.Definitions.Values) yield return c;
@@ -805,6 +805,19 @@ namespace Microsoft.OpenApi
             }
 
             return null;
+        }
+
+        internal Uri? GetDocumentId(string? key, Uri baseUri)
+        {
+            if (key is not null)
+            {
+                var location = DefaultStreamLoader.ResolveUri(baseUri, new Uri(key, UriKind.RelativeOrAbsolute));
+                if (_documentsIdRegistry.TryGetValue(location.AbsoluteUri, out var id))
+                {
+                    return id;
+                }
+            }
+            return GetDocumentId(key);
         }
 
         /// <summary>
