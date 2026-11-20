@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -631,7 +631,12 @@ namespace Microsoft.OpenApi
 
             string uriLocation;
             var id = reference.Id;
-            if (!string.IsNullOrEmpty(id) && id!.Contains('/')) // this means its a URL reference
+            var isStandaloneExternal = reference.IsExternal && IsStandaloneExternalReference(reference);
+            if (isStandaloneExternal)
+            {
+                uriLocation = reference.ExternalResource ?? id ?? string.Empty;
+            }
+            else if (!string.IsNullOrEmpty(id) && id!.IndexOf('/') >= 0)
             {
                 uriLocation = id!;
             }
@@ -662,31 +667,62 @@ namespace Microsoft.OpenApi
                     relativePath = $"#{OpenApiConstants.ComponentsSegment}{reference.Type.GetDisplayName()}/{id}";
                 }
 
-                Uri? externalResourceUri = useExternal ? Workspace?.GetDocumentId(reference.ExternalResource, BaseUri) : null;
+                Uri? externalResourceUri = useExternal
+                    ? (BaseUri is not null ? Workspace?.GetDocumentId(reference.ExternalResource, BaseUri) : Workspace?.GetDocumentId(reference.ExternalResource))
+                    : null;
 
                 uriLocation = useExternal && externalResourceUri is not null
                     ? externalResourceUri.AbsoluteUri + relativePath
                     : BaseUri + relativePath;
             }
 
-            var absoluteUri =
-#if NETSTANDARD2_1 || NETCOREAPP || NET5_0_OR_GREATER
-            uriLocation.StartsWith('#')
-#else
-            uriLocation.StartsWith("#", StringComparison.OrdinalIgnoreCase)
-#endif
-            switch
+            Uri? resolvedUri = null;
+            if (isStandaloneExternal && useExternal && reference.ExternalResource is not null &&
+                (BaseUri is not null ? Workspace?.GetDocumentId(reference.ExternalResource, BaseUri) : Workspace?.GetDocumentId(reference.ExternalResource)) is Uri extDocUri)
             {
-                true => new Uri(BaseUri, uriLocation).AbsoluteUri,
-                false => new Uri(uriLocation).AbsoluteUri
-            };
+                resolvedUri = extDocUri;
+            }
+            else if (BaseUri is not null && Uri.TryCreate(BaseUri, uriLocation, out var relCombinedUri))
+            {
+                resolvedUri = relCombinedUri;
+            }
+            else if (Uri.TryCreate(uriLocation, UriKind.Absolute, out var absUri))
+            {
+                resolvedUri = absUri;
+            }
 
-            if (reference.Type is ReferenceType.Schema && absoluteUri.Contains('#') && parentSchema is not null)
+            if (resolvedUri is null)
+            {
+                return null;
+            }
+
+            var absoluteUri = resolvedUri.AbsoluteUri;
+
+            if (reference.Type is ReferenceType.Schema && absoluteUri.IndexOf('#') >= 0 && parentSchema is not null)
             {
                 return Workspace?.ResolveJsonSchemaReference(absoluteUri, parentSchema);
             }
 
             return Workspace?.ResolveReference<IOpenApiReferenceable>(absoluteUri);
+        }
+
+        private static bool IsStandaloneExternalReference(BaseOpenApiReference reference)
+        {
+            if (reference.IsStandalone)
+            {
+                return true;
+            }
+
+            var referenceV3 = reference.ReferenceV3;
+            if (!string.IsNullOrEmpty(referenceV3))
+            {
+                return referenceV3!.IndexOf('#') < 0;
+            }
+
+            return reference.Type == ReferenceType.Schema &&
+                reference.Id is { } id &&
+                id.IndexOf('#') < 0 &&
+                id.IndexOf('/') >= 0;
         }
 
         private static bool IsSubComponent(string reference)

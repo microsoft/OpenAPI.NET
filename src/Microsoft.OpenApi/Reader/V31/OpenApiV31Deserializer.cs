@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Reader.V31
 
             var isExternalResource = !refSegments[0].StartsWith("#", StringComparison.OrdinalIgnoreCase);
             string? externalResource = null;
-            if (isExternalResource && pointer.Contains('#'))
+            if (isExternalResource)
             {
                 externalResource = pointer.Split('#')[0].TrimEnd('#');
             }

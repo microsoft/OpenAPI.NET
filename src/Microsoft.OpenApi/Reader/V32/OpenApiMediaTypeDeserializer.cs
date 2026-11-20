@@ -97,6 +97,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var mediaTypeReference = new OpenApiMediaTypeReference(reference.Item1, hostDocument, reference.Item2);
                 mediaTypeReference.Reference.SetMetadataFromJsonObject(jsonObject);
+                mediaTypeReference.Reference.SetJsonPointerPath(pointer, context);
                 return mediaTypeReference;
             }
 

@@ -31,7 +31,9 @@ namespace Microsoft.OpenApi.Reader.V3
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiCallbackReference(reference.Item1, hostDocument, reference.Item2);
+                var callbackReference = new OpenApiCallbackReference(reference.Item1, hostDocument, reference.Item2);
+                callbackReference.Reference.SetJsonPointerPath(pointer, context);
+                return callbackReference;
             }
 
             var domainObject = new OpenApiCallback();

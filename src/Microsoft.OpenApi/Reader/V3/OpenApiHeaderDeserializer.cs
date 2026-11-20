@@ -118,7 +118,9 @@ namespace Microsoft.OpenApi.Reader.V3
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiHeaderReference(reference.Item1, hostDocument, reference.Item2);
+                var headerReference = new OpenApiHeaderReference(reference.Item1, hostDocument, reference.Item2);
+                headerReference.Reference.SetJsonPointerPath(pointer, context);
+                return headerReference;
             }
 
             var header = new OpenApiHeader();

@@ -13,20 +13,46 @@ namespace Microsoft.OpenApi
     /// </summary>
     public class BaseOpenApiReference : IOpenApiSerializable
     {
+        private string? _externalResource;
         /// <summary>
         /// External resource in the reference.
         /// It maybe:
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </summary>
-        public string? ExternalResource { get; init; }
+        public string? ExternalResource
+        {
+            get => _externalResource;
+            init
+            {
+                if (!string.Equals(_externalResource, value, StringComparison.Ordinal))
+                {
+                    _externalResource = value;
+                    _referenceV3 = null;
+                    _isStandalone = false;
+                }
+            }
+        }
         
+        private ReferenceType _type;
         /// <summary>
         /// The element type referenced.
         /// </summary>
         /// <remarks>This must be present if <see cref="ExternalResource"/> is not present.</remarks>
-        public ReferenceType Type { get; init; }
+        public ReferenceType Type
+        {
+            get => _type;
+            init
+            {
+                if (_type != value)
+                {
+                    _type = value;
+                    _referenceV3 = null;
+                }
+            }
+        }
 
+        private string? _id;
         /// <summary>
         /// The identifier of the reusable component of one particular ReferenceType.
         /// If ExternalResource is present, this is the path to the component after the '#/'.
@@ -34,7 +60,19 @@ namespace Microsoft.OpenApi
         /// If ExternalResource is not present, this is the name of the component without the reference type name.
         /// For example, if the reference is '#/components/schemas/componentName', the Id is 'componentName'.
         /// </summary>
-        public string? Id { get; init; }
+        public string? Id
+        {
+            get => _id;
+            init
+            {
+                if (!string.Equals(_id, value, StringComparison.Ordinal))
+                {
+                    _id = value;
+                    _referenceV3 = null;
+                    _isStandalone = false;
+                }
+            }
+        }
 
         /// <summary>
         /// Gets a flag indicating whether this reference is an external reference.
@@ -46,10 +84,36 @@ namespace Microsoft.OpenApi
         /// </summary>
         public bool IsLocal => ExternalResource == null;
 
+        private bool _isFragment;
         /// <summary>
         /// Gets a flag indicating whether a file is a valid OpenAPI document or a fragment
         /// </summary>
-        public bool IsFragment { get; init; }
+        public bool IsFragment
+        {
+            get => _isFragment;
+            init
+            {
+                if (_isFragment != value)
+                {
+                    _isFragment = value;
+                    _referenceV3 = null;
+                    if (value)
+                    {
+                        _isStandalone = false;
+                    }
+                }
+            }
+        }
+
+        private bool _isStandalone;
+        /// <summary>
+        /// Gets or sets a flag indicating whether this reference points directly to a standalone external resource rather than a component within it.
+        /// </summary>
+        internal bool IsStandalone
+        {
+            get => _isStandalone;
+            set => _isStandalone = value;
+        }
 
         private OpenApiDocument? hostDocument;        
         /// <summary>
@@ -144,10 +208,13 @@ namespace Microsoft.OpenApi
         public BaseOpenApiReference(BaseOpenApiReference reference)
         {
             Utils.CheckArgumentNull(reference);
-            ExternalResource = reference.ExternalResource;
-            Type = reference.Type;
-            Id = reference.Id;
-            HostDocument = reference.HostDocument;
+            _externalResource = reference._externalResource;
+            _type = reference._type;
+            _id = reference._id;
+            hostDocument = reference.hostDocument;
+            _isFragment = reference._isFragment;
+            _isStandalone = reference._isStandalone;
+            _referenceV3 = reference._referenceV3;
         }
 
         /// <inheritdoc/>
@@ -241,6 +308,11 @@ namespace Microsoft.OpenApi
 
         private string? GetExternalReferenceV3()
         {
+            if (IsStandalone)
+            {
+                return ExternalResource;
+            }
+
             if (Id != null)
             {
                 if (IsFragment)
@@ -319,23 +391,106 @@ namespace Microsoft.OpenApi
 
         internal void SetJsonPointerPath(string pointer, ParsingContext context)
         {
+            if (IsExternal)
+            {
+                IsStandalone = pointer.IndexOf('#') < 0;
+            }
+
             // Relative reference to internal JSON schema node/resource (e.g. "#/properties/b")
-#if NETSTANDARD2_1 || NETCOREAPP2_1_OR_GREATER || NET5_0_OR_GREATER
-            if (pointer.StartsWith("#/", StringComparison.OrdinalIgnoreCase) && !pointer.Contains("/components/schemas", StringComparison.OrdinalIgnoreCase))
-#else
-            if (pointer.StartsWith("#/", StringComparison.OrdinalIgnoreCase) && !pointer.ToLowerInvariant().Contains("/components/schemas"))
-#endif
+            if (pointer.StartsWith("#/", StringComparison.OrdinalIgnoreCase) && !pointer.StartsWith("#/components/", StringComparison.OrdinalIgnoreCase))
             {
                 ReferenceV3 = ResolveRelativePointer(context.GetLocation(), pointer);
             }
 
-            // Absolute reference or anchor (e.g. "#/components/schemas/..." or full URL)
-            else if ((pointer.Contains('#') || pointer.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-                && !string.Equals(ReferenceV3, pointer, StringComparison.OrdinalIgnoreCase))
+            // Absolute reference, anchor, or relative pointer (e.g. "#/components/schemas/...", full URL, or "schemas/uuid.schema.json")
+            else if (!string.IsNullOrEmpty(_referenceV3)
+                ? !string.Equals(_referenceV3, pointer, StringComparison.OrdinalIgnoreCase)
+                : !MatchesDefaultReferenceV3(pointer))
             {
                 ReferenceV3 = pointer;
             }
         }
+
+        private bool MatchesDefaultReferenceV3(string pointer)
+        {
+            if (IsExternal)
+            {
+                if (IsStandalone || Id is null)
+                {
+                    return string.Equals(ExternalResource, pointer, StringComparison.OrdinalIgnoreCase);
+                }
+
+                if (IsFragment)
+                {
+                    return ExternalResource is not null &&
+                        pointer.Length == ExternalResource.Length + 1 + Id.Length &&
+                        pointer.StartsWith(ExternalResource, StringComparison.OrdinalIgnoreCase) &&
+                        pointer[ExternalResource.Length] == '#' &&
+                        pointer.EndsWith(Id, StringComparison.OrdinalIgnoreCase);
+                }
+
+                if (Id.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                    Id.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                {
+                    return string.Equals(Id, pointer, StringComparison.OrdinalIgnoreCase);
+                }
+
+                var externalTypeName = GetReferenceTypeDisplayName(Type);
+                if (ExternalResource is null || externalTypeName is null)
+                {
+                    return false;
+                }
+
+                const string ComponentsPrefix = "#/components/";
+                var expectedExternalLength = ExternalResource.Length + ComponentsPrefix.Length + externalTypeName.Length + 1 + Id.Length;
+                return pointer.Length == expectedExternalLength &&
+                    pointer.StartsWith(ExternalResource, StringComparison.OrdinalIgnoreCase) &&
+                    string.Compare(pointer, ExternalResource.Length, ComponentsPrefix, 0, ComponentsPrefix.Length, StringComparison.OrdinalIgnoreCase) == 0 &&
+                    string.Compare(pointer, ExternalResource.Length + ComponentsPrefix.Length, externalTypeName, 0, externalTypeName.Length, StringComparison.OrdinalIgnoreCase) == 0 &&
+                    pointer[ExternalResource.Length + ComponentsPrefix.Length + externalTypeName.Length] == '/' &&
+                    pointer.EndsWith(Id, StringComparison.OrdinalIgnoreCase);
+            }
+
+            if (Type is ReferenceType.Tag or ReferenceType.SecurityScheme)
+            {
+                return string.Equals(Id, pointer, StringComparison.OrdinalIgnoreCase);
+            }
+
+            if (!string.IsNullOrEmpty(Id) && Id is not null &&
+                (Id.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                 Id.StartsWith("https://", StringComparison.OrdinalIgnoreCase) ||
+                 Id.IndexOf("#/components", StringComparison.OrdinalIgnoreCase) >= 0))
+            {
+                return string.Equals(Id, pointer, StringComparison.OrdinalIgnoreCase);
+            }
+
+            var typeName = GetReferenceTypeDisplayName(Type) ?? string.Empty;
+            var idSegment = Id ?? string.Empty;
+            const string LocalComponentsPrefix = "#/components/";
+            var expectedLocalLength = LocalComponentsPrefix.Length + typeName.Length + 1 + idSegment.Length;
+            return pointer.Length == expectedLocalLength &&
+                pointer.StartsWith(LocalComponentsPrefix, StringComparison.OrdinalIgnoreCase) &&
+                string.Compare(pointer, LocalComponentsPrefix.Length, typeName, 0, typeName.Length, StringComparison.OrdinalIgnoreCase) == 0 &&
+                pointer[LocalComponentsPrefix.Length + typeName.Length] == '/' &&
+                pointer.EndsWith(idSegment, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string? GetReferenceTypeDisplayName(ReferenceType type) => type switch
+        {
+            ReferenceType.Schema => OpenApiConstants.Schemas,
+            ReferenceType.Response => OpenApiConstants.Responses,
+            ReferenceType.Parameter => OpenApiConstants.Parameters,
+            ReferenceType.Example => OpenApiConstants.Examples,
+            ReferenceType.RequestBody => OpenApiConstants.RequestBodies,
+            ReferenceType.Header => OpenApiConstants.Headers,
+            ReferenceType.SecurityScheme => OpenApiConstants.SecuritySchemes,
+            ReferenceType.Link => OpenApiConstants.Links,
+            ReferenceType.Callback => OpenApiConstants.Callbacks,
+            ReferenceType.Tag => OpenApiConstants.Tags,
+            ReferenceType.PathItem => OpenApiConstants.PathItems,
+            ReferenceType.MediaType => OpenApiConstants.MediaTypes,
+            _ => type.GetDisplayName(),
+        };
 
         private static string ResolveRelativePointer(string nodeLocation, string relativeRef)
         {
