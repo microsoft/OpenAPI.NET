@@ -6,6 +6,7 @@ using System.Collections.Generic;
 #if NET
 using System.Collections.Immutable;
 #endif
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -570,7 +571,7 @@ namespace Microsoft.OpenApi
         {
 #if NET7_OR_GREATER
             using var memoryStream = new MemoryStream();
-            using var streamWriter = new StreamWriter(memoryStream);
+            using var streamWriter = new FormattingStreamWriter(memoryStream, CultureInfo.InvariantCulture);
 
             await WriteDocumentAsync(streamWriter, cancellationToken).ConfigureAwait(false);
 
@@ -580,7 +581,8 @@ namespace Microsoft.OpenApi
 #else
             using HashAlgorithm sha = SHA512.Create();
             using var cryptoStream = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
-            using var streamWriter = new StreamWriter(cryptoStream);
+            // The invariant culture keeps the hash of a document the same on every machine
+            using var streamWriter = new FormattingStreamWriter(cryptoStream, CultureInfo.InvariantCulture);
 
             await WriteDocumentAsync(streamWriter, cancellationToken).ConfigureAwait(false);
 #if NET5_0_OR_GREATER

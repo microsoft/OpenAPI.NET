@@ -2,8 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Globalization;
 using System.IO;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -25,7 +25,6 @@ namespace Microsoft.OpenApi
     /// </remarks>
     public sealed class OpenApiSchemaJsonConverter : JsonConverter<OpenApiSchema>
     {
-        private static readonly UTF8Encoding Utf8NoBom = new(encoderShouldEmitUTF8Identifier: false);
         private readonly OpenApiSpecVersion _version;
 
         /// <summary>
@@ -67,7 +66,10 @@ namespace Microsoft.OpenApi
             Utils.CheckArgumentNull(value);
 
             using var stream = new MemoryStream();
-            using (var textWriter = new StreamWriter(stream, Utf8NoBom, bufferSize: 1024, leaveOpen: true))
+            // Numbers must be written with the invariant culture: under de-DE the writer would emit 1.5 as "1,5",
+            // which the raw value below would pass through as invalid JSON.
+            // The writer emits UTF-8 without a BOM; disposing it closes the stream, which ToArray still reads.
+            using (var textWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture))
             {
                 var openApiWriter = new OpenApiJsonWriter(textWriter);
                 SerializeSchema(value, openApiWriter);

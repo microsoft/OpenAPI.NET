@@ -1648,6 +1648,39 @@ paths: { }";
         }
 
         [Fact]
+        public async Task HashCodeDoesNotDependOnCurrentCulture()
+        {
+            var document = new OpenApiDocument
+            {
+                Info = new OpenApiInfo { Title = "Culture", Version = "1.0" },
+                Components = new OpenApiComponents
+                {
+                    Schemas = new Dictionary<string, IOpenApiSchema>
+                    {
+                        ["price"] = new OpenApiSchema { Type = JsonSchemaType.Number, Default = JsonValue.Create(1.5) }
+                    }
+                }
+            };
+
+            var originalCulture = CultureInfo.CurrentCulture;
+            string invariantHash, germanHash;
+            try
+            {
+                CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+                invariantHash = await document.GetHashCodeAsync(TestContext.Current.CancellationToken);
+                // de-DE writes 1.5 as "1,5"
+                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("de-DE");
+                germanHash = await document.GetHashCodeAsync(TestContext.Current.CancellationToken);
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = originalCulture;
+            }
+
+            Assert.Equal(invariantHash, germanHash);
+        }
+
+        [Fact]
         public async Task TestHashCodesForSimilarOpenApiDocuments()
         {
             // Arrange
