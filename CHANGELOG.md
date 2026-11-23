@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.11.2](https://github.com/microsoft/OpenAPI.NET/compare/v3.11.1...v3.11.2) (2026-11-23)
+
+
+### Bug Fixes
+
+* write schema JSON and document hashes with the invariant culture ([#3186](https://github.com/microsoft/OpenAPI.NET/issues/3186)) ([cd7cb1c](https://github.com/microsoft/OpenAPI.NET/commit/cd7cb1ce2150fc711d79f4f2ba7d9e967322f241))
+
+
+### Performance Improvements
+
+* remove LINQ and HashSet lookups from the YAML string check ([#3184](https://github.com/microsoft/OpenAPI.NET/issues/3184)) ([a046b91](https://github.com/microsoft/OpenAPI.NET/commit/a046b916767b3932492ef92b8b6e419335fce38a))
+
 ## [3.11.1](https://github.com/microsoft/OpenAPI.NET/compare/v3.11.0...v3.11.1) (2026-11-16)
 
 
