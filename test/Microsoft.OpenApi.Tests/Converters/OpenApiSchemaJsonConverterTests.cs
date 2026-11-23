@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Converters
@@ -20,6 +22,35 @@ namespace Microsoft.OpenApi.Tests.Converters
         {
             Converters = { new OpenApiSchemaJsonConverter() }
         };
+
+        [Theory]
+        [InlineData("de-DE")] // writes 1.5 as "1,5"
+        [InlineData("fi-FI")] // writes -5 with U+2212 MINUS SIGN
+        public void Serialize_NumericValues_DoNotDependOnCurrentCulture(string culture)
+        {
+            var schema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.Number,
+                Default = JsonValue.Create(1.5),
+                Enum = [JsonValue.Create(-5), JsonValue.Create(1.5)]
+            };
+
+            var originalCulture = CultureInfo.CurrentCulture;
+            string json;
+            try
+            {
+                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+                json = JsonSerializer.Serialize(schema, _optionsV31);
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = originalCulture;
+            }
+
+            using var doc = JsonDocument.Parse(json);
+            Assert.Equal(1.5, doc.RootElement.GetProperty("default").GetDouble());
+            Assert.Equal(-5, doc.RootElement.GetProperty("enum")[0].GetInt32());
+        }
 
         [Fact]
         public void Serialize_SimpleStringSchema_ProducesOpenApiWireFormat()
