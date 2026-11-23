@@ -1,9 +1,10 @@
-﻿using Xunit;
-using Microsoft.OpenApi.Reader;
-using System.Threading.Tasks;
+﻿using System;
 using System.IO;
-using System;
 using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.OpenApi.Reader;
+using Microsoft.OpenApi.YamlReader;
+using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Reader;
 
@@ -21,6 +22,59 @@ public class OpenApiModelFactoryTests
             new Uri(resource, UriKind.RelativeOrAbsolute));
 
         Assert.Equal(expected.AbsoluteUri, actual.AbsoluteUri);
+    }
+
+    [Fact]
+    public void LoadReturnsDiagnosticWhenStreamIsEmpty()
+    {
+        using var stream = new MemoryStream();
+        var settings = new OpenApiReaderSettings();
+        settings.AddYamlReader();
+
+        var result = OpenApiDocument.Load(stream, settings: settings);
+
+        Assert.Null(result.Document);
+        var error = Assert.Single(result.Diagnostic.Errors);
+        Assert.Equal("Cannot parse the stream: input is empty or contains no elements.", error.Message);
+        Assert.Equal(OpenApiConstants.Yaml, result.Diagnostic.Format);
+    }
+
+    [Fact]
+    public async Task LoadAsyncReturnsDiagnosticWhenStreamIsEmpty()
+    {
+        await using var stream = new MemoryStream();
+
+        var result = await OpenApiDocument.LoadAsync(stream, cancellationToken: TestContext.Current.CancellationToken);
+
+        Assert.Null(result.Document);
+        var error = Assert.Single(result.Diagnostic.Errors);
+        Assert.Equal("Cannot parse the stream: input is empty or contains no elements.", error.Message);
+        Assert.Equal(OpenApiConstants.Yaml, result.Diagnostic.Format);
+    }
+
+    [Fact]
+    public void ParseThrowsWhenInputIsEmpty()
+    {
+        var settings = new OpenApiReaderSettings();
+        settings.AddYamlReader();
+
+        Assert.Throws<ArgumentException>(() => OpenApiDocument.Parse(string.Empty, settings: settings));
+    }
+
+    [Fact]
+    public void ParseGenericReturnsDiagnosticWhenJsonRootIsNull()
+    {
+        var schema = OpenApiModelFactory.Parse<OpenApiSchema>(
+            "null",
+            OpenApiSpecVersion.OpenApi3_0,
+            new OpenApiDocument(),
+            out var diagnostic,
+            OpenApiConstants.Json);
+
+        Assert.Null(schema);
+        var error = Assert.Single(diagnostic.Errors);
+        Assert.Equal(OpenApiConstants.Json, diagnostic.Format);
+        Assert.Equal("Failed to parse stream, input", error.Message);
     }
 
     [Fact]
@@ -216,7 +270,7 @@ $$$"""
         var baseUri = new Uri(tempFilePathReferrer);
         var settings = new OpenApiReaderSettings
         {
-            BaseUrl = baseUri, 
+            BaseUrl = baseUri,
         };
         var readResult = await OpenApiDocument.LoadAsync(stream, settings: settings, cancellationToken: TestContext.Current.CancellationToken);
         Assert.Equal(OpenApiConstants.Json, readResult.Diagnostic.Format);
@@ -249,10 +303,10 @@ paths: {}
         // Given
         using var memoryStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(documentJson));
         using var nonSeekableStream = new NonSeekableStream(memoryStream);
-    
+
         // When
         var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream, cancellationToken: TestContext.Current.CancellationToken);
-    
+
         // Then
         Assert.NotNull(document);
         Assert.Equal("Sample API", document.Info.Title);
@@ -266,10 +320,10 @@ paths: {}
         using var nonSeekableStream = new NonSeekableStream(memoryStream);
         var settings = new OpenApiReaderSettings();
         settings.AddYamlReader();
-    
+
         // When
         var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream, settings: settings, cancellationToken: TestContext.Current.CancellationToken);
-    
+
         // Then
         Assert.NotNull(document);
         Assert.Equal("Sample API", document.Info.Title);
@@ -281,10 +335,10 @@ paths: {}
         // Given
         await using var memoryStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(documentJson));
         await using var nonSeekableStream = new AsyncOnlyStream(memoryStream);
-    
+
         // When
         var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream, cancellationToken: TestContext.Current.CancellationToken);
-    
+
         // Then
         Assert.NotNull(document);
         Assert.Equal("Sample API", document.Info.Title);
@@ -298,10 +352,10 @@ paths: {}
         await using var nonSeekableStream = new AsyncOnlyStream(memoryStream);
         var settings = new OpenApiReaderSettings();
         settings.AddYamlReader();
-    
+
         // When
         var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream, settings: settings, cancellationToken: TestContext.Current.CancellationToken);
-    
+
         // Then
         Assert.NotNull(document);
         Assert.Equal("Sample API", document.Info.Title);
@@ -313,10 +367,10 @@ paths: {}
         // Given
         using var memoryStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("     " + documentJson));
         using var nonSeekableStream = new NonSeekableStream(memoryStream);
-    
+
         // When
         var (document, _) = await OpenApiDocument.LoadAsync(nonSeekableStream, cancellationToken: TestContext.Current.CancellationToken);
-    
+
         // Then
         Assert.NotNull(document);
         Assert.Equal("Sample API", document.Info.Title);
@@ -327,7 +381,7 @@ paths: {}
     {
         // When
         var (document, _) = OpenApiDocument.Parse("     " + documentJson);
-    
+
         // Then
         Assert.NotNull(document);
         Assert.Equal("Sample API", document.Info.Title);
