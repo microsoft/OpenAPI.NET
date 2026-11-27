@@ -106,7 +106,9 @@ namespace Microsoft.OpenApi.Reader.V3
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiSecuritySchemeReference(reference.Item1, hostDocument, reference.Item2);
+                var securitySchemeReference = new OpenApiSecuritySchemeReference(reference.Item1, hostDocument, reference.Item2);
+                securitySchemeReference.Reference.SetJsonPointerPath(pointer, context);
+                return securitySchemeReference;
             }
 
             var securityScheme = new OpenApiSecurityScheme();

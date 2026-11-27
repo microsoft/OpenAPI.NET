@@ -52,7 +52,9 @@ namespace Microsoft.OpenApi.Reader.V3
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiLinkReference(reference.Item1, hostDocument, reference.Item2);
+                var linkReference = new OpenApiLinkReference(reference.Item1, hostDocument, reference.Item2);
+                linkReference.Reference.SetJsonPointerPath(pointer, context);
+                return linkReference;
             }
 
             ParseMap(jsonObject, link, _linkFixedFields, _linkPatternFields, hostDocument, context);

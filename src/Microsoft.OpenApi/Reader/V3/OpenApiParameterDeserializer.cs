@@ -158,7 +158,9 @@ namespace Microsoft.OpenApi.Reader.V3
             if (pointer != null)
             {
                 var reference = GetReferenceIdAndExternalResource(pointer);
-                return new OpenApiParameterReference(reference.Item1, hostDocument, reference.Item2);
+                var parameterReference = new OpenApiParameterReference(reference.Item1, hostDocument, reference.Item2);
+                parameterReference.Reference.SetJsonPointerPath(pointer, context);
+                return parameterReference;
             }
 
             var parameter = new OpenApiParameter();

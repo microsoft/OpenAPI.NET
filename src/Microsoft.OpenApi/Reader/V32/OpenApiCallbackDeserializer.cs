@@ -28,6 +28,7 @@ namespace Microsoft.OpenApi.Reader.V32
                 var reference = GetReferenceIdAndExternalResource(pointer);
                 var callbackReference = new OpenApiCallbackReference(reference.Item1, hostDocument, reference.Item2);
                 callbackReference.Reference.SetMetadataFromJsonObject(jsonObject);
+                callbackReference.Reference.SetJsonPointerPath(pointer, context);
                 return callbackReference;
             }
 

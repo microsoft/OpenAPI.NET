@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -171,6 +171,36 @@ namespace Microsoft.OpenApi.Tests
             };
 
             return doc;
+        }
+
+        [Fact]
+        public void OpenApiWorkspacesCanResolveAbsoluteUriReferences()
+        {
+            var workspace = new OpenApiWorkspace();
+            var targetSchema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String,
+                Description = "Schema at absolute URI"
+            };
+            workspace.RegisterComponent("https://example.com/schemas/uuid.schema.json", targetSchema);
+
+            var resolved = workspace.ResolveReference<OpenApiSchema>("https://example.com/schemas/uuid.schema.json");
+            Assert.Same(targetSchema, resolved);
+        }
+
+        [Fact]
+        public void OpenApiWorkspacesResolvesRootRelativeUriAgainstBaseUrl()
+        {
+            var workspace = new OpenApiWorkspace(new Uri("https://example.com/base/"));
+            var targetSchema = new OpenApiSchema
+            {
+                Type = JsonSchemaType.String,
+                Description = "Schema at root-relative URI"
+            };
+            workspace.RegisterComponent("https://example.com/schemas/common.json", targetSchema);
+
+            var resolved = workspace.ResolveReference<OpenApiSchema>("/schemas/common.json");
+            Assert.Same(targetSchema, resolved);
         }
     }
 

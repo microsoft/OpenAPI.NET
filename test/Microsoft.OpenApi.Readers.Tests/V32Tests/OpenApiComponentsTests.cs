@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
         [InlineData("A:\\Dir\\File.json#/components/schemas/ExternalAbsWindowsPathModel", "ExternalAbsWindowsPathModel", "A:\\Dir\\File.json")]
         [InlineData("/Dir/File.json#/components/schemas/ExternalAbsUnixPathModel", "ExternalAbsUnixPathModel", "/Dir/File.json")]
         [InlineData("https://host.lan:1234/path/to/file/resource.json#/components/schemas/ExternalHttpsModel", "ExternalHttpsModel", "https://host.lan:1234/path/to/file/resource.json")]
-        [InlineData("File.json", "File.json", null)]
+        [InlineData("File.json", "File.json", "File.json")]
         public void ParseExternalSchemaReferenceShouldSucceed(string reference, string referenceId, string externalResource)
         {
             var input = $@"{{
@@ -33,6 +33,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V32Tests
             // Assert
             var schema = components.Schemas["Model"] as OpenApiSchemaReference;
             var expected = new OpenApiSchemaReference(referenceId, openApiDocument, externalResource);
+            if (!reference.Contains('#'))
+            {
+                expected.Reference.IsStandalone = true;
+            }
             Assert.Equivalent(expected, schema);
         }
     }
